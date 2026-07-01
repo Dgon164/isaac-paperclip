@@ -1,0 +1,5 @@
+numpy
+scikit-learn
+# Optional — only needed for the vision perception-lens work (ResNet18/CIFAR):
+# torch
+# torchvision

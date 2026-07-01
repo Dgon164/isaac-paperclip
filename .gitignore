@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data / caches (fetched on demand; not committed)
+data/
+scikit_learn_data/
+*.npz
+*.npy
+*.csv
+*.csv.gz
+*.pt
+*.safetensors
+emb_cache.npz
+*_out.txt
