@@ -14,7 +14,7 @@ full picture, read the manual and the docs below.
 ## What's here
 
 ```
-isaac.py                    the engine — one file, one class (self-test: python isaac.py → 6/6)
+isaac.py                    the engine — one file, one class (self-test: python isaac.py → 10/10)
 PAPERCLIP_MANUAL.md         the full manual (Starter / Operation / Reference / Theory)
 docs/
   THE_COMPLETE_PICTURE.md      the whole research line, front to back
@@ -82,3 +82,37 @@ the deliverable is explicit, readable structure. Nulls are reported as nulls.
 
 The full corpus (history, theory sources, the personal story, all experiments) lives
 outside this snapshot. Start with `PAPERCLIP_MANUAL.md`, then `docs/THE_COMPLETE_PICTURE.md`.
+
+---
+
+## Update — 2026-07-01/02: the discovery stack
+
+The engine grew four capability areas in two days (self-test now **10/10**),
+all numpy, all null-gated, no trained networks anywhere:
+
+- **discover()** — the challenge loop: given examples of something it cannot
+  do, it recovers the explicit equation (held-out validated, reusable via
+  `apply_law()`) or says honestly what state its knowledge is in:
+  UNDERSTOOD / PARTIAL / CAPTURED (caught by exemplars, not yet said) /
+  NO RULE. 0/40 false discoveries on pure noise across two batteries.
+  Rival look-alike forms (parabola vs wide cosine, exp vs cubic) are held
+  open with a named discriminating probe until `confirm()` settles them.
+- **Waves** — temporal crystallization: simultaneity groups, handoffs,
+  circles, recursively (circles of circles); a tracked circle gives an
+  internal clock (100% phase through occlusion), expectation, and
+  temporary statuses whose explanations EMERGE from ordinary co-activation
+  (`blocks(disk) <- cloud`), entering the fact index.
+- **Registration perception** (experiments/) — pose/identity factoring:
+  digits under random position+scale go from ~5-15% to 84-87%; ideals +
+  learned key identifiers (differentia) hit 99.7% on a six-way look-alike
+  world and correctly demote unreliable taught features.
+- **Covtype accounting** (experiments/) — articulated doors 59%, captured
+  exemplars **94.4%** with a learned readable metric (elevation 0.76) vs
+  the old 82% net baseline; the row-index-alone control (79%) quantifies
+  the dataset's spatial leakage.
+
+Full methods, numbers, limits, and how to verify every claim:
+`docs/WRITEUP_FOR_REVIEW.md`. Theory: `docs/Understanding_as_Closure.md`.
+The audit discipline: `docs/AUDIT_STANDARD_v1.md` + `docs/VERDICT_SHEET.md`.
+The `experiments/` folder is the full harness (planted ground truth,
+batteries, red team) — every result re-runnable; nothing requires trust.
