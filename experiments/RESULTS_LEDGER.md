@@ -79,6 +79,14 @@ per-row notes below.
 | Scoreboard: mnist 95.2 / fashion 76.5 / cifar 32.6 (designed face-plant) / omniglot 1-shot 51.6 / fsdd 92→54 / smallnorb 87.7 / fraud recall 79 / kepler+noise honest refusals / sunspots NO RULE post-cap | `gauntlet.py` | NEEDS-DATA/TIME | (2026-07-02 recorded) | script now in repo with repo-local paths; needs `data/` populated (mnist/fashion via openml, cifar/fsdd/omniglot/norb archives, `fraud_*.npy`, `clocks_48.npz` from `clock_world.py`, `sunspots.csv`); multi-hour run |
 | Clocks 22.9% | `gauntlet.py` | RECORDED (known harness bug) | (2026-07-02) | the readout peak-picking is the bug, engine unimplicated — repair before re-quoting |
 
+## World GM (generative worlds, oracle-only teaching — NEW 2026-07-03)
+
+| Claim | Script | Status | Verified | Observed |
+|---|---|---|---|---|
+| World GM v1: primitives programmed, laws emergent (never written as laws), information EARNED (observe/run/submit on a budget), GM grades beyond the observed range | `world_gm.py` | **VERIFIED** (instrument works) | 2026-07-03 | 6 s, 4 world types. Composed tertiary law `c ∝ a^(α·β)` recovered exactly in one draw (form-true, never programmed); NULL world correctly refused (accounting 0/0/100 = GM truth); gated world solved by a smooth surrogate that held beyond range (0.91); scope self-check loop works (Isaac spends budget on beyond-hull experiments, validate_law, re-learns with earned points — UNDERSTOOD honestly downgraded once) |
+| **NEW ENGINE FINDING 1 (via GM): the form-true scope label is over-generous** | `world_gm.py` | **VERIFIED** | 2026-07-03 | the engine's edge check tests only the outer quartile of the OBSERVED cloud; 2 of 3 form-true labels failed the GM's external beyond-range audit (exchange −0.44, chain 0.596). This is the calibration audit (owner priority 4) operating: the label should say what was tested ("edges-hold"), or earn "form-true" via beyond-hull validation. Engine item queued. |
+| **NEW ENGINE FINDING 2 (via GM): sum-of-many-singles laws lose to product impostors** | `world_gm.py` (exchange world) | **VERIFIED** | 2026-07-03 | the exchange world's emergent law is plain linear mixing (exactly representable, R²=1 achievable); the enumerator instead admits x_i·x_j and cos terms (on positively-correlated support a product out-correlates the single terms) and cannot recover the linear form even with earned far points. The discovery battery never caught this — no plain-sum case exists in it. Battery case + fix queued. |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.

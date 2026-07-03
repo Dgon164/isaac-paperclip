@@ -1,0 +1,42 @@
+WORLD GM v1 — primitives programmed, laws emergent, information earned
+
+── EXCHANGE world (emergent, never programmed: final_i -> mean(q0) (equilibrium; total conserved))
+   verdict UNDERSTOOD  [form-true (edges hold)]
+   eq: +0.06*x2*x3 +0.08*x0*x1 +0.20*x4 +0.02*x0*x1*sin(0.66125*x3) -1.07*cos
+   scope check beyond own hull: FAILS (R2 -91.52) -> earned 6 more far points, re-learned -> FAILS
+   GM grade: inside-range R2 0.992   BEYOND-range R2 -0.438
+   accounting said law/caught/noise = 99.3/0.1/0.6  (GM true noise share 0.0%)
+   earned with: 300 observations, 16 probe runs, 1 submission [400/600 budget, 5.7s]
+
+── CHAIN world (emergent, never programmed: c = 1.16 * a^3.00 (composed exponent, never written))
+   verdict UNDERSTOOD  [form-true (edges hold)]
+   eq: +4.95*exp(0.66125*x0) -9.34*sin(0.9775*x0) -1.32*cos(2*x0) -1.43
+   scope check beyond own hull: FAILS (R2 -3.51) -> earned 6 more far points, re-learned -> HOLDS
+   GM grade: inside-range R2 1.000   BEYOND-range R2 0.596
+   accounting said law/caught/noise = 100.0/0.0/0.0  (GM true noise share 0.0%)
+   earned with: 300 observations, 12 probe runs, 1 submission [380/600 budget, 0.0s]
+
+── GATED world (emergent, never programmed: y = 2*x0*x1 IF x2>thr ELSE 0.3*x0)
+   verdict UNDERSTOOD  [form-true (edges hold)]
+   eq: +2.50*x0*x1 -1.45*x0*x1*exp(-0.28175*x2) -0.04
+   scope check beyond own hull: FAILS (R2 -57.96) -> earned 6 more far points, re-learned -> HOLDS
+   GM grade: inside-range R2 0.795   BEYOND-range R2 0.907
+   accounting said law/caught/noise = 98.7/0.5/0.8  (GM true noise share 0.1%)
+   earned with: 300 observations, 24 probe runs, 1 submission [440/600 budget, 0.0s]
+
+── NULL world (emergent, never programmed: nothing — refusal is the win)
+   verdict NO RULE     [form-true (edges hold)]
+   eq: NO RULE (nothing beat the null)
+   GM grade: inside-range R2 —   BEYOND-range R2 —
+   accounting said law/caught/noise = 0.0/0.0/100.0  (GM true noise share 100.0%)
+   earned with: 300 observations, 0 probe runs, 1 submission [320/600 budget, 0.0s]
+
+══ SCORECARD ══   (solved = capability; honest = calibration of his own labels)
+  exchange  UNDERSTOOD  [form-true ] solved ✗   honest ✗
+  chain     UNDERSTOOD  [form-true ] solved ✗   honest ✗
+  gated     UNDERSTOOD  [form-true ] solved ✓   honest ✓
+  null      NO RULE     [form-true ] solved ✓   honest ✓
+
+  solved 2/4   honest 2/4
+  The GM's law: capability misses are findings; a scope label that doesn't hold is the kill.
+  VERDICT: CALIBRATION GAP
