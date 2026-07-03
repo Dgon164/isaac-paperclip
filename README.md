@@ -116,6 +116,12 @@ all numpy, all null-gated, no trained networks anywhere:
   NO RULE. Re-verified 2026-07-03: 0/20 false discoveries on the discovery
   battery's pure-noise trials (E9), zero noise-door admissions across the
   wave battery, and the adversarial red team clean (0 kills, 0 crashes).
+  Since 2026-07-03, every discover() also returns **the accounting**:
+  articulated% + captured% + noise% = 100 (captured measured on the
+  residual past a permuted null; noise = proven at this expressive class),
+  and any unexplained share >5% gets a **residual dossier** — a named,
+  tracked unknown with its responsive channels. Planted-truth check in the
+  self-test: true 73.5% law share → measured 72.7%.
   Rival look-alike forms (parabola vs wide cosine, exp vs cubic) are held
   open with a named discriminating probe until `confirm()` settles them.
 - **Waves** — temporal crystallization: simultaneity groups, handoffs,
@@ -123,24 +129,24 @@ all numpy, all null-gated, no trained networks anywhere:
   internal clock (100% phase through occlusion), expectation, and
   temporary statuses whose explanations EMERGE from ordinary co-activation
   (`blocks(disk) <- cloud`), entering the fact index.
-- **Registration perception** (experiments/) — pose/identity factoring.
-  Honest status: the committed script (`registration_perception.py`, 8×8
-  digits) demonstrates the mechanism but its canvas clips shifted pixels
-  off the edge (information destruction), so it shows ~5-15% → 21-53%.
-  The recorded 84-87% came from a 16×16-canvas variant that was never
-  committed — that number is NOT currently re-runnable and is quoted
-  nowhere else in this repo until the 16×16 harness is rebuilt. Ideals +
-  learned key identifiers (differentia) hit 99.7% on a six-way look-alike
-  world and correctly demote unreliable taught features (re-verified,
+- **Registration perception** (experiments/) — pose/identity factoring,
+  re-runnable end to end since 2026-07-03: on the fair 16×16 canvas
+  (`registration_perception_16.py`) digits under random position+size go
+  from 23.7% (raw doors) to **84.4%** registered; sizes never seen in
+  training generalize (85.4%); tiny glyphs are an information floor
+  (58.3%), not a registration failure; pose read out exactly. The 8×8
+  script remains as the edge-clipping caveat case. Ideals + learned key
+  identifiers (differentia) hit 99.7% on a six-way look-alike world and
+  correctly demote unreliable taught features (re-verified,
   `experiments/ideals_differentia.py`).
 - **Covtype accounting** (experiments/) — articulated doors 56.2 → 59.0%
-  with 25 null-gated compound doors; captured exemplars **90.0%** vs the
-  old 82% net baseline (all three re-verified 2026-07-03,
-  `experiments/covtype_compounds.py`, 34 s). The further door-weighted
-  variant (94.4%) and the row-index leakage control (79%) are RECORDED
-  results whose script variant was never committed — see
-  `experiments/RESULTS_LEDGER.md`; they are quoted only with that caveat
-  until the variant is rebuilt.
+  with 25 null-gated compound doors; captured exemplars 90.0% plain /
+  95.3% door-weighted (all re-verified 2026-07-03). **The honest
+  headline is the articulated tier**: the rebuilt leakage control
+  (`covtype_door_weighted.py`) shows the ROW INDEX ALONE scores 94.8% —
+  the exemplar road reads the dataset's spatial ordering as much as the
+  terrain. Null discipline applied to our own best number; see
+  `experiments/RESULTS_LEDGER.md`.
 
 Full methods, numbers, limits, and how to verify every claim:
 `docs/WRITEUP_FOR_REVIEW.md`. Theory: `docs/Understanding_as_Closure.md`.

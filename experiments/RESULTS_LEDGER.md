@@ -22,7 +22,8 @@ per-row notes below.
 
 | Claim | Script | Status | Verified | Observed |
 |---|---|---|---|---|
-| Self-test 10/10 capability areas | `python isaac.py` (repo root) | **VERIFIED** | 2026-07-03 | 10/10, 9.2 s (`runs/2026-07-03/selftest.txt`) |
+| Self-test 10/10 capability areas | `python isaac.py` (repo root) | **VERIFIED** | 2026-07-03 | 10/10, 9.2 s (`runs/2026-07-03/selftest.txt`); discovery area 8/8 after the accounting was added |
+| **THE ACCOUNTING (audit 2.8): articulated% + captured% + noise% = 100 per discover(), residual dossier attached** | in-engine, self-test (g) | **VERIFIED** | 2026-07-03 | planted law + known 26.5% noise share → measured articulated 72.7% (true 73.5%), sums to 100; pure noise → 0/0/100; red team + E9 0/20 unchanged after the capture-null fix |
 | Kepler `T = a^1.5` UNDERSTOOD, R² 1.0000 | inside `cross_domain.py` retest | **VERIFIED** | 2026-07-03 | UNDERSTOOD, families found: 3 |
 | Pluto 248.0 yr predicted via inherited ledger law / web UI | ledger+UI demo flow (`ui/isaac_ui.py`) | RECORDED | 2026-07-02 | 247.96 via web form (UI now in repo; demo flow not scripted) |
 
@@ -56,8 +57,8 @@ per-row notes below.
 | Digits structural doors ~91% clean | `digits_structural.py` | **VERIFIED\*** | 2026-07-03 | observed 90.7% (docs recorded 91.5% — treat 90.7 as the repo's number) |
 | Ideals + differentia 99.7% on six-way look-alike world; unreliable taught feature demoted | `ideals_differentia.py` | **VERIFIED** | 2026-07-03 | 99.7%, 1.6 s |
 | Condensation scaling: per-item cost flat while naive grows; purity rises | `condensation_scaling.py` | **VERIFIED** | 2026-07-03 | 1.5 s |
-| **Registration 84–87% under position+scale** | — | **RECORDED — NOT RE-RUNNABLE** | (2026-07-01) | The 84.4/86.5% came from a 16×16-canvas harness that was **never committed**. The committed `registration_perception.py` is the 8×8 version: baseline 4.6–15.6% → 21–53% (8×8 shifts clip pixels off the canvas — information destruction, not registration failure). **TODO: rebuild the 16×16 harness, then move this row to VERIFIED.** |
-| Registration mechanism (pose factoring, pose readout) | `registration_perception.py` | **VERIFIED\*** | 2026-07-03 | runs clean; demonstrates the mechanism at 8×8 with the caveat above |
+| **Registration 84% under random position+size (16×16 canvas)** | `registration_perception_16.py` (rebuilt 2026-07-03) | **VERIFIED** | 2026-07-03 | raw canvas 23.7% → registered **84.4%** (recorded 84.4 — vindicated); novel bigger sizes 13–15 never trained: **85.4%** (recorded 86.5); tiny 6–7: 58.3% = information floor; clean control 89.1% exact; pose readout exact. VERDICT WORKS |
+| Registration mechanism at 8×8 (edge-clipping caveat) | `registration_perception.py` | **VERIFIED\*** | 2026-07-03 | 8×8 canvas clips shifted pixels (information destruction): ~5–15% → 21–53%; kept as the caveat case |
 
 ## Real data (full datasets)
 
@@ -65,8 +66,8 @@ per-row notes below.
 |---|---|---|---|---|
 | Covtype flat doors 56.2% (vs box 49.3%); class-conditional variant BROKEN ~20% (kept as marked failure) | `covtype_real_test.py` | **VERIFIED** | 2026-07-03 | 56.15% / 20.45%, 14 s (sklearn covtype cache) |
 | Covtype compounds: 25 null-gated compound doors, 56.2 → 59.0%; captured road 90.0% (5-NN, 200k exemplars) | `covtype_compounds.py` | **VERIFIED** | 2026-07-03 | 25 admitted / 58.97% / 89.98%, 34 s |
-| **Covtype 94.4% door-weighted exemplars** (elevation 0.76 metric; 406k exemplars, k=1) | — | **RECORDED — NOT RE-RUNNABLE** | (2026-07-02) | the door-weighted variant was never committed; the committed script's captured road is the 90.0% row above. **TODO: rebuild the door-weighted variant, then move to VERIFIED.** |
-| Covtype row-index-alone control 79.1% (spatial leakage quantified) | — | RECORDED | (2026-07-02) | variant not committed; same TODO as above |
+| Covtype door-weighted exemplars ~94–95% (differentia weights, all 406k, k=1) | `covtype_door_weighted.py` (rebuilt 2026-07-03) | **VERIFIED\*** | 2026-07-03 | **95.3%** (recorded 94.4 — vindicated); learned weights readable: elevation 0.78 (recorded 0.76), then wilderness/roads/fire. **BUT read the next row before quoting this one.** |
+| Covtype row-index-alone control (spatial leakage) | `covtype_door_weighted.py` | **VERIFIED — SUPERSEDES the recorded 79.1%** | 2026-07-03 | k=1 nearest ORIGINAL ROW INDEX, zero terrain features: **94.8%**. The recorded 79.1% was a weaker control protocol. The sharp control shows the covtype captured tier (90–95%) barely beats pure map-reading — **the honest covtype achievement is the articulated tier (56.2 → 59.0%)**; the exemplar numbers measure the dataset's spatial ordering as much as the terrain. This is the null-discipline law operating: the leakage null attacks exactly what the exemplar claim uses. |
 | HIGGS doors 64.6% / AUC 0.700 on 11M rows | `higgs_real_test.py` (needs `data/HIGGS.npy`) | **VERIFIED** | 2026-07-03 | 64.64% / AUC 0.700, 70 s total |
 | HIGGS m_jj wall: poly-L1 ~0.05, staged ~0.03, true-form cap R² 0.065 → proven DATA wall | `higgs_real_test.py` | **VERIFIED\*** | 2026-07-03 | old 0.050 / staged 0.033 observed (the 0.065 true-form scan is in the recorded diagnostic, not this script's output) |
 | HIGGS physics naming + invariant-mass reconstruction R² ≈ 0.865 | `demos/interaction_extract.py`, `demos/higgs_residual.py` | NEEDS-DATA | — | needs `fetch_openml(23512)` download; not re-run today |
@@ -81,6 +82,7 @@ per-row notes below.
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
-- Registration "84–87%" and covtype "94.4%" / "79.1%" → RECORDED only, see rows above.
+- Covtype "79.1% row-index control" → superseded by the sharp control: **94.8%** (see row above). Quoting 94–95% covtype exemplar accuracy without the leakage row next to it is dishonest — the articulated tier (56–59%) is the achievement.
+- Registration "86.5%" novel-bigger → the rebuilt harness observes 85.4%; quote the observed number.
 - "Self-test 5/5, 6/6, 7/7, 9/9" in older docs → the suite is 10/10 (grew over 07-01/02).
-- Engine "~2,900 lines" → ~3,400.
+- Engine "~2,900 lines" → ~3,500 (accounting added 07-03).

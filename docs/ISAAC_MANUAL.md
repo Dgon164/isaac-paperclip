@@ -210,8 +210,27 @@ can enter further discoveries). Four laws govern every mechanism:
   - **half held out**: the rule must WORK, not merely fit.
   - **verdicts**: `UNDERSTOOD` (R² ≥ .9 held-out) / `PARTIAL` / `CAPTURED`
     (nearest-exemplar beats permuted null — incl. per-feature 1-D
-    fallback; caught, not said; no nets) / `NO RULE` (0/40 false
-    discoveries across batteries).
+    fallback; caught, not said; no nets) / `NO RULE` (0/20 false
+    discoveries on the battery's pure-noise trials, re-verified
+    2026-07-03). Since 2026-07-03 a real partial equation is stored even
+    when the headline verdict is CAPTURED (previously it was discarded —
+    the CAPTURED-erases-law bug), and the capture null replays the same
+    max-over-candidate-neighbor-sets contest the real score won (it
+    previously permuted only under the winner — anti-conservative).
+  - **THE ACCOUNTING (audit 2.8, added 2026-07-03)** — every discover()
+    returns `accounting`: **articulated% + captured% + noise% = 100**.
+    Articulated = held-out R² of the kept equation; captured = what
+    exemplars additionally predict ON THE RESIDUAL past a permuted null;
+    noise = the remainder that beat nothing — proven noise **at this
+    expressive class**, never absolutely. Self-test (g): planted law with
+    a known 26.5% noise share → measured articulated 72.7% vs true 73.5%.
+  - **residual dossier** — when >5% is unexplained, the unknown becomes a
+    first-class object: `dossier` = name (`x:<challenge>`), share %,
+    how much of it is captured, top responsive channels (|corr| ranked),
+    RMS and edge-RMS. Stored on the law node meta and in the ledger —
+    can't say what it is; can characterize how it behaves; track it.
+    (Level-indexed accounting — residual at level N handed to level N+1 —
+    is still open; this is the flat level.)
   - **scope**: `form-true` (edges of observed range hold) vs `range-valid`
     (usable inside; never silently swapped). Both are knowledge.
   - **rivals**: classic look-alikes (linear/quadratic/cubic/sin/cos/
@@ -221,9 +240,16 @@ can enter further discoveries). Four laws govern every mechanism:
 - `confirm(name, X, y)` — new evidence retires rivals (CONFIRMED) or
   **OVERTURNS** and rewrites the law. (Pendulum demo: parabola chosen on
   ±1.2, cosine tie declared, probe "x≈3", overturned on the wide view.)
+  Since 2026-07-03: an **absolute-fit guard** — a law whose fit collapses
+  on the new data (R² < 0.2) is **REFUTED**, not CONFIRMED-by-default,
+  even with no live rivals.
 - `apply_law(name, X)` — a law is reusable computation. (Kepler, learned
   from 8 planets, predicted Pluto: 248.0 vs 247.9 — beyond training range,
   across a session boundary.)
+- `validate_law(name, X, y)` — added 2026-07-03: re-validate a (possibly
+  ledger-inherited) law on new evidence → HOLDS / DEGRADED / FAILS,
+  recorded in the ledger. apply_law itself checks only shape; call this
+  before trusting an inherited law.
 - **Cross-domain** (harness `experiments/cross_domain.py` — [HARNESS-ONLY
   — experiments/, not wired into engine]; re-run 2026-07-03 from this
   repo: cold 0.82 → primed 0.995 reproduced): laws

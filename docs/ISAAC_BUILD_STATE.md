@@ -14,6 +14,39 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 > (project root `code\`, NOT `2_the_machine\code\` — that copy is older). In this
 > repo: `isaac.py` at root, byte-identical.
 
+---
+
+## 2026-07-03 — the accounting + audit fixes (suite 10/10, discovery 8/8)
+
+- **THE ACCOUNTING (audit 2.8) BUILT — flat level.** Every `discover()` now
+  returns `articulated% + captured% + noise% = 100` (captured measured on the
+  RESIDUAL of the kept equation, past a permuted null; noise = proven at this
+  expressive class). Self-test (g): planted 73.5% law share → measured 72.7%.
+  **Residual dossier**: >5% unexplained becomes a first-class `x:<name>` with
+  share, responsive channels, RMS/edge-RMS — on the law node + ledger.
+  Level-indexed accounting still OPEN.
+- **CAPTURED-erases-law bug FIXED**: a real partial equation is stored even
+  when capture wins the headline verdict.
+- **Capture null re-targeted**: the null now replays the same
+  max-over-candidate-neighbor-sets contest the real score won (was permuting
+  only under the winner — anti-conservative). Red team + batteries unchanged
+  (0 kills; E9 0/20).
+- **confirm() absolute-fit guard**: fit collapse (R² < 0.2) on new data →
+  REFUTED, never CONFIRMED-by-default with no rivals.
+- **validate_law(name, X, y) NEW**: HOLDS/DEGRADED/FAILS on new evidence,
+  ledger-recorded — the check that keeps ledger-inherited laws honest.
+- **Harness variants rebuilt & committed** (were RECORDED-only):
+  `experiments/registration_perception_16.py` — 84.4% random pos+size
+  (recorded 84.4), novel-bigger 85.4%, raw canvas 23.7%, VERDICT WORKS;
+  `experiments/covtype_door_weighted.py` — 95.3% door-weighted k=1 (recorded
+  94.4; elevation weight 0.78 vs recorded 0.76) — **and the sharpened
+  row-index control scores 94.8%**, so the covtype captured tier is almost
+  entirely spatial leakage; the honest covtype number is the articulated
+  tier (56–59%).
+- Still OPEN (unchanged): block-permutation null; level-indexed accounting;
+  CAPTURED→law graduation (distillation); shrug→discover reflex; compound
+  doors in-engine; uptake edges in-engine.
+
 > **Maintenance rule:** when you add, change, or break a capability, update THIS
 > file in the same step. The Manual explains the theory; this doc tracks the
 > live state. If a capability isn't listed here with a status, assume it doesn't

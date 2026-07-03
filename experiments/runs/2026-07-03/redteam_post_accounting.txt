@@ -1,0 +1,30 @@
+==========================================================================
+RED TEAM vs discover()
+==========================================================================
+A1 true wide cosine k=0.25: SURVIVED (found the cosine)
+    -> UNDERSTOOD [form-true] R2 0.997 edge 0.998 cap 0.997
+    eq: +3.98*cos(0.28175*x0) +1.02
+A1 true wide cosine k=0.4: SURVIVED (found the cosine)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 0.999 cap 0.999
+    eq: +4.95*cos(0.4025*x0) +0.05
+A2 completion vs 0.5% crumb: SURVIVED (crumb recovered)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap 0.859
+    eq: +1.00*x0*x1 +0.07*x2 -0.00
+A3 bimodal hole (y=x0^2): SURVIVED (true form)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap -0.148
+    eq: +1.00*x0*x0 +0.00
+A4 deterministic sin(9x) + 30 noise dims: FLESH WOUND (honest CAPTURED)
+    -> CAPTURED [range-valid] R2 -0.001 edge -0.001 cap 0.997
+    eq: NO RULE (nothing beat the null)
+A5 exp growth (library is decay-only): SURVIVED (honest or found a usable exp form)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap 0.998
+    eq: +1.00*exp(0.5*x0) +0.00
+A6 sorted input (y=x0^2): SURVIVED (true form despite covariate shift)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap -0.338
+    eq: +1.00*x0*x0 -0.00
+A7 features at 1e6 and 1e-3 scales: SURVIVED (recovered product across 9 orders of magnitude)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap 0.902
+    eq: +0.00*x0*x1 +0.00
+A8 one NaN cell: FLESH WOUND (no crash; verdict UNDERSTOOD)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap 0.903
+    eq: +1.00*x0*x1 -0.00

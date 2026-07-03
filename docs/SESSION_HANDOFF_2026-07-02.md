@@ -5,10 +5,13 @@
 > `code/isaac.py` → `isaac.py` (root), `rebuild/` → `experiments/`,
 > `audit/` + theory docs → `docs/`, and the UI is at `ui/isaac_ui.py`.
 > `ROADMAP_2026-07-02.md` / `EXPERIMENT_MATRIX_2026-07-02.md` live in the full
-> corpus, not this snapshot. Two quoted numbers have known caveats — see
-> `docs/VERDICT_SHEET.md` (07-03 refresh): registration "84-87%" and covtype
-> "94.4%" came from harness variants that were never committed; the re-runnable
-> neighbors are 21-53% (8×8 mechanism demo) and 90.0% respectively.
+> corpus, not this snapshot. Two quoted numbers had uncommitted harnesses;
+> both were REBUILT 2026-07-03 and vindicated: registration 84.4%
+> (`experiments/registration_perception_16.py`) and covtype door-weighted
+> 95.3% (`experiments/covtype_door_weighted.py`) — but the rebuilt row-index
+> control scores 94.8% (not the recorded 79.1%), so the covtype captured tier
+> is mostly spatial leakage; the honest covtype number is the articulated
+> 56-59%. See `docs/VERDICT_SHEET.md` + `experiments/RESULTS_LEDGER.md`.
 
 ## ═══ THE GOAL BOX — READ FIRST ═══
 The mission is unchanged: extract TRUE relationships, validated real, human-

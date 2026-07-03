@@ -1,0 +1,16 @@
+C:\Users\jtwee\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\jtwee\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+clean control (canonical, native 8x8): 89.1%
+
+variant                     raw doors  registered
+--------------------------------------------------
+random pos + size 8-12          23.7%       84.4%
+novel bigger 13-15              26.5%       85.4%
+novel tiny 6-7                  13.7%       58.3%
+
+pose readout: displacement seen = dy +3.0, dx +3.0 (planted +3, +3)
+pose readout: size seen = 14x8 vs 10x6 (planted 14 vs 10)
+
+VERDICT: WORKS — registration recovers the wall the raw canvas hits; bigger-than-trained sizes generalize; tiny sizes are an information floor, not a registration failure.

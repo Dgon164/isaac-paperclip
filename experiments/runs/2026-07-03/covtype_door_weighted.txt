@@ -1,0 +1,15 @@
+covtype: train 406,708 test 174,304 (evaluating on the first 20,000 test rows)
+door weights learned [1s] — top doors:
+   Elevation                        0.78
+   Wilderness_Area_3                0.45
+   Horizontal_Distance_To_Roadways  0.42
+   Horizontal_Distance_To_Fire_Poin 0.33
+   Wilderness_Area_0                0.28
+   Hillshade_9am                    0.25
+door-weighted exemplars (k=1, 406,708 exemplars): 95.29%  [21s]
+row-index ALONE (k=1, zero terrain features): 94.75%  [0s]
+
+ACCOUNTING (captured tier, sharpened):
+  committed baseline (plain 5-NN, 200k):  90.0%  (covtype_compounds.py)
+  door-weighted k=1, all exemplars:       95.3%
+  spatial leakage floor (row index):      94.8%
