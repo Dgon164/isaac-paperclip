@@ -1,4 +1,12 @@
 # The Operation Paperclip Manual
+> **NOTE (2026-07-02):** this manual is the NARRATIVE/STARTER guide, written
+> in the 5/5-era. The engine has since grown five capability generations
+> (self-test now 10/10: discovery loop with four verdicts, rivals+probes,
+> waves/clock/statuses, findings ledger, save/load/fork, the UI). The
+> complete, CURRENT capability reference — kept up to date by rule — is
+> **`docs/ISAAC_MANUAL.md`**. Read that for what he can do; read this for
+> how to think about him.
+
 ### One engine, two lenses, one operation — the unified manual for the whole research line
 
 *Companion to the Isaac Manual, written the same way and to the same depth, but
