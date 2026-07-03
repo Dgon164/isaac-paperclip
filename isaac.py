@@ -349,6 +349,8 @@ def _atom_specs(d):
             specs += [("sin", i, None, k), ("cos", i, None, k)]
         for k in (0.25, 0.5, 1.0, -0.25, -0.5, -1.0):   # decay AND growth
             specs.append(("exp", i, None, k))
+        for k in (-2.0, -1.0, -0.5, 0.5, 1.5):          # power laws (Kepler,
+            specs.append(("pow", i, None, k))           # inverse-square...)
     for i in range(d):
         for j in range(i + 1, d):
             for k in (0.5, 1.0, 2.0):
@@ -368,6 +370,8 @@ def _atom_col(X, spec):
         return np.cos(k * X[:, i])
     if kind == "exp":
         return np.exp(np.clip(-k * X[:, i], -30, 30))
+    if kind == "pow":
+        return np.power(np.maximum(np.abs(X[:, i]), 1e-9), k)
     diff = np.clip(X[:, i] - X[:, j], -20, 20)
     if kind == "cosd":
         return np.cos(k * diff)
@@ -386,6 +390,8 @@ def _atom_label(spec):
         return f"cos({k:g}*x{i})"
     if kind == "exp":
         return f"exp({-k:g}*x{i})"
+    if kind == "pow":
+        return f"x{i}^{k:g}"
     op = {"cosd": "cos", "sind": "sin", "coshd": "cosh"}[kind]
     return f"{op}({k:g}*(x{i}-x{j}))"
 
@@ -398,8 +404,15 @@ def _disc_col(A, term):
 
 
 class _Enumerator:
-    def __init__(self, max_degree=3, n_perm=40, pct=95):
+    def __init__(self, max_degree=3, n_perm=40, pct=95, max_terms=16):
         self.max_degree, self.n_perm, self.pct = max_degree, n_perm, pct
+        # max_terms: on AUTOCORRELATED real data (e.g. a smooth time series)
+        # the iid permutation null is too easy — shuffling destroys the
+        # autocorrelation, so weak junk beats it forever and admission never
+        # stops (found the hard way: a 20-CPU-hour runaway on sunspots).
+        # The cap is the emergency brake; the proper cure is a BLOCK
+        # permutation null for temporal targets (post-mortem item).
+        self.max_terms = max_terms
         self.terms, self.coefs, self.intercept = [], np.array([]), 0.0
 
     def fit(self, X, y):
@@ -411,7 +424,7 @@ class _Enumerator:
         frontier = [(i,) for i in range(n_atoms)]
         frontier += [(i, j) for i in range(n_vars) for j in range(i, n_vars)]
         seen = set(frontier)
-        while True:
+        while len(self.terms) < self.max_terms:
             cand = [t for t in frontier if t not in self.terms]
             M = np.column_stack([_disc_col(self.A, t) for t in cand])
             Ms = (M - M.mean(0)) / (M.std(0) + 1e-12)
@@ -684,6 +697,10 @@ class Isaac:
         self.followed = {}                # circles being tracked (his clock)
         self.phase_log = {}               # circle -> [(log_index, phase)]
         self.world = World(self)          # entity states: temporary statuses live here
+
+        # ── findings ledger: durable, searchable scientific memory ──
+        self.findings = []                # structured records of what he knows
+        self.ledger_path = None           # set to a .jsonl path to persist
 
     # ── observation ─────────────────────────────────────────────
 
@@ -1099,6 +1116,78 @@ class Isaac:
             self.fact_index[(subject, relation)].append(obj)
         self.net.add_door(str(subject), str(obj), tag=relation)
 
+    # ── the findings ledger ─────────────────────────────────────
+
+    @staticmethod
+    def _jsonable(v):
+        if isinstance(v, np.ndarray):
+            return v.tolist()
+        if isinstance(v, (np.integer,)):
+            return int(v)
+        if isinstance(v, (np.floating,)):
+            return float(v)
+        if isinstance(v, dict):
+            return {str(k): Isaac._jsonable(x) for k, x in v.items()}
+        if isinstance(v, (list, tuple)):
+            return [Isaac._jsonable(x) for x in v]
+        return v
+
+    def record_finding(self, kind, name, **payload):
+        """Every outcome — a law, a family, a NO RULE, an overturn — becomes
+        a structured, searchable record. Negative knowledge is knowledge:
+        a recorded 'proven nothing' saves the next session from re-proving it."""
+        entry = dict(id=len(self.findings) + 1, kind=kind, name=str(name))
+        entry.update({k: self._jsonable(v) for k, v in payload.items()})
+        self.findings.append(entry)
+        node = f"finding:{entry['id']}"
+        self.net.add_door("findings", node, tag="finding")
+        self.net.set_meta(node, "entry", entry)
+        if self.ledger_path:
+            import json
+            with open(self.ledger_path, "a", encoding="utf-8") as f:
+                f.write(json.dumps(entry, default=str) + "\n")
+        return entry["id"]
+
+    def recall_findings(self, kind=None, contains=None, limit=50):
+        """Search his own scientific memory."""
+        import json
+        out = []
+        for e in reversed(self.findings):
+            if kind and e.get("kind") != kind:
+                continue
+            if contains and contains.lower() not in \
+                    json.dumps(e, default=str).lower():
+                continue
+            out.append(e)
+            if len(out) >= limit:
+                break
+        return out
+
+    def load_ledger(self, path):
+        """Rehydrate a previous session's findings: laws become APPLICABLE
+        again (apply_law works on them), records become searchable."""
+        import json
+        n_laws = 0
+        for line in open(path, encoding="utf-8"):
+            e = json.loads(line)
+            e["id"] = len(self.findings) + 1
+            self.findings.append(e)
+            if e.get("kind") == "law" and e.get("model"):
+                m = e["model"]
+                node = f"law:{e['name']}"
+                self.net.add_door("law", node, tag="law")
+                self.net.set_meta(node, "model", dict(
+                    terms=[tuple(t) for t in m["terms"]],
+                    coefs=np.array(m["coefs"]),
+                    intercept=float(m["intercept"]), d=int(m["d"]),
+                    r2=float(m.get("r2", 0)),
+                    specs=[tuple(s) for s in m["specs"]],
+                    rivals=m.get("rivals", [])))
+                self.net.set_meta(node, "equation", e.get("equation", ""))
+                self._teach_fact(node, "explains", e["name"])
+                n_laws += 1
+        return dict(records=len(self.findings), laws_restored=n_laws)
+
     # ── discovery: the challenge loop ───────────────────────────
 
     def discover(self, X, y, name=None, verbose=False):
@@ -1165,10 +1254,20 @@ class Isaac:
             print(f"    discover[{name}]: {verdict} [{scope}]  R2 {r2:.3f}  "
                   f"edge {r2_edge:.3f}  captured {cap_r2:.3f}  "
                   f"eq: {enum.equation()}")
+        riv_summary = [dict(rival=r["rival"], F=r["F"], probe=r["probe"])
+                       for r in rivals]
+        self.record_finding(
+            "law" if verdict in ("UNDERSTOOD", "PARTIAL") else "verdict",
+            name or "challenge", verdict=verdict, equation=enum.equation(),
+            r2=r2, r2_edge=r2_edge, scope=scope, captured_r2=cap_r2,
+            n=len(y), d=X.shape[1], rivals=riv_summary,
+            model=(dict(terms=list(enum.terms), coefs=enum.coefs,
+                        intercept=enum.intercept, d=X.shape[1], r2=r2,
+                        specs=list(enum.specs))
+                   if verdict in ("UNDERSTOOD", "PARTIAL") else None))
         return dict(verdict=verdict, equation=enum.equation(),
                     r2=r2, r2_edge=r2_edge, scope=scope, captured_r2=cap_r2,
-                    rivals=[dict(rival=r["rival"], F=r["F"], probe=r["probe"])
-                            for r in rivals])
+                    rivals=riv_summary)
 
     def apply_law(self, name, X):
         """Apply a discovered law: the challenge, now computable.
@@ -1224,11 +1323,16 @@ class Isaac:
                      specs=r["model"]["specs"], rivals=[])
             self.net.set_meta(node, "equation", r["model"]["equation"])
             self.net.set_meta(node, "model", m)
+            self.record_finding("confirmation", name,
+                                status=f"OVERTURNED -> {r['rival']}",
+                                equation=r["model"]["equation"])
             return dict(status=f"OVERTURNED -> {r['rival']}", rivals_left=[])
         m["rivals"] = kept
         self.net.set_meta(node, "model", m)
-        return dict(status="CONFIRMED" if not kept
-                    else f"STILL TIED ({len(kept)})",
+        status = "CONFIRMED" if not kept else f"STILL TIED ({len(kept)})"
+        self.record_finding("confirmation", name, status=status,
+                            rivals_left=[r["rival"] for r in kept])
+        return dict(status=status,
                     rivals_left=[r["rival"] for r in kept])
 
     def _capture(self, X, y, half):
@@ -1423,6 +1527,11 @@ class Isaac:
         self.waves = {"groups": groups, "edges": edges, "circles": circles,
                       "circle_orders": [[gname[i] for i in c] for c in circles_ix],
                       "level2": level2, "explanations": explanations}
+        if groups:
+            self.record_finding(
+                "waves", "consolidation", n_groups=len(groups),
+                circles=circles, explanations=explanations,
+                level2_circles=len(level2.get("circles", [])))
         if verbose:
             print(f"    waves: {len(groups)} groups, {len(edges)} handoffs, "
                   f"{len(circles)} circles, "
