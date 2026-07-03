@@ -1,0 +1,21 @@
+==========================================================================
+REBUILD E — interference: present but blocked
+==========================================================================
+
+T1 groups: [('sun', (0, 1, 2, 3, 4)), ('wind', (5, 6)), ('cloud', (7, 8))]
+   sun group holds the disk despite 40% occlusion: True
+
+T2 masking edges: [('cloud', 'sun', 'door0', 'dark 0.86 vs 0.10')]
+   exactly 'cloud blocks sun.disk', nothing else: True
+
+T3 per-tick readout (PRESENT / BLOCKED / ABSENT): 97.1% correct  (>=85%: True)
+
+T4 blocker-timeline-shuffle control: groups 3 (intact), mask edges 0 (want 0): True
+
+T5 heavy occlusion (~93% of sun-time): groups [('sun', (0, 1, 2, 3, 4)), ('wind', (5, 6)), ('cloud', (7, 8))]
+   disk RETAINED in its group even at 93% blocking: True
+   mask still found and exact: True   (['dark 0.95 vs 0.22'])
+   rescue not triggered, no false adoptions: True
+--------------------------------------------------------------------------
+T1 permanence-in-group: True   T2 mask exact: True   T3 readout: True   T4 control: True   T5 occlusion-robust: True
+REBUILD E VERDICT: WORKS

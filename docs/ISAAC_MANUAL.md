@@ -1,6 +1,6 @@
 # THE ISAAC MANUAL
 ### The complete, current capability reference — every part, every method, honestly scoped
-**Engine:** `code/isaac.py` (one file, one class, numpy only, no neural nets in any decision path)
+**Engine:** `isaac.py` (repo root) (one file, one class, numpy only, no neural nets in any decision path)
 **Self-test:** `PYTHONIOENCODING=utf-8 python isaac.py` → expect **10/10**
 **UI:** `python ui/isaac_ui.py` → http://127.0.0.1:8674
 
@@ -8,7 +8,18 @@
 > added, changed, or broken, update THIS manual in the same step. If a
 > capability isn't documented here, assume it doesn't exist. The narrative
 > introduction lives in `PAPERCLIP_MANUAL.md`; the day-by-day state ledger in
-> `2_the_machine/docs/ISAAC_BUILD_STATE.md`; THIS doc is what he can DO.
+> `docs/ISAAC_BUILD_STATE.md`; THIS doc is what he can DO.
+
+**Verification status legend** (every capability section below is tagged):
+- **[VERIFIED 2026-07-03 — re-run from this repo]** — re-executed from this
+  repo on 2026-07-03; output logs in `experiments/runs/2026-07-03/`.
+- **[VERIFIED IN ENGINE SELF-TEST 10/10]** — exercised by `python isaac.py`
+  (re-run 2026-07-03 from this repo: "10/10 capability areas passed").
+- **[HARNESS-ONLY — experiments/, not wired into engine]** — the capability
+  lives in a harness script under `experiments/`, not in `isaac.py`.
+- **[RECORDED — script not in this repo or data required; not independently
+  re-verified]** — a number from the research record; reproducing it needs
+  datasets, long runs, or a script variant not yet committed here.
 
 ---
 
@@ -32,7 +43,7 @@ can enter further discoveries). Four laws govern every mechanism:
 
 ---
 
-## 1. The mind's substrate
+## 1. The mind's substrate — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 | part | what it is | key methods |
 |---|---|---|
@@ -42,7 +53,7 @@ can enter further discoveries). Four laws govern every mechanism:
 | `World` | mutable entity states + taught actions | `set_state/clear_state/has_state`, `teach_action`, `execute` |
 | findings | the scientific memory (see §8) | `record_finding/recall_findings/load_ledger` |
 
-## 2. Sensing (how experience enters)
+## 2. Sensing (how experience enters) — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 - `observe(tokens)` — sequence → sequential doors; dirty-marking; immediate
   type-slotting (`_sense`); auto-`tick`s each token with its type doors.
@@ -56,7 +67,7 @@ can enter further discoveries). Four laws govern every mechanism:
   circle is being followed (§6), advances the clock and opens statuses.
   **Caveat:** clock ticks are sensory ticks — keep one stream per episode.
 
-## 3. Consolidation (idle mode — "sleep")
+## 3. Consolidation (idle mode — "sleep") — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 - `consolidate()` / `crystallize()` — FCA-style type discovery from door
   profiles (dirty-scoped or full). Types are nodes; membership doors both
@@ -78,8 +89,21 @@ can enter further discoveries). Four laws govern every mechanism:
   Operating envelope (battery-measured): period ≥ 9 ticks, instantaneous
   handoffs, non-overlapping groups, fire rate ≥ 0.7, ≲4 concurrent
   aperiodic waves, T ≥ ~1000. Movement claims: 0/20 false on noise.
+- `crystallize_senses(node, min_shared=2)` — the crystallizer turned
+  inward on ONE node: every occurrence of the node (from
+  `observed_sequences`) carries the context it appeared in; occurrences
+  sharing ≥ `min_shared` context tokens are linked into clusters; each
+  cluster becomes a SENSE (its own in-doors, out-doors, context) stored
+  on the node's meta. Returns the sense list. Gives a node internal
+  structure instead of one flat door pile. **Limit:** the link rule is a
+  fixed count, not a statistical test (pre-dates law 2).
+- `route(node, incoming)` — read through a node BY SENSE: `incoming` (one
+  token or a set of context tokens) is overlap-matched against each
+  sense's in-doors + context; the best-matching sense's out-doors are
+  returned. Falls back to the node's flat `seq` door-set when no sense
+  matches.
 
-## 4. Thinking (query paths)
+## 4. Thinking (query paths) — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 - `lookup(context)` / `check(context, target)` — argmax / specific-cell read
   through the think loop (recall → process → evaluate) over the compiled
@@ -91,12 +115,35 @@ can enter further discoveries). Four laws govern every mechanism:
 - `compute(a, op, b)` — arithmetic with decompose-when-shrug + memoization.
 - `solve(problem)` — token problems with `?` unknowns (forward / backward /
   gap-fill). *(Distinct from `apply_law` — see §7.)*
+- `solve_steps(steps, verbose=True)` — multi-step solving: a list of
+  problem strings in which `$0`, `$1`, … reference earlier steps'
+  answers; each resolved step runs through `solve`. Returns the list of
+  results (the working shown step by step when verbose).
 - `logic_eval`, `reason_chain`, `is_a_check`, `can_check`,
   `containment_check`, `property_check`, `syllogism` — the symbolic layer;
   reads facts and type doors.
 - `assess / plan_think_execute` + `World` actions — consequence layer.
+- Introspection / net-walking:
+  - `check_connection(src, tgt)` — is src→tgt a valid connection? Walks
+    the net and returns `(valid, manifest)`; the manifest records direct
+    `seq`/`neg` doors, lockout, and per-type support vs contradiction.
+    Valid = a direct seq door OR ≥1 type whose other members have the
+    door; a lockout vetoes everything.
+  - `compare_nodes(a, b, tag=None)` — the differentiation atom applied to
+    two nodes: shared / only-a / only-b, computed over both outgoing and
+    incoming doors (optionally one tag).
+  - `infer(src, tgt, tag="seq")` — can src connect to tgt? Walks src's
+    types looking for a sibling member that already has the door; if one
+    is found the door is ADDED (a side effect, not just a query) and
+    `{"inferred": True, "via": member, "type": t}` returned, else
+    `{"inferred": False}`. **Limit:** the first supporting sibling wins —
+    no vote, no null.
+  - `status()` — the mind's vitals as one dict: node/door counts, tags in
+    use, types/rules/lockouts/starts, observations, indexed facts,
+    compiled flag + matrix shape, dirty counters. (Printed at the end of
+    the self-test.)
 
-## 5. Perception (doors, not boxes)
+## 5. Perception (doors, not boxes) — [VERIFIED 2026-07-03 — re-run from this repo] (in-engine methods, via `experiments/doors_proximity.py` + `experiments/digits_structural.py`; harness-side items tagged inline)
 
 - `fit_lens(name, X, ...)` — registers an aligner. **Default = the
   null-gated basis**: standardize, then rotate only along correlations
@@ -112,14 +159,29 @@ can enter further discoveries). Four laws govern every mechanism:
 - `recognize_doors(active, tag)` — partial, recursive recognition: a
   concept fires from the fraction of its `part` doors present (permanence;
   load-bearing in the clock).
-- Harness-side (validated, not yet in-engine): **registration front-end**
-  (`rebuild/registration_perception.py` — pose/identity factoring; digits
-  under position+scale 5–15% → 84–87%; pose returned as data) and
-  **ideals + differentia** (`rebuild/ideals_differentia.py` — genus/
-  species recognition, key identifiers discovered by minimal inter-sibling
-  door overlap, honest genus-level ties, truncation cue).
+- `apply_lens(name, X)` — run data through a registered lens: optional
+  random lift + ReLU, then the null-gated rotation (standardize, rotate)
+  or DC-strip, then dim selection — whatever the transform stored on
+  `lens:<name>` specifies. `name=None` is the identity. Returns the
+  aligned array. Used internally by crystallize/classify; public so you
+  can inspect what a lens does to data.
+- Harness-side **[HARNESS-ONLY — experiments/, not wired into engine]**:
+  **registration front-end** (`experiments/registration_perception.py` —
+  pose/identity factoring; pose returned as data) and **ideals +
+  differentia** (`experiments/ideals_differentia.py` — genus/species
+  recognition, key identifiers discovered by minimal inter-sibling door
+  overlap, honest genus-level ties, truncation cue).
+  **Registration number caveat [RECORDED — script not in this repo]:**
+  the headline 84–87% (digits under position+scale, up from ~5–15% raw)
+  came from a 16×16-canvas variant of the harness that was never
+  committed. The committed `experiments/registration_perception.py` is
+  the 8×8 version, which shows only ~5–15% → 21–53% (re-run 2026-07-03)
+  — because on an 8×8 canvas the shifts clip pixels off the edge:
+  information destruction, not a registration failure. The mechanism is
+  demonstrated by the committed script; the headline number awaits the
+  16×16 harness being rebuilt and committed.
 
-## 6. The clock, statuses, expectation
+## 6. The clock, statuses, expectation — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 - `follow(circle)` — attend to a discovered circle: phases ordered by
   `wave_next`, members and learned dwell loaded; registers live in Scratch.
@@ -132,7 +194,7 @@ can enter further discoveries). Four laws govern every mechanism:
 - Self-test: phase 100% through occlusion; statuses 94.1%/tick;
   `blocks(disk) ← cloud` queryable in `fact_index`.
 
-## 7. Discovery — the challenge loop (the thing that learns things)
+## 7. Discovery — the challenge loop (the thing that learns things) — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 - `discover(X, y, name=)` — given examples of something he cannot do:
   - **atom library**: variables; products to degree 3; sin/cos at scale
@@ -162,7 +224,9 @@ can enter further discoveries). Four laws govern every mechanism:
 - `apply_law(name, X)` — a law is reusable computation. (Kepler, learned
   from 8 planets, predicted Pluto: 248.0 vs 247.9 — beyond training range,
   across a session boundary.)
-- **Cross-domain** (harness `rebuild/cross_domain.py`, validated): laws
+- **Cross-domain** (harness `experiments/cross_domain.py` — [HARNESS-ONLY
+  — experiments/, not wired into engine]; re-run 2026-07-03 from this
+  repo: cold 0.82 → primed 0.995 reproduced): laws
   matched by structure via log-track exponents (power laws are linear in
   log-log); families become abstraction nodes (`instance_of` facts);
   **analogy-primed transfer** solves data-starved domains (magnetism n=24:
@@ -174,7 +238,7 @@ can enter further discoveries). Four laws govern every mechanism:
   autocorrelated targets (cap + pending block-perm); rational functions
   admit usable trig surrogates (range-valid).
 
-## 8. Memory that outlives the process
+## 8. Memory that outlives the process — [VERIFIED IN ENGINE SELF-TEST 10/10]
 
 - **Findings ledger** — `record_finding` fires automatically on every
   discover (laws AND verdicts — negative knowledge included), confirm
@@ -190,28 +254,32 @@ can enter further discoveries). Four laws govern every mechanism:
   ledger preserves knowledge.** Minds are cheap to fork and discard;
   knowledge accumulates across all of them.
 
-## 9. The UI (`ui/isaac_ui.py`)
+## 9. The UI (`ui/isaac_ui.py`) — [VERIFIED 2026-07-03 — re-run from this repo] (server starts and serves on 127.0.0.1:8674)
 
 One stdlib file. Panels: **Mind** (save/load/new/fork; laws held),
 **Converse** (teach s-r-o; observe; ask — `cat is_a ?` or next-token),
 **Discover** (paste CSV → verdict card: equation, R², edge, scope, rivals
 with probes; apply any law to new rows), **Remember** (ledger search).
-Server binds 127.0.0.1:8674; minds stored in `data/minds/`.
+Server binds 127.0.0.1:8674; minds stored in `data/minds/`; the findings
+ledger at `data/findings.jsonl`.
 
 ## 10. Test map (what proves what)
 
 - Engine self-test (10 areas): language, math, logic, reasoning, decompose,
   persistence, waves, tracking, discovery, rivalry.
-- Harness (`rebuild/`): six rebuild proofs (doors, composition, enumerator,
-  waves, interference, entity-status); batteries with per-run CSVs
-  (`wave_battery`, `discovery_battery`); adversarial `redteam_discovery`;
-  real-data (`covtype_*`, `higgs_real_test`, `gauntlet` — 10 datasets, one
-  pipeline); `cross_domain`; `condensation_scaling`; `clock_world`;
-  `registration_perception`; `ideals_differentia`; `digits_structural`.
-- Reports: `rebuild/RESULTS.md`, `WAVE_TEST_REPORT.md`,
-  `WRITEUP_2026-07-01_FOR_REVIEW.md` (§7 = verify-everything commands).
+- Harness (`experiments/`): six rebuild proofs (doors, composition,
+  enumerator, waves, interference, entity-status); batteries with per-run
+  CSVs (`wave_battery`, `discovery_battery`); adversarial
+  `redteam_discovery`; real-data (`covtype_*`, `higgs_real_test`,
+  `experiments/gauntlet.py` — 10 datasets, one pipeline);
+  `experiments/cross_domain.py`; `condensation_scaling`;
+  `experiments/clock_world.py`; `registration_perception`;
+  `ideals_differentia`; `digits_structural`. Run logs from this repo:
+  `experiments/runs/2026-07-03/`.
+- Reports: `experiments/RESULTS.md`, `experiments/WAVE_TEST_REPORT.md`,
+  `docs/WRITEUP_FOR_REVIEW.md` (§7 = verify-everything commands).
 
-## 11. Current honest scoreboard (2026-07-02)
+## 11. Current honest scoreboard (2026-07-02) — [RECORDED — script not in this repo or data required; not independently re-verified] (the gauntlet and cross-domain scripts ARE now in `experiments/`, but the scoreboard numbers need their datasets and long runs)
 
 Competitive: covtype 94.4% (record ~97.5); exact law recovery incl.
 off-grid damped oscillation; cross-domain transfer. Commodity-or-below:

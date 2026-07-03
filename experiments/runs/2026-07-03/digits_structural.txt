@@ -1,0 +1,13 @@
+========================================================================
+DIGITS — generic percepts, differentia learned per confusion
+========================================================================
+
+1. clean accuracy, structural doors: 90.7%   (pixel-only raw baseline was 88.1%)
+
+2. learned differentia for the classic confusions:
+   8 vs 3: ['col_cross3', 'px', 'px', 'px', 'px', 'px']
+   4 vs 9: ['px', 'px', 'px', 'px', 'px', 'px']
+   1 vs 7: ['px', 'px', 'px', 'px', 'px', 'px']
+   0 vs 8: ['px', 'px', 'px', 'px', 'px', 'px']
+
+3. shifted 1px: 83.3%   shrunk 6x6+moved: 70.7%   (raw-pixel engine: 22%/13%)

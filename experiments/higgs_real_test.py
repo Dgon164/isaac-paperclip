@@ -101,7 +101,8 @@ def part2_mjj(D):
 
 if __name__ == "__main__":
     t0 = time.time()
-    D = np.load("../data/HIGGS.npy")
+    import os
+    D = np.load(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "data", "HIGGS.npy"))
     print(f"HIGGS loaded {D.shape} [{time.time()-t0:.0f}s]")
     part1_doors(D)
     part2_mjj(D)

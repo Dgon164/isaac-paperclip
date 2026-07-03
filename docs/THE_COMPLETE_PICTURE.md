@@ -292,9 +292,10 @@ results above can be believed.
 ## 8. Run it
 
 ```
-cd 2_the_machine/code
-python isaac.py            # expect: 6/6 passed
+python isaac.py            # from the repo root; expect: 10/10 capability areas passed
 ```
+(This doc was written in the 6/6 era; the suite grew to 10 areas on
+2026-07-01/02 — see docs/ISAAC_MANUAL.md for the current capability list.)
 On Windows, if box-drawing characters error out: `set PYTHONUTF8=1` first.
 
 The demo scripts live beside `isaac.py`; the transplant work is in

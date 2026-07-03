@@ -1,0 +1,10 @@
+HIGGS loaded (11000000, 29) [1s]
+
+PART 1 — proximity doors on 28 features, train 10,500,000 / test 500,000
+  doors: 64.64% correct   AUC 0.700   [20s]
+  (references: box 52.5% / logistic 64.2% / MLP 69.1% / additive AUC 0.765 / full ceiling 79.6%, AUC 0.881)
+
+PART 2 — real m_jj^2 from jet1/jet2 low-level, fit 100,000 rows, held-out 500,000
+  OLD poly-L1:  held-out R2 0.050 with 16 terms   [0s]   (recorded wall: R2 0.075)
+  NEW staged:   held-out R2 0.033   [47s]
+  NEW equation: +0.91*j1pt*j2pt -0.70*j1pt*j2pt*cos(1.00*(j1eta-j2eta)) +0.32*j1pt*j2pt*cos(1.75*(j1eta-j2eta)) -0.19*j1pt*j2pt*cos(1.75*(j1pt-j2pt)) +0.00*j1pt*j2pt*cosh(2.00*(j1eta-j1phi)) +0.02*j1eta*j1eta*cosh(1.00*(j1pt-j2eta)) -0.15*j1pt*j2pt*cos(3.00*(j1phi-j2phi)) -0.18*j1eta*j1eta*cos(0.75*(j1eta-j2eta)) -0.12*j1pt*j2pt*cos(2.75*(j1eta-j2eta)) +0.02*j1eta*j1eta*cosh(1.00*(j1phi-j2pt)) -0.00*j1pt*j2pt*cosh(2.00*(j1eta-j2pt)) +0.13*j1pt*j2pt*cos(0.75*(j1eta-j2pt)) +0.00*j1pt*j2pt*cosh(2.00*(j2pt-j2phi)) +0.03*j1eta*j1eta*cosh(1.00*(j2pt-j2eta)) +0.07*j1eta*j1eta*j1phi -0.00*j1pt*j2pt*cosh(2.00*(j1eta-j2eta)) +0.75

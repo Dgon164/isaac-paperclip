@@ -16,7 +16,7 @@ should pick the HOLE door; 1-vs-7 the crossing doors.
 import sys
 import numpy as np
 
-sys.path.insert(0, r"C:\Users\jtwee\Documents\isaac_project\code")
+import os; sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # repo-local isaac.py
 from isaac import Isaac
 from registration_perception import canonical, resample, shift_pad, shrink_place
 from ideals_differentia import scores_of, differentia

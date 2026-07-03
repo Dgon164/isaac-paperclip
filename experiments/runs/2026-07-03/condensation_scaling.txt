@@ -1,0 +1,14 @@
+============================================================================
+CONDENSATION — naive all-pairs vs compare-against-ideals
+============================================================================
+
+     n   naive total  condensed   saving  concepts  per-item  purity
+   250        31,125      4,570       7x        10        20   90.8%
+   500       124,750      9,570      13x        10        20   91.2%
+  1000       499,500     19,570      26x        10        20   92.0%
+  2000     1,999,000     39,570      51x        10        20   92.5%
+  4000     7,998,000     79,570     101x        10        20   93.1%
+  8000    31,996,000    159,570     201x        10        20   93.2%
+
+per-item = comparisons a NEW item needs right now (2 x concepts:
+real + its null). Naive per-item at n=8000 would be 7,999.

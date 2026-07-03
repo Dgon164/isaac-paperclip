@@ -1,0 +1,6 @@
+covtype: train 406,708  test 174,304
+BoxDoors (old):            49.31% correct   [1s]   (recorded box ceiling ~62%, net 82%)
+ProximityDoors bins=12:    54.01% correct   [2s]
+ProximityDoors bins=32:    56.15% correct   [2s]
+ProximityDoorsCC bins=32:  20.45% correct   [3s]   (per-class null-gated basis + priors)
+ProximityDoorsCC bins=64:  20.34% correct   [4s]   (per-class null-gated basis + priors)

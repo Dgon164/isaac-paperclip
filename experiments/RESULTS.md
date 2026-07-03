@@ -2,7 +2,11 @@
 
 Three subsystems reported broken; each rebuilt as a minimal clean mechanism and
 run head-to-head against a faithful implementation of the broken mechanism, on
-planted ground truth, per `audit/AUDIT_STANDARD_v1.md`. Verdicts strict.
+planted ground truth, per `docs/AUDIT_STANDARD_v1.md`. Verdicts strict.
+(2026-07-03: every in-repo script below re-run and verified — observed numbers
+and raw outputs in `RESULTS_LEDGER.md` + `runs/`. Paths in this doc refer to
+this repo: the engine is `isaac.py` at the repo root, scripts are in this
+`experiments/` folder.)
 
 Integrity rule honored throughout: numpy only, the mechanism under test makes
 every decision. All scripts in this folder are self-contained and rerunnable.
@@ -11,7 +15,7 @@ every decision. All scripts in this folder are self-contained and rerunnable.
 
 | Thread | Broken load-bearing property | Evidence |
 |---|---|---|
-| SIS / Isaac structure | Composition stores **membership only** (no uptake edges); doors are **binary** | `code/isaac.py` `_crystallize()` stores `{"members"}`; audit 2.3 suspect confirmed |
+| SIS / Isaac structure | Composition stores **membership only** (no uptake edges); doors are **binary** | `isaac.py` `_crystallize()` stores `{"members"}`; audit 2.3 suspect confirmed |
 | Net extractor | **Hard box membership** on a fixed axis basis: geometry ceiling + encoding-dependence | covtype boxes ~0.62 vs net 0.82 (no knob closes it); box→matmul finding (0.900 vs 0.922) |
 | Enumerator (Stage-2 terms) | Polynomial-only basis + flat enumeration + **no null gate** | m_jj R² 0.075; §11.1 basis disconnect; d^k blowup |
 
@@ -77,7 +81,7 @@ recovery per §11.2.
    missing jet 4-vectors (data absent, not basis wrong). The rebuild fixes
    basis + admission discipline; it cannot conjure unrecorded variables.
 2. Rebuild B is a clean mechanism demonstration, not yet wired into
-   `code/isaac.py`. Integration = crystallizer stores uptake edges alongside
+   `isaac.py`. Integration = crystallizer stores uptake edges alongside
    members, recognition consumes them.
 3. OLD-mechanism numbers here are from faithful reimplementations (documented
    algorithms), not imports of the original scripts (those are dataset-bound).

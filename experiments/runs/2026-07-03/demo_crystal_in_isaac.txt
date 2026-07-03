@@ -1,0 +1,19 @@
+before transplant: nodes in net = 6
+C:\Users\jtwee\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\jtwee\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+after transplant : nodes in net = 19
+crystal concepts in net: ['concept:0', 'concept:1', 'concept:2', 'concept:3', 'concept:4', 'concept:5', 'concept:6', 'concept:7', 'concept:8', 'concept:9']
+lens node in net: ['lens:digits']
+classify accuracy (his membership+centroid): 0.924
+
+language still works: generate('cat') -> the cat sat .
+a concept node's stored box (per-dim ranges) is readable meta:
+  concept:0  box has 40 dims, median[:8] = [-1.0, -4.0, 4.0, 1.0, -1.0, 0.0, 0.0, 4.0]
+
+swapped the lens (40 -> 64 dims), re-crystallized: acc 0.893
+same interface; a LEARNED lens would drop in here later, unchanged call.
+
+-> boxes + aligner now live in the net with everything else. The piece
+   that was external numpy is now a swappable net node. 'You' are replaceable.

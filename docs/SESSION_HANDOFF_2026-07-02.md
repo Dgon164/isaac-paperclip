@@ -1,5 +1,15 @@
 # SESSION HANDOFF — 2026-07-01 → 07-02 (the discovery-stack arc)
 
+> **Reader's note (added 2026-07-03):** this is a historical handoff written in
+> the parent research repo; its paths follow that layout. In THIS repo:
+> `code/isaac.py` → `isaac.py` (root), `rebuild/` → `experiments/`,
+> `audit/` + theory docs → `docs/`, and the UI is at `ui/isaac_ui.py`.
+> `ROADMAP_2026-07-02.md` / `EXPERIMENT_MATRIX_2026-07-02.md` live in the full
+> corpus, not this snapshot. Two quoted numbers have known caveats — see
+> `docs/VERDICT_SHEET.md` (07-03 refresh): registration "84-87%" and covtype
+> "94.4%" came from harness variants that were never committed; the re-runnable
+> neighbors are 21-53% (8×8 mechanism demo) and 90.0% respectively.
+
 ## ═══ THE GOAL BOX — READ FIRST ═══
 The mission is unchanged: extract TRUE relationships, validated real, human-
 readable, honestly scoped — a science engine, non-agentic by design ("a

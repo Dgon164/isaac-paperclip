@@ -34,7 +34,7 @@ but honest). Report what the engine DID, not what I hoped.
 import sys
 import numpy as np
 
-sys.path.insert(0, r"C:\Users\jtwee\Documents\isaac_project\code")
+import os; sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # repo-local isaac.py
 from isaac import Isaac
 
 rng = np.random.default_rng(66)

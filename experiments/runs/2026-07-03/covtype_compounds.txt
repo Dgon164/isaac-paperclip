@@ -1,0 +1,15 @@
+covtype: train 406,708 test 174,304
+marginal doors:            56.15%  [2s]
+most-confused pairs: [(np.int64(1), np.int64(2)), (np.int64(2), np.int64(5)), (np.int64(1), np.int64(7)), (np.int64(3), np.int64(6))]
+  pair 1-2: 10 null-surviving compounds (kept 10)
+  pair 2-5: 4 null-surviving compounds (kept 4)
+  pair 1-7: 11 null-surviving compounds (kept 11)
+  pair 3-6: 0 null-surviving compounds (kept 0)
+compound doors admitted: 25  [2s]
+marginal + compound doors: 58.97%  [4s]
+exemplar (captured) road:  89.98%  [23s]  (5-NN over 200k exemplars, 20k test sample)
+
+ACCOUNTING vs recorded net 0.82:
+  articulated (doors):     56.2%
+  + compound doors:        59.0%
+  captured (exemplars):    90.0%

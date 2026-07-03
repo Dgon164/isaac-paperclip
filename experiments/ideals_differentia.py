@@ -23,7 +23,7 @@ stem). Everything round. Random position and size jitter on a 16x16 canvas.
 import sys
 import numpy as np
 
-sys.path.insert(0, r"C:\Users\jtwee\Documents\isaac_project\code")
+import os; sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # repo-local isaac.py
 from isaac import Isaac
 from registration_perception import canonical, resample
 

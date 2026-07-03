@@ -1,0 +1,17 @@
+========================================================================
+REBUILD B — uptake-edge composition vs membership-only
+========================================================================
+
+(a) whole affords torque:                 True   (engine.operable = ['fuel', 'ignition', 'torque'])
+(b) torque inoperable in every part:      True
+(c) dismantled pile lacks torque [NEW]:   True
+    OLD: engine and dismantled pile are THE SAME OBJECT: True   <- membership-only cannot see arrangement, by construction
+(d) rewired whole differs + loses torque [NEW]: True
+    OLD: rewired and correct whole identical:   True
+(e) same whole from every assembly order: True   (1 distinct identity from 12 orders)
+(f) decomposition recovers parts:         True
+(g) engine composes upward -> car moves:  True   (car.operable = ['fuel', 'ignition', 'locomotion', 'torque', 'traction'])
+------------------------------------------------------------------------
+NEW passes (a)-(g): True
+OLD (membership-only): fails (c) and (d) BY CONSTRUCTION — cannot distinguish engine / pile / miswired.
+REBUILD B VERDICT: WORKS

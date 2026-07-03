@@ -1,0 +1,55 @@
+======================================================================================================================
+
+E1 stream length (onset curve)
+E1_length                     120   groups P/R  61.6/100.0%   edges P/R  82.5/ 53.3%   circles  30.0%   false_circ 0.2   noise 0.0   [0.0s]
+E1_length                     240   groups P/R  42.9/100.0%   edges P/R 100.0/ 50.0%   circles  50.0%   false_circ 0.0   noise 0.0   [0.0s]
+E1_length                     480   groups P/R  56.3/100.0%   edges P/R  90.0/ 56.7%   circles  50.0%   false_circ 0.0   noise 0.0   [0.1s]
+E1_length                     960   groups P/R  65.7/100.0%   edges P/R 100.0/ 66.7%   circles  60.0%   false_circ 0.0   noise 0.0   [0.1s]
+E1_length                    1920   groups P/R  71.0/100.0%   edges P/R  93.3/ 73.3%   circles  70.0%   false_circ 0.2   noise 0.0   [0.1s]
+
+E2 sensor flicker (active doors fire with p)
+E2_flicker                   0.95   groups P/R  65.7/100.0%   edges P/R 100.0/ 63.3%   circles  60.0%   false_circ 0.0   noise 0.0   [0.1s]
+E2_flicker                    0.9   groups P/R  65.7/100.0%   edges P/R 100.0/ 70.0%   circles  70.0%   false_circ 0.0   noise 0.0   [0.1s]
+E2_flicker                    0.8   groups P/R  41.8/100.0%   edges P/R  52.0/ 23.3%   circles  20.0%   false_circ 0.2   noise 0.0   [0.1s]
+E2_flicker                    0.7   groups P/R  61.6/100.0%   edges P/R  45.0/ 36.7%   circles  20.0%   false_circ 0.0   noise 0.0   [0.1s]
+E2_flicker                    0.6   groups P/R  56.3/100.0%   edges P/R  20.0/ 20.0%   circles  20.0%   false_circ 0.0   noise 0.0   [0.1s]
+E2_flicker                    0.5   groups P/R  65.6/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.0   [0.1s]
+
+E3 background noise (doors, rate)
+E3_noise                   12@0.1   groups P/R  56.3/100.0%   edges P/R  92.0/ 53.3%   circles  50.0%   false_circ 0.2   noise 0.0   [0.1s]
+E3_noise                   12@0.5   groups P/R  58.7/100.0%   edges P/R  80.0/ 50.0%   circles  30.0%   false_circ 0.6   noise 0.0   [0.1s]
+E3_noise                   40@0.3   groups P/R  67.6/100.0%   edges P/R  82.0/ 60.0%   circles  50.0%   false_circ 0.2   noise 0.4   [0.2s]
+E3_noise                   80@0.3   groups P/R  56.3/100.0%   edges P/R  90.0/ 56.7%   circles  50.0%   false_circ 0.0   noise 0.0   [0.3s]
+
+E4 dwell (H1: period inside jitter range 2-5 dies by construction)
+E4_dwell                        1   groups P/R 100.0/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.0   [0.1s]
+E4_dwell                        2   groups P/R 100.0/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.0   [0.1s]
+E4_dwell                        3   groups P/R 100.0/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.0   [0.1s]
+E4_dwell                        5   groups P/R  96.4/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.2   [0.1s]
+E4_dwell                        8   groups P/R 100.0/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.0   [0.1s]
+E4_dwell                       12   groups P/R 100.0/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.0   [0.1s]
+
+E5 handoff lag (H2: gap >= 2 falls outside the +-1 window)
+E5_lag                          0   groups P/R 100.0/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.0   [0.1s]
+E5_lag                          1   groups P/R  96.4/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.2   [0.1s]
+E5_lag                          2   groups P/R 100.0/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.0   [0.1s]
+E5_lag                          3   groups P/R 100.0/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.0   [0.1s]
+
+E6 concurrency (independent waves at once)
+E6_concurrency                  1   groups P/R 100.0/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.0   [0.1s]
+E6_concurrency                  2   groups P/R  52.2/100.0%   edges P/R  77.3/ 53.3%   circles  50.0%   false_circ 0.6   noise 0.0   [0.1s]
+E6_concurrency                  4   groups P/R   9.1/100.0%   edges P/R   0.0/  0.0%   circles   0.0%   false_circ 0.0   noise 0.2   [0.2s]
+E6_concurrency                  6   groups P/R   4.7/100.0%   edges P/R  20.0/  1.1%   circles   0.0%   false_circ 0.0   noise 0.0   [0.2s]
+
+E7 shared doors (H3: overlapping groups merge)
+E7_share                        0   groups P/R 100.0/100.0%   edges P/R 100.0/100.0%   circles 100.0%   false_circ 0.0   noise 0.0   [0.1s]
+E7_share                        1   groups P/R  80.5/ 75.6%   edges P/R  60.0/ 60.0%   circles  60.0%   false_circ 0.0   noise 0.0   [0.1s]
+E7_share                        2   groups P/R 100.0/ 60.0%   edges P/R  63.3/ 33.3%   circles   0.0%   false_circ 0.6   noise 0.0   [0.1s]
+
+E8 pure noise (false positives; want all zeros)
+E8_null: streams with any groups 3/20, edges 0/20, circles 0/20
+
+E9 irregular dwell (aperiodic waves — co-timing, not clocks)
+E9_irregular                  2-8   groups P/R  90.6/100.0%   edges P/R  90.0/ 86.7%   circles  80.0%   false_circ 0.0   noise 0.0   [0.1s]
+
+done — per-run log in wave_battery_results.csv

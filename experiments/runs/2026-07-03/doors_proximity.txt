@@ -1,0 +1,13 @@
+========================================================================
+REBUILD A — proximity doors (observe+matmul, basis-first) vs boxes
+========================================================================
+
+T1 box-friendly blobs      box 100.0% correct   proximity 100.0% correct
+T2 diagonal (box-hostile)  box  88.0% correct   proximity  99.0% correct
+T3 graded overlap [box      ] strong 0.432  remote 0.055  none 0.000   three-way distinguishable: True
+T3 graded overlap [proximity] strong 0.380  remote 0.069  none 0.029   three-way distinguishable: True
+T4 invariance     [box      ] verdicts identical after re-encoding: 82.2%
+T4 invariance     [proximity] verdicts identical after re-encoding: 100.0%
+------------------------------------------------------------------------
+T1 parity: True   T2 beats ceiling: True   T3 graded: True (box graded: True)   T4 invariant: True
+REBUILD A VERDICT: WORKS

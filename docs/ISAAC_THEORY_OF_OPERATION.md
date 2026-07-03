@@ -3,7 +3,9 @@
 *How the engine actually works, mechanism by mechanism, and why each mechanism
 is what it is. This is the "how it operates" doc — distinct from `ISAAC_Manual.md`
 (full theory/API) and `ISAAC_BUILD_STATE.md` (live capability ledger). Accurate to
-`isaac.py` as of 2026-06-24 (self-test 6/6).*
+`isaac.py` as of 2026-06-24 (self-test 6/6 at that date; the suite is 10/10 as
+of 2026-07-02 — the mechanisms described here are unchanged, but discovery,
+rivalry, waves and tracking are documented in `ISAAC_MANUAL.md`, not here).*
 
 ---
 

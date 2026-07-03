@@ -16,7 +16,7 @@ raw vs canonicalized, same classifier, same settings.
 import sys
 import numpy as np
 
-sys.path.insert(0, r"C:\Users\jtwee\Documents\isaac_project\code")
+import os; sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))  # repo-local isaac.py
 from isaac import Isaac
 from sklearn.datasets import load_digits          # data loading only
 

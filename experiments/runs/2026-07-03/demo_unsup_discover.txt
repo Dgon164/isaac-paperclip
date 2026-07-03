@@ -1,0 +1,25 @@
+====================================================================
+  RAW INPUT: 6 channels, 10000 events, NO labels.
+====================================================================
+   channels: ['E1', 'p1x', 'p1y', 'E2', 'p2x', 'p2y']
+
+  STEP 1-2  DISCOVERED INVARIANT (smallest-variance quadratic of the raw sum):
+    q  = +1.00*E_tot^2  +  -1.01*px_tot^2  +  -1.00*py_tot^2
+    (planted truth, never shown: E^2 - px^2 - py^2  ->  [+1, -1, -1, 0, 0, 0])
+
+    spread of discovered q : std/mean = 0.317  (near-constant => conserved)
+    spread of total energy : std/mean = 0.640  (varies wildly => not it)
+
+  STEP 3  ACCOUNT FOR THE FIELD -> the needle is the leftover accumulation:
+    bulk mass (dominant peak of recovered q) : 1.001   (planted bulk M=1.0)
+    leftover peak (the 'Higgs')              : 1.598   (planted res M=1.6)
+    leftover events flagged: 518  (planted resonance count: 500)
+
+  GRADE (truth revealed only now):
+    of flagged leftovers, 96% are the real hidden resonance (purity)
+    of the real resonance, 100% were recovered (recall)
+
+  READ: from raw numbers and NO labels, the engine (1) recovered the invariant-
+  mass equation E^2-px^2-py^2, (2) in readable form, (3) modeled the field and
+  surfaced the hidden resonance as the residual peak. That is the whole thesis,
+  validated where we control the truth.

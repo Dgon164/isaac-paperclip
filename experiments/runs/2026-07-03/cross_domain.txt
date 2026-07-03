@@ -1,0 +1,38 @@
+==========================================================================
+CROSS-DOMAIN — analogy as closure-matching, then transfer
+==========================================================================
+
+0. KEPLER retest: UNDERSTOOD  R2 1.0000
+   equation: +1.00*x0^1.5 +0.00
+
+1. independent discovery:
+   gravity    UNDERSTOOD R2 0.999  +4.12*x1*x2^-2.645 -0.57*x0*x2^-2.44861 +7.13*x0*x1*x2^-2.
+   coulomb    UNDERSTOOD R2 0.999  +1.67*x0*x2^-1.49046 +8.68*x0*x1*x2^-2.12922 -1.68*x0*cos(
+   light      UNDERSTOOD R2 1.000  -0.14*x0*x1^-2.12922 +0.22*x0*x1^0.735*x1^-2.8159 +0.00
+   spring     UNDERSTOOD R2 1.000  -8.10*x0 -0.00
+   cooling    UNDERSTOOD R2 0.999  +90.06*exp(-0.2975*x0) -1.01
+   capacitor  UNDERSTOOD R2 0.999  +4.99*exp(-0.425*x0) -0.15*x0*exp(-0.425*x0) +0.00
+
+2. structural matching (variable identities abstracted):
+   gravity    log-track exponents (-2.0, 1.0, 1.0) (R2 1.000)
+   coulomb    log-track exponents (-2.0, 1.0, 1.0) (R2 1.000)
+   light      log-track exponents (-2.0, 1.0) (R2 1.000)
+   spring     shape (('^1',),)
+   cooling    shape (('T',),)
+   capacitor  shape (('T',),)
+
+   EXACT FAMILY ['gravity', 'coulomb']
+   EXACT FAMILY ['cooling', 'capacitor']
+   ROLE FAMILY (shared ^-2 role): ['gravity', 'coulomb', 'light']
+
+3. abstraction node family:exact:coulomb+gravity: instances = ['law:coulomb', 'law:gravity']
+3. abstraction node family:exact:capacitor+cooling: instances = ['law:capacitor', 'law:cooling']
+3. abstraction node family:inverse_square: instances = ['law:coulomb', 'law:gravity', 'law:light']
+
+4. transfer to a data-starved domain (magnetism, n=24):
+   cold discovery:   PARTIAL  R2 0.821  (n=24 — too few)
+   analogy-primed:   role trial chose column 2 as 'r'; held-out R2 0.995
+   imported law: F = 3.26 * a*b/r^2   (true constant 3.2)
+--------------------------------------------------------------------------
+kepler: UNDERSTOOD   families found: 3   cold R2 0.82 vs primed 0.99
+VERDICT: WORKS

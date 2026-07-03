@@ -88,8 +88,9 @@ and **cheap enough to run on a Raspberry Pi.**
 
 Each engine has been run and verified (see Part 4 for the full record, with numbers):
 
-**The cortex (Isaac)** — passes its own self-test across five capability areas
-(language, math, logic, reasoning, computation), and generalizes:
+**The cortex (Isaac)** — passes its own self-test across ten capability areas
+(language, math, logic, reasoning, decompose, persistence, waves, tracking,
+discovery, rivalry), and generalizes:
 - learns grammar structure from example sentences and generates new ones,
 - recalls arithmetic tables *and* computes numbers outside them by decomposition
   (`999 × 999 = 998001`, computed, not memorized),
@@ -123,20 +124,18 @@ You need Python 3.10+, `numpy`, and (for the lenses) `scikit-learn` and `torch`.
 Verified environment: Python 3.12, numpy 2.4, sklearn 1.9, torch 2.5 (CUDA 12.1).
 
 ```
-# The cortex — expect: 5/5 capability areas passed
-cd Documents/isaac_project/2_the_machine/code
+# The cortex — expect: 10/10 capability areas passed
+# (run from the repo root — the engine is isaac.py at the root)
 set PYTHONUTF8=1        # Windows: avoids box-drawing character errors
 python isaac.py
 ```
 
 ```
 # The perception lens into the cortex (digits, instant, CPU)
-cd Documents/isaac_project/2_the_machine/code/neural_transplant
-python crystal_in_isaac.py
+python demos/crystal_in_isaac.py
 
 # The law lens (self-contained toy collider, no external data)
-cd Documents/isaac_project/equation_discovery/code
-python unsup_discover.py
+python demos/unsup_discover.py
 ```
 
 ## Your First Session (the cortex)
@@ -309,11 +308,10 @@ The law lens takes a raw table and recovers the equations that govern it. Four m
 Running it — a self-contained toy with planted truth, and the real particle data:
 
 ```
-cd equation_discovery/code
-python unsup_discover.py         # toy: recovers E²−px²−py², finds the hidden resonance
-cd ../../code
-python interaction_extract.py    # real HIGGS (fetch_openml 23512): names the physics terms
-python higgs_residual.py         # reconstructs the invariant-mass features (R²≈0.865)
+# from the repo root
+python demos/unsup_discover.py       # toy: recovers E²−px²−py², finds the hidden resonance
+python demos/interaction_extract.py  # real HIGGS (fetch_openml 23512): names the physics terms
+python demos/higgs_residual.py       # reconstructs the invariant-mass features (R²≈0.865)
 ```
 
 On **real HIGGS data** the extractor names the correct physics — the intermediate
@@ -511,7 +509,7 @@ These rules are *why* the numbers below can be believed.
 
 Every number here was produced by a real run during this session.
 
-**Cortex — 5/5 capability areas, generalizes.**
+**Cortex — 10/10 capability areas, generalizes.**
 - `999 × 999 = 998001` computed by decomposition (outside the memorized 100×100 table).
 - Novel objects (`me smash computer → caution`) resolved by verb-level fallback.
 - *(The preserver/persistence subsystem was disabled this session — see below.)*
@@ -600,7 +598,8 @@ ALU, the `transduce`/`react` loops.
 untrained-net tinkering → Xenointelligence → Intellon (persistence theory; the symbolic
 node engine reaching 457 tests) → xAGI (Experimental *Explainable* AGI) → SIS → **Isaac**
 → the neural-net transplant → the equation engine. The names changed; the program didn't.
-Full detail: `../1_history_of_development/` and `../THE_COMPLETE_PICTURE.md`.
+Full detail: the whole arc is in `docs/THE_COMPLETE_PICTURE.md`; the
+history-of-development folder lives in the full research corpus, not this snapshot.
 
 ## Why This Is Kept
 
@@ -614,7 +613,7 @@ growing knowledge from data, explainable at every step.
 
 *End of the Operation Paperclip Manual. This document supersedes nothing in the Isaac
 corpus; it sits inside it as a subclass and points into it. For the cortex in depth,
-read `../2_the_machine/docs/ISAAC_Manual.md` and `../2_the_machine/docs/ISAAC_THEORY_OF_OPERATION.md`;
-for the law lens, `../equation_discovery/EQUATION_DISCOVERY_ENGINE.md`; for the origin,
-`../1_history_of_development/intellon_era/INTELLON_HISTORY.md`; for the whole arc,
-`../THE_COMPLETE_PICTURE.md`.*
+read `docs/ISAAC_MANUAL.md` and `docs/ISAAC_THEORY_OF_OPERATION.md`;
+for the law lens, `docs/EQUATION_DISCOVERY_ENGINE.md`; for the whole arc,
+`docs/THE_COMPLETE_PICTURE.md`. The origin document (Intellon history) and the
+history-of-development folder live in the full research corpus, not this snapshot.*

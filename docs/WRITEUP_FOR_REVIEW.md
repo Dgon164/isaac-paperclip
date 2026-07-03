@@ -1,10 +1,10 @@
 # ISAAC Discovery Stack — Technical Report for Review
-**Date:** 2026-07-01 · **Code:** `code/isaac.py` (single file, numpy only) + `rebuild/` harness
-**Status of every claim: re-runnable.** See §7. Nothing here requires trusting the author.
+**Date:** 2026-07-01 (paths/counts refreshed 2026-07-03) · **Code:** `isaac.py` (repo root, single file, numpy only) + `experiments/` harness
+**Status of every claim: re-runnable.** See §7 and `experiments/RESULTS_LEDGER.md`. Nothing here requires trusting the author.
 
 ## 1. Summary
 
-One engine (`isaac.py`, ~2,900 lines, no ML frameworks, no trained networks in
+One engine (`isaac.py`, ~3,400 lines, no ML frameworks, no trained networks in
 any decision path) that, given examples of a task it cannot do, returns one of
 four validated verdicts and, when possible, the explicit generating equation:
 
@@ -83,7 +83,7 @@ masking-specific code and entered the fact index).
 
 ## 4. Results — failure modes and limits (battery, ~60 runs + nulls)
 
-`rebuild/discovery_battery.py`, per-run log in CSV. Headlines:
+`experiments/discovery_battery.py`, per-run log in CSV. Headlines:
 
 - **Noise:** exact form survives to noise = 1.5× signal std (coefs within
   10%); verdict downgrades honestly UNDERSTOOD→PARTIAL from 0.4×. Never fake.
@@ -108,7 +108,7 @@ masking-specific code and entered the fact index).
 - **False discoveries: 0/20 on pure noise.**
 - **Heavy tails:** exact under lognormal and Student-t(3) inputs.
 
-## 4b. Adversarial self-review (red team, `rebuild/redteam_discovery.py`)
+## 4b. Adversarial self-review (red team, `experiments/redteam_discovery.py`)
 
 Eight attacks designed WITH knowledge of the internals, each targeting a
 specific design decision. First round: 3 kills + 1 crash. All fixed with
@@ -165,16 +165,22 @@ unchanged. Suite: 10/10.
 
 ## 6. What is still missing (gap analysis)
 
-Full sheet: `audit/VERDICT_SHEET_2026-07-01.md`. The short list, ranked:
+Full sheet: `docs/VERDICT_SHEET.md`. The short list, ranked:
 
-1. **Compound doors (audit 2.11)** — both real-data gaps point here; ceiling
-   detection → compound search is specified, not built.
-2. **Uptake-edge composition in the engine** — validated in harness (7/7
+1. **Three-valued completeness accounting (audit 2.8)** — the verdicts are
+   mutually exclusive labels, not `law% + captured% + noise% = 100`; the
+   residual after PARTIAL is dropped, not dossiered. All the ingredients are
+   already computed inside discover(); the accounting is a synthesis step.
+2. **Compound doors in the engine (audit 2.11)** — one null-gated round
+   exists in harness (`experiments/covtype_compounds.py`, 56.2→59.0);
+   ceiling detection → compound search is not wired into the engine.
+3. **Uptake-edge composition in the engine** — validated in harness (7/7
    incl. dismantled-engine control); `_crystallize` still stores members only.
-3. **Identifiability clause (2.6)** — when two forms tie on observed data
-   (cos vs cosh in the bulk; trig surrogates of rationals), the engine should
-   NAME the tie and request the discriminating sample; today it commits.
-4. **Shrug → discover auto-trigger** — discovery is a method call, not yet a
+4. **Identifiability clause (2.6) — declaration built, resolution manual.**
+   The engine now names ties and probes inside discover() (§4c), but only
+   for single-feature terms, and nothing automates fetching the probe and
+   calling `confirm()`. apply_law/load_ledger also apply recalled laws blind.
+5. **Shrug → discover auto-trigger** — discovery is a method call, not yet a
    reflex on failure.
 5. **CAPTURED → law graduation** — attack the exemplar memory with function
    recovery until caught becomes said (completeness loop, 2.8).
@@ -189,24 +195,30 @@ Full sheet: `audit/VERDICT_SHEET_2026-07-01.md`. The short list, ranked:
 
 ## 7. How to verify (no trust required)
 
-```
-cd Documents\isaac_project\code
-set PYTHONIOENCODING=utf-8
-python isaac.py                          # engine self-test: expect 9/9
+All commands from this repo; runtimes are as measured on the 2026-07-03
+re-verification (raw outputs: `experiments/runs/2026-07-03/`).
 
-cd ..\rebuild
-python doors_proximity.py                # rebuild A: expect WORKS 4/4
-python composition_uptake.py             # rebuild B: expect WORKS 7/7
-python enumerator_staged.py              # rebuild C: expect WORKS 4/4
-python wave_crystallizer.py              # rebuild D: expect WORKS 5/5
-python wave_interference.py              # rebuild E: expect WORKS 5/5
-python entity_status.py                  # rebuild F: expect WORKS 5/5
-python wave_battery.py                   # ~5 min, CSV + failure modes
-python discovery_battery.py              # ~3 min, CSV + failure modes
-python covtype_real_test.py              # full covtype head-to-head
-python higgs_real_test.py                # full HIGGS (needs data/HIGGS.npy)
 ```
-All randomness is seeded. The engine backup chain is in `code/backups/`.
+set PYTHONUTF8=1
+python isaac.py                          # engine self-test: expect 10/10 (~9 s)
+
+cd experiments
+python doors_proximity.py                # rebuild A: expect WORKS 4/4    (<1 s)
+python composition_uptake.py             # rebuild B: expect WORKS 7/7    (<1 s)
+python enumerator_staged.py              # rebuild C: expect WORKS 4/4    (<1 s)
+python wave_crystallizer.py              # rebuild D: expect WORKS 5/5    (<1 s)
+python wave_interference.py              # rebuild E: expect WORKS 5/5    (<1 s)
+python entity_status.py                  # rebuild F: expect WORKS 5/5    (<1 s)
+python redteam_discovery.py              # red team: 0 kills, 0 crashes   (~1 s)
+python wave_battery.py                   # CSV + failure modes            (~18 s)
+python discovery_battery.py              # CSV + failure modes; E9 0/20   (~11 s)
+python covtype_real_test.py              # full covtype (sklearn download) (~14 s cached)
+python covtype_compounds.py              # compounds 59.0 / captured 90.0 (~34 s)
+python higgs_real_test.py                # full HIGGS (needs data/HIGGS.npy, ~70 s)
+```
+All randomness is seeded — the battery CSVs come out byte-identical across
+re-runs. The full ledger of claims → scripts → observed numbers:
+`experiments/RESULTS_LEDGER.md`.
 
 ## 8. Relation to prior art (positioning for review)
 

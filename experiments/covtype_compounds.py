@@ -19,8 +19,9 @@ box-forest ~62% / net 0.82.
 import time
 import numpy as np
 from sklearn.datasets import fetch_covtype          # data loading only
+import os
 import sys
-sys.path.insert(0, r"C:\Users\jtwee\Documents\isaac_project\rebuild")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))  # repo-local doors_proximity.py
 from doors_proximity import ProximityDoors
 
 rng = np.random.default_rng(3)

@@ -15,8 +15,9 @@ full picture, read the manual and the docs below.
 
 ```
 isaac.py                    the engine — one file, one class (self-test: python isaac.py → 10/10)
-PAPERCLIP_MANUAL.md         the full manual (Starter / Operation / Reference / Theory)
+PAPERCLIP_MANUAL.md         the narrative manual (Starter / Operation / Reference / Theory)
 docs/
+  ISAAC_MANUAL.md              THE capability reference — every method, every limit
   THE_COMPLETE_PICTURE.md      the whole research line, front to back
   ISAAC_THEORY_OF_OPERATION.md how the engine actually works
   EQUATION_DISCOVERY_ENGINE.md the equation-discovery engine, in depth
@@ -26,6 +27,13 @@ demos/
   unsup_discover.py         law lens → recovers an invariant equation, unsupervised (toy)
   interaction_extract.py    law lens → names the particle physics in real HIGGS data
   higgs_residual.py         law lens → reconstructs invariant masses (R²≈0.865)
+experiments/
+  RESULTS_LEDGER.md         every claim → its script → last-verified date → observed numbers
+  RESULTS.md                the rebuild results write-up (A–F, real-data head-to-heads)
+  runs/                     raw outputs of the verification re-runs, dated
+  *.py                      the full harness: planted ground truth, batteries, red team
+ui/
+  isaac_ui.py               one-file stdlib web console → http://127.0.0.1:8674
 ```
 
 ## The idea in one line
@@ -42,13 +50,23 @@ demos/
 ## Run it
 
 ```bash
-python isaac.py                       # engine self-test → 6/6
+python isaac.py                       # engine self-test → 10/10 capability areas
 
 python demos/crystal_in_isaac.py      # net-lens into Isaac (sklearn digits; instant, CPU)
 python demos/unsup_discover.py        # equation discovery on a toy collider (no data needed)
 python demos/interaction_extract.py   # real HIGGS via fetch_openml(23512); names the physics
 python demos/higgs_residual.py        # reconstructs the intermediate-particle masses
+
+python ui/isaac_ui.py                 # web console on http://127.0.0.1:8674
+
+cd experiments                        # the harness; every script imports ../isaac.py
+python redteam_discovery.py           # adversarial red team of discover() (~1 s)
 ```
+
+Which experiments were re-verified, when, and what they printed:
+**`experiments/RESULTS_LEDGER.md`**. Raw outputs live in `experiments/runs/`.
+Big-data scripts (gauntlet, HIGGS, covtype) expect their datasets in the
+gitignored `data/` — the ledger says what each needs.
 
 Requirements: Python 3.10+, `numpy`, `scikit-learn` (the vision-lens work also uses
 `torch`/`torchvision`). On Windows, `set PYTHONUTF8=1` first if box-drawing chars error.
@@ -56,8 +74,9 @@ Requirements: Python 3.10+, `numpy`, `scikit-learn` (the vision-lens work also u
 ## Honest status (what's proven, what's open)
 
 **Verified / runs:**
-- Cortex self-test 6/6 (language, math, logic, reasoning, computation, persistence), and
-  it generalizes (computes `999×999` by decomposition; novel objects via verb-level).
+- Engine self-test 10/10 (language, math, logic, reasoning, decompose, persistence,
+  waves, tracking, discovery, rivalry), and it generalizes (computes `999×999` by
+  decomposition; novel objects via verb-level).
 - Perception lens: held-out digits ~90%; frozen ResNet18/CIFAR features read at 71%
   (numpy box) → **79%** (matrix-native log-likelihood reader).
 - Law lens: recovered a planted invariant law exactly (96% purity / 100% recall on a
@@ -94,7 +113,9 @@ all numpy, all null-gated, no trained networks anywhere:
   do, it recovers the explicit equation (held-out validated, reusable via
   `apply_law()`) or says honestly what state its knowledge is in:
   UNDERSTOOD / PARTIAL / CAPTURED (caught by exemplars, not yet said) /
-  NO RULE. 0/40 false discoveries on pure noise across two batteries.
+  NO RULE. Re-verified 2026-07-03: 0/20 false discoveries on the discovery
+  battery's pure-noise trials (E9), zero noise-door admissions across the
+  wave battery, and the adversarial red team clean (0 kills, 0 crashes).
   Rival look-alike forms (parabola vs wide cosine, exp vs cubic) are held
   open with a named discriminating probe until `confirm()` settles them.
 - **Waves** — temporal crystallization: simultaneity groups, handoffs,
@@ -102,14 +123,24 @@ all numpy, all null-gated, no trained networks anywhere:
   internal clock (100% phase through occlusion), expectation, and
   temporary statuses whose explanations EMERGE from ordinary co-activation
   (`blocks(disk) <- cloud`), entering the fact index.
-- **Registration perception** (experiments/) — pose/identity factoring:
-  digits under random position+scale go from ~5-15% to 84-87%; ideals +
+- **Registration perception** (experiments/) — pose/identity factoring.
+  Honest status: the committed script (`registration_perception.py`, 8×8
+  digits) demonstrates the mechanism but its canvas clips shifted pixels
+  off the edge (information destruction), so it shows ~5-15% → 21-53%.
+  The recorded 84-87% came from a 16×16-canvas variant that was never
+  committed — that number is NOT currently re-runnable and is quoted
+  nowhere else in this repo until the 16×16 harness is rebuilt. Ideals +
   learned key identifiers (differentia) hit 99.7% on a six-way look-alike
-  world and correctly demote unreliable taught features.
-- **Covtype accounting** (experiments/) — articulated doors 59%, captured
-  exemplars **94.4%** with a learned readable metric (elevation 0.76) vs
-  the old 82% net baseline; the row-index-alone control (79%) quantifies
-  the dataset's spatial leakage.
+  world and correctly demote unreliable taught features (re-verified,
+  `experiments/ideals_differentia.py`).
+- **Covtype accounting** (experiments/) — articulated doors 56.2 → 59.0%
+  with 25 null-gated compound doors; captured exemplars **90.0%** vs the
+  old 82% net baseline (all three re-verified 2026-07-03,
+  `experiments/covtype_compounds.py`, 34 s). The further door-weighted
+  variant (94.4%) and the row-index leakage control (79%) are RECORDED
+  results whose script variant was never committed — see
+  `experiments/RESULTS_LEDGER.md`; they are quoted only with that caveat
+  until the variant is rebuilt.
 
 Full methods, numbers, limits, and how to verify every claim:
 `docs/WRITEUP_FOR_REVIEW.md`. Theory: `docs/Understanding_as_Closure.md`.

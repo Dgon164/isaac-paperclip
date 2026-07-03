@@ -1,0 +1,25 @@
+========================================================================
+REBUILD D — wave crystallizer: simultaneity, movement, circles
+========================================================================
+stream: 2440 steps x 40 doors (25 drivers in 5 planted groups, 15 noise)
+
+T1 co-activation groups: found 5 [(0, 1, 2, 3, 4), (5, 6, 7, 8, 9), (10, 11, 12, 13, 14), (15, 16, 17, 18, 19), (20, 21, 22, 23, 24)]
+   exactly the 5 planted groups: True   noise doors admitted: False
+
+T2 handoff edges (the wave moving): [('G1', 'G2'), ('G2', 'G3'), ('G3', 'G1'), ('H1', 'H2'), ('H2', 'H1')]
+   exactly the planted transitions: True
+
+T3 circles: [['G1', 'G2', 'G3'], ['H1', 'H2']]
+   the two planted cycles (period 3 and period 2): True
+
+T4 shuffled-time control: groups 5 (same: True), handoffs 0, circles 0
+   co-occurrence survives, ALL movement dies: True
+   (this is exactly the part the static crystallizer cannot see)
+
+T5 level-2 (same machinery on circle-activity):
+   level-2 states: ['(0, 1)', '(1, 0)', '(1, 1)']
+   level-2 circles: [['(0, 1)', '(1, 1)', '(1, 0)']]
+   the planted era rotation A->B->C found as a circle of circles: True
+------------------------------------------------------------------------
+T1 groups: True   T2 movement: True   T3 circles: True   T4 static-blind: True   T5 recursion: True
+REBUILD D VERDICT: WORKS

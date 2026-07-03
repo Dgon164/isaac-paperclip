@@ -1,0 +1,13 @@
+========================================================================
+IDEALS + DIFFERENTIA — six round fruits, key identifiers
+========================================================================
+
+1. cascade accuracy (genus answers count if they contain the truth): 99.7%  (1 honest genus answers)
+2. cherry vs apple            identifiers: [np.int64(101), np.int64(100), np.int64(42), np.int64(47), np.int64(41), np.int64(52)]   (planted: size (pose doors 100,101))
+2. cherry vs black_cherry     identifiers: [np.int64(54), np.int64(55), np.int64(63), np.int64(62), np.int64(75), np.int64(78)]   (planted: color/darkness (pixel intensities))
+2. peach vs nectarine         identifiers: [np.int64(27), np.int64(26), np.int64(36), np.int64(37), np.int64(35), np.int64(25)]   (planted: fuzz vs shine (boundary/spot pixels))
+   size doors are the cherry/apple identifier: True
+
+3. stem-occluded apples: right-or-honest-tie 63/100, confidently-wrong 20/100
+------------------------------------------------------------------------
+VERDICT: WORKS

@@ -1,0 +1,24 @@
+========================================================================
+REBUILD C — staged null-gated enumerator vs flat polynomial L1
+========================================================================
+
+(a) planted pt1*pt2*(cosh(e1-e2)-cos(f1-f2)):
+    OLD poly-L1: held-out R2 0.609 with 16 terms  <- the wall
+    NEW staged:  held-out R2 1.000
+    NEW equation: +1.00*pt1*pt2*cosh(e1-e2) -1.00*pt1*pt2*cos(f1-f2) +0.00
+    exact form recovered: True
+
+(b) planted x0*x1 + x2^2 - x3:
+    NEW equation: +1.00*x2*x2 +1.00*x0*x1 -1.00*x3 -0.00   held-out R2 1.000
+    exactly the 3 planted terms, no junk: True
+
+(c) pure noise:
+    NEW admits 0 terms -> 'NO RULE (nothing beat the null)'
+    OLD keeps 26 junk terms (train R2 0.009, held-out R2 -0.013)
+
+(d) hidden-variable recovery, dual-track:
+    additive law  -> chose linear, corr(d_hat, d_true) 0.999
+    multiplicative-> chose log, corr(d_hat, d_true) 1.000
+------------------------------------------------------------------------
+(a) wall broken: True   (b) exact poly: True   (c) no-rule on noise: True   (d) dual-track: True
+REBUILD C VERDICT: WORKS

@@ -1,0 +1,20 @@
+==========================================================================
+REBUILD F — entity identity + temporary statuses (general)
+==========================================================================
+
+T1 identity+rhythm: groups [(0, 1, 2, 3), (4, 5, 10), (6, 7), (8, 9)]
+   day/night circle discovered: True ([(0, 1, 2, 3), (4, 5, 10)])
+
+T2 the clock: phase correct 99.3% overall, 99.2% during occlusion (knows it's day though the disk is hidden): True
+
+T3 statuses: miss-doors opened for [0, 1, 2, 3, 4, 5, 10] (0 = the disk)
+   miss:disk tracks (sun AND cloud) at 92.8%/tick; sun-door misses at night 9 (0.11% — dusk-boundary tracker lag) vs 683 occlusion misses: absence-by-night opens ~no status: True
+
+T4 explanation EMERGES from ordinary co-activation on the status-augmented stream:
+   groups found in the sun's timeframe: [(6, 7, 'miss:disk'), (8, 9)]
+   miss:disk travels with the cloud doors {6,7}: True
+
+T5 prediction: cloud lifts in daytime 95 times; disk back within 3 ticks 97.9%: True
+--------------------------------------------------------------------------
+T1 rhythm: True  T2 clock: True  T3 statuses: True  T4 emergent explanation: True  T5 prediction: True
+REBUILD F VERDICT: WORKS

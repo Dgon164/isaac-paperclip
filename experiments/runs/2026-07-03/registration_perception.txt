@@ -1,0 +1,14 @@
+variant                 raw doors  registered
+----------------------------------------------
+C:\Users\jtwee\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\jtwee\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\LocalCache\local-packages\Python312\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+clean                       88.1%       89.1%
+shift 1px                   13.7%       53.1%
+shift 2px                    4.6%       21.3%
+shrink 6x6 + move           15.6%       53.0%
+shrink 5x5 + move           12.6%       46.5%
+
+pose readout: displacement seen = dy +1.0, dx +1.0 (planted +2, +1)
+pose readout: size seen = 5x3 vs 8x4 (planted ~5/8 shrink)
