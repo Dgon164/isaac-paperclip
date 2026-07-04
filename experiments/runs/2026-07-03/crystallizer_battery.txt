@@ -1,7 +1,7 @@
 ==================================================================
 C1 — clean planted categories (the regime it has always handled)
 ==================================================================
-  pure categories recovered: 3/3
+  pure categories recovered: 3/3   all classified SOUND vs their chance-null: YES
 ==================================================================
 C2a — abc/abd: distinct things, one shared parent
 ==================================================================
@@ -23,20 +23,33 @@ C2c — the bitter-lesson negative: penguin earns not_fly by being
   chick (2 sightings) got NO negative — ABSENT stays silent: YES
   fly-type keeps fly, penguin excluded, shared group kept:  YES
 ==================================================================
-C3 — chance co-occurrence: junk types, measured
+C3 — chance co-occurrence: junk forms, and is FILED AS WRONG
 ==================================================================
-  types formed from pure chance: 249 (honest answer would be ~0 — the admission null is still open)
+  types formed from pure chance: 249
+  classified WRONG (chance-level coherence): 249 (100%)
+  a wrong entry, with its why: type:t0_t16[5]
+    -> coherence 8 within chance for this context (best shuffled structure scores 12) — co-occurrence alone explains it
+  wrong section populated, reasons attached: YES
+==================================================================
+C6 — supersession: 'if there is a and b, and b works better, use b'
+     — and a stays on the record, wearing its defeat
+==================================================================
+  B in use (cosine law active):            YES
+  A kept with its why (found): -0.61*x0*x0 +5.00
+    -> overturned by rival 'cosine' on new evidence (n=600): rival SSE 3.198 vs 1253
 ==================================================================
 C5 — scale curve (seconds to consolidate)
 ==================================================================
-  n=  50 nodes:   0.05 s   (134 types)
-  n= 200 nodes:   2.98 s   (708 types)
-  n= 800 nodes: 422.96 s   (1615 types)
+  n=  50 nodes:   0.05 s   (121 types)
+  n= 200 nodes:   3.16 s   (729 types)
+  n= 800 nodes: 437.87 s   (1594 types)
 ==================================================================
-C1 clean categories : PASS
-C2a abc/abd law     : PASS
-C2b penguin (taught): PASS
-C2c penguin (earned): PASS
-C3/C5               : measurements above (null + knee, open items)
+C1 clean categories (and classified sound): PASS
+C2a abc/abd law                            : PASS
+C2b penguin (taught)                       : PASS
+C2c penguin (earned)                       : PASS
+C3  wrong is kept and classified, with why : PASS
+C6  supersession keeps the loser + why     : PASS
+C5  scale knee: measurement above (untouched — no optimizing before limits)
 VERDICT: WORKS to the owner spec
 ==================================================================

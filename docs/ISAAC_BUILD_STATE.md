@@ -16,6 +16,26 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-03 (late night) — WRONG IS KEPT; SUPERSESSION, NOT OVERWRITE
+
+- Owner's laws: "junk types would just be a different classification of
+  wrong... it can learn not only what was wrong, but why. knowing what is
+  right is intelligence. knowing what is wrong is wisdom." + "deprecation
+  = supersession: if there is a and b, and b works better, use b." + "no
+  optimizing before limits; telling it what was important broke
+  everything before."
+- **_crystallize Phase 3.5 NEW**: every type tested vs its chance-null
+  (degree-preserving shuffle, best-of-chance selection-corrected); failures
+  FILED in `wrong_types` with why on node meta — never prevented, never
+  deleted, downstream untouched. C3: 249/249 chance types filed wrong;
+  C1 categories all sound.
+- **confirm() OVERTURN now supersedes**: the losing law appended to
+  `superseded` with the why (equation, model, SSE margin). C6 NEW: the
+  defeated parabola stays on the record wearing its defeat.
+- Dropped from the plan per owner: forgetting/disuse-decay and salience
+  weighting (human constraints Isaac doesn't have; importance-telling =
+  the old trap). Suite 11/11.
+
 ## 2026-07-03 (night) — THE FOUNDATION FIX: DIVERGENT DOORS SELF-ASSEMBLE
 
 - Owner: "the less you do, the more you let Isaac do... let the natural

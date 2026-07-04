@@ -89,6 +89,24 @@ can enter further discoveries). Four laws govern every mechanism:
   door (tag `neg`, so negatives never leak into sequence generation) —
   crystallization can share it (penguins and ostriches share `not_fly`)
   and be vetoed by it. Known-different never collapses; only unknown may.
+- **WRONG IS KEPT AND CLASSIFIED (owner's law, 2026-07-03).** "Knowing
+  what is right is intelligence. Knowing what is wrong is wisdom." Every
+  crystallized type is tested against its chance-null (the same context
+  with door targets shuffled, degrees preserved; scored by the BEST
+  structure chance produces — selection-corrected). Types that fail are
+  neither prevented nor deleted: they are filed in `isaac.wrong_types`
+  with the WHY on the node meta (`verdict: wrong`, `why_wrong: ...`) —
+  error itself is learnable material. Sound types carry `verdict: sound`.
+  Downstream behavior is deliberately unchanged: no pruning, no
+  importance-weighting (the old trap — "we fell into that by telling it
+  what was important and it broke everything"). Battery C3: 249/249
+  chance types filed wrong with reasons; C1 category types all sound.
+- **SUPERSESSION, not overwrite (owner's law, 2026-07-03).** "If there is
+  a and b, and b works better, use b" — and A is KEPT, wearing its
+  defeat. `confirm()` OVERTURN now appends the losing form to the law's
+  `superseded` list with the why (what was believed, what beat it, by how
+  much). Battery C6: after the pendulum overturn, the parabola remains on
+  the record with "overturned by rival 'cosine'... SSE 3.198 vs 1253".
 - **DIVERGENT doors self-assemble (the foundation fix, 2026-07-03).** The
   atom's three verdicts all write now: SAME → membership (always did);
   **DIVERGENT → a `not_<door>` minted from experience**; ABSENT →
