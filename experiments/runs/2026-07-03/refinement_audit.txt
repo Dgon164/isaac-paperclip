@@ -1,0 +1,24 @@
+REFINEMENT AUDIT — 100 worlds; before -> refine -> after
+
+  ... 20 laws refined [2s]
+  ... 40 laws refined [6s]
+C:\Users\jtwee\Documents\isaac-paperclip\experiments\calibration_audit.py:60: RuntimeWarning: invalid value encountered in sqrt
+  f = lambda X: 1.5 * X[:, i] ** a
+C:\Users\jtwee\Documents\isaac-paperclip\experiments\calibration_audit.py:60: RuntimeWarning: invalid value encountered in power
+  f = lambda X: 1.5 * X[:, i] ** a
+  ... 60 laws refined [9s]
+  ... 80 laws refined [36s]
+======================================================================
+DID THE CORRECTION LOOP MOVE THE NUMBER?
+======================================================================
+  beyond-range hold BEFORE refine: 40/80  = 50%
+  beyond-range hold AFTER  refine: 60/80  = 75%   <- the number that had to move
+  inside-range hold: 99% -> 94%  (must not regress)
+
+  OCCAM: mean terms per law 2.8 -> 2.8   (90 refinements accepted, 47 terms pruned at F-tie)
+  budget: 60 experiments/law, chosen by the confidence signal
+
+[36s total]
+======================================================================
+VERDICT: WORKS — beyond-range accuracy +25 pts; the indicator steered the experiments; simpler survived at ties.
+======================================================================

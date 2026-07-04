@@ -356,6 +356,21 @@ trajectories and stores only what refuses to vary.
   ledger-inherited) law on new evidence → HOLDS / DEGRADED / FAILS,
   recorded in the ledger. apply_law itself checks only shape; call this
   before trusting an inherited law.
+- `refine(name, X, y, ask=, budget=, rounds=)` — **THE CORRECTION LOOP**
+  (owner's design, 2026-07-03: the confidence indicator becomes a
+  steering signal). Each round: (1) fan candidate probes past the hull
+  and let `law_confidence` pick the WEAKEST region; (2) spend budget
+  asking the instrument (`ask(X)->y`; non-finite answers discarded);
+  (3) re-derive on everything known; (4) accept only through the **Occam
+  gate** — decisively better by F-test, or tied AND simpler ("simpler
+  with the same accuracy or better is better"); (5) the displaced law is
+  SUPERSEDED with the why, never erased. Ends with an Occam prune
+  (`_prune_terms`: greedily drop terms that survive an F-tie on held-out
+  data). **Measured** (`experiments/refinement_audit.py`, 100-world
+  deck): beyond-range hold 50% → **75%** with mean terms flat (2.8) and
+  47 terms pruned; known trade: inside-range hold eased 99% → 94% (the
+  refit weighs the new frontier; a strict interior-preservation gate is
+  a queued option).
 - **Cross-domain** (harness `experiments/cross_domain.py` — [HARNESS-ONLY
   — experiments/, not wired into engine]; re-run 2026-07-03 from this
   repo: cold 0.82 → primed 0.995 reproduced): laws

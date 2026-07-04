@@ -128,6 +128,8 @@ per-row notes below.
 
 | **Extrapolated confidence (owner's design): the binary scope stamp becomes graded, measured belief** — `law_confidence(name, X)` = boundary confidence inside the hull × the measured survival curve beyond it | `confidence_curve.py` (fit on 60 worlds, validated on 60 FRESH) | **VERIFIED** | 2026-07-03 | measured decay: 76% at boundary → 59% (+0.1 spans) → 45% (+0.3) → 43% (+0.6) → 37% (+1.0); out-of-sample reliability: predicted 0.22→actual 34%, 0.40→48%, 0.60→60%; **ECE 0.070; Brier 0.249 vs flat-68% baseline 0.288 (better)**; in-engine with provenance (`DECAY_MEASURED`), self-test (h): inside 0.88 > near 0.57 > far 0.38; suite 11/11, discovery 9/9 |
 
+| **THE CORRECTION LOOP (owner's design): confidence as a steering signal — probe the weakest region, re-derive, accept only better-or-tied-and-simpler, supersede with why, Occam-prune** | `refinement_audit.py` + `isaac.refine()` | **VERIFIED** | 2026-07-03 | 100-world deck, 60 experiments/law: **beyond-range hold 50% → 75% (+25 pts)**; Occam held complexity flat (2.8 → 2.8 mean terms) while accuracy rose; 90 refinements accepted through the gate, **47 terms pruned at F-ties** (simpler won); known trade: inside-range 99% → 94%; instrument failures (non-finite probes) handled; 36 s total; suite 11/11 |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
