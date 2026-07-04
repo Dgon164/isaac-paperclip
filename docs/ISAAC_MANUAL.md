@@ -323,6 +323,22 @@ trajectories and stores only what refuses to vary.
     is still open; this is the flat level.)
   - **scope**: `form-true` (edges of observed range hold) vs `range-valid`
     (usable inside; never silently swapped). Both are knowledge.
+    **Calibration, measured (2026-07-03, 100-world external audit):** the
+    label is right 68% of the time when it says form-true — the edge
+    check can only test edges that were observed. Superseded in practice
+    by graded belief (below); the label remains as the coarse summary.
+- `law_confidence(name, X)` — **graded belief instead of a binary stamp**
+  (owner's design: "maybe just a boundary confidence? what about
+  extrapolated confidence?"). Per query point: inside the observed hull →
+  the law's boundary confidence (held-out edge R²); beyond it → boundary
+  confidence × the **measured survival curve** of extrapolating claims
+  (76% at the boundary → 59% at +0.1 spans → 45% at +0.3 → 37% at +1.0;
+  measured on 51 externally-graded laws, validated on 52 FRESH ones:
+  ECE 0.070, Brier 0.249 vs flat-baseline 0.288 — the curve is what
+  actually happened, not an opinion). Curve provenance lives on
+  `Isaac.DECAY_MEASURED`; re-measure via
+  `experiments/confidence_curve.py` whenever the enumerator changes.
+  Law nodes now also store per-feature observed `ranges` + `r2_edge`.
   - **rivals**: classic look-alikes (linear/quadratic/cubic/sin/cos/
     exp±) swapped in per single-feature term, F-tested; survivors stay
     LIVE on the law with a **probe** — the input where the tied forms

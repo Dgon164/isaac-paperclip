@@ -16,6 +16,21 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-03 (last) — EXTRAPOLATED CONFIDENCE: the stamp becomes a curve
+
+- Owner: "maybe just a boundary confidence? what about extrapolated
+  confidence?" → `law_confidence(name, X)` NEW: per-point graded belief —
+  boundary confidence (edge R²) inside the hull, × the MEASURED survival
+  curve beyond it (`DECAY_MEASURED`: 76/59/45/43/37% at δ = 0/.1/.3/.6/1.0
+  spans; from 51 externally-graded laws; validated on 52 fresh: ECE 0.070,
+  Brier beats the flat 68% baseline). Law nodes store observed `ranges` +
+  `r2_edge`. Self-test (h): inside 0.88 > near 0.57 > far 0.38; discovery
+  9/9; suite 11/11.
+- Calibration audit (priority 4) DONE same session: form-true trust number
+  68%; UNDERSTOOD-inside 100%; noise refusals 15/15; accounting median
+  error 0.2 pts. `experiments/calibration_audit.py` +
+  `confidence_curve.py`.
+
 ## 2026-07-03 (late night) — WRONG IS KEPT; SUPERSESSION, NOT OVERWRITE
 
 - Owner's laws: "junk types would just be a different classification of
