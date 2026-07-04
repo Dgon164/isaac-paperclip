@@ -16,6 +16,25 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-03 (night) — THE FOUNDATION FIX: DIVERGENT DOORS SELF-ASSEMBLE
+
+- Owner: "the less you do, the more you let Isaac do... let the natural
+  structures fall where they may" + "i didn't realize not/'divergent'
+  doors weren't being created." Both fixed at the substrate:
+- **`Net.door_counts` NEW** — per-door observation counts. Seen-once vs
+  seen-a-hundred-times are different facts; no statistical divergence
+  test was possible without this.
+- **`_crystallize` Phase 1.5 NEW** — the atom's three verdicts all write:
+  SAME → membership; **DIVERGENT → not_<door> minted from experience**
+  (rest-of-intent carrier, ≥3 sightings, absence beats the
+  like-your-siblings null at 1%, Laplace-smoothed); ABSENT → silence.
+  Runs before the merge so fresh negatives veto collapses same-sleep.
+  Minted negatives carry tag `neg` (never enter sequence generation);
+  teach_not moved to tag `neg` too.
+- Battery C2c NEW: **penguin earns not_fly by being WATCHED, never
+  taught**; chick at 2 sightings earns nothing. C1/C2a/C2b/C2c all PASS;
+  suite 11/11 unchanged.
+
 ## 2026-07-03 (evening) — CRYSTALLIZER AMENDED TO THE OWNER'S TWO LAWS
 
 - Owner's spec, verbatim intent: negatives are POSITIVE facts (penguin

@@ -86,9 +86,22 @@ can enter further discoveries). Four laws govern every mechanism:
   2.9 s @ 200, ~420 s @ 800 — C5).
 - `teach_not(subject, prop)` — a positive negative: indexes a cannot-fact
   (the reasoning layer honors it) AND writes a first-class `not_<prop>`
-  door, so negative knowledge is visible in profiles — crystallization
-  can share it (penguins and ostriches share `not_fly`) and be vetoed by
-  it. Known-different never collapses; only unknown may.
+  door (tag `neg`, so negatives never leak into sequence generation) —
+  crystallization can share it (penguins and ostriches share `not_fly`)
+  and be vetoed by it. Known-different never collapses; only unknown may.
+- **DIVERGENT doors self-assemble (the foundation fix, 2026-07-03).** The
+  atom's three verdicts all write now: SAME → membership (always did);
+  **DIVERGENT → a `not_<door>` minted from experience**; ABSENT →
+  nothing. During every consolidation, a node carrying the REST of a
+  circle's intent, observed repeatedly (≥3 sightings) WITHOUT the one
+  door its siblings show essentially always, has positively diverged —
+  the gate is a Laplace-smoothed binomial against the "you are like your
+  siblings" null at 1%, on the net's new per-door observation counts
+  (`Net.door_counts` — "seen once" and "seen a hundred times" are
+  different facts now). Runs BEFORE the merge phase, so a fresh negative
+  can veto a collapse in the same sleep. Battery C2c: penguin earns
+  `not_fly` by being watched, never taught; a chick seen twice earns
+  nothing (ABSENT stays silent).
 - `wave_consolidate()` — the temporal crystallizer, one mechanism recursed:
   - **groups** — doors that fire together (jitter-null + independence floor,
     1.4× anti-bridge margin);

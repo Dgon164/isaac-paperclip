@@ -16,19 +16,27 @@ C2b — the positive negative: penguin not_fly must veto the collapse
   penguin still shares the birds group with robin:     YES
   penguin inside any fly-type (must be NO):            NO
 ==================================================================
+C2c — the bitter-lesson negative: penguin earns not_fly by being
+      WATCHED (nothing taught); a barely-seen chick earns NOTHING
+==================================================================
+  penguin's not_fly MINTED from experience (never taught): YES
+  chick (2 sightings) got NO negative — ABSENT stays silent: YES
+  fly-type keeps fly, penguin excluded, shared group kept:  YES
+==================================================================
 C3 — chance co-occurrence: junk types, measured
 ==================================================================
   types formed from pure chance: 249 (honest answer would be ~0 — the admission null is still open)
 ==================================================================
 C5 — scale curve (seconds to consolidate)
 ==================================================================
-  n=  50 nodes:   0.04 s   (134 types)
-  n= 200 nodes:   2.94 s   (708 types)
-  n= 800 nodes: 419.31 s   (1615 types)
+  n=  50 nodes:   0.05 s   (134 types)
+  n= 200 nodes:   2.98 s   (708 types)
+  n= 800 nodes: 422.96 s   (1615 types)
 ==================================================================
 C1 clean categories : PASS
 C2a abc/abd law     : PASS
-C2b penguin law     : PASS
+C2b penguin (taught): PASS
+C2c penguin (earned): PASS
 C3/C5               : measurements above (null + knee, open items)
 VERDICT: WORKS to the owner spec
 ==================================================================
