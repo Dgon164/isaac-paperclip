@@ -1,0 +1,27 @@
+taught 72 plain facts (12 things; category labels NEVER taught)
+
+==================================================================
+2-3. the matrix, embedded and perceived
+==================================================================
+spectrum gap statistic: 0.092 (crystalline if >> the null below)
+  precipitated cluster: ['dog', 'cat', 'bird', 'fish']  PURE
+  precipitated cluster: ['apple', 'banana', 'cherry', 'mango']  PURE
+  precipitated cluster: ['hammer', 'saw', 'wrench', 'drill']  PURE
+cluster purity vs never-taught truth: 100%  (3 clusters, truth has 3)
+==================================================================
+4. LEVEL 2 — the categories themselves become things
+==================================================================
+distances between precipitated categories:
+  [dog-group] <-> [apple-group]: 0.789
+  [dog-group] <-> [hammer-group]: 0.970
+  [apple-group] <-> [hammer-group]: 0.972
+closest pair of ABSTRACTIONS: dog-group <-> apple-group
+-> matches the property overlap (animals and fruits share alive+grows; tools share nothing organic). Abstraction = the same perceiver, one level up.
+==================================================================
+5. NULL CONTROL — 20 shuffled-property worlds, full pipeline each
+==================================================================
+crystal score (separation, gated on >=3 substantial clusters):
+  real 3.71   shuffled: 0/20 runs even FORM 3 substantial clusters; best score 0.00
+==================================================================
+VERDICT: WORKS — the matrix became geometry; categories precipitated un-taught; abstraction emerged one level up; no shuffled world forms the crystal the real one does.
+==================================================================

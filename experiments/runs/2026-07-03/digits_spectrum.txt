@@ -1,0 +1,12 @@
+spectra computed for train; classifying (k=5, L1)...
+
+variant                     spectrum   (raw doors / registered, from registration_perception_16)
+------------------------------------------------------------------------------
+random pos + size 8-12         55.0%   (23.7% / 84.4%)
+novel bigger 13-15             46.5%   (26.5% / 85.4%)
+novel tiny 6-7                 35.2%   (13.7% / 58.3%)
+
+HONEST READING: the spectrum needs NO registration step — pose
+never entered the representation. Where it lands relative to the
+registration road is the measurement; the confusion structure
+(6 vs 9 share a spectrum) is the known lossy-ness, by design.
