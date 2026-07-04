@@ -141,6 +141,8 @@ per-row notes below.
 
 | **The op family is open: log + ratio composites, domain-guarded** ("instead of just sub... values or logs or other things") | `numberfunc_battery.py` | **VERIFIED** | 2026-07-04 | L1: y=2·ln(x0)+1 → **`+2.00*log(x0) +1.00` exact and legible** (cold surrogates it with powers at 1.00 in-range — see the log-is-a-power note in the manual); L2: sin(2·(x0/x1)) cold PARTIAL 0.76 → interrogation finds "flows through the ratio x0/x1 ONLY, periodic" → graduated **`+1.00*sin(2*(x0/x1))` exact**; L3: log on data with negatives → 306/600 in-domain rows used honestly, no crash, no false claim; suite 11/11, all composite-family batteries green |
 
+| **ONE DIAL: log folded into the power family at λ=0** (owner: "isn't a log just a power? it's not special" — correct: the Box-Cox limit, the missing grid point) | in-engine (`_atom_specs`/`_atom_col`); rivals gain log & sqrt look-alikes | **VERIFIED** | 2026-07-04 | cold discovery now writes **`+2.00*log(x0) +1.00`** natively (was: unsayable without a registered composite); suite 11/11; all 6 composite-family + red-team batteries green; **calibration re-measured after the enumerator change: trust profile UNCHANGED** (form-true 68%, noise 0/15, linear-sum 0/15) so `DECAY_MEASURED` stays valid |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
