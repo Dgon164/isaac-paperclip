@@ -81,27 +81,43 @@ can enter further discoveries). Four laws govern every mechanism:
   vetoes any merge** — penguin `not_fly` is evidence, not absence; a merge
   that would erase a positively-disclaimed distinction is forbidden
   (verified: fly-birds keep `fly` in their intent, penguin excluded from
-  fly-types but still in the shared birds group). **Still-open limits,
-  measured in the battery:** no admission null (249 types form from pure
-  chance co-occurrence — C3) and the scale knee (0.04 s @ 50 nodes,
-  2.9 s @ 200, ~420 s @ 800 — C5).
+  fly-types but still in the shared birds group). **A2 CLOSED
+  2026-07-04** (admission battery 10/10 + C1–C6 re-verified): the
+  wrong/sound verdict is a degrees-aware hypergeometric TEST (below);
+  `min_shared=2` stays as the candidate floor (expansion — propose
+  freely; admission is the test); wrong-verdict types are demoted from
+  ORGANIZING (no hierarchy minting — law 4 demotion, same as senses);
+  co-occurrence rules face a chance gate. Scale knee RE-MEASURED after
+  the E3 reverse index + shuffle removal: 0.02 s @ 50, 0.65 @ 200,
+  ~26 s @ 800 (was 0.04/2.9/~420).
 - `teach_not(subject, prop)` — a positive negative: indexes a cannot-fact
   (the reasoning layer honors it) AND writes a first-class `not_<prop>`
   door (tag `neg`, so negatives never leak into sequence generation) —
   crystallization can share it (penguins and ostriches share `not_fly`)
   and be vetoed by it. Known-different never collapses; only unknown may.
-- **WRONG IS KEPT AND CLASSIFIED (owner's law, 2026-07-03).** "Knowing
-  what is right is intelligence. Knowing what is wrong is wisdom." Every
-  crystallized type is tested against its chance-null (the same context
-  with door targets shuffled, degrees preserved; scored by the BEST
-  structure chance produces — selection-corrected). Types that fail are
-  neither prevented nor deleted: they are filed in `isaac.wrong_types`
-  with the WHY on the node meta (`verdict: wrong`, `why_wrong: ...`) —
-  error itself is learnable material. Sound types carry `verdict: sound`.
-  Downstream behavior is deliberately unchanged: no pruning, no
-  importance-weighting (the old trap — "we fell into that by telling it
-  what was important and it broke everything"). Battery C3: 249/249
-  chance types filed wrong with reasons; C1 category types all sound.
+- **WRONG IS KEPT AND CLASSIFIED (owner's law, 2026-07-03; test upgraded
+  2026-07-04).** "Knowing what is right is intelligence. Knowing what is
+  wrong is wisdom." Every crystallized type is tested against chance —
+  since A2, a **degrees-aware hypergeometric test** (supersedes the 07-03
+  global re-clustering shuffle, which gave the same battery verdicts at
+  8× the cost): p(type) = pairs-scanned selection charge × P(the two
+  chanciest members share the k-door intent | their degrees, the
+  context's door universe) × each further member's chance of covering the
+  whole intent; sound iff p < 0.01, p stored on the node meta
+  (`p_chance`). Types that fail are neither prevented nor deleted: filed
+  in `isaac.wrong_types` with the WHY (now naming the degrees and
+  universe). Wrong types are demoted from ORGANIZING (hierarchy needs
+  both types sound) but otherwise downstream behavior is unchanged: no
+  pruning, no importance-weighting (the old trap). Battery C3 re-verified
+  under the new test: chance types filed wrong with reasons; C1 category
+  types sound with p < 0.01.
+- **Lockouts are evidence-weighted and revisable (A4, 2026-07-04).** One
+  negative observation → ACTIVE lockout labeled `provisional`
+  (`isaac.lockout_status`); ≥2 → `confirmed`; a lockout later
+  contradicted by positive observation is RETRACTED from the active set
+  into `isaac.wrong_lockouts` with the why — the net keeps the door
+  (nothing leaves the net; the active set is a comparison set, law 4).
+  Admission battery A4a–c: provisional/confirmed/retraction all pinned.
 - **SUPERSESSION, not overwrite (owner's law, 2026-07-03).** "If there is
   a and b, and b works better, use b" — and A is KEPT, wearing its
   defeat. `confirm()` OVERTURN now appends the losing form to the law's

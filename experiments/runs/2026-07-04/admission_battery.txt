@@ -1,0 +1,21 @@
+
+A2a — degrees-aware admission verdicts
+  [PASS] clean categories admitted with p < 0.01 — 1 sound types
+  [PASS] chance co-occurrence filed wrong with degrees in the why — 95 wrong, 0 sound
+
+A2b — hierarchy needs soundness (or significance)
+  [PASS] no wrong-verdict type minted a parent link — 0 chance hierarchy links
+
+A2c — rules gate
+  [PASS] chance context mints few/no co-occurrence rules — 0 rules from noise
+
+A4 — lockouts: provisional / confirmed / retracted
+  [PASS] one negative -> ACTIVE provisional lockout — status=provisional
+  [PASS] repeated negatives -> confirmed — status=confirmed
+  [PASS] contradicted lockout RETRACTED from the active set
+  [PASS] retraction recorded with the why (wrong_lockouts) — retracted: contradicted by positive observation (p
+  [PASS] the net keeps the door (nothing leaves the net)
+  [PASS] uncontradicted lockout still active
+
+============================================================
+ADMISSION BATTERY: 10/10 passed

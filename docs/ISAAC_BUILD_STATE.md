@@ -16,6 +16,39 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — A2 + A4: tests replace thresholds in the crystallizer
+
+The organ everything stands on gets its statistics. Admission battery
+(`experiments/admission_battery.py`) **10/10**; crystallizer battery C1–C6
+re-verified WORKS to owner spec; suite 11/11; sense/blockperm/periodfold
+batteries green after.
+- **The wrong/sound verdict is now a degrees-aware hypergeometric TEST**
+  (numpy-only, `_hyper_tail`): p(type) = pairs-scanned selection charge ×
+  P(two chanciest members share the k-door intent | degrees, universe) ×
+  ∏ remaining members' coverage chance; sound iff p < 0.01; p stored on
+  meta. SUPERSEDES the 07-03 global re-clustering shuffle — same battery
+  verdicts (C1 sound, C3 chance-wrong) at O(types) instead of
+  O(shuffles×n²); knee now ~26 s @ 800 (from 32 post-E3, ~420 pre-E3).
+- **min_shared=2 KEPT as the candidate floor** — expansion by design
+  (propose freely); admission is the test. **0.8 merge KEPT** — the
+  owner-settled DEFINITION of near-identical (C2a law).
+- **Wrong types demoted from ORGANIZING** — hierarchy requires both types
+  sound (law-4 demotion, the senses precedent). Two battery-caught design
+  corrections along the way: (1) chance-gating the hierarchy between
+  SOUND types broke the abc/abd law (C2a FAIL — double-gating; reverted
+  to definitional-between-sound); (2) a hypergeometric OR-branch for
+  wrong types let 7 chance links through (A2b FAIL — chance types share
+  members by construction; independent-draws significance is the wrong
+  null for "should these organize"). Both wrong designs recorded here,
+  wearing their defeats.
+- **Rules face a chance gate** (overlap must beat independence at 1%;
+  ratio stays as strength). Noise context: 0 rules.
+- **A4 — lockouts evidence-weighted and revisable**: recomputed each
+  sleep; 1 negative → ACTIVE provisional, ≥2 → confirmed
+  (`lockout_status`); contradicted → RETRACTED to `wrong_lockouts` with
+  the why (the old behavior — one glance locks forever, even against
+  later positive evidence — is gone); the net keeps the door.
+
 ## 2026-07-04 — E7 CURED: the phase-fold period proposal (owner's design)
 
 Hours after the block null unmasked E7 (off-grid frequencies unreachable

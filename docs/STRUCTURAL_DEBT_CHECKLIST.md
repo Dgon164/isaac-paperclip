@@ -21,16 +21,25 @@ honesty, or capability debt.
       on-grid under AR(0.9) noise. Decay curve re-measured per the standing
       rule: profile stands (ECE 0.079). Side discovery: the old null's
       "power" on off-grid frequencies was an artifact — see E7.
-- [ ] **A2. Crystallizer admission null** — NEVER BUILT at type *formation*:
-      `min_shared=2`, three 0.8 fixed overlaps, zero statistical tests in the
-      organ everything stands on. The 07-03 wrong-section files chance types
-      AFTER formation (C3: 249/249 classified with whys), but formation itself
-      is ungated. (2.10b; battery C3.)
+- [x] **A2. Crystallizer admission null** — **CLOSED 2026-07-04** (admission
+      battery 10/10; C1–C6 re-verified WORKS): the wrong/sound verdict is a
+      degrees-aware hypergeometric test with a pairs-scanned selection
+      charge (supersedes the global shuffle — same verdicts, O(types) not
+      O(shuffles·n²)); `min_shared=2` kept as the candidate floor
+      (expansion by design); wrong types demoted from ORGANIZING (no
+      hierarchy minting; battery caught the OR-branch alternative letting
+      7 chance links through — wrong null for "should these organize");
+      rules face a chance gate; the 0.8 merge kept as owner-settled
+      definition (C2a). Knee after shuffle removal: ~26 s @ 800.
 - [ ] **A3. Bare constants riding good nulls** — 1.4× anti-bridge margin,
       1.5×+2.0 in waves, F<10 with no dof accounting. Tests-over-thresholds
       (law 2) not yet applied to the nulls' own post-processing. (2.10.)
-- [ ] **A4. Single negative observation = permanent lockout** (`:935` region) —
-      one bad frame vetoes forever; no evidence-weighing. (2.10b.)
+- [x] **A4. Single-negative permanent lockout** — **CLOSED 2026-07-04**
+      (admission battery A4a–c): lockouts recomputed each sleep; one
+      negative → ACTIVE `provisional`, ≥2 → `confirmed`
+      (`lockout_status`); contradicted lockouts RETRACTED to
+      `wrong_lockouts` with the why (previously they persisted forever
+      even against positive evidence); the net keeps the door.
 - [ ] **A5. `infer()` first-supporting-sibling wins** — adds a door as a side
       effect with no vote and no null. (Manual §4.)
 - [ ] **A6. Sense candidate LINKING is fixed-count** — admission is null-gated

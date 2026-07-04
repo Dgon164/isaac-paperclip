@@ -117,6 +117,31 @@ class Net:
 # PRIMITIVES — compare and tokenize
 # ═════════════════════════════════════════════════════════════════
 
+def _hyper_tail(N, K, n, k):
+    """P(X >= k) for X ~ Hypergeometric(N, K, n) — the chance that two
+    door-sets of sizes K and n drawn from a universe of N share >= k
+    targets. numpy-only (lgamma), exact tail sum. The crystallizer's
+    admission tests (A2, 2026-07-04) are built on this."""
+    from math import lgamma, exp
+    if k <= 0:
+        return 1.0
+    K, n = int(min(K, N)), int(min(n, N))
+    if k > min(K, n):
+        return 0.0
+    def lC(a, b):
+        if b < 0 or b > a:
+            return None
+        return lgamma(a + 1) - lgamma(b + 1) - lgamma(a - b + 1)
+    base = lC(N, n)
+    tot = 0.0
+    for x in range(k, min(K, n) + 1):
+        la, lb = lC(K, x), lC(N - K, n - x)
+        if la is None or lb is None:
+            continue
+        tot += exp(la + lb - base)
+    return float(min(1.0, tot))
+
+
 def compare(set_a, set_b):
     """The single cognitive primitive. Same, different, not significant."""
     shared = set_a & set_b
@@ -840,7 +865,9 @@ class Isaac:
         self.starts = set()
         self.types = {}
         self.rules = []
-        self.lockouts = set()
+        self.lockouts = set()             # ACTIVE lockouts (a comparison set)
+        self.lockout_status = {}          # pair -> provisional | confirmed
+        self.wrong_lockouts = {}          # retracted lockouts, with the why
         self.observed_sequences = []      # raw record (Rule 5: store raw)
         self.fact_index = defaultdict(list)  # (subject, relation) → [objects]
         self.scratch = Scratch()          # working memory: his registers / RAM
@@ -988,15 +1015,20 @@ class Isaac:
                         if not n.startswith("type:")])
         scope_set = set(scope) if scope else None
 
-        # Phase 1: raw circles via FCA
+        # Phase 1: raw circles via FCA. min_shared stays as the CANDIDATE
+        # floor (expansion — propose freely); admission is Phase 3.5's test.
         circles = []
         seen = set()
         seen_pairs = set()
+        universe = set()          # all door targets/sources in this context
+        pairs_scanned = 0         # selection charge for the admission test
         for i, a in enumerate(nodes):
             preds_a = self.net.get_predecessors(a, tag=tag)
             succs_a = self.net.get_doors(a, tag=tag)
             if not preds_a and not succs_a:
                 continue
+            universe |= preds_a
+            universe |= succs_a
             for b in nodes[i + 1:]:
                 # Scoped: skip pairs where neither node is dirty
                 if scope_set and a not in scope_set and b not in scope_set:
@@ -1005,6 +1037,7 @@ class Isaac:
                 succs_b = self.net.get_doors(b, tag=tag)
                 shared_p = preds_a & preds_b
                 shared_s = succs_a & succs_b
+                pairs_scanned += 1
                 if len(shared_p) + len(shared_s) < min_shared:
                     continue
                 members = {a, b}
@@ -1126,48 +1159,54 @@ class Isaac:
         # the wrong section with the WHY attached, so error itself becomes
         # learnable material. Downstream behavior is deliberately unchanged
         # (no pruning, no importance-weighting — the old trap).
-        def _best_chance_score(n_shuffles=8):
-            edges = []
-            for a in nodes:
-                for t in self.net.get_doors(a, tag=tag):
-                    edges.append((a, t))
-            if len(edges) < 4:
-                return 0.0
-            srcs = [e[0] for e in edges]
-            tgts = [e[1] for e in edges]
-            best = 0.0
-            srng = np.random.default_rng(len(edges))
-            for _ in range(n_shuffles):
-                perm = srng.permutation(len(tgts))
-                succs_s = defaultdict(set)
-                preds_s = defaultdict(set)
-                for k, s in enumerate(srcs):
-                    t = tgts[perm[k]]
-                    succs_s[s].add(t)
-                    preds_s[t].add(s)
-                ns = sorted(set(succs_s) | set(preds_s))
-                for i, a in enumerate(ns):
-                    for b in ns[i + 1:]:
-                        sh_s = succs_s[a] & succs_s[b]
-                        sh_p = preds_s[a] & preds_s[b]
-                        if len(sh_s) + len(sh_p) < min_shared:
-                            continue
-                        mem = sum(1 for m in ns
-                                  if sh_s <= succs_s[m] and sh_p <= preds_s[m])
-                        best = max(best,
-                                   (mem - 1) * (len(sh_s) + len(sh_p)))
-            return best
+        # A2 (2026-07-04): the verdict is now a degrees-aware TEST, not a
+        # shuffle score. SUPERSEDES the 07-03 global re-clustering shuffle
+        # (same battery verdicts — C1 sound, C3 249/249 wrong — at O(types)
+        # instead of O(shuffles × n²); the shuffle survives in git and the
+        # BUILD_STATE entry, wearing its succession). The claim a type makes:
+        # "these m members share this k-door intent beyond chance, given
+        # their degrees and this context's universe." p(type) =
+        #   pairs_scanned                          (selection charge)
+        #   × P(the two chanciest members' door-sets share >= k | degrees)
+        #   × ∏ remaining members' chance of covering the whole intent.
+        from math import lgamma, exp
 
-        chance_best = _best_chance_score()
+        def _lC(a, b):
+            if b < 0 or b > a:
+                return None
+            return lgamma(a + 1) - lgamma(b + 1) - lgamma(a - b + 1)
+
+        N_univ = max(len(universe), 2)
+
+        def _coverage(d, k):
+            # P(a random d-subset of the universe contains all k intent doors)
+            la, lb = _lC(N_univ - k, d - k), _lC(N_univ, d)
+            if la is None or lb is None:
+                return 0.0
+            return exp(la - lb)
+
         self.wrong_types = {}
         for c in merged:
-            score = (len(c["members"]) - 1) * (len(c["preds"])
-                                               + len(c["succs"]))
+            k_int = len(c["preds"]) + len(c["succs"])
+            score = (len(c["members"]) - 1) * k_int
             c["score"] = score
-            if score <= chance_best:
-                why = (f"coherence {score} within chance for this context "
-                       f"(best shuffled structure scores {chance_best}) — "
-                       f"co-occurrence alone explains it")
+            degs = sorted((min(len(self.net.get_predecessors(m, tag=tag))
+                               + len(self.net.get_doors(m, tag=tag)),
+                               N_univ) for m in c["members"]), reverse=True)
+            p = float(max(pairs_scanned, 1))
+            if len(degs) >= 2:
+                p *= _hyper_tail(N_univ, degs[0], degs[1], k_int)
+            for d in degs[2:]:
+                p *= _coverage(d, k_int)
+            p = min(1.0, p)
+            c["p_chance"] = p
+            self.net.set_meta(c["name"], "p_chance", p)
+            if p >= 0.01:
+                why = (f"intent of {k_int} doors shared by "
+                       f"{len(c['members'])} members is within chance for "
+                       f"their degrees in a {N_univ}-door universe "
+                       f"(p≈{p:.3g} ≥ 0.01 after {pairs_scanned} pairs "
+                       f"scanned) — co-occurrence alone explains it")
                 c["verdict"] = "wrong"
                 c["why_wrong"] = why
                 self.wrong_types[c["name"]] = c
@@ -1177,13 +1216,27 @@ class Isaac:
                 c["verdict"] = "sound"
                 self.net.set_meta(c["name"], "verdict", "sound")
 
-        # Phase 4: hierarchy (subset = child)
+        # Phase 4: hierarchy (subset = child). The 0.8 containment stays as
+        # the DEFINITION of "belongs under" BETWEEN SOUND TYPES — they
+        # already passed the admission test; double-gating broke the
+        # owner-settled abc/abd law (battery C2a caught it). Wrong-verdict
+        # types are KEPT and classified but demoted from ORGANIZING (law 4,
+        # the same demotion route()/senses use): chance structure may
+        # exist; it does not get to build the hierarchy. (A hypergeometric
+        # OR-branch was tried and failed its battery — chance types share
+        # members by construction, so independent-draws significance is
+        # the wrong null for "should these organize"; admission battery
+        # A2b caught 7 chance links.)
+        n_ctx = max(len(nodes), 2)
         type_list = list(self.types.values())
         for child in type_list:
             for parent in type_list:
                 if child is parent:
                     continue
                 if len(child["members"]) >= len(parent["members"]):
+                    continue
+                if not (child.get("verdict") == "sound"
+                        and parent.get("verdict") == "sound"):
                     continue
                 overlap = len(child["members"] & parent["members"])
                 if overlap / len(child["members"]) >= 0.8:
@@ -1205,7 +1258,11 @@ class Isaac:
                 overlap = len(pred_sets[a] & pred_sets[b])
                 ratio_a = overlap / len(pred_sets[a]) if pred_sets[a] else 0
                 ratio_b = overlap / len(pred_sets[b]) if pred_sets[b] else 0
-                if ratio_a >= 0.8 or ratio_b >= 0.8:
+                # A2: the ratio stays as strength; the chance gate decides
+                # admission (overlap must beat independence at 1%)
+                if ((ratio_a >= 0.8 or ratio_b >= 0.8)
+                        and _hyper_tail(n_ctx, len(pred_sets[a]),
+                                        len(pred_sets[b]), overlap) < 0.01):
                     self.rules.append((a, b, round(max(ratio_a, ratio_b), 2)))
                     self.net.add_door(a, b, tag="cooccurs")
 
@@ -1223,7 +1280,13 @@ class Isaac:
         return self.types
 
     def _discover_violations(self):
-        """Compare seq doors vs neg doors. The difference IS negation."""
+        """Compare seq doors vs neg doors. The difference IS negation.
+        A4 (2026-07-04): lockouts are EVIDENCE-WEIGHTED and revisable —
+        one negative observation locks PROVISIONALLY (active, honestly
+        labeled); repeated negatives (>=2) lock CONFIRMED; a lockout later
+        contradicted by positive observation is RETRACTED from the active
+        set into wrong_lockouts with the why (the net keeps the door —
+        nothing leaves the net; the ACTIVE set is a comparison set, law 4)."""
         seq_pairs = set()
         neg_pairs = set()
         for (src, tgt), tags in self.net.door_tags.items():
@@ -1231,9 +1294,31 @@ class Isaac:
                 seq_pairs.add((src, tgt))
             if "neg" in tags:
                 neg_pairs.add((src, tgt))
-        for src, tgt in (neg_pairs - seq_pairs):
-            self.net.add_door(src, tgt, tag="lockout")
-            self.lockouts.add((src, tgt))
+        counts = getattr(self.net, "door_counts", {})
+        if not hasattr(self, "wrong_lockouts"):
+            self.wrong_lockouts = {}
+        if not hasattr(self, "lockout_status"):
+            self.lockout_status = {}
+        # retraction: a locked pair now positively observed is overturned
+        for pair in list(self.lockouts):
+            if pair in seq_pairs:
+                self.lockouts.discard(pair)
+                self.wrong_lockouts[pair] = (
+                    f"retracted: contradicted by positive observation "
+                    f"(pair count {counts.get(pair, 0)}) — was "
+                    f"{self.lockout_status.get(pair, 'provisional')}")
+                self.lockout_status.pop(pair, None)
+        for pair in (neg_pairs - seq_pairs):
+            src, tgt = pair
+            has_lock = "lockout" in self.net.get_door_tags(src, tgt)
+            # evidence = observations of the pair minus the single
+            # lockout-door bookkeeping add (guarded to at most one)
+            ev = max(counts.get(pair, 1) - (1 if has_lock else 0), 1)
+            if not has_lock:
+                self.net.add_door(src, tgt, tag="lockout")
+            self.lockouts.add(pair)
+            self.lockout_status[pair] = ("confirmed" if ev >= 2
+                                         else "provisional")
 
     # ── compilation ─────────────────────────────────────────────
     # Doors → matrix. Same information, different representation.
