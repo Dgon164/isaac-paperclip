@@ -98,6 +98,17 @@ honesty, or capability debt.
 - [ ] **D11. Interior-preservation gate in refine()** — known trade: inside-
       range hold eased 99%→94% when the refit weighs the new frontier.
 - [ ] **D12. λ-continuous refine across 0** (power-dial polish).
+- [ ] **D13. The engineer loop** (Omega Closure 6, owner 2026-07-04): spec
+      layer (desired states as expectations), faults as signed effect
+      entities, DO-probes for root cause, laws-run-backward repair planning,
+      fix verification against its own null, repair ledger with wrong-section.
+      Rides on D9 + the existing consequence layer; P5 predicts the cost is
+      in the SPEC layer, not the reasoning.
+- [ ] **D14. Gated-English conversation** (Omega Closure 7, owner 2026-07-04):
+      why-unfolding over the Converse panel (every sentence traces to a net
+      object or shrugs with a diagnosis); then the LLM renderer at the
+      interface tier with the faithfulness null (parse back, diff against
+      source objects). Shallow form buildable NOW.
 
 ## E. MEASURED limits — the only licensed optimization targets (owner's law)
 
