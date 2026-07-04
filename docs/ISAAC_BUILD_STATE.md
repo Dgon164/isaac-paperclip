@@ -16,6 +16,45 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — THE CORRECTION-AND-REUSE ARC (suite 11/11 throughout)
+
+One day, eight capabilities, every one owner-specified and battery-proven:
+- **refine()** — the correction loop: law_confidence picks the weakest
+  region, budgeted experiments go exactly there, re-derivation passes the
+  Occam gate. Measured: beyond-range hold **50% → 75%** (+25 pts), terms
+  flat. **Occam is a PREFERENCE, not a gate** ("its not only. its just
+  preferred") — non-preferred candidates RETAINED as alternatives.
+- **capture_net / graduate** — audit 2.8 CLOSED (flat level): the
+  null-gated stopgap net + the distillation attack; planted x0·x1−x2
+  captured then said EXACTLY (prune runs against REALITY, so net-warp
+  terms die). Noise nets fail their null; nothing stored.
+- **adequacy** — data too weak to interpret is a DIAGNOSIS with a cause
+  (below-onset/provisional, missing-variable shadow, class limit,
+  nothing-beats-chance, range-too-narrow).
+- **interrogate / graduate_composite** — the captured made explicit in
+  gated English (drivers, joint action, composite dependence vs matched
+  level-set nulls, shape+frequency); the stuck sin(3·x0·x1) delivered
+  "flows through the product ONLY" then graduated EXACT via the
+  composite coordinate.
+- **register_composite** — combinations are THINGS: comb:(x0*x1) nodes,
+  ledger-persisted, offered to every future discover(). The canonical
+  unsayable became UNDERSTOOD-exact after learning the combination on a
+  DIFFERENT problem, including across a session boundary.
+- **collectives** — the common mode enumerated SIGNED both directions
+  ("darkening vs brightening"), gated vs sign-scrambled shifts, minted
+  as mean(...) coordinates; mixed-sign groups refused.
+- **ops open + ONE DIAL** — ratio and log composites (domain-guarded);
+  then log folded INTO the power family at λ=0 (Box-Cox limit); rivals
+  gain log+sqrt; `+2.00*log(x0) +1.00` sayable natively cold.
+- **the audits** — calibration (100 worlds): form-true trust number
+  **68%**, UNDERSTOOD-inside 100%, noise refusals 15/15, accounting
+  median error 0.2 pts; extrapolated-confidence curve measured and
+  validated out-of-sample (ECE 0.070); re-measured after the enumerator
+  change: profile unchanged.
+NEXT (queued): **effect entities** (the shadow pipeline: expect →
+subtract → perceive-the-delta, signed); block-permutation null; pixel
+clock; MVP track (CSV ingestion → Report → UI plots → packaging).
+
 ## 2026-07-03 (last) — EXTRAPOLATED CONFIDENCE: the stamp becomes a curve
 
 - Owner: "maybe just a boundary confidence? what about extrapolated

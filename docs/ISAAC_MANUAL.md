@@ -288,9 +288,19 @@ trajectories and stores only what refuses to vary.
 
 - `discover(X, y, name=)` — given examples of something he cannot do:
   - **atom library**: variables; products to degree 3; sin/cos at scale
-    grids; exp decay AND growth; **powers** (±0.5, ±1, −2, 1.5 grids);
-    pairwise cos/sin/cosh of differences. Grids PROPOSE scale parameters
-    (unreachable by regression); hill-climbing refits SHARPEN them.
+    grids; exp decay AND growth; **the power DIAL** (−2, −1, −0.5, **0**,
+    0.5, 1.5 — where **λ=0 IS log**, the Box-Cox limit: "isn't a log just
+    a power? it's not special" — correct; log and sqrt also joined the
+    rival look-alikes); pairwise cos/sin/cosh of differences. Grids
+    PROPOSE scale parameters (unreachable by regression); hill-climbing
+    refits SHARPEN them. `y = a·ln(x)+b` is sayable natively:
+    cold discovery writes `+2.00*log(x0) +1.00` exact.
+  - **the open op family (learned combinations)**: product, sum,
+    difference, **ratio** (guarded at b≈0), **log** (arity-1, guarded at
+    x≤0), **mean** (arity-N collectives). Out-of-domain rows drop
+    honestly at discover-time. Minted composites are columns for every
+    future discover(); calibration was re-measured after the enumerator
+    change (trust profile unchanged — `DECAY_MEASURED` stands).
   - **staged, null-gated admission**: candidates grow only around admitted
     terms; a term must beat the max-over-candidates correlation on
     permuted residuals; trial shortlist is structurally diverse (raw-var
