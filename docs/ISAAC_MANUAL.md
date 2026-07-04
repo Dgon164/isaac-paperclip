@@ -356,6 +356,27 @@ trajectories and stores only what refuses to vary.
   ledger-inherited) law on new evidence → HOLDS / DEGRADED / FAILS,
   recorded in the ledger. apply_law itself checks only shape; call this
   before trusting an inherited law.
+- **`capture_net(name, X, y)` / `graduate(name, X=, y=)` — the stopgap
+  that exists to be destroyed** (audit 2.8's closing loop, 2026-07-04).
+  THE NO-NETS LAW HOLDS: the tiny numpy net (1 tanh layer) is never the
+  deliverable — it is quarantined on the unknown's node `x:<name>`, it
+  counts ONLY past a permuted-output null that replays the whole training
+  contest (a noise-net stores NOTHING — verified), and its purpose is the
+  distillation attack: `graduate()` queries the net as a free oracle
+  (answers carry the net's own held-out residual as noise — its honest
+  uncertainty), runs discover() on the answers, and prunes the result
+  **against the original data** so terms serving the net's private warp
+  die at F-ties while terms serving the truth survive. Battery
+  (`experiments/capture_graduation.py`): planted x0·x1−x2 captured at
+  0.984 → graduated to `+1.00*x0*x1 −1.00*x2` exactly (R² 1.000 vs
+  truth); out-of-class sin(3·x0·x1) captured and HONESTLY not graduated;
+  noise net failed its null, nothing stored.
+- **`adequacy` (in every discover() result)** — data too weak to
+  interpret is a DIAGNOSIS, not a shrug: names the cause with evidence —
+  sample below onset (attaches as "provisional" even to successes),
+  no responsive channel (missing-variable shadow), expressive-class
+  limit ("structure IS present but no equation in the library says it"),
+  nothing-beats-chance, or range-too-narrow (live rivals + probes).
 - `refine(name, X, y, ask=, budget=, rounds=)` — **THE CORRECTION LOOP**
   (owner's design, 2026-07-03: the confidence indicator becomes a
   steering signal). Each round: (1) fan candidate probes past the hull

@@ -130,6 +130,9 @@ per-row notes below.
 
 | **THE CORRECTION LOOP (owner's design): confidence as a steering signal — probe the weakest region, re-derive, accept only better-or-tied-and-simpler, supersede with why, Occam-prune** | `refinement_audit.py` + `isaac.refine()` | **VERIFIED** | 2026-07-03 | 100-world deck, 60 experiments/law: **beyond-range hold 50% → 75% (+25 pts)**; Occam held complexity flat (2.8 → 2.8 mean terms) while accuracy rose; 90 refinements accepted through the gate, **47 terms pruned at F-ties** (simpler won); known trade: inside-range 99% → 94%; instrument failures (non-finite probes) handled; 36 s total; suite 11/11 |
 
+| **Audit 2.8 CLOSED (flat level): capture nets + the distillation attack + graduation** — the stopgap that exists to be destroyed | `capture_graduation.py` + `isaac.capture_net/graduate` | **VERIFIED** | 2026-07-04 | G1: planted x0·x1−x2 captured by the null-gated tiny net (0.984 vs null −0.13) → distilled → pruned against reality → **`+1.00*x0*x1 −1.00*x2` exact, R² 1.000 vs truth**; G2: out-of-class sin(3·x0·x1) captured, honestly STILL CAPTURED after distillation; G3: noise net FAILED its null, nothing stored (the lie-killer); the razor at graduation runs against the ORIGINAL data so net-warp terms die while truth terms survive |
+| **Data-adequacy diagnosis** in every discover(): too-weak data gets a cause, not a shrug | `capture_graduation.py` G4 | **VERIFIED** | 2026-07-04 | hidden driver → "driver may not be among these columns (shadow)"; nested → "expressive-class limit, not weak data"; n=40 → "interpretable (provisional: small sample)"; suite 11/11 |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.

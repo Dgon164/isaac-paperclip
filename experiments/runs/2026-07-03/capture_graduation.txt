@@ -1,0 +1,29 @@
+======================================================================
+G1 — capture -> distill -> the equation matches the planted truth
+======================================================================
+  capture: CAPTURED (net)  (held-out R2 0.984 vs null -0.126)
+  graduate: GRADUATED  -> +1.00*x0*x1 -1.00*x2 +0.00
+  distilled law vs the PLANTED truth (fresh data): R2 1.000
+======================================================================
+G2 — out-of-class: captured, distillation honestly finds no law
+======================================================================
+  capture: CAPTURED (net)  (R2 0.455 vs null -0.046)
+  graduate: STILL CAPTURED (distilled verdict PARTIAL, R2 0.63)
+  the unknown's status: still captured (distillation found no equation)
+======================================================================
+G3 — a net trained on pure noise must FAIL its null
+======================================================================
+  capture on noise: FAILED NULL  (R2 -0.393 vs null -0.199);  stored: NOTHING
+======================================================================
+G4 — data too weak to interpret: the diagnosis names the cause
+======================================================================
+  n=40 (below onset)       -> interpretable (provisional: small sample) cause named: YES
+  hidden driver            -> too weak to interpret      cause named: YES
+  nested (class limit)     -> partially interpretable    cause named: YES
+======================================================================
+G1 caught -> said -> matches truth : PASS
+G2 honest non-graduation           : PASS
+G3 noise net fails its null        : PASS
+G4 weakness diagnosed with cause   : PASS
+VERDICT: WORKS — audit 2.8 is closed at the flat level
+======================================================================
