@@ -137,6 +137,8 @@ per-row notes below.
 
 | **Combinations are first-class, memorized, REUSED** — comb:<name> nodes minted by interrogation, ledger-inherited, auto-offered to every discover() | `composite_reuse_battery.py` | **VERIFIED** | 2026-07-04 | R0 control: sin(3·x0·x1)+0.5·x2 cold = PARTIAL 0.80 (unsayable); R1: after learning (x0*x1) on a DIFFERENT problem → **UNDERSTOOD `+1.00*sin(3*(x0*x1)) +0.50*x2` exact**, applies to fresh raw data at 0.999; R2: a fresh Isaac inherits the combination through the ledger and solves it cold; R3: (x0*x1), (x0+x1), (x1*x2) are three distinct nodes with provenance; full regression green (suite 11/11, all batteries, refinement +24) |
 
+| **Collective signals: the common mode enumerated — signed, gated, minted, reused** | `collective_battery.py` | **VERIFIED** | 2026-07-04 | K1: 8 faint columns → "the 8 drivers move TOGETHER: +3.82 up / −3.34 down, 6.1× any single feature, beats sign-scrambled 2.87" + `mean(x0..x7)` minted; K2: −2·mean reported as DARKENING (up-shift −2.40) — the sign is the fact; K3: x0−x1+x2 (mixed signs, no common mode) correctly REFUSED; K4: cold CAPTURED 0.38 → with the learned collective **UNDERSTOOD `+1.00*cos(3*mean(x0..x7))` exact**; suite 11/11, interrogation/capture/reuse batteries green |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.

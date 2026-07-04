@@ -402,6 +402,19 @@ trajectories and stores only what refuses to vary.
   from a DIFFERENT easy problem it is UNDERSTOOD **`+1.00*sin(3*(x0*x1))
   +0.50*x2` exact**, including in a fresh Isaac that inherited the
   combination through the ledger. The vocabulary grows with experience.
+- **COLLECTIVE signals — signed, gated, minted** (owner, 2026-07-04:
+  "a strong significant collective signal, but a weak individual signal";
+  "darkening vs brightening" — deltas are SIGNED, both directions,
+  always). interrogate() shifts all drivers TOGETHER vs one at a time vs
+  the matched null (same-size shifts with scrambled signs — coherence
+  broken, perturbation kept). A certified common mode is reported with
+  both signed responses and minted as a collective coordinate
+  `mean(x0,...)` — an arity-N composite the registry reuses. Battery
+  (`experiments/collective_battery.py` 4/4): 8 faint columns → "move
+  TOGETHER, +3.82 up / −3.34 down, 6.1× any single, beats scrambled";
+  −2·mean reported as DARKENING; mixed-sign group correctly refused;
+  and the minted collective made cos(3·mean(x0..x7)) — CAPTURED 0.38
+  cold — **UNDERSTOOD `+1.00*cos(3*mean(x0..x7))` exact**.
 - **`adequacy` (in every discover() result)** — data too weak to
   interpret is a DIAGNOSIS, not a shrug: names the cause with evidence —
   sample below onset (attaches as "provisional" even to successes),

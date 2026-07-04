@@ -1,0 +1,27 @@
+======================================================================
+K1 — y = 3*mean(x0..x7): weak alone, strong together
+======================================================================
+    - the pattern lives in x1 (14%), x6 (14%), x2 (13%), x4 (13%), x5 (13%), x7 (12%), x0 (11%), x3 (10%)
+    - the 8 drivers move TOGETHER: a coherent shift up moves the response +3.82 and a coherent shift down moves it -3.34 (signed — brightening and darkening are different facts); the collective is 6.1x any single feature and beats sign-scrambled shifts (2.87) — the response rises with the group's common mode
+  minted: ['mean(x0,x1,x2,x3,x4,x5,x6,x7)']
+======================================================================
+K2 — y = -2*mean(...): the response FALLS as the collective rises
+======================================================================
+    coherent up-shift response: -2.40  (darkening); down-shift: +2.15 (brightening)
+======================================================================
+K3 — y = x0 - x1 + x2: drivers yes, collective NO (mixed signs)
+======================================================================
+    collective claim: NONE (correct refusal)
+======================================================================
+K4 — reuse: cos(3*mean(x0..x7)), cold vs with the learned collective
+======================================================================
+    cold engine: CAPTURED (R2 0.38)
+    with the collective: UNDERSTOOD (R2 0.996)
+    equation: +1.00*cos(3*mean(x0,x1,x2,x3,x4,x5,x6,x7)) -0.00
+======================================================================
+K1 collective found, signed, minted   : PASS
+K2 darkening reported as darkening    : PASS
+K3 mixed signs refused                : PASS
+K4 collective reused on a new problem : PASS
+VERDICT: WORKS — the common mode is enumerable, signed, and reusable
+======================================================================
