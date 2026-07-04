@@ -312,6 +312,19 @@ trajectories and stores only what refuses to vary.
     PROPOSE scale parameters (unreachable by regression); hill-climbing
     refits SHARPEN them. `y = a·ln(x)+b` is sayable natively:
     cold discovery writes `+2.00*log(x0) +1.00` exact.
+    **Phase-fold period proposal (E7 cure, owner's design 2026-07-04:
+    "do the projection thing... a few samples and to map it")**: before
+    atoms are built, y is FOLDED onto candidate periods of each input
+    (coarse geomspace scan + fine scan around the winner); coherence =
+    variance explained by phase bins; a period is proposed only past a
+    selection-corrected block-perm null replaying the same two-stage
+    scan (99th pct, 100 draws — white noise proposes ~nothing). Proposed
+    frequencies join the sin/cos grid for that discover() and still face
+    the admission null. Battery `experiments/periodfold_battery.py` 6/6:
+    off-grid sin(1.5t) over 40u + AR noise — NO RULE pre-fold —
+    articulated at k=1.506; **150 scattered timestamps suffice**
+    (UNDERSTOOD; folding needs coverage of the cycle, not of time);
+    0/5 false laws on AR noise; iid path untouched.
   - **the open op family (learned combinations)**: product, sum,
     difference, **ratio** (guarded at b≈0), **log** (arity-1, guarded at
     x≤0), **mean** (arity-N collectives). Out-of-domain rows drop
@@ -484,14 +497,12 @@ trajectories and stores only what refuses to vary.
   cold 0.82 → primed 0.995). Log-track inside `discover()` is a queued
   engine item.
 - Known limits (battery + red team, all documented): wrong-form risk at
-  n < ~400 (provisional rule); frequency reach ≈ 2× grid max; **grid
-  RESOLUTION over long windows** (measured 2026-07-04, unmasked by the
-  block null: an off-grid frequency — e.g. 1.5 between grid points 1 and
-  2 — is near-orthogonal to every proposal atom over many cycles, r 0.12
-  vs gate 0.37 → honest NO RULE; the old invalid null "found" such cases
-  by letting near-miss atoms through for hill-climbing — power by
-  accident); nested nonlinearities land in CAPTURED by design; rational
-  functions admit usable trig surrogates (range-valid).
+  n < ~400 (provisional rule); frequency reach ≈ 2× grid max for
+  non-periodic scales (periodic scales now reachable by the phase-fold
+  proposal — grid RESOLUTION over long windows was measured 2026-07-04,
+  unmasked by the block null, and CURED the same day by folding);
+  nested nonlinearities land in CAPTURED by design; rational functions
+  admit usable trig surrogates (range-valid).
 
 ## 8. Memory that outlives the process — [VERIFIED IN ENGINE SELF-TEST 11/11]
 

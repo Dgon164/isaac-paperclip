@@ -100,12 +100,19 @@ check("law articulated despite autocorrelated noise",
       and ("sin" in res4["equation"] or "cos" in res4["equation"]),
       f"{res4['verdict']}: {res4['equation'][:60]}")
 
-# ── B5: the unmasked limit, recorded as expected behavior ───────────
-print("\nB5 — off-grid frequency over a long window: honest refusal (E6)")
+# ── B5: the unmasked limit (E7) — CURED same day by phase-folding ───
+# History: this case was an honest NO RULE when the block null landed (the
+# old invalid null had found it by accident). The owner's fix ("do the
+# projection thing... a few samples and to map it") proposes the period
+# from the data; the truth is now articulated LEGITIMATELY — through valid
+# gates. Full folding battery: experiments/periodfold_battery.py.
+print("\nB5 — off-grid frequency: cured by phase-fold proposal (E7)")
 y_off = 3.0 * np.sin(1.5 * t4[:, 0]) + 0.35 * ar1(n4, 0.9, rng)
 res5 = Isaac().discover(t4, y_off, name="offgrid_long_window")
-check("no false law where the grid cannot reach",
-      res5["verdict"] != "UNDERSTOOD", f"verdict={res5['verdict']}")
+check("truth articulated through valid gates (was NO RULE pre-fold)",
+      res5["verdict"] in ("UNDERSTOOD", "PARTIAL")
+      and ("sin" in res5["equation"] or "cos" in res5["equation"]),
+      f"{res5['verdict']}: {res5['equation'][:50]}")
 
 n_pass = sum(1 for _, ok in results if ok)
 print(f"\n{'='*60}\nBLOCK-PERM BATTERY: {n_pass}/{len(results)} passed")

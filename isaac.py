@@ -497,9 +497,82 @@ class _Enumerator:
         blocks = r.reshape(nb, L)
         return blocks[_wave_rng.permutation(nb)].ravel()[:n]
 
+    # ── E7 (2026-07-04): phase-fold period proposal ────────────────────
+    # Owner: "if you suspect a period do the projection thing. you don't
+    # need the whole thing, you just need a few samples and to map it."
+    # An off-grid frequency over a long window is near-orthogonal to every
+    # grid atom (measured: r 0.12 vs gate 0.37) — so PROPOSE periods from
+    # the data itself: fold y onto candidate periods of each input and
+    # score how much variance the phase map explains. Sparse and irregular
+    # sampling is fine — folding needs coverage of the CYCLE, not of time.
+    # A period is proposed only past a selection-corrected block-perm null
+    # (max-over-all-periods on permuted y). Proposals WIDEN the grid
+    # (expansion); every proposed atom still faces the admission null
+    # (compression unchanged).
+
+    def _propose_periods(self, X, y, n_perm=100, pct=99, bins=8):
+        n = len(y)
+        if n < 40:
+            return []
+        ys = (y - np.mean(y)) / (np.std(y) + 1e-12)
+        self.block_L = min(self._decorr_len(ys), max(2, n // 20))
+        proposals = []
+        for i in range(X.shape[1]):
+            t = np.asarray(X[:, i], float)
+            span = float(t.max() - t.min())
+            if span <= 0:
+                continue
+            p_min = 8.0 * span / n        # >= ~8 samples per cycle
+            p_max = span / 2.0            # >= 2 folds, else nothing maps
+            if p_min >= p_max:
+                continue
+            Ps = np.geomspace(p_min, p_max, 64)
+            t0 = t - t.min()
+
+            def fold_score(vals, P):
+                ph = np.minimum((t0 % P) / P * bins, bins - 1).astype(int)
+                cnt = np.bincount(ph, minlength=bins)
+                s1 = np.bincount(ph, weights=vals, minlength=bins)
+                s2 = np.bincount(ph, weights=vals * vals, minlength=bins)
+                ssw = float((s2 - s1 * s1 / np.maximum(cnt, 1)).sum())
+                return 1.0 - ssw / (float(vals @ vals) + 1e-12)
+
+            def best_fold(vals):
+                # coarse map, then a fine scan around the winner — the null
+                # replays BOTH stages, so selection stays corrected
+                best, bestP = 0.0, None
+                for P in Ps:
+                    r = fold_score(vals, P)
+                    if r > best:
+                        best, bestP = r, P
+                if bestP is not None:
+                    for P in np.linspace(bestP * 0.93, bestP * 1.07, 33):
+                        r = fold_score(vals, P)
+                        if r > best:
+                            best, bestP = r, P
+                return best, bestP
+
+            real, realP = best_fold(ys)
+            if realP is None:
+                continue
+            null = np.empty(n_perm)
+            for k in range(n_perm):
+                null[k] = best_fold(self._null_perm(ys))[0]
+            if real > np.percentile(null, pct):
+                proposals.append((i, 2.0 * np.pi / realP))
+        self.proposed_periods = proposals
+        return proposals
+
     def fit(self, X, y):
         self.X = X
         self.specs = _atom_specs(X.shape[1])
+        # phase-fold proposals join the grid (dedup against existing ks)
+        for (i, k) in self._propose_periods(X, y):
+            k = round(float(k), 4)
+            if not any(s[0] in ("sin", "cos") and s[1] == i
+                       and s[3] is not None and abs(s[3] - k) / k < 0.02
+                       for s in self.specs):
+                self.specs += [("sin", i, None, k), ("cos", i, None, k)]
         self.A = np.column_stack([_atom_col(X, s) for s in self.specs])
         n_atoms = self.A.shape[1]
         n_vars = X.shape[1]

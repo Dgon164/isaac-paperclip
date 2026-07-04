@@ -16,6 +16,35 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — E7 CURED: the phase-fold period proposal (owner's design)
+
+Hours after the block null unmasked E7 (off-grid frequencies unreachable
+over long windows), the owner supplied the cure: "if you suspect a period
+do the projection thing. you don't need the whole thing, you just need a
+few samples and to map it." Built as `_Enumerator._propose_periods`:
+before atoms are built, y is FOLDED onto candidate periods of each input
+(t mod P → phase bins; coherence = variance explained; coarse geomspace
+scan then fine scan around the winner); a period is proposed only past a
+selection-corrected block-perm null that replays the identical two-stage
+scan (99th pct, 100 draws). Proposed frequencies join the sin/cos grid
+for that discover() and STILL face the admission null — expansion
+widened, compression untouched (the Intellon pattern, stated by the
+owner the same hour). Battery `periodfold_battery.py` **6/6**:
+- the E7 case (sin(1.5t) + AR(0.9) over 40u, NO RULE pre-fold) →
+  **`+3.10*sin(1.5061*x0)` PARTIAL** — truth through valid gates;
+- **150 scattered timestamps → UNDERSTOOD** (`sin+cos` pair at 1.4805) —
+  folding needs coverage of the CYCLE, not of time (the owner's "few
+  samples" claim, verified);
+- AR noise alone 0/5 false laws; white noise proposes ~nothing at the 1%
+  gate; planted iid law untouched.
+Two battery-caught corrections during the build: the coarse-only scan
+proposed k 2% off and small-n refits couldn't walk it home (fine scan
+added, null replays it); the 95% proposal gate tripped 2/10 on white
+noise (raised to 99%, 100 draws). blockperm B5 updated: the case it
+recorded as an honest refusal is now articulated legitimately.
+Suite 11/11; discovery battery + red team green; calibration re-measured
+(third time today — the standing rule).
+
 ## 2026-07-04 — DOWN THE CHECKLIST: E3 + A1 (the core before the additions)
 
 Owner: "fix the core before adding on" — the debt checklist's attack order,

@@ -1,0 +1,19 @@
+
+P1 — off-grid frequency over a long window (yesterday's honest NO RULE)
+  [PASS] articulated (was NO RULE before folding) — PARTIAL: +3.10*sin(1.5061*x0)-0.09
+  [PASS] frequency recovered near 1.5 — k=1.5061
+
+P2 — 150 scattered timestamps ('you just need a few samples and to map it')
+  [PASS] law found from scattered samples — UNDERSTOOD: +2.85*sin(1.4805*x0) +1.12*cos(1.4805*x0) -1.31*ex
+
+P3 — AR(0.9) noise alone: folding must not create false laws
+  [PASS] 0/5 false laws on autocorrelated noise — 0/5
+
+P4 — proposal gate refuses white noise
+  [PASS] white noise: ~0 proposals across 10 draws (<=1 at the 1% gate) — 0 proposals
+
+P5 — planted iid law still exact
+  [PASS] UNDERSTOOD, form exact — -1.00*x2 +0.99*x0*x1 -0.00
+
+============================================================
+PERIOD-FOLD BATTERY: 6/6 passed

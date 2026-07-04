@@ -130,14 +130,16 @@ honesty, or capability debt.
       pre-index snapshots; `get_full_profile` uses it too. Equivalence
       verified exactly (0 mismatches, 10 random nets × all tags); suite
       11/11; knee collapsed 13× (see E1) without touching the crystallizer.
-- [ ] **E7. Grid frequency resolution over long windows** — NEW, measured
-      2026-07-04 (unmasked by A1): an off-grid frequency between proposal
-      points is near-orthogonal to every atom over many cycles (r 0.12 vs
-      gate 0.37) → honest NO RULE. The old invalid null admitted near-miss
-      atoms that hill-climbing then walked to the truth — power by
-      accident. Proper fix when wanted: denser adaptive frequency proposal
-      (e.g. spectral peak of the residual as a proposed scale — expansion
-      phase widened, compression unchanged).
+- [x] **E7. Grid frequency resolution over long windows** — measured
+      2026-07-04 (unmasked by A1), **CURED the same day by the owner's
+      design** ("do the projection thing... a few samples and to map it"):
+      phase-fold period proposal — fold y onto candidate periods, coarse +
+      fine scan, propose only past a selection-corrected block-perm null
+      (99th pct) — proposed frequencies join the grid, admission null
+      unchanged. Battery `periodfold_battery.py` 6/6: off-grid 1.5
+      articulated at 1.506; 150 SCATTERED samples suffice (UNDERSTOOD);
+      0/5 false laws on AR noise; white noise proposes nothing; iid path
+      untouched. Expansion widened, compression untouched — the pattern.
 - [ ] **E4. `observe_spatial` all-pairs O(n²) per frame set.** (Manual §5b.)
 - [ ] **E5. Wave envelope** (measured, not bugs): period ≥ 9 ticks,
       instantaneous handoffs, ≲4 concurrent aperiodic waves, fire rate ≥ 0.7,

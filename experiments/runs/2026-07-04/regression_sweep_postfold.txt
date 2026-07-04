@@ -1,0 +1,15 @@
+E11_tails              student_t3  UNDERSTOOD R2  1.000 edge  1.000        [1s]  +1.00*x0*x1*cos(1*(x2-x3)) +0.00
+
+done — discovery_battery_results.csv
+    eq: +0.00*x0*x1 +0.00
+A8 one NaN cell: FLESH WOUND (no crash; verdict UNDERSTOOD)
+    -> UNDERSTOOD [form-true] R2 1.000 edge 1.000 cap 0.903
+    eq: +1.00*x0*x1 -0.00
+
+  calibration error (ECE): 0.077
+  Brier score: graded confidence 0.248  vs  flat 68% baseline 0.286  (BETTER)
+======================================================================
+VERDICT: WORKS — the binary stamp becomes graded belief:
+boundary confidence inside the hull, measured-decay confidence beyond it,
+validated on worlds the curve never saw.
+======================================================================
