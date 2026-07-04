@@ -16,6 +16,35 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — LINES, RECTANGLES, RELATIONAL ROTATION (owner, same day)
+
+"A slanted 8 is just two circles at 15 degrees, a 7 is a 25 degree 1 with
+a second line on top." Battery `rotation_battery.py` **11/11**; shapes
+11/11; wireframe 8/8; pattern3d 9/9; suite 11/11 after.
+- **Identity vs pose, made operational**: every part carries rel_angle
+  (identity, survives rotation); the glyph frame carries TILT (pose).
+  Verified: the slanted 8 has the SAME relational description as the
+  upright 8 plus "tilted -18°"; the rotated 7 keeps its joint angle
+  (60°→61°) while its tilt moves (-18°→+8°).
+- **Lines with corners**: skeleton strokes decompose by PEELING DIAMETER
+  PATHS (BFS twice → longest path → Douglas–Peucker corner split →
+  remove → repeat); joined lines relate by JOINT ANGLE. The 7: "two
+  lines, joined at 60°". The 1: "one line".
+- **Rectangles and squares**: round-vs-square is FILL in the region's own
+  frame (ellipse π/4 vs rectangle ~1; discrete cut at 0.92); hollow rect
+  = FRAME, filled = RECT, square flagged. Full-vs-hollow stays topology.
+- **THREE root-cause bugs found by the battery, in order**: (1) raw
+  neighbour-count junctions shatter 8-connected diagonals (→ crossing
+  number); (2) even crossing-number junctions chop strokes where
+  thinning leaves 2px bits — junction detection ABANDONED for path
+  peeling; (3) the deepest: `_ink_components` was 4-connected — a
+  skeleton is an 8-connected path, so every diagonal step split it and
+  the 7's top bar fell under the size floor (→ conn=8 for skeletons,
+  conn=4 kept for holes, which NEED it).
+- The connectivity fix cascaded: the MNIST signature road jumped
+  **36.7% → 52–58% at 299/300 coverage** with no new learning — the
+  perception was lying and stopped.
+
 ## 2026-07-04 — FULL AND HOLLOW: the shape vocabulary (owner, same day)
 
 "What if it had full and hollow bones? circle vs disc vs sphere vs

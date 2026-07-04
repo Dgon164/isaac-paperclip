@@ -389,10 +389,21 @@ trajectories and stores only what refuses to vary.
   machinery). The 8 answers: **"two rings, stacked, one squished
   (0.66)"**. `classify_solid(points)`: 3D shell (sphere, radius cv→0)
   vs solid (ball, cv≈0.26 exact for uniform), middle band refuses.
-  Real handwriting: hole-count agrees with canonical digit topology
-  **86%**; the raw signature road alone scores 38.5% at 299/300
-  coverage — the natural two-tier (topology filters, bone patterns
-  decide) is the named next step.
+  **Lines, rectangles, and RELATIONAL ROTATION (owner, same day;
+  battery `experiments/rotation_battery.py` 11/11):** skeleton strokes
+  decompose by peeling diameter paths + Douglas–Peucker corner splits
+  into LINES; joined lines carry their JOINT ANGLE; round-vs-square is
+  FILL in the region's own frame (frame/rect kinds, square flagged);
+  every part carries rel_angle (identity) and the whole carries tilt
+  (pose) — a slanted 8 is the upright 8 plus "tilted -18°"; the 7 is
+  "two lines, joined at 60°" and keeps that joint when rotated while
+  its tilt moves. Three root-cause perception bugs battery-caught
+  (see BUILD_STATE; deepest: components were 4-connected, skeletons
+  are 8-connected paths). Real handwriting: hole-count agrees with
+  canonical digit topology **86%**; the (holes, lines) signature road
+  now scores **52–58% at 299/300 coverage** (was 38.5 pre-fix) — the
+  two-tier road (topology filters, bone patterns decide) is the named
+  next step.
 - Limits (honest): trajectories need identities given (the tracker half
   of the pixel bridge is still open); the lift is single-rigid-body
   (multi-body SfM not built — stitch_views covers the multi-VIEW case,

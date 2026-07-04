@@ -1,0 +1,23 @@
+
+R1 — the rectangle family
+  [PASS] hollow rectangle reads FRAME — one frame
+  [PASS] filled square reads square RECT — one square rect
+  [PASS] ellipse hole still reads RING (fill separates round from square) — one ring
+
+R2 — a slanted 8 is the upright 8 wearing a tilt
+  [PASS] relational identity equal (two rings, stacked) — up=(2, ('ring', 'ring')) slant=(2, ('ring', 'ring'))
+  [PASS] the tilt is reported (~15 deg) — upright tilt 0.0, slanted tilt -18.1 — 'two rings, tilted -18°'
+
+R3 — a 7 is a tilted line with a second line on top
+  [PASS] the 7 is TWO lines — two lines, joined at 60°, tilted -18°
+  [PASS] joined at ~65 deg (90-25, the owner's arithmetic) — joint 60°
+  [PASS] the 1 is ONE line — one line
+  [PASS] rotated 7: joint angle SURVIVES (identity) — 60° -> 61°
+  [PASS] rotated 7: the tilt MOVES (pose) — tilt -18.4 -> 7.6
+
+R4 — the signature road with line-splitting (honest re-measure)
+    (holes, n_lines) road: 52.2% on 299/300
+  [PASS] line-aware signature stays far above chance (>= 30%) — 0.522
+
+============================================================
+ROTATION BATTERY: 11/11 passed

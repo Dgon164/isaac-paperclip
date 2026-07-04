@@ -2663,6 +2663,18 @@ class Isaac:
         return B
 
     @staticmethod
+    def _skel_crossings(S):
+        """Crossing number per pixel: 0->1 transitions in the 8-ring.
+        Endpoints have 1, line interiors 2, junctions >= 3 — robust on
+        diagonal staircases where raw neighbour counts lie."""
+        P = np.pad(S, 1)
+        p2 = P[:-2, 1:-1]; p3 = P[:-2, 2:]; p4 = P[1:-1, 2:]
+        p5 = P[2:, 2:]; p6 = P[2:, 1:-1]; p7 = P[2:, :-2]
+        p8 = P[1:-1, :-2]; p9 = P[:-2, :-2]
+        seq = np.stack([p2, p3, p4, p5, p6, p7, p8, p9, p2])
+        return ((seq[:-1] == 0) & (seq[1:] == 1)).sum(0)
+
+    @staticmethod
     def _skeleton_keynodes(skel, k_min=6, prune=3):
         """Structural keypoints from a skeleton: ENDPOINTS (1 neighbour)
         and JUNCTIONS (>=3) — the bone ends. Thick strokes sprout
@@ -2694,8 +2706,9 @@ class Isaac:
                 return np.zeros((0, 2))
         nb = degrees(S)
         deg = nb[ys, xs]
-        key = (deg == 1) | (deg >= 3)
-        pts = np.column_stack([xs, -ys]).astype(float)
+        cross = Isaac._skel_crossings(S)[ys, xs]
+        key = (cross == 1) | (cross >= 3)            # crossing number, not
+        pts = np.column_stack([xs, -ys]).astype(float)   # raw neighbours
         kpts = pts[key]
         # merge junction clusters (thick joints -> several junction px)
         merged = []
@@ -2845,9 +2858,17 @@ class Isaac:
     # sayable in gated English.
 
     @staticmethod
-    def _ink_components(mask):
-        """4-connected components of a boolean mask (iterative flood)."""
+    def _ink_components(mask, conn=4):
+        """Connected components of a boolean mask (iterative flood).
+        conn=4 for REGIONS (holes must stay separated from outside by
+        8-connected ink); conn=8 for SKELETONS — a thinned stroke is an
+        8-connected path, and 4-conn splits it at every diagonal step
+        (battery R3: the 7's strokes shattered and the top bar's
+        fragments fell under the size floor)."""
         mask = mask.copy()
+        nbrs = (((1, 0), (-1, 0), (0, 1), (0, -1)) if conn == 4 else
+                tuple((dy, dx) for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+                      if (dy, dx) != (0, 0)))
         comps = []
         H, W = mask.shape
         for y0 in range(H):
@@ -2859,7 +2880,7 @@ class Isaac:
                 while stack:
                     y, x = stack.pop()
                     comp.append((y, x))
-                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                    for dy, dx in nbrs:
                         ny, nx = y + dy, x + dx
                         if 0 <= ny < H and 0 <= nx < W and mask[ny, nx]:
                             mask[ny, nx] = False
@@ -2888,36 +2909,79 @@ class Isaac:
                     stack.append((ny, nx))
         return cls._ink_components(bg & ~border)
 
+    @staticmethod
+    def _region_geometry(pts):
+        """Center, axes, angle, squish, and FILL of a pixel region in its
+        own principal frame. Fill separates ellipse from rectangle: a
+        rectangle fills its rotated bounding box (~1.0), an ellipse fills
+        pi/4 (~0.785) of it. Full-vs-hollow is topology; round-vs-square
+        is fill."""
+        c = pts.mean(0)
+        _, sv, Vt = np.linalg.svd(pts - c, full_matrices=False)
+        sd = sv / np.sqrt(len(pts))
+        angle = float(np.degrees(np.arctan2(Vt[0, 1], Vt[0, 0]))) % 180.0
+        R = (pts - c) @ Vt.T
+        ext = R.max(0) - R.min(0) + 1.0
+        fill = float(len(pts) / max(ext[0] * ext[1], 1.0))
+        squish = float(sd[1] / (sd[0] + 1e-9))
+        return c, sd, angle, squish, fill
+
+    @staticmethod
+    def _split_polyline(path, tol=1.8):
+        """Douglas–Peucker: split an ordered pixel path at its corners —
+        a 7 is a tilted line PLUS a top line, never one smeared bar."""
+        segs = []
+
+        def rec(i, j):
+            if j - i < 3:
+                segs.append((i, j))
+                return
+            a, b = path[i], path[j]
+            ab = b - a
+            L = np.linalg.norm(ab) + 1e-12
+            d = np.abs(np.cross(ab / L, path[i:j + 1] - a))
+            k = int(np.argmax(d))
+            if d[k] > tol and 2 <= k <= j - i - 2:
+                rec(i, i + k)
+                rec(i + k, j)
+            else:
+                segs.append((i, j))
+        rec(0, len(path) - 1)
+        return segs
+
     def describe_shape(self, img, thresh=0.5, teach_label=None,
                        min_hole=3):
-        """Decompose a glyph into TAUGHT shape primitives: rings (hollow —
-        one per hole, squish = minor/major axis ratio), discs (full —
-        compact hole-less blobs), bars (thin strokes), plus arrangement
-        (touching / above / beside). Returns the parts, the arrangement,
-        and a gated-English sentence; with teach_label the decomposition
-        is ASSEMBLED into the net (a whole whose parts are shapes).
-        The 8 answers: two rings, stacked, maybe one squished."""
+        """Decompose a glyph into TAUGHT shape primitives — full and
+        hollow, round and square (owner, 2026-07-04): holes mint RINGS
+        (elliptical) or FRAMES (rectangular hollow); hole-less blobs mint
+        DISCS or RECTS (square flagged); skeleton paths split at corners
+        into LINES with JOINT angles between connected lines. RELATIONAL
+        ROTATION: the glyph's principal frame gives a global TILT (pose);
+        every part also carries rel_angle (identity) — a slanted 8 is the
+        upright 8 wearing a tilt; a 7 is a tilted line with a second line
+        joined at its head. With teach_label the decomposition ASSEMBLES
+        into the net."""
         img = np.asarray(img, float)
         ink = img > thresh * img.max() if img.max() > 0 else img > 0.5
         if not ink.any():
             return None
+        iy0, ix0 = np.where(ink)
+        ink_pts = np.column_stack([ix0, -iy0]).astype(float)
+        _, _, frame_angle, _, _ = self._region_geometry(ink_pts)
+        tilt = min((frame_angle % 90), 90 - (frame_angle % 90)) * \
+            (1 if (frame_angle % 90) <= 45 else -1)
         parts = []
         for h in self._holes(ink):
             if len(h) < min_hole:
                 continue
             pts = np.column_stack([h[:, 1], -h[:, 0]]).astype(float)
-            c = pts.mean(0)
-            if len(pts) >= 2:
-                _, sv, Vt = np.linalg.svd(pts - c, full_matrices=False)
-                sd = sv / np.sqrt(len(pts))
-                squish = float(sd[1] / (sd[0] + 1e-9))
-                angle = float(np.degrees(np.arctan2(Vt[0, 1], Vt[0, 0])))
-            else:
-                squish, angle, sd = 1.0, 0.0, np.array([1.0, 1.0])
-            parts.append(dict(kind="ring", center=c.tolist(),
+            c, sd, angle, squish, fill = self._region_geometry(pts)
+            kind = "frame" if fill > 0.92 else "ring"
+            parts.append(dict(kind=kind, center=c.tolist(),
                               size=float(sd[0] * 4), squish=round(squish, 2),
-                              angle=round(angle, 1)))
-        # strokes and discs from what remains
+                              angle=round(angle, 1),
+                              square=bool(kind == "frame" and squish > 0.8)))
+        # lines from the skeleton (rings' own ink excluded)
         skel = self._skeletonize(img, thresh)
         if parts:
             hole_pts = np.vstack([np.column_stack([h[:, 1], -h[:, 0]])
@@ -2934,30 +2998,87 @@ class Isaac:
                     if f:
                         keep[int(-y), int(x)] = 1
                 skel = keep
-        for comp in self._ink_components(skel > 0):
-            if len(comp) < 4:
-                continue
-            pts = np.column_stack([comp[:, 1], -comp[:, 0]]).astype(float)
-            c = pts.mean(0)
-            _, sv, Vt = np.linalg.svd(pts - c, full_matrices=False)
-            sd = sv / np.sqrt(len(pts))
-            parts.append(dict(kind="bar", center=c.tolist(),
-                              length=float(sd[0] * 4),
-                              angle=round(float(np.degrees(
-                                  np.arctan2(Vt[0, 1], Vt[0, 0]))), 1)))
-        if not parts:                                  # hole-less blob
+        # strokes: PEEL DIAMETER PATHS. Junction-pixel chopping was tried
+        # twice and failed twice (raw-neighbour junctions shattered
+        # diagonals; crossing-number junctions still misfire where the
+        # thinning leaves 2px bits, chopping straight strokes and
+        # dropping the 7's top bar under the min-size floor — battery
+        # R3). No junction detection at all: take the LONGEST path
+        # through the component, split it at corners, remove it, repeat
+        # on what remains. Straight strokes, corners, and T/Y branches
+        # all fall out of the same loop.
+        S = (skel > 0).astype(np.uint8)
+        from collections import deque
+
+        def _bfs_far(start, cset):
+            par, dist = {start: None}, {start: 0}
+            q = deque([start])
+            far = start
+            while q:
+                p = q.popleft()
+                if dist[p] > dist[far]:
+                    far = p
+                for dy in (-1, 0, 1):
+                    for dx in (-1, 0, 1):
+                        if (dy, dx) == (0, 0):
+                            continue
+                        n_ = (p[0] + dy, p[1] + dx)
+                        if n_ in cset and n_ not in dist:
+                            dist[n_] = dist[p] + 1
+                            par[n_] = p
+                            q.append(n_)
+            return far, par
+
+        for comp in self._ink_components(S == 1, conn=8):
+            cset = {(int(y), int(x)) for y, x in comp}
+            while len(cset) >= 4:
+                a0, _ = _bfs_far(next(iter(cset)), cset)
+                b0, par = _bfs_far(a0, cset)
+                chain = []
+                p = b0
+                while p is not None:
+                    chain.append(p)
+                    p = par[p]
+                if len(chain) < 4:
+                    break
+                path = np.array([(x, -y) for y, x in chain], float)
+                for i0, j0 in self._split_polyline(path):
+                    seg = path[i0:j0 + 1]
+                    if len(seg) < 4:
+                        continue
+                    c, sd, angle, squish, fill = self._region_geometry(seg)
+                    parts.append(dict(kind="line", center=c.tolist(),
+                                      length=float(np.linalg.norm(
+                                          seg[-1] - seg[0])),
+                                      angle=round(angle, 1),
+                                      rel_angle=round((angle - frame_angle)
+                                                      % 180, 1),
+                                      ends=[seg[0].tolist(),
+                                            seg[-1].tolist()]))
+                # peel: remove the path (and its immediate halo) and
+                # continue with the remaining branches
+                for p in chain:
+                    cset.discard(p)
+                cset = {p for p in cset
+                        if any((p[0] + dy, p[1] + dx) in cset
+                               for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+                               if (dy, dx) != (0, 0))}
+        if not parts:                                   # hole-less blob
             for comp in self._ink_components(ink.copy()):
                 if len(comp) < 6:
                     continue
                 pts = np.column_stack([comp[:, 1], -comp[:, 0]]).astype(float)
-                c = pts.mean(0)
-                _, sv, _ = np.linalg.svd(pts - c, full_matrices=False)
-                sd = sv / np.sqrt(len(pts))
-                aspect = float(sd[1] / (sd[0] + 1e-9))
-                kind = "disc" if aspect > 0.55 else "bar"
+                c, sd, angle, squish, fill = self._region_geometry(pts)
+                if squish > 0.55:
+                    kind = "rect" if fill > 0.92 else "disc"
+                else:
+                    kind = "line"
                 parts.append(dict(kind=kind, center=c.tolist(),
                                   size=float(sd[0] * 4),
-                                  squish=round(aspect, 2)))
+                                  squish=round(squish, 2),
+                                  angle=round(angle, 1),
+                                  square=bool(kind == "rect"
+                                              and squish > 0.8)))
         # arrangement between parts: TOUCHING = carved from the same
         # connected ink component (no radius arithmetic — connectivity is
         # a fact of the ink, not an estimate; the first cut used
@@ -2980,8 +3101,22 @@ class Isaac:
             for b in range(a + 1, len(parts)):
                 if part_comp[a] != part_comp[b]:
                     continue
-                ca = np.array(parts[a]["center"])
-                cb = np.array(parts[b]["center"])
+                pa, pb = parts[a], parts[b]
+                # RELATIONAL ROTATION: two joined lines relate by their
+                # JOINT ANGLE (identity survives any global tilt)
+                if (pa["kind"] == "line" and pb["kind"] == "line"
+                        and "ends" in pa and "ends" in pb):
+                    ea = np.array(pa["ends"])
+                    eb = np.array(pb["ends"])
+                    gap = np.sqrt(((ea[:, None, :] - eb[None, :, :]) ** 2)
+                                  .sum(-1)).min()
+                    if gap < 4.0:
+                        d_ang = abs(pa["angle"] - pb["angle"]) % 180
+                        d_ang = min(d_ang, 180 - d_ang)
+                        edges.append((a, b, f"joint {int(round(d_ang))}"))
+                        continue
+                ca = np.array(pa["center"])
+                cb = np.array(pb["center"])
                 dy, dx = cb[1] - ca[1], cb[0] - ca[0]
                 rel = ("above" if dy > abs(dx) else
                        "below" if -dy > abs(dx) else "beside")
@@ -2991,17 +3126,28 @@ class Isaac:
         segs = []
         for k in sorted(set(kinds)):
             n_k = kinds.count(k)
-            segs.append(f"{['zero','one','two','three','four','five'][n_k] if n_k < 6 else n_k} {k}{'s' if n_k != 1 else ''}")
+            word = k
+            if k in ("frame", "rect") and all(
+                    p.get("square") for p in parts if p["kind"] == k):
+                word = "square " + k
+            segs.append(f"{['zero','one','two','three','four','five'][n_k] if n_k < 6 else n_k} {word}{'s' if n_k != 1 else ''}")
         english = ", ".join(segs)
-        rings = [p for p in parts if p["kind"] == "ring"]
+        rings = [p for p in parts if p["kind"] in ("ring", "frame")]
         if len(rings) == 2 and edges:
             sq = sorted(r["squish"] for r in rings)
             english += f", stacked" if any(e[2] in ("above", "below")
                                            for e in edges) else ", touching"
             if sq[0] < 0.8 <= sq[1]:
                 english += f", one squished ({sq[0]:.2f})"
+        joints = [e for e in edges if str(e[2]).startswith("joint")]
+        if joints:
+            english += ", " + ", ".join(
+                f"joined at {e[2].split()[1]}°" for e in joints[:2])
+        if abs(tilt) >= 8:
+            english += f", tilted {tilt:+.0f}°"
         result = dict(parts=parts, arrangement=edges, english=english,
-                      n_holes=len(rings))
+                      n_holes=len(rings), tilt=round(float(tilt), 1),
+                      frame_angle=round(float(frame_angle), 1))
         if teach_label:
             names = []
             for pi, p in enumerate(parts):
