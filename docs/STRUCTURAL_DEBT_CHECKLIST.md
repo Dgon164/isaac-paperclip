@@ -12,11 +12,15 @@ honesty, or capability debt.
 
 ## A. Null discipline debt — the epistemics' own gaps (fix FIRST; doors-first order)
 
-- [ ] **A1. Block-permutation null** — iid permutation is INVALID on
-      autocorrelated targets; only the `max_terms=16` emergency brake stands
-      between discover() and the sunspot runaway (still reproducible up to the
-      brake). The OLDEST methods debt. (2.10; handoff #2; also the MVP's
-      autocorr guard.)
+- [x] **A1. Block-permutation null** — **CLOSED 2026-07-04** (battery
+      `blockperm_battery.py` 10/10): admission null permutes blocks at the
+      residual's measured decorrelation length (lag-1 test at 1% → ACF
+      first in-band lag, capped at ≥20 blocks); iid path untouched when
+      white (planted law still exact); the sunspot-runaway condition stops
+      at 0 terms, NO RULE, 0/5 false laws across seeds; power verified
+      on-grid under AR(0.9) noise. Decay curve re-measured per the standing
+      rule: profile stands (ECE 0.079). Side discovery: the old null's
+      "power" on off-grid frequencies was an artifact — see E7.
 - [ ] **A2. Crystallizer admission null** — NEVER BUILT at type *formation*:
       `min_shared=2`, three 0.8 fixed overlaps, zero statistical tests in the
       organ everything stands on. The 07-03 wrong-section files chance types
@@ -41,7 +45,9 @@ honesty, or capability debt.
       deliverable; graduation/interrogation built 07-04 and works, but the
       stopgap remains the only holder of out-of-class structure. Successor:
       richer expressive class + level-indexed accounting (D1). (2.8.)
-- [ ] **B2. `max_terms=16` brake** — dies the day A1 lands.
+- [x] **B2. `max_terms=16` brake** — demoted to backstop 2026-07-04 (A1
+      landed; battery shows admission stops on its own at 0 terms on the
+      runaway condition). Kept as belt-and-braces, no longer load-bearing.
 - [ ] **B3. Fisher ratio still live** in `fit_lens(select=...)` — the audit's
       FORBIDDEN statistic for causal ranking; deprecated but present.
       Successor: drop-one keypoint relevance (D6 / audit 2.7). (2.7.)
@@ -112,16 +118,26 @@ honesty, or capability debt.
 
 ## E. MEASURED limits — the only licensed optimization targets (owner's law)
 
-- [ ] **E1. Crystallizer knee** — 0.04 s @ 50 nodes, 2.9 s @ 200, ~420 s @ 800;
-      audit says O(n³–n⁴) in practice because of E3. Licensed to fix ONLY when
-      a real workload bites (owner's explicit gate). (C5; 2.4.)
+- [ ] **E1. Crystallizer knee** — RE-MEASURED 2026-07-04 after E3: 0.03 s @
+      50 nodes, 0.77 s @ 200 (was 2.9), 32.6 s @ 800 (was ~420 — **13×**).
+      The knee remains (crystallizer's own pairwise loops) but no longer
+      urgent; still gated on "when a real workload bites."
 - [ ] **E2. `_capture` O(n²·d) broadcast** — unconditional, now up to TWICE per
       discover() (accounting adds a residual capture). Audit-flagged 07-03;
       optimization queued. (Carried suspects.)
-- [ ] **E3. `Net.get_predecessors` is a full scan** — no reverse index; the
-      structural root under E1 and several walkers. The single highest-value
-      *structural* optimization in the file — and it's a data-structure fix,
-      not a speed hack.
+- [x] **E3. `Net.get_predecessors` full scan** — **CLOSED 2026-07-04**:
+      reverse index (`Net.preds`) maintained in add_door, lazy-rebuilt for
+      pre-index snapshots; `get_full_profile` uses it too. Equivalence
+      verified exactly (0 mismatches, 10 random nets × all tags); suite
+      11/11; knee collapsed 13× (see E1) without touching the crystallizer.
+- [ ] **E7. Grid frequency resolution over long windows** — NEW, measured
+      2026-07-04 (unmasked by A1): an off-grid frequency between proposal
+      points is near-orthogonal to every atom over many cycles (r 0.12 vs
+      gate 0.37) → honest NO RULE. The old invalid null admitted near-miss
+      atoms that hill-climbing then walked to the truth — power by
+      accident. Proper fix when wanted: denser adaptive frequency proposal
+      (e.g. spectral peak of the residual as a proposed scale — expansion
+      phase widened, compression unchanged).
 - [ ] **E4. `observe_spatial` all-pairs O(n²) per frame set.** (Manual §5b.)
 - [ ] **E5. Wave envelope** (measured, not bugs): period ≥ 9 ticks,
       instantaneous handoffs, ≲4 concurrent aperiodic waves, fire rate ≥ 0.7,

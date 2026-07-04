@@ -38,6 +38,10 @@ class Net:
         self.door_tags = defaultdict(set)         # (src, tgt) → {tags}
         self.meta = defaultdict(dict)             # node → {key: value}
         self.door_counts = defaultdict(int)       # (src, tgt) → observations
+        self.preds = defaultdict(set)             # node → {sources} (E3:
+        # the reverse index — get_predecessors was a full scan over every
+        # door in the net, the measured structural root under the
+        # crystallizer knee; 2026-07-04)
 
     def add_door(self, src, tgt, tag="seq"):
         is_new = tgt not in self.doors[src]
@@ -49,9 +53,20 @@ class Net:
         if not hasattr(self, "door_counts"):      # minds saved pre-counts
             self.door_counts = defaultdict(int)
         self.door_counts[(src, tgt)] += 1
+        if not hasattr(self, "preds"):            # minds saved pre-index
+            self._rebuild_preds()
+        self.preds[tgt].add(src)
         if tgt not in self.doors:
             self.doors[tgt] = set()
         return is_new
+
+    def _rebuild_preds(self):
+        """Reconstruct the reverse index from the forward doors (for minds
+        saved before the index existed). One scan, then never again."""
+        self.preds = defaultdict(set)
+        for src, tgts in self.doors.items():
+            for tgt in tgts:
+                self.preds[tgt].add(src)
 
     def has_door(self, src, tgt):
         return tgt in self.doors.get(src, set())
@@ -63,12 +78,13 @@ class Net:
         return {t for t in all_t if tag in self.door_tags.get((node, t), set())}
 
     def get_predecessors(self, node, tag=None):
-        preds = set()
-        for src, tgts in self.doors.items():
-            if node in tgts:
-                if tag is None or tag in self.door_tags.get((src, node), set()):
-                    preds.add(src)
-        return preds
+        if not hasattr(self, "preds"):            # minds saved pre-index
+            self._rebuild_preds()
+        srcs = self.preds.get(node, set())
+        if tag is None:
+            return set(srcs)
+        return {src for src in srcs
+                if tag in self.door_tags.get((src, node), set())}
 
     def get_door_tags(self, src, tgt):
         return self.door_tags.get((src, tgt), set())
@@ -77,10 +93,11 @@ class Net:
         out = {}
         for tgt in self.doors.get(node, set()):
             out[tgt] = self.door_tags.get((node, tgt), set()).copy()
+        if not hasattr(self, "preds"):            # minds saved pre-index
+            self._rebuild_preds()
         inc = {}
-        for src, tgts in self.doors.items():
-            if node in tgts:
-                inc[src] = self.door_tags.get((src, node), set()).copy()
+        for src in self.preds.get(node, set()):
+            inc[src] = self.door_tags.get((src, node), set()).copy()
         return {"out": out, "in": inc}
 
     def all_nodes(self):
@@ -425,10 +442,60 @@ class _Enumerator:
         # the iid permutation null is too easy — shuffling destroys the
         # autocorrelation, so weak junk beats it forever and admission never
         # stops (found the hard way: a 20-CPU-hour runaway on sunspots).
-        # The cap is the emergency brake; the proper cure is a BLOCK
-        # permutation null for temporal targets (post-mortem item).
+        # CURED 2026-07-04: the admission null is now BLOCK permutation at
+        # the residual's measured decorrelation length (see _null_perm).
+        # The cap stays as the backstop only; the battery shows admission
+        # now stops on its own (experiments/blockperm_battery.py).
         self.max_terms = max_terms
         self.terms, self.coefs, self.intercept = [], np.array([]), 0.0
+        self.block_L = 1     # measured decorrelation length of the residual
+        # (1 = white; >1 = the admission null permutes BLOCKS of this length)
+
+    # ── A1 (2026-07-04): the block-permutation null ────────────────────
+    # On an autocorrelated residual the iid shuffle destroys the
+    # autocorrelation itself, not just the claimed alignment — the null gets
+    # too easy and junk beats it forever (the sunspot runaway). The cure:
+    # measure the residual's decorrelation length L; if L > 1, the null
+    # permutes contiguous blocks of length L, preserving the texture the
+    # data actually has and destroying ONLY candidate↔residual alignment.
+
+    @staticmethod
+    def _decorr_len(rs):
+        """Measured decorrelation length of a standardized series.
+        Gate: lag-1 autocorrelation tested at 1% (|r1| > 2.58/sqrt(n) under
+        the iid null). If significant, L = first lag where the ACF falls
+        inside its own significance band (2/sqrt(n)), capped at n//4."""
+        n = len(rs)
+        if n < 20:
+            return 1
+        z = rs - rs.mean()
+        denom = float(z @ z) + 1e-12
+        r1 = float(z[:-1] @ z[1:]) / denom
+        if abs(r1) <= 2.58 / np.sqrt(n):
+            return 1
+        band = 2.0 / np.sqrt(n)
+        maxlag = min(n // 4, 200)
+        for lag in range(2, maxlag + 1):
+            ac = float(z[:-lag] @ z[lag:]) / denom
+            if abs(ac) < band:
+                return lag
+        return maxlag
+
+    def _null_perm(self, rs):
+        """One draw from the admission null: iid shuffle when the residual
+        is white (block_L == 1), circular moving-block permutation when it
+        is autocorrelated (blocks of the MEASURED length, random phase)."""
+        L = self.block_L
+        if L <= 1:
+            return _wave_rng.permutation(rs)
+        n = len(rs)
+        r = np.roll(rs, int(_wave_rng.integers(0, n)))   # random phase
+        nb = int(np.ceil(n / L))
+        pad = nb * L - n
+        if pad:
+            r = np.concatenate([r, r[:pad]])
+        blocks = r.reshape(nb, L)
+        return blocks[_wave_rng.permutation(nb)].ravel()[:n]
 
     def fit(self, X, y):
         self.X = X
@@ -446,9 +513,14 @@ class _Enumerator:
             r = y - self._fit_predict(y)
             rs = (r - r.mean()) / (r.std() + 1e-12)
             real = np.abs(Ms.T @ rs) / len(y)
+            # re-measured every round; capped so the null keeps >= 20 blocks
+            # to permute — uncapped, a slow SIGNAL's own period inflates L
+            # until the null preserves the structure under test (measured:
+            # sin(1.5t) at L=76 became unfindable; power returns at the cap)
+            self.block_L = min(self._decorr_len(rs), max(2, len(rs) // 20))
             null_max = np.empty(self.n_perm)
             for k in range(self.n_perm):
-                null_max[k] = np.max(np.abs(Ms.T @ _wave_rng.permutation(rs))) / len(y)
+                null_max[k] = np.max(np.abs(Ms.T @ self._null_perm(rs))) / len(y)
             gate = np.percentile(null_max, self.pct)
             if real.max() <= gate:
                 break                               # nothing beats its null
@@ -1608,9 +1680,13 @@ class Isaac:
     # distances in units of the observed span; values are observed hold
     # rates. This is a calibrated prior, not an opinion.
     DECAY_MEASURED = {0.0: 0.765, 0.1: 0.588, 0.3: 0.451,
-                      0.6: 0.431, 1.0: 0.373}
+                      0.6: 0.431, 1.0: 0.353}
     # (measured 2026-07-03 on 51 externally-graded laws; validated on 52
-    # FRESH laws: ECE 0.070, Brier 0.249 vs flat-baseline 0.288)
+    # FRESH laws: ECE 0.070, Brier 0.249 vs flat-baseline 0.288.
+    # RE-MEASURED 2026-07-04 after the block-permutation null joined the
+    # enumerator: curve unchanged within noise except the far point
+    # (1.0: 0.373 → 0.353); validation on 60 fresh worlds ECE 0.079,
+    # Brier 0.255 vs flat 0.284 — the profile stands.)
 
     def law_confidence(self, name, X, decay=None):
         """GRADED BELIEF instead of a binary scope stamp (owner's design,

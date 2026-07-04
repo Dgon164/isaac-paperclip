@@ -32,8 +32,9 @@ can enter further discoveries). Four laws govern every mechanism:
 1. **The null law** — every admitted claim beats a null designed to destroy
    exactly the claimed structure, nothing else. (Five case studies: jitter
    null for co-timing; null-gated basis; conditional rate-gap for blockers;
-   F-test at the noise ceiling; block-permutation needed for autocorrelated
-   targets — the last is still an open item, guarded by a term cap.)
+   F-test at the noise ceiling; block-permutation for autocorrelated
+   targets — the last CLOSED 2026-07-04: the admission null now permutes
+   blocks at the residual's measured decorrelation length.)
 2. **Tests over thresholds** — wherever a fixed threshold caused trouble, a
    statistical test replaced it.
 3. **The proposal principle** — "we offer possible solutions, not THE
@@ -321,8 +322,16 @@ trajectories and stores only what refuses to vary.
     terms; a term must beat the max-over-candidates correlation on
     permuted residuals; trial shortlist is structurally diverse (raw-var
     candidates guaranteed trials); completers judged by **F-test**
-    (significance decides; genuine ties go to the simpler form);
-    `max_terms=16` brake (autocorrelated targets — see law 1).
+    (significance decides; genuine ties go to the simpler form). **The
+    admission null is autocorrelation-valid (A1, 2026-07-04)**: each round
+    the residual's decorrelation length L is measured (lag-1 test at 1%,
+    then the ACF's first in-band lag, capped so ≥20 blocks remain); L=1 →
+    the iid shuffle exactly as before; L>1 → circular moving-block
+    permutation, preserving the data's texture and destroying only
+    candidate↔residual alignment. The sunspot-runaway condition now stops
+    at 0 terms with NO RULE (0/5 false laws across seeds; battery
+    `experiments/blockperm_battery.py` 10/10). `max_terms=16` stays as a
+    backstop only.
   - **half held out**: the rule must WORK, not merely fit.
   - **verdicts**: `UNDERSTOOD` (R² ≥ .9 held-out) / `PARTIAL` / `CAPTURED`
     (nearest-exemplar beats permuted null — incl. per-feature 1-D
@@ -363,7 +372,9 @@ trajectories and stores only what refuses to vary.
   ECE 0.070, Brier 0.249 vs flat-baseline 0.288 — the curve is what
   actually happened, not an opinion). Curve provenance lives on
   `Isaac.DECAY_MEASURED`; re-measure via
-  `experiments/confidence_curve.py` whenever the enumerator changes.
+  `experiments/confidence_curve.py` whenever the enumerator changes
+  (done 2026-07-04 after the block null joined: unchanged within noise,
+  far point 0.373→0.353; ECE 0.079, Brier 0.255 vs flat 0.284).
   Law nodes now also store per-feature observed `ranges` + `r2_edge`.
   - **rivals**: classic look-alikes (linear/quadratic/cubic/sin/cos/
     exp±) swapped in per single-feature term, F-tested; survivors stay
@@ -473,10 +484,14 @@ trajectories and stores only what refuses to vary.
   cold 0.82 → primed 0.995). Log-track inside `discover()` is a queued
   engine item.
 - Known limits (battery + red team, all documented): wrong-form risk at
-  n < ~400 (provisional rule); frequency reach ≈ 2× grid max; nested
-  nonlinearities land in CAPTURED by design; iid permutation invalid on
-  autocorrelated targets (cap + pending block-perm); rational functions
-  admit usable trig surrogates (range-valid).
+  n < ~400 (provisional rule); frequency reach ≈ 2× grid max; **grid
+  RESOLUTION over long windows** (measured 2026-07-04, unmasked by the
+  block null: an off-grid frequency — e.g. 1.5 between grid points 1 and
+  2 — is near-orthogonal to every proposal atom over many cycles, r 0.12
+  vs gate 0.37 → honest NO RULE; the old invalid null "found" such cases
+  by letting near-miss atoms through for hill-climbing — power by
+  accident); nested nonlinearities land in CAPTURED by design; rational
+  functions admit usable trig surrogates (range-valid).
 
 ## 8. Memory that outlives the process — [VERIFIED IN ENGINE SELF-TEST 11/11]
 

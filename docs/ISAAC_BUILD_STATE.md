@@ -16,6 +16,40 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — DOWN THE CHECKLIST: E3 + A1 (the core before the additions)
+
+Owner: "fix the core before adding on" — the debt checklist's attack order,
+executed in order. Suite 11/11 throughout; discovery battery, red team,
+sense battery all green after.
+- **E3 CLOSED — the reverse index.** `Net.preds` maintained in add_door
+  (lazy rebuild for pre-index snapshots); get_predecessors and
+  get_full_profile read the index. Equivalence PROVEN exact (0 mismatches,
+  10 random nets × all tags vs the old scan). The crystallizer knee, the
+  measured limit E1, collapsed WITHOUT touching the crystallizer:
+  50/200/800 nodes = 0.03/0.77/32.6 s (was 0.04/2.9/~420 — **13× at 800**),
+  confirming E3 was the structural root.
+- **A1 CLOSED — the block-permutation null** (the oldest methods debt; the
+  sunspot 20-CPU-hour runaway's proper cure). Every admission round the
+  residual's decorrelation length L is MEASURED (lag-1 significance at 1%,
+  then the ACF's first in-band lag, capped so ≥20 blocks remain — the cap
+  itself was measured in: uncapped, a slow signal's own period inflates L
+  until the null protects the structure under test). L=1 → the old iid
+  path bit-for-bit; L>1 → circular moving-block permutation. Battery
+  `blockperm_battery.py` **10/10**: detector right on white/AR(0.6)/AR(0.95);
+  planted iid law still exact; the runaway condition now stops at 0 terms
+  NO RULE (0/5 false laws across seeds); power retained on-grid under
+  AR(0.9). `max_terms=16` demoted to backstop.
+- **Enumerator changed → calibration RE-MEASURED per the standing rule:**
+  decay curve unchanged within noise (far point 0.373→0.353), ECE 0.079,
+  Brier 0.255 vs flat 0.284 — DECAY_MEASURED updated with provenance.
+- **NEW measured limit (E7), unmasked by the honest null:** grid frequency
+  resolution over long windows — off-grid 1.5 between grid points 1 and 2
+  is near-orthogonal to every proposal atom over ~10 cycles (r 0.12 vs
+  gate 0.37) → honest NO RULE. The OLD null "found" such cases by letting
+  near-miss atoms in for hill-climbing — power by accident through an
+  invalid gate. Filed as E7 with the principled fix (adaptive spectral
+  proposal — widen expansion, keep compression).
+
 ## 2026-07-04 — SENSES ARE THINGS (polysemy rebuilt on doors; suite 11/11)
 
 The polysemy mechanism (crystallize_senses/route, 2026-06-23) audited on the

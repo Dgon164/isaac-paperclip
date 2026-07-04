@@ -1,0 +1,23 @@
+
+B1 — the measured decorrelation length
+  [PASS] white noise: lag-1 gate holds (<=2/20 trips at the 1% level) — 2/20 draws measured L>1
+  [PASS] AR(1) phi=0.6 detected (L > 1) — L=7
+  [PASS] stronger autocorrelation -> longer blocks — L(0.95)=21 > L(0.6)=7
+
+B2 — iid data: planted law still exact
+  [PASS] verdict UNDERSTOOD — +1.00*x0*x1 -1.00*x2 -0.00
+  [PASS] form exact — +1.00*x0*x1 -1.00*x2 -0.00
+
+B3 — AR(1) noise against time (the sunspot shape, no law present)
+  [PASS] no false UNDERSTOOD on autocorrelated noise — verdict=NO RULE
+  [PASS] admission stopped far below the brake (< 8 of 16) — ~0 terms: NO RULE (nothing beat the null)
+  [PASS] 0/5 false laws across seeds — 0/5
+
+B4 — real structure + AR noise (on-grid frequency): still found
+  [PASS] law articulated despite autocorrelated noise — PARTIAL: +2.81*sin(3*x0) -0.04
+
+B5 — off-grid frequency over a long window: honest refusal (E6)
+  [PASS] no false law where the grid cannot reach — verdict=NO RULE
+
+============================================================
+BLOCK-PERM BATTERY: 10/10 passed
