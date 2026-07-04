@@ -1,0 +1,21 @@
+WORLD GM — SPATIAL: the sandbox generates, the perceiver plays,
+the GM only grades. Information earned, never given.
+
+------------------------------------------------------------------
+S1 visible four-bar
+  4 locked edges = the 4 bars (ground included, undeclared)
+  GM grade: CORRECT  (1.018/1.018, 4.562/4.562, 5.964/5.964, 7.420/7.419)
+  earned with 360 observations, 0 probes  [380/700 budget]
+------------------------------------------------------------------
+S2 occluded four-bar (crank tip hidden)
+  2 locked + 1 varying pair; bought 36 probe angles -> fold/extend: hidden crank 1.316, hidden coupler 7.632
+  GM grade: CORRECT  (1.316/1.312, 4.198/4.198, 6.811/6.811, 7.632/7.631)
+  earned with 360 observations, 36 probes  [560/700 budget]
+------------------------------------------------------------------
+S3 null world (walkers)
+  nothing locked anywhere -> submitted 'none'
+  GM grade: CORRECT  (refusal)
+  earned with 360 observations, 0 probes  [380/700 budget]
+==================================================================
+SCORE 3/3 — the loop is closed: generator, perceiver, examiner
+==================================================================
