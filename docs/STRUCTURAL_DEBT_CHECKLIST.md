@@ -67,14 +67,19 @@ honesty, or capability debt.
 
 ## C. Harness-proven, NOT in engine (migration debt — the capability exists, the mind can't use it)
 
-- [ ] **C1. Uptake / holarchy composition** (rebuild B, 7/7) — engine crystals
-      are still membership-only; wave handoff edges are the sole arrangement
-      info. THE structural gap the 07-03 crystallizer work re-confirmed
-      (static crystallizer shallow, 2.3/2.4 want the same fix). (2.3.)
-- [ ] **C2. Compound doors + ceiling→trigger** — covtype 56.2→59.0 null-gated
-      in harness, one round; not wired into the crystal pipeline; the trigger
-      (additive ceiling → try compounds) not built. Flagged highest-leverage
-      toward the articulated tier. (2.11.)
+- [x] **C1. Uptake / holarchy composition** — **IN ENGINE 2026-07-04**
+      (uptake battery 10/10 = rebuild B's (a)–(g) engine-native + learned
+      arrangement): register_part/assemble/operable/emergent/dismantle/
+      whole_as_part on offer:/uptake:/whole: net nodes; wave handoffs mint
+      the same uptake structure and circles arrange their edges. (2.3.)
+- [x] **C2. Compound doors + ceiling→trigger** — **IN ENGINE 2026-07-04**
+      (compound battery 6/6): crystallize_features(compounds="auto") mines
+      conjunction doors per held-out-confused class pair behind the wired
+      ceiling trigger; label-permutation null + kept-only-if-held-out-
+      improves; classify_features augments identically; decision recorded.
+      XOR 0.46→0.89. Battery-caught migration bug: the harness's marginal
+      work-filter hard-blocked pure-XOR (marginals exactly zero) — removed.
+      Covtype re-run with the engine path still pending (F1 gauntlet). (2.11.)
 - [ ] **C3. Registration front-end** (pose/identity factoring; 23.7%→84.4%
       digits under position+scale, novel-bigger 85.4%) — harness only.
       Wire-in target named at curriculum post-mortem. (Manual §5.)

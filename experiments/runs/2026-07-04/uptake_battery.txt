@@ -1,0 +1,21 @@
+
+U-a..d — emergence lives in the arrangement
+  [PASS] (a) whole affords torque — ['fuel', 'ignition', 'torque']
+  [PASS] (b) torque inoperable in every part alone
+  [PASS] (c) dismantled pile lacks torque
+  [PASS] (d) rewired whole differs and loses torque
+  [PASS] emergent() names exactly the new capability — {'torque'}
+
+U-e..f — determinism and decomposition
+  [PASS] (e) same identity from a different assembly order
+  [PASS] (f) decomposition recovers the parts
+
+U-g — first-class upward composition
+  [PASS] (g) engine composes upward -> car affords locomotion — ['fuel', 'ignition', 'locomotion', 'torque', 'traction']
+
+U-h — LEARNED arrangement: wave handoffs mint uptake edges
+  [PASS] handoffs minted uptake nodes — 3 uptake nodes
+  [PASS] the circle ARRANGES its uptake edges (learned whole) — 1 circles
+
+============================================================
+UPTAKE BATTERY: 10/10 passed

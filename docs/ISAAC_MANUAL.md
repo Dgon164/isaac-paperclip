@@ -153,6 +153,23 @@ can enter further discoveries). Four laws govern every mechanism:
   Operating envelope (battery-measured): period ≥ 9 ticks, instantaneous
   handoffs, non-overlapping groups, fire rate ≥ 0.7, ≲4 concurrent
   aperiodic waves, T ≥ ~1000. Movement claims: 0/20 false on noise.
+- **Composition: wholes with ARRANGEMENT (C1, 2026-07-04; battery
+  `experiments/uptake_battery.py` 10/10 — rebuild B's (a)–(g) now
+  engine-native).** A whole = parts + uptake edges
+  (provider —affordance→ consumer); configuration IS the edge set;
+  everything is net structure (`offer:`, `uptake:`, `whole:` nodes).
+  Methods: `register_part(name, offers)` (teach affordances +
+  requirements), `assemble(name, parts, edges)` (identity =
+  order-independent (parts, edges); a rewired whole is a DIFFERENT
+  whole), `operable(whole)` (fixed-point propagation: an affordance
+  lives when its requirements arrive via edges from live providers),
+  `emergent(whole)` (operable at the whole, in no part alone),
+  `dismantle(whole)`, `whole_as_part(whole)` (upward composition —
+  engine+wheels+frame → car affords locomotion). LEARNED arrangement:
+  `wave_consolidate` handoffs mint the same `uptake:` structure and
+  circles ARRANGE their edges — temporal wholes carry arrangement
+  without being taught. (Membership-only crystals were the audit's
+  designed-in flaw 2.3 — engine migration done.)
 - `crystallize_senses(node, min_shared=2)` — **SENSES ARE THINGS
   (rebuilt 2026-07-04; battery `experiments/sense_battery.py` 14/14).**
   The crystallizer turned inward on ONE node: occurrences (from
@@ -230,9 +247,20 @@ can enter further discoveries). Four laws govern every mechanism:
   beating ~3/√n (the basis itself must beat chance). Optional random lift,
   discriminative select (Fisher option survives but is deprecated by
   audit 2.7 — do not use it for causal ranking).
-- `crystallize_features(X, y, lens=)` — one concept-node per class whose
-  doors are **observed quantile log-densities** (proximity doors). Legacy
-  box meta still written for `recognize_matrix`/old scripts.
+- `crystallize_features(X, y, lens=, compounds="auto")` — one
+  concept-node per class whose doors are **observed quantile
+  log-densities** (proximity doors). Legacy box meta still written for
+  `recognize_matrix`/old scripts. **Compound doors + the ceiling trigger
+  (C2, 2026-07-04; audit 2.11 wired; battery
+  `experiments/compound_battery.py` 6/6):** when flat doors leave
+  held-out confusions, conjunction doors ("feature i in bin a AND
+  feature j in bin b") are mined per confused class pair — admitted only
+  past a selection-corrected label-permutation null, KEPT only if
+  held-out accuracy improves; the decision is recorded
+  (`compound_report` in the crystal calib) and `classify_features`
+  augments identically. XOR: flat 0.46 → compounds 0.89. Migration note:
+  the harness's marginal-separation work-filter hard-blocked pure-XOR
+  structure (marginals exactly zero) — removed; the null is the gate.
 - `classify_features(X)` — summed log-likelihood, one matmul-shaped
   decision. **Known gap: no abstention** — it always answers (fix queued:
   shrug + genus-level answers).
@@ -578,10 +606,11 @@ readable end to end.
 > evidence and attack order — lives in `docs/STRUCTURAL_DEBT_CHECKLIST.md`
 > (2026-07-04). This section stays as the quick list.
 
-No abstention in classify_features; no compound doors in-engine; uptake
-composition harness-only; no FCA lattice (overlap merging); no
-shrug→discover reflex; no block-permutation null; no symbolic/token
+No abstention in classify_features; no FCA lattice (overlap merging); no
+shrug→discover reflex; no symbolic/token
 challenges in discover(); no
 learned-invariant perception (phase 4); no curiosity — challenges arrive
 from outside, and the probe queue is proposals only. The clock-reading
 harness readout is broken (22.9% — harness bug, engine unimplicated).
+(Closed 2026-07-04 and no longer on this list: block-permutation null,
+compound doors + trigger, uptake composition — see the checklist.)

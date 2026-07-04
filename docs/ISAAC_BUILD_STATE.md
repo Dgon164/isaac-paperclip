@@ -16,6 +16,36 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — C1 + C2 IN ENGINE: arrangement and binding (the two the audits kept converging on)
+
+- **C1 — uptake composition** (`uptake_battery.py` **10/10** = rebuild B's
+  (a)–(g) engine-native): wholes are parts + uptake edges as NET STRUCTURE
+  (offer:/uptake:/whole: nodes; register_part / assemble / operable
+  (fixed-point over doors) / emergent / dismantle / whole_as_part).
+  Engine affords torque only when wired right; rewired = different whole,
+  no torque; pile = nothing; engine+wheels+frame compose upward to a car
+  that affords locomotion. THE LEARNED SIDE: wave_consolidate handoffs now
+  mint the same uptake:<g>.activation-><h> structure and circles ARRANGE
+  their edges — temporal wholes carry arrangement without being taught.
+  Membership-only crystals (audit 2.3's designed-in flaw) are done.
+- **C2 — compound doors + the ceiling trigger** (`compound_battery.py`
+  **6/6**; audit 2.11's missing wiring): crystallize_features(
+  compounds="auto") — when flat doors leave held-out confusions the
+  trigger fires; conjunction doors mined per confused pair; admission =
+  selection-corrected label-permutation null; KEPT only if held-out
+  accuracy improves; the whole decision recorded (compound_report);
+  classify_features augments identically. **XOR: flat 0.46 → 0.89.**
+  Refusals: 0/3 random-label runs kept compounds; separable data leaves
+  the trigger silent. Battery-caught migration bug, recorded: the covtype
+  harness's marginal-separation work-filter (skip bins with marg < 0.02)
+  HARD-BLOCKED pure XOR, where marginals are exactly zero and the signal
+  lives only in the conjunction — pruning is not statistics; the null is
+  the gate. Second battery-caught tune: 8-bin compound grid + keep-15 was
+  too sparse to cover XOR's informative cells (0.59); 6-bin + keep-30 →
+  0.89. Covtype re-run on the engine path rides with the gauntlet (F1).
+- Regression: suite 11/11; sense 14/14; blockperm 10/10; periodfold 6/6;
+  admission 10/10; crystallizer C1–C6 WORKS.
+
 ## 2026-07-04 — A2 + A4: tests replace thresholds in the crystallizer
 
 The organ everything stands on gets its statistics. Admission battery

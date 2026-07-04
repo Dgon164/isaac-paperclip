@@ -2944,6 +2944,13 @@ class Isaac:
         edges = [(gname[a], gname[b]) for a, b in edges_ix]
         for a, b in edges:
             self.net.add_door(a, b, tag="wave_next")
+            # C1 (2026-07-04): a handoff IS an uptake edge, learned — the
+            # provider hands ACTIVATION to the consumer. Same structure as
+            # taught assemblies, so wholes carry arrangement either way.
+            unode = f"uptake:{a}.activation->{b}"
+            self.net.add_door(a, unode, tag="provides")
+            self.net.add_door(unode, b, tag="feeds")
+            self.net.add_door(unode, "activation", tag="carries")
         circles = []
         for c in circles_ix:
             cname = "circle:" + ">".join(groups[i][0] for i in c)
@@ -2952,6 +2959,11 @@ class Isaac:
                 self.net.add_door(gname[i], cname, tag="wave")
                 self.net.add_door(cname, gname[i], tag="part")
                 self._teach_fact(gname[i], "phase_of", cname)
+            seq = [gname[i] for i in c]
+            for x, y_ in zip(seq, seq[1:] + seq[:1]):
+                unode = f"uptake:{x}.activation->{y_}"
+                if self.net.has_door(x, unode):
+                    self.net.add_door(cname, unode, tag="arranges")
         for bi, dname in pending_blocks:         # rescue's discovered blockers
             self._teach_fact(gname[bi], "blocks", dname)
 
@@ -3535,15 +3547,169 @@ class Isaac:
             H = H[:, t["dims"]]
         return H
 
-    def crystallize_features(self, X, y, lens=None, margin=1.5, bins=12):
+    @staticmethod
+    def _compound_bins(H, nb=8, cedges=None):
+        """Quantile-bin lensed features for compound-door evaluation."""
+        if cedges is None:
+            qs = np.linspace(0, 100, nb + 1)[1:-1]
+            cedges = np.stack([np.percentile(H[:, j], qs)
+                               for j in range(H.shape[1])])
+        B = np.column_stack([np.searchsorted(cedges[j], H[:, j])
+                             for j in range(H.shape[1])]).astype(int)
+        return B, cedges
+
+    @staticmethod
+    def _compound_indicators(B, spec):
+        if not spec:
+            return np.empty((len(B), 0))
+        return np.column_stack([((B[:, f1] == b1) & (B[:, f2] == b2))
+                                .astype(float) for f1, b1, f2, b2 in spec])
+
+    def _mine_compound_doors(self, H, y, bins, nb=6, n_perm=20,
+                             top_feats=6, max_pairs=3, keep_per_pair=30):
+        """C2 (2026-07-04), migrated from the covtype harness: COMPOUND
+        DOORS behind the CEILING TRIGGER (audit 2.11, now wired). When flat
+        doors leave held-out confusions, mine conjunction doors ('feature i
+        in bin a AND feature j in bin b') per confused class pair; a
+        compound is admitted only when its joint separation beats its best
+        PART by a margin surviving a label-permutation null (selection-
+        corrected max-gain, 95th pct). Kept only if held-out accuracy
+        actually improves. Returns (spec, cedges, report)."""
+        n, d = H.shape
+        classes = np.unique(y)
+        report = dict(trigger="silent", admitted=0, kept=False)
+        if n < 200 or d < 2 or len(classes) < 2:
+            report["why"] = "too little data/dims/classes to mine"
+            return [], None, report
+        rng = np.random.default_rng(11)
+        idx = rng.permutation(n)
+        cut = int(0.75 * n)
+        tr, he = idx[:cut], idx[cut:]
+        qs = np.linspace(0, 100, bins + 1)[1:-1]
+
+        def flat_fit(Ht, yt):
+            e = np.stack([np.percentile(Ht[:, j], qs)
+                          for j in range(Ht.shape[1])])
+            mods = []
+            for c in classes:
+                obs = Ht[yt == c]
+                ld = np.empty((Ht.shape[1], bins))
+                for j in range(Ht.shape[1]):
+                    cnt = np.bincount(np.searchsorted(e[j], obs[:, j]),
+                                      minlength=bins).astype(float)
+                    ld[j] = np.log((cnt + 1.0) / (cnt.sum() + bins))
+                mods.append(ld)
+            return e, mods
+
+        def flat_predict(e, mods, Hs):
+            sc = np.zeros((len(Hs), len(classes)))
+            for j in range(Hs.shape[1]):
+                ix = np.searchsorted(e[j], Hs[:, j])
+                for k, ld in enumerate(mods):
+                    sc[:, k] += ld[j][ix]
+            return classes[np.argmax(sc, axis=1)]
+
+        e0, m0 = flat_fit(H[tr], y[tr])
+        pred = flat_predict(e0, m0, H[he])
+        acc_flat = float((pred == y[he]).mean())
+        conf = defaultdict(int)
+        for a, b in zip(y[he], pred):
+            if a != b:
+                conf[(min(a, b), max(a, b))] += 1
+        top = sorted(conf, key=conf.get, reverse=True)[:max_pairs]
+        if not top or conf[top[0]] < 10:
+            report["why"] = f"no confusable pair (held acc {acc_flat:.3f})"
+            return [], None, report
+        report["trigger"] = "fired"
+        report["pairs"] = [tuple(int(v) for v in p) for p in top]
+
+        B, cedges = self._compound_bins(H, nb)
+        spec = []
+        for a, b in top:
+            sa = B[tr][y[tr] == a][:10000]
+            sb = B[tr][y[tr] == b][:10000]
+            marg = np.zeros((d, nb))
+            for j in range(d):
+                pa = np.bincount(sa[:, j], minlength=nb) / max(len(sa), 1)
+                pb = np.bincount(sb[:, j], minlength=nb) / max(len(sb), 1)
+                marg[j] = np.abs(pa - pb)
+            frank = np.argsort(-marg.max(axis=1))[:top_feats]
+
+            # NOTE: the covtype harness skipped bins with marginal
+            # separation < 0.02 as a work-saver — a hard gate that BLOCKED
+            # pure-XOR structure, where marginals are exactly zero and the
+            # signal lives ONLY in the conjunction (battery X1 caught it).
+            # Pruning is not statistics; the permutation null is the gate.
+            def gains(A, B_):
+                out = []
+                for fi in range(len(frank)):
+                    for fj in range(fi + 1, len(frank)):
+                        f1, f2 = int(frank[fi]), int(frank[fj])
+                        for b1 in range(nb):
+                            m1a = A[:, f1] == b1
+                            m1b = B_[:, f1] == b1
+                            for b2 in range(nb):
+                                ja = float((m1a & (A[:, f2] == b2)).mean())
+                                jb = float((m1b & (B_[:, f2] == b2)).mean())
+                                g = abs(ja - jb) - max(marg[f1, b1],
+                                                       marg[f2, b2])
+                                if g > 0:
+                                    out.append((g, f1, b1, f2, b2))
+                return out
+
+            real = gains(sa, sb)
+            if not real:
+                continue
+            pool = np.vstack([sa, sb])
+            na = len(sa)
+            null_max = np.empty(n_perm)
+            for k in range(n_perm):
+                p = rng.permutation(len(pool))
+                nl = gains(pool[p[:na]], pool[p[na:]])
+                null_max[k] = max((g for g, *_ in nl), default=0.0)
+            thr = np.percentile(null_max, 95)
+            surv = sorted([r for r in real if r[0] > thr], reverse=True)
+            spec += [(f1, b1, f2, b2)
+                     for _, f1, b1, f2, b2 in surv[:keep_per_pair]]
+        seen = set()
+        spec = [c for c in spec if not (c in seen or seen.add(c))][:60]
+        report["admitted"] = len(spec)
+        if not spec:
+            report["why"] = "no compound survived its null"
+            return [], None, report
+        # the keep decision: held-out accuracy must actually improve
+        Haug = np.column_stack([H, self._compound_indicators(B, spec)])
+        e1, m1 = flat_fit(Haug[tr], y[tr])
+        acc_aug = float((flat_predict(e1, m1, Haug[he]) == y[he]).mean())
+        report["held_flat"], report["held_aug"] = acc_flat, acc_aug
+        if acc_aug <= acc_flat:
+            report["why"] = "compounds admitted but did not improve held-out"
+            return [], None, report
+        report["kept"] = True
+        return spec, cedges, report
+
+    def crystallize_features(self, X, y, lens=None, margin=1.5, bins=12,
+                             compounds="auto"):
         """Transplant: one concept per class as a NODE in the net, tagged
         'crystal'. The concept's doors are now OBSERVED DISTRIBUTIONS
         (quantile-binned per-dim log-densities) — observe + matmul, not a
         fitted box. Boxes were a ceiling: they cap on diagonal data and flip
         verdicts under re-encoding (rebuild A head-to-head). The legacy box
         meta is still written so recognize_matrix and old scripts keep
-        running; classification no longer uses it."""
-        H = self.apply_lens(lens, X)
+        running; classification no longer uses it.
+        compounds='auto' (C2, 2026-07-04): when flat doors leave held-out
+        confusions, conjunction doors are mined per confused pair
+        (null-gated, kept only if held-out improves) and joined to the
+        feature set; classify_features augments identically."""
+        H = self.apply_lens(lens, np.asarray(X, float))
+        comp_spec, comp_edges, comp_report = [], None, None
+        if compounds == "auto":
+            comp_spec, comp_edges, comp_report = \
+                self._mine_compound_doors(H, np.asarray(y), bins)
+            if comp_spec:
+                B, _ = self._compound_bins(H, cedges=comp_edges)
+                H = np.column_stack([H,
+                                     self._compound_indicators(B, comp_spec)])
         d = H.shape[1]
         qs = np.linspace(0, 100, bins + 1)[1:-1]
         edges = np.stack([np.percentile(H[:, j], qs) for j in range(d)])
@@ -3565,7 +3731,9 @@ class Isaac:
                 hi=np.percentile(obs_q, 95, axis=0) + margin,
                 med=np.median(obs_q, axis=0)))
         self.net.set_meta("crystal", "calib",
-                          dict(qlo=qlo, qhi=qhi, lens=lens, edges=edges))
+                          dict(qlo=qlo, qhi=qhi, lens=lens, edges=edges,
+                               compounds=comp_spec, cedges=comp_edges,
+                               compound_report=comp_report))
         return sorted(self.net.get_doors("crystal", tag="crystal"))
 
     def classify_features(self, X):
@@ -3574,6 +3742,10 @@ class Isaac:
         Lens + doors both live in the net."""
         calib = self.net.get_meta("crystal", "calib")
         H = self.apply_lens(calib["lens"], np.atleast_2d(np.asarray(X, float)))
+        if calib.get("compounds"):
+            B, _ = self._compound_bins(H, cedges=calib["cedges"])
+            H = np.column_stack([H, self._compound_indicators(
+                B, calib["compounds"])])
         edges = calib["edges"]
         concepts = [(self.net.get_meta(n, "label"), self.net.get_meta(n, "doors"))
                     for n in sorted(self.net.get_doors("crystal", tag="crystal"))]
@@ -3811,6 +3983,100 @@ class Isaac:
         if best is None:
             return set(self.net.get_doors(node, tag="seq"))
         return set(self.net.get_doors(best, tag="sense_seq"))
+
+    # ── composition: wholes with ARRANGEMENT (uptake edges) ─────────
+    # C1 (2026-07-04), migrated from rebuild B (7/7): a whole is parts +
+    # uptake edges (provider --affordance--> consumer), not a member bag.
+    # Emergence = interlocking affordances; configuration IS the edge set.
+    # Everything is net structure: offer:<part>.<aff> nodes carry offers,
+    # uptake:<src>.<aff>-><dst> nodes carry arrangement, whole:<name>
+    # arranges them. Wave circles write the SAME structure (learned
+    # arrangement); assemblies are taught (proposal principle).
+
+    def register_part(self, name, offers):
+        """Teach a part: offers = {affordance: iterable of requirements}.
+        A requirement-free offer is what the part can do ALONE."""
+        for aff, req in offers.items():
+            onode = f"offer:{name}.{aff}"
+            self.net.add_door(name, onode, tag="offers")
+            self.net.add_door(onode, aff, tag="affords")
+            for r in req:
+                self.net.add_door(onode, r, tag="requires")
+        return name
+
+    def part_operable(self, name):
+        """What the part can do alone: requirement-free offers."""
+        out = set()
+        for onode in self.net.get_doors(name, tag="offers"):
+            if not self.net.get_doors(onode, tag="requires"):
+                out |= self.net.get_doors(onode, tag="affords")
+        return out
+
+    def assemble(self, name, parts, edges):
+        """A whole = parts + uptake edges [(provider, affordance,
+        consumer), ...]. Identity is (parts, edges) — same whole from any
+        assembly order; a rewired whole is a DIFFERENT whole."""
+        wname = f"whole:{name}"
+        for p in parts:
+            self.net.add_door(p, wname, tag="part_of")
+            self.net.add_door(wname, p, tag="part")
+        for (src, aff, dst) in edges:
+            unode = f"uptake:{src}.{aff}->{dst}"
+            self.net.add_door(src, unode, tag="provides")
+            self.net.add_door(unode, dst, tag="feeds")
+            self.net.add_door(unode, aff, tag="carries")
+            self.net.add_door(wname, unode, tag="arranges")
+        self.net.set_meta(wname, "identity",
+                          (tuple(sorted(parts)),
+                           tuple(sorted(tuple(e) for e in edges))))
+        return wname
+
+    def dismantle(self, whole):
+        """Decomposition recovers the parts (the arrangement stays on the
+        whole — nothing leaves the net)."""
+        return set(self.net.get_doors(whole, tag="part"))
+
+    def operable(self, whole):
+        """Fixed-point propagation over the doors: (part, affordance)
+        becomes live when every requirement arrives via an uptake edge
+        from a part whose provided affordance is itself live."""
+        parts = self.dismantle(whole)
+        edges = set()
+        for unode in self.net.get_doors(whole, tag="arranges"):
+            for s in self.net.get_predecessors(unode, tag="provides"):
+                for a in self.net.get_doors(unode, tag="carries"):
+                    for d in self.net.get_doors(unode, tag="feeds"):
+                        edges.add((s, a, d))
+        live = set()
+        changed = True
+        while changed:
+            changed = False
+            for p in parts:
+                for onode in self.net.get_doors(p, tag="offers"):
+                    reqs = self.net.get_doors(onode, tag="requires")
+                    for f in self.net.get_doors(onode, tag="affords"):
+                        if (p, f) in live:
+                            continue
+                        if all(any((s, need, p) in edges and (s, need) in live
+                                   for s in parts) for need in reqs):
+                            live.add((p, f))
+                            changed = True
+        return {f for _, f in live}
+
+    def emergent(self, whole):
+        """Operable at the whole, operable in NO part alone — the thing
+        membership bags could never represent."""
+        alone = set()
+        for p in self.dismantle(whole):
+            alone |= self.part_operable(p)
+        return self.operable(whole) - alone
+
+    def whole_as_part(self, whole):
+        """First-class upward composition: the whole re-enters as a part
+        offering everything it can do (emergent included), requirement-
+        free — circles of circles, engines into cars."""
+        self.register_part(whole, {f: () for f in self.operable(whole)})
+        return whole
 
     # ── logic ───────────────────────────────────────────────────
 
