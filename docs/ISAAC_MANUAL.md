@@ -388,6 +388,20 @@ trajectories and stores only what refuses to vary.
   periodic ~2.5 rad/unit" and then graduated to
   **`+1.00*sin(3*(x1*x0))` exactly**; additive control invented nothing;
   (x0+x1)² found the sum and graduated exactly.
+- **Combinations are THINGS** (owner, 2026-07-04: "it's combinatorial...
+  memorize and reuse those combinations — a topological venn diagram, a
+  dimensionless structure"). `register_composite(op, features)` mints a
+  first-class node `comb:(x0*x1)` — distinct from its parts and from
+  every other combination — auto-minted by interrogation when a composite
+  beats its null, persisted through the ledger, and **offered to every
+  future discover() as a column**, so all atoms (sin/cos/exp/pow) act on
+  learned combinations. apply_law / confirm / law_confidence / refine all
+  speak raw coordinates outside and augmented inside. Battery
+  (`experiments/composite_reuse_battery.py` 4/4): the canonical unsayable
+  sin(3·x0·x1)+0.5·x2 is PARTIAL (0.80) cold — after learning (x0*x1)
+  from a DIFFERENT easy problem it is UNDERSTOOD **`+1.00*sin(3*(x0*x1))
+  +0.50*x2` exact**, including in a fresh Isaac that inherited the
+  combination through the ledger. The vocabulary grows with experience.
 - **`adequacy` (in every discover() result)** — data too weak to
   interpret is a DIAGNOSIS, not a shrug: names the cause with evidence —
   sample below onset (attaches as "provisional" even to successes),

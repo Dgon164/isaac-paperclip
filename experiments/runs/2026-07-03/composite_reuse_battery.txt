@@ -1,0 +1,31 @@
+======================================================================
+R0 — control: sin(3*x0*x1) + 0.5*x2 WITHOUT the learned combination
+======================================================================
+  verdict: PARTIAL (R2 0.80) — unsayable, as expected
+======================================================================
+R1 — learn the combination on an EASY product problem; spend it on the canonical stuck one
+======================================================================
+  combinations now owned: ['(x0*x1)']
+  new challenge: UNDERSTOOD (R2 0.999)
+  equation: +1.00*sin(3*(x0*x1)) +0.50*x2 +0.00
+  applied to fresh raw data: R2 0.999
+======================================================================
+R2 — a fresh Isaac inherits the combination through the ledger
+======================================================================
+  ledger loaded: 4 records; combinations inherited: ['(x0*x1)']
+  new challenge, cold engine + inherited combination: UNDERSTOOD (R2 0.999)
+  equation: +1.00*sin(3*(x0*x1)) +0.50*x2 +0.00
+======================================================================
+R3 — ab is not a and b: three combinations, three nodes
+======================================================================
+  combination nodes: ['comb:(x0*x1)', 'comb:(x0+x1)', 'comb:(x1*x2)']
+    (x0*x1): from interrogation of x:lesson
+    (x0+x1): from R3 demo
+    (x1*x2): from R3 demo
+======================================================================
+R0 unsayable without the combination : PASS
+R1 learned once, spent elsewhere     : PASS
+R2 inherited across sessions         : PASS
+R3 combinations are distinct things  : PASS
+VERDICT: WORKS — the vocabulary grows with experience
+======================================================================

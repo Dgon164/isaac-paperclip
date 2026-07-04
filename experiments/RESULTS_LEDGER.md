@@ -135,6 +135,8 @@ per-row notes below.
 
 | **Interrogation: the captured made explicit** — drivers, joint action, composite dependence (level-set invariance vs matched random-direction null), shape+frequency, all in gated English; then `graduate_composite` re-discovers in the coordinate Isaac identified | `interrogation_battery.py` | **VERIFIED** | 2026-07-04 | I1 the stuck case UNSTUCK: sin(3·x0·x1) capture → "lives in x0,x1 (50/50), acts JOINTLY (97%), flows through the PRODUCT only (0.87 vs null 0.37), periodic ~2.5 rad/unit" → **graduated to `+1.00*sin(3*(x1*x0))` exact**; I2 additive control invented NO structure; I3 (x0+x1)² → sum found, graduated exact; 1.2 s; suite 11/11 |
 
+| **Combinations are first-class, memorized, REUSED** — comb:<name> nodes minted by interrogation, ledger-inherited, auto-offered to every discover() | `composite_reuse_battery.py` | **VERIFIED** | 2026-07-04 | R0 control: sin(3·x0·x1)+0.5·x2 cold = PARTIAL 0.80 (unsayable); R1: after learning (x0*x1) on a DIFFERENT problem → **UNDERSTOOD `+1.00*sin(3*(x0*x1)) +0.50*x2` exact**, applies to fresh raw data at 0.999; R2: a fresh Isaac inherits the combination through the ledger and solves it cold; R3: (x0*x1), (x0+x1), (x1*x2) are three distinct nodes with provenance; full regression green (suite 11/11, all batteries, refinement +24) |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
