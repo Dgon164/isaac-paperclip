@@ -32,6 +32,12 @@ experiments/
   RESULTS.md                the rebuild results write-up (A–F, real-data head-to-heads)
   runs/                     raw outputs of the verification re-runs, dated
   *.py                      the full harness: planted ground truth, batteries, red team
+spatial/
+  engine.py                 the spatial sandbox: mechanism solver + variance-ledger
+                            perceiver (structure from what refuses to vary) + the
+                            null-gated edge vocabulary (locked/bounded/sprung/free)
+  test_*.py                 12 standalone tests incl. test_null_battery.py (the E9)
+  WRITEUP.md                the session write-up: pitch → working perceiver
 ui/
   isaac_ui.py               one-file stdlib web console → http://127.0.0.1:8674
 ```
