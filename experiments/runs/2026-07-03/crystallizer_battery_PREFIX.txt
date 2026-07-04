@@ -1,0 +1,34 @@
+==================================================================
+C1 — clean planted categories (the regime it has always handled)
+==================================================================
+  pure categories recovered: 3/3
+==================================================================
+C2a — abc/abd: distinct things, one shared parent
+==================================================================
+  abc survives as its own type: NO (collapsed)
+  abd survives as its own type: NO (collapsed)
+  shared ab parent exists:      YES
+  both linked under ab:         NO
+==================================================================
+C2b — the positive negative: penguin not_fly must veto the collapse
+==================================================================
+  fly-type exists with the 4 fliers, penguin excluded: NO (collapsed / fly erased)
+  penguin still shares the birds group with robin:     YES
+  penguin inside any fly-type (must be NO):            NO
+==================================================================
+C3 — chance co-occurrence: junk types, measured
+==================================================================
+  types formed from pure chance: 129 (honest answer would be ~0 — the admission null is still open)
+==================================================================
+C5 — scale curve (seconds to consolidate)
+==================================================================
+  n=  50 nodes:   0.04 s   (122 types)
+  n= 200 nodes:   2.88 s   (623 types)
+  n= 800 nodes: 412.55 s   (868 types)
+==================================================================
+C1 clean categories : PASS
+C2a abc/abd law     : FAIL
+C2b penguin law     : FAIL
+C3/C5               : measurements above (null + knee, open items)
+VERDICT: SPEC NOT MET (see above)
+==================================================================

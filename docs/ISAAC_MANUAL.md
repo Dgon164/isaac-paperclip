@@ -71,8 +71,24 @@ can enter further discoveries). Four laws govern every mechanism:
 
 - `consolidate()` / `crystallize()` — FCA-style type discovery from door
   profiles (dirty-scoped or full). Types are nodes; membership doors both
-  ways. **Known limit:** connected-component grouping cannot represent
-  OVERLAPPING concepts (measured: shared doors merge groups).
+  ways. **Merge amended 2026-07-03 to the owner's two laws** (battery:
+  `experiments/crystallizer_battery.py`, before/after runs kept):
+  (1) merge only near-identical member sets — a proper subgroup stays a
+  distinct type and is linked by hierarchy instead ("abc and abd are not
+  the same thing, but they can both belong to the ab group" — verified:
+  abc + abd + shared ab parent all survive); (2) a **positive negative
+  vetoes any merge** — penguin `not_fly` is evidence, not absence; a merge
+  that would erase a positively-disclaimed distinction is forbidden
+  (verified: fly-birds keep `fly` in their intent, penguin excluded from
+  fly-types but still in the shared birds group). **Still-open limits,
+  measured in the battery:** no admission null (249 types form from pure
+  chance co-occurrence — C3) and the scale knee (0.04 s @ 50 nodes,
+  2.9 s @ 200, ~420 s @ 800 — C5).
+- `teach_not(subject, prop)` — a positive negative: indexes a cannot-fact
+  (the reasoning layer honors it) AND writes a first-class `not_<prop>`
+  door, so negative knowledge is visible in profiles — crystallization
+  can share it (penguins and ostriches share `not_fly`) and be vetoed by
+  it. Known-different never collapses; only unknown may.
 - `wave_consolidate()` — the temporal crystallizer, one mechanism recursed:
   - **groups** — doors that fire together (jitter-null + independence floor,
     1.4× anti-bridge margin);

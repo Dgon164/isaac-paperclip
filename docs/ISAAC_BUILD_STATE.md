@@ -16,6 +16,23 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-03 (evening) — CRYSTALLIZER AMENDED TO THE OWNER'S TWO LAWS
+
+- Owner's spec, verbatim intent: negatives are POSITIVE facts (penguin
+  not_fly vetoes collapse — "not just unknown, a positively negative
+  result"); partial overlap FACTORS, never merges ("abc and abd are not
+  the same thing, but they can both belong to the ab group").
+- `_crystallize` Phase 2: merge now requires near-identical member sets
+  (overlap vs the LARGER set ≥ 0.8) AND no positive-negative conflict.
+  `teach_not()` NEW: cannot-fact + first-class not_<prop> door.
+- `experiments/crystallizer_battery.py` NEW (before/after outputs in
+  runs/): C1 clean categories PASS (unchanged — the regime it always
+  handled); C2a abc/abd FAIL→**PASS**; C2b penguin FAIL→**PASS**; C3
+  measured: 249 junk types from pure chance (admission null still OPEN —
+  now MORE visible since stricter merging no longer hides it); C5 knee
+  measured: 0.04/2.9/~420 s at 50/200/800 nodes (OPEN).
+- Suite 11/11 unchanged.
+
 ## 2026-07-03 (later) — SPATIAL PERCEPTION IN THE ENGINE (suite 11/11)
 
 - **observe_spatial(frames, label=)** + **compare_scenes(a, b)** migrated
