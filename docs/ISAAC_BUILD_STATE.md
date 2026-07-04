@@ -16,6 +16,35 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — THE WIREFRAME (owner's 2D-transformer design, same day)
+
+Owner's spec, verbatim commitments: "create a wireframe concept of the
+thing that isaac can then run numbers over... tracks all objects...
+basically a lidar 3d scan of the image faces... stitch them together into
+an idea... assumed reflection axis of symmetry to fill out unknowns...
+bones and structures... and for 2d the same thing across a single plane."
+Battery `wireframe_battery.py` **8/8**; suite 11/11; spatial 13/13;
+pattern3d 9/9 after.
+- **Bones (2D)**: `keypoints_structural` — Zhang–Suen skeleton, spur
+  pruning + junction merging (raw skeletons of thick strokes sprout
+  spurious branches — battery W1: 20.7%→74.2% once pruned). MNIST
+  patterns on bones: 74.2% where answered vs 33.3% ink sampling; more
+  total correct; coverage 31/200 = the open dial.
+- **Symmetry completion**: `complete_symmetry` — candidate planes FROM
+  MIRROR PAIRS (normal = difference direction, offset = midpoint
+  projection); v1 forced the plane through the observed centroid, which
+  a partial scan's lopsidedness pulls off the true plane (W2 caught it);
+  null-gated (10/10 refusals on asymmetric clouds); inferred points are
+  provenance-marked hypotheses. Design honesty recorded: symmetry is
+  UNFALSIFIABLE from one side alone — the first W2 draft demanded it and
+  the organ correctly refused; the test was wrong.
+- **Stitching**: `stitch_views` — partial scans merge via >=3 shared
+  points, both factorization depth-signs tried; machine-exact (1.3e-15);
+  refuses thin overlap.
+- Named next steps: bone GRAPH into the net (ratios on bones →
+  discover()), coverage dial on bone patterns, tracker (pixels→tracks),
+  texture/color percepts.
+
 ## 2026-07-04 — THE LIFT AND THE PATTERN NET (owner: 2D→3D "but it needs
 ## to work on 2d to 2d abstraction too... it can learn the spatial pattern net")
 

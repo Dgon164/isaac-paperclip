@@ -353,13 +353,40 @@ trajectories and stores only what refuses to vary.
   sampling is unstable — structural keypoints are the named next
   step). ICP note: free scale invites collapse (shrink to fake a low
   residual) — clamped to [0.8, 1.25]; battery caught it at 25%→56%.
+- **The WIREFRAME organs (owner's 2D-transformer design, 2026-07-04;
+  battery `experiments/wireframe_battery.py` 8/8).** "A wireframe
+  concept of the thing that Isaac can then run numbers over":
+  - `keypoints_structural(img)` — **bones**: Zhang–Suen skeleton →
+    spur-pruned, junction-merged endpoints/junctions (the bone ends).
+    On MNIST patterns: **74.2% where answered vs 33.3%** for raw ink
+    sampling, and more total correct (23 vs 19 per 200); coverage
+    (31/200 answered) is the open dial — precision-first, honestly.
+  - `complete_symmetry(points)` — **the assumed reflection axis fills
+    unknowns**: candidate planes come from mirror PAIRS (normal = pair
+    difference, offset = midpoint projection — a plane through the
+    lopsided centroid of a partial scan was v1's bug); earned only past
+    a scrambled-cloud null (asymmetric refuses 10/10; symmetry is
+    honestly UNFALSIFIABLE from one side alone — some sliver of the
+    other side must be seen); unmatched mirrors return as INFERRED
+    geometry, provenance-marked, never mixed with observations. Sliver
+    test: 3 hidden points inferred at 0.0000 error.
+  - `stitch_views(views)` — **faces stitched into an idea**: partial
+    rigid scans (ids, local coords) merge through ≥3 shared points
+    (Procrustes, both depth signs tried — the factorization sign
+    ambiguity); machine-exact on ground truth (1.3e-15); refuses when
+    overlap is too thin.
 - Limits (honest): trajectories need identities given (the tracker half
   of the pixel bridge is still open); the lift is single-rigid-body
-  (multi-body SfM not built); all-pairs cost O(n²) per frame set;
-  bounded certification needs enough revisits; sprung classification
-  exists in the harness (`spatial/engine.py`) but not yet in-engine;
-  pattern-net keypoints are geometry-only (no texture/color — CIFAR
-  needs more than shape).
+  (multi-body SfM not built — stitch_views covers the multi-VIEW case,
+  not multi-BODY); all-pairs cost O(n²) per frame set; bounded
+  certification needs enough revisits; sprung classification exists in
+  the harness (`spatial/engine.py`) but not yet in-engine; pattern-net
+  keypoints are geometry-only (no texture/color — CIFAR needs more than
+  shape); bone-pattern coverage low (abstains 84% on transformed MNIST
+  — the recognition bar and per-class bone variation are the next
+  dials); wireframe BONE GRAPH (bones as net edges with length-ratio
+  meta, "run numbers over it") is minted only as keypoints so far —
+  ratios-on-bones discovery is the named next step.
 - The full spatial suite (solver, occlusion inference, materials, maps,
   circuits, the null battery) lives in `spatial/` — 13 standalone tests.
   The GM plays mechanism worlds against this capability:

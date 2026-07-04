@@ -2627,6 +2627,214 @@ class Isaac:
             return None, scores                       # honest shrug
         return best, scores
 
+    # ── the WIREFRAME (owner's design, 2026-07-04): "create a wireframe
+    # concept of the thing that isaac can then run numbers over... bones
+    # and structures... rigid structures with a wireframe point based
+    # mesh... and for 2d the same thing across a single plane."
+    # Pixels → skeleton → BONES (segments between junctions/endpoints);
+    # partial 3D views STITCH via shared points; an earned reflection
+    # symmetry fills the unseen side (inferred, marked, revisable).
+
+    @staticmethod
+    def _skeletonize(img, thresh=0.5):
+        """Zhang–Suen thinning: ink → one-pixel-wide skeleton (the bones'
+        raw material). numpy only."""
+        B = (np.asarray(img, float) > thresh * np.max(img)).astype(np.uint8)
+        changed = True
+        while changed:
+            changed = False
+            for step in (0, 1):
+                P = np.pad(B, 1)
+                p2 = P[:-2, 1:-1]; p3 = P[:-2, 2:]; p4 = P[1:-1, 2:]
+                p5 = P[2:, 2:]; p6 = P[2:, 1:-1]; p7 = P[2:, :-2]
+                p8 = P[1:-1, :-2]; p9 = P[:-2, :-2]
+                nb = p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9
+                seq = np.stack([p2, p3, p4, p5, p6, p7, p8, p9, p2])
+                A = ((seq[:-1] == 0) & (seq[1:] == 1)).sum(0)
+                if step == 0:
+                    cond = ((B == 1) & (nb >= 2) & (nb <= 6) & (A == 1)
+                            & (p2 * p4 * p6 == 0) & (p4 * p6 * p8 == 0))
+                else:
+                    cond = ((B == 1) & (nb >= 2) & (nb <= 6) & (A == 1)
+                            & (p2 * p4 * p8 == 0) & (p2 * p6 * p8 == 0))
+                if cond.any():
+                    B[cond] = 0
+                    changed = True
+        return B
+
+    @staticmethod
+    def _skeleton_keynodes(skel, k_min=6, prune=3):
+        """Structural keypoints from a skeleton: ENDPOINTS (1 neighbour)
+        and JUNCTIONS (>=3) — the bone ends. Thick strokes sprout
+        spurious short branches (battery W1 caught it): SPURS shorter
+        than `prune` are removed first, and junction pixel clusters
+        merge to their centroid. Loops (a '0') have neither endpoints
+        nor junctions, so pad to k_min with farthest-point samples
+        along the skeleton."""
+        S = skel.copy().astype(np.uint8)
+
+        def degrees(S_):
+            P = np.pad(S_, 1)
+            return sum(P[1 + dy:P.shape[0] - 1 + dy,
+                         1 + dx:P.shape[1] - 1 + dx]
+                       for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+                       if (dy, dx) != (0, 0))
+
+        for _ in range(prune):                       # shave spur tips
+            nb = degrees(S)
+            tips = (S == 1) & (nb == 1)
+            if not tips.any():
+                break
+            S[tips] = 0
+        ys, xs = np.where(S > 0)
+        if len(ys) == 0:
+            ys, xs = np.where(skel > 0)              # tiny glyph: un-pruned
+            S = skel
+            if len(ys) == 0:
+                return np.zeros((0, 2))
+        nb = degrees(S)
+        deg = nb[ys, xs]
+        key = (deg == 1) | (deg >= 3)
+        pts = np.column_stack([xs, -ys]).astype(float)
+        kpts = pts[key]
+        # merge junction clusters (thick joints -> several junction px)
+        merged = []
+        for p in kpts:
+            for q in merged:
+                if np.linalg.norm(p - q["c"] / q["n"]) < 2.0:
+                    q["c"] += p
+                    q["n"] += 1
+                    break
+            else:
+                merged.append({"c": p.copy(), "n": 1})
+        chosen_pts = [q["c"] / q["n"] for q in merged]
+        if len(chosen_pts) < k_min and len(pts) > len(chosen_pts):
+            d = np.full(len(pts), np.inf)
+            if not chosen_pts:
+                chosen_pts = [pts[int(np.argmax(
+                    ((pts - pts.mean(0)) ** 2).sum(1)))]]
+            for c in chosen_pts:
+                d = np.minimum(d, ((pts - c) ** 2).sum(1))
+            while len(chosen_pts) < min(k_min, len(pts)):
+                nxt = int(np.argmax(d))
+                chosen_pts.append(pts[nxt])
+                d = np.minimum(d, ((pts - pts[nxt]) ** 2).sum(1))
+        return np.array(chosen_pts)
+
+    def keypoints_structural(self, img, k_min=6):
+        """The wireframe front end for glyph-like images: skeleton bones'
+        endpoints and junctions instead of raw ink samples."""
+        return self._skeleton_keynodes(self._skeletonize(img), k_min)
+
+    def complete_symmetry(self, points, n_axes=36, tol=0.08, n_null=20):
+        """The owner's trick: 'assumed reflection axis of symmetry to
+        fill out unknowns.' Search candidate reflection axes (2D) or
+        planes (3D, PCA-guided); an axis is EARNED only if the fraction
+        of observed points whose mirror lands on another observed point
+        beats the same search on scrambled points (selection-corrected
+        null). The unmatched points' mirrors are returned as INFERRED
+        geometry — hypotheses wearing their provenance, never silently
+        mixed with observations."""
+        P = np.asarray(points, float)
+        n, d = P.shape
+        if n < 4:
+            return dict(axis=None, inferred=np.zeros((0, d)))
+        mu = P.mean(0)
+        scale = np.sqrt(((P - mu) ** 2).sum(1).mean()) + 1e-12
+
+        def plane_candidates(Q):
+            # a mirror pair DEFINES its plane: normal = the pair's
+            # difference direction, offset = the midpoint's projection.
+            # (v1 forced the plane through the observed centroid — a
+            # PARTIAL scan's centroid is off the true plane; battery W2.)
+            cands = []
+            m = len(Q)
+            pair_ix = [(a, b) for a in range(m) for b in range(a + 1, m)]
+            if len(pair_ix) > 200:
+                sel = np.random.default_rng(7).choice(len(pair_ix), 200,
+                                                      replace=False)
+                pair_ix = [pair_ix[int(t)] for t in sel]
+            for a, b in pair_ix:
+                v = Q[a] - Q[b]
+                nv = np.linalg.norm(v)
+                if nv > 1e-9:
+                    nrm = v / nv
+                    cands.append((nrm, float(((Q[a] + Q[b]) / 2) @ nrm)))
+            return cands
+
+        def best_plane(Q):
+            best_f, best_nc, best_M = 0.0, None, None
+            for nrm, c in plane_candidates(Q):
+                Zd = Q @ nrm - c
+                M = Q - 2 * np.outer(Zd, nrm)          # mirrored points
+                d2 = ((M[:, None, :] - Q[None, :, :]) ** 2).sum(-1)
+                f = float((np.sqrt(d2.min(1)) / scale < tol).mean())
+                if f > best_f:
+                    best_f, best_nc, best_M = f, (nrm, c), M
+            return best_f, best_nc, best_M
+
+        real_f, nc, M = best_plane(P)
+        rng = np.random.default_rng(23)
+        null_f = [best_plane(mu + (rng.uniform(-1, 1, P.shape)) * scale)[0]
+                  for _ in range(n_null)]
+        if nc is None or real_f <= np.percentile(null_f, 95):
+            return dict(axis=None, inferred=np.zeros((0, d)),
+                        why=f"symmetry {real_f:.2f} within chance "
+                            f"(null 95th {np.percentile(null_f, 95):.2f})")
+        d2 = ((M[:, None, :] - P[None, :, :]) ** 2).sum(-1)
+        unmatched = np.sqrt(d2.min(1)) / scale >= tol
+        return dict(axis=nc[0], offset=nc[1], coverage=real_f,
+                    inferred=M[unmatched])
+
+    @staticmethod
+    def stitch_views(views):
+        """'Build a lidar scan of the faces and stitch them into an
+        idea': views = list of (ids, points) partial rigid scans — point
+        identities as labels, coordinates local to each view. Views merge
+        through >=3 shared points (Procrustes, both reflection signs
+        tried — factorization depth carries a sign ambiguity). Returns
+        (ids, points) of the stitched model, or None when views never
+        overlap enough (stitching that can refuse)."""
+        views = [(list(ids), np.asarray(P, float)) for ids, P in views]
+        ids0, P0 = views[0]
+        model = {i: p for i, p in zip(ids0, P0)}
+        pending = list(views[1:])
+        progress = True
+        while pending and progress:
+            progress = False
+            for vi, (ids, P) in enumerate(pending):
+                shared = [i for i in ids if i in model]
+                if len(shared) < 3:
+                    continue
+                A = np.array([model[i] for i in shared])
+                B = np.array([P[ids.index(i)] for i in shared])
+                best = None
+                for sign in (1.0, -1.0):
+                    Bs = B.copy()
+                    Bs[:, -1] *= sign
+                    muA, muB = A.mean(0), Bs.mean(0)
+                    A0, B0 = A - muA, Bs - muB
+                    U, s, Vt = np.linalg.svd(B0.T @ A0)
+                    if np.linalg.det(U @ Vt) < 0:
+                        U[:, -1] *= -1
+                    R = U @ Vt
+                    sc = s.sum() / max((B0 ** 2).sum(), 1e-12)
+                    res = float(((B0 @ R) * sc - A0).std())
+                    if best is None or res < best[0]:
+                        Pf = P.copy()
+                        Pf[:, -1] *= sign
+                        best = (res, (Pf - muB) @ R * sc + muA)
+                for i, p in zip(ids, best[1]):
+                    if i not in model:
+                        model[i] = p
+                pending.pop(vi)
+                progress = True
+                break
+        if pending:
+            return None
+        ids = sorted(model)
+        return ids, np.array([model[i] for i in ids])
+
     # ── the capture net: a stopgap that exists to be destroyed ─────────
     # Audit 2.8, built 2026-07-03 at the owner's prompt. THE NO-NETS LAW
     # HOLDS: the net is never the deliverable — it is quarantined inside

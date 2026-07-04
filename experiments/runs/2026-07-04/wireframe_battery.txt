@@ -1,0 +1,22 @@
+
+W1 — structural keypoints (bones) vs ink sampling, same pattern net
+    bones: 74.2% on 31/200 answered   ink: 33.3% on 57/200 answered
+  [PASS] bones beat ink where answered — 0.742 vs 0.333
+  [PASS] bones win on TOTAL correct answers per 200 — 23 vs 19 (coverage 31 vs 57 — the open dial)
+
+W2 — the assumed axis fills the unseen side
+  [PASS] reflection axis earned (x-normal) — axis=[1. 0. 0.]
+  [PASS] inferred points land on the hidden truth — mean err 0.0000 over 3 inferred
+
+W3 — no symmetry invented
+  [PASS] asymmetric clouds refuse an axis (>= 8/10) — 10/10 refused
+
+W4 — faces stitched into an idea
+  [PASS] two overlapping views merge — 12 points in the model
+  [PASS] stitched distances match ground truth — max err 1.33e-15
+
+W5 — stitching that can refuse
+  [PASS] non-overlapping views return None
+
+============================================================
+WIREFRAME BATTERY: 8/8 passed
