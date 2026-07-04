@@ -590,15 +590,35 @@ ledger at `data/findings.jsonl`.
 - Reports: `experiments/RESULTS.md`, `experiments/WAVE_TEST_REPORT.md`,
   `docs/WRITEUP_FOR_REVIEW.md` (§7 = verify-everything commands).
 
-## 11. Current honest scoreboard (2026-07-02) — [RECORDED — script not in this repo or data required; not independently re-verified] (the gauntlet and cross-domain scripts ARE now in `experiments/`, but the scoreboard numbers need their datasets and long runs)
+## 11. Current honest scoreboard — [VERIFIED 2026-07-04 — full gauntlet re-run from this repo with the upgraded stack] (log: `experiments/runs/2026-07-04/gauntlet_rerun.txt`)
 
-Competitive: covtype 94.4% (record ~97.5); exact law recovery incl.
-off-grid damped oscillation; cross-domain transfer. Commodity-or-below:
-MNIST 95.2 / Fashion 76.5 / CIFAR 32.6 / Omniglot 1-shot 51.6 / FSDD 92
-mixed–54 transfer. Differentiated (the product): verdicts + scope +
-rivals + probes + precedent-dossier explanations + cross-session
-inheritance — honesty machinery wrapped around discovery, on a CPU,
-readable end to end.
+Every recorded number REPRODUCED, two improved:
+- **Kepler: UNDERSTOOD `+1.00*x0^1.5` EXACT from n=8** — the gauntlet's
+  own note still says "PREDICTED FAIL (a^1.5 inexpressible)"; the one
+  dial (λ=1.5 in the power family, 2026-07-04) made it expressible.
+- **Sunspots: honest NO RULE in 2 seconds** — the dataset that caused
+  the 20-CPU-hour runaway now terminates instantly under the block-perm
+  null with no false law (quasi-periodic: folding correctly refuses a
+  fixed period).
+- Covtype articulated: flat engine doors 57.0% (bins=12) / **59.1%
+  (bins=32)** — reaches the harness's augmented number flat; compound
+  keep-guard correctly REFUSES compounds here (held-out drops: binary
+  indicator columns bin badly under the quantile log-density model — a
+  known-why on the checklist, not a silent regression). Captured
+  door-weighted 95.3% remains RECORDED-only; honest number stays the
+  articulated tier (row-index leakage 94.8%).
+- Commodity-or-below, unchanged (the D8/phase-4 perception wall, as
+  predicted): MNIST 95.2 exemplar / 86.5 doors; Fashion 76.5/69.3;
+  CIFAR 32.6/26.9 (designed face-plant); Omniglot 1-shot 51.6;
+  smallNORB 87.7/40.1 (viewpoint unhandled); FSDD 92 mixed → 54
+  speaker-transfer; fraud minority recall 79% (accuracy is majority
+  theater there); clocks 22.9% (known harness readout bug, D8).
+
+Differentiated (the product, unchanged): verdicts + scope + rivals +
+probes + accounting + graded confidence + cross-session inheritance —
+honesty machinery wrapped around discovery, on a CPU, readable end to
+end. The strengths are the discovery stack; the wall is pixel-level
+perception — exactly where the checklist points next (D8, D9).
 
 ## 12. What does NOT exist yet (so nobody assumes it)
 

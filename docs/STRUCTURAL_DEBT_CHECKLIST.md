@@ -165,9 +165,20 @@ honesty, or capability debt.
 
 ## F. Protocol / hygiene debt
 
-- [ ] **F1. Gauntlet re-run with the current stack** (standing since 07-03).
-- [ ] **F2. Scoreboard numbers are RECORDED-not-reverified** (need datasets +
-      long runs; manual §11 tags them honestly).
+- [x] **F1. Gauntlet re-run** — **DONE 2026-07-04** with the upgraded stack
+      (log in runs/): all 10 datasets, every recorded number reproduced;
+      Kepler now EXACT (`x0^1.5` via the dial); sunspots = honest NO RULE
+      in 2 s (the runaway is dead); covtype engine flat bins=32 59.1%.
+- [x] **F2. Scoreboard re-verified** — §11 retagged VERIFIED 2026-07-04 for
+      the gauntlet datasets. Still RECORDED-only: covtype door-weighted
+      95.3% captured tier, HIGGS full-run numbers.
+- [ ] **F6. Compound doors at scale (new known-why, from the covtype
+      re-run)**: binary indicator columns bin badly under the quantile
+      log-density model — trigger fires, admission works, keep-guard
+      correctly refuses (57.0%→57.0%, no regression shipped), but the
+      harness's +2.8 isn't reproduced through the engine path. Fix when
+      wanted: indicator columns should join the model as Bernoulli doors,
+      not quantile-binned pseudo-continuous columns.
 - [ ] **F3. `isaac_project/TODO.md` is stale** (says 10/10, engine at `code/`).
 - [ ] **F4. Sense/wave/crystallizer batteries not in the 11-area self-test**
       (by design — suite = smoke; batteries = proof; keep the distinction
