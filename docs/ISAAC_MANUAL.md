@@ -532,6 +532,10 @@ readable end to end.
 
 ## 12. What does NOT exist yet (so nobody assumes it)
 
+> The complete audited inventory — every limitation, stopgap, and gap with
+> evidence and attack order — lives in `docs/STRUCTURAL_DEBT_CHECKLIST.md`
+> (2026-07-04). This section stays as the quick list.
+
 No abstention in classify_features; no compound doors in-engine; uptake
 composition harness-only; no FCA lattice (overlap merging); no
 shrug→discover reflex; no block-permutation null; no symbolic/token
