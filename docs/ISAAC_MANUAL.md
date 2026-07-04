@@ -371,6 +371,23 @@ trajectories and stores only what refuses to vary.
   0.984 → graduated to `+1.00*x0*x1 −1.00*x2` exactly (R² 1.000 vs
   truth); out-of-class sin(3·x0·x1) captured and HONESTLY not graduated;
   noise net failed its null, nothing stored.
+- **`interrogate(name)` / `graduate_composite(name, X, y)` — enumerate
+  what a capture is detecting** (owner, 2026-07-04: "define the heuristic
+  connections... they can at least point in the direction — 'this is a
+  pattern' as a deliverable"). The captured net is queried as an object
+  of study; every claim is gated: **drivers** (permutation importance),
+  **joint action** (2-D ANOVA interaction share), **composite
+  dependence** (level-set invariance through xi*xj / xi+xj / xi−xj,
+  judged against random-direction level sets — the matched null), and
+  **shape along the composite** (monotone / peaked / periodic + a
+  frequency estimate). Output is English sentences stored on x:<name>
+  and in the ledger — a deliverable even when the law is out of reach.
+  THE CLOSING MOVE: `graduate_composite` re-discovers in the composite
+  coordinate Isaac himself identified — battery: the stuck
+  sin(3·x0·x1) capture delivered "flows through the product ONLY,
+  periodic ~2.5 rad/unit" and then graduated to
+  **`+1.00*sin(3*(x1*x0))` exactly**; additive control invented nothing;
+  (x0+x1)² found the sum and graduated exactly.
 - **`adequacy` (in every discover() result)** — data too weak to
   interpret is a DIAGNOSIS, not a shrug: names the cause with evidence —
   sample below onset (attaches as "provisional" even to successes),

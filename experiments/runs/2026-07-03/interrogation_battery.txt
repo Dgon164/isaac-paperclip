@@ -1,0 +1,27 @@
+======================================================================
+I1 — sin(3*x0*x1) + bystander: enumerate the pattern, then say it
+======================================================================
+  capture: CAPTURED (net) (R2 0.767 vs null -0.056)
+  THE DELIVERABLE (English, each claim gated):
+    - the pattern lives in x1 (50%), x0 (50%) — the rest of the columns are bystanders
+    - x1 and x0 act JOINTLY (interaction carries 97% of their effect) — not a sum of separate influences
+    - the dependence flows through the product x1*x0 ONLY (invariance 0.87, beats its null 0.37); along that axis the response is periodic, roughly 2.49 rad/unit
+  graduate via composite: GRADUATED (via composite)  -> +1.00*sin(3*(x1*x0)) -0.00
+======================================================================
+I2 — additive control (x0^2 + x1): no joint claim may be invented
+======================================================================
+    - the pattern lives in x1 (62%), x0 (38%) — the rest of the columns are bystanders
+  false interaction claimed: NO;  false composite claimed: NO
+======================================================================
+I3 — (x0+x1)^2: the dependence flows through the SUM
+======================================================================
+    - the pattern lives in x0 (52%), x1 (48%)
+    - x0 and x1 act JOINTLY (interaction carries 72% of their effect) — not a sum of separate influences
+    - the dependence flows through the sum x0+x1 ONLY (invariance 1.00, beats its null 0.90); along that axis the response is single-peaked
+  graduate via composite: GRADUATED (via composite)  -> +1.00*(x0+x1)*(x0+x1) +0.00
+======================================================================
+I1 stuck case -> deliverable -> exact law : PASS
+I2 no invented structure                  : PASS
+I3 sum-composite found and graduated      : PASS
+VERDICT: WORKS — the captured is enumerable, and pointing at the pattern can BECOME the law
+======================================================================
