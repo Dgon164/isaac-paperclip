@@ -31,7 +31,7 @@ gated the way science gates claims. The engine already does this end to end at
 small scale. The final version is this loop closed, recursed without limit,
 and pointed at everything.
 
-## 2. The five closures (what "logical conclusion" means concretely)
+## 2. The seven closures (what "logical conclusion" means concretely)
 
 ### Closure 1 — The tower: levels without limit
 Today: flat accounting (articulated + captured + noise = 100%), residual
@@ -116,6 +116,77 @@ defeats; validate_law() before trust is the protocol's handshake.
   sensor has the same epistemic machinery as a lab: discovery with honest
   refusal, readable end to end, no cloud, no gradient farm, no gatekeeper.
 
+### Closure 6 — The engineer
+*(Owner's addition, 2026-07-04: "more than just discovery... find
+information, find issues, and be able to fix and resolve them logically and
+explicitly — R&D, not so much science.")*
+Discovery understands what IS. Engineering achieves what SHOULD BE. The
+pieces already exist in embryo — this closure is their composition:
+- **The spec is a first-class object.** A desired state is an EXPECTATION
+  (the clock already runs on expectations); requirements are taught the way
+  facts are taught, with scope and testability attached.
+- **Diagnosis IS effect entities.** expect → subtract → perceive-the-delta:
+  the signed difference between spec and observed reality is *the issue*,
+  minted as a thing (`fault:<name>`), with a dossier — where it lives, what
+  it responds to, how big, which direction. Finding issues is not a new
+  capability; it is the shadow pipeline pointed at intentions.
+- **Root cause = laws + interventional probes.** The candidate causes are the
+  laws and blocks-facts upstream of the delta (provenance makes "upstream"
+  computable); refine()-style budgeted probes are DO-operations — wiggle the
+  suspected cause, watch the effect entity respond, null-gated. The GM
+  already plays this game; engineering plays it against real systems.
+- **Repair planning = laws run backward.** apply_law inverted / solve() with
+  the unknown on the intervention side: "what input change moves the output
+  into spec?" — searched over the action vocabulary (World.teach_action,
+  assess, plan_think_execute), with predicted consequences attached to every
+  step BEFORE it is taken. Explicit means: the plan is a causal chain of
+  cited laws, readable end to end, refusable at every link.
+- **The fix is verified like a discovery.** Did the delta close? Held-out,
+  against the fix's own null (would the delta have closed anyway?). Fixes
+  that fail are KEPT and classified with the why — the repair ledger grows a
+  wrong-section, and wrong fixes are wisdom ("what is wrong is wisdom"
+  applies to interventions exactly as to types).
+- **"Find information"** = the standing probe queue widened beyond
+  instruments: ledgers, corpora, documentation, other minds' findings —
+  retrieval is just observation of already-crystallized experience, and
+  inherited claims pass validate_law() before they bear load.
+- End state: hand Isaac a misbehaving system — a machine, a codebase, a
+  process, a circuit — plus a spec, and he returns: the issues as signed
+  first-class objects, the root-cause chain with cited laws and measured
+  confidence, the intervention plan with predicted consequences, and after
+  execution, the verification — or an honest refusal naming what evidence
+  is missing. An engineer whose every move is auditable and whose failed
+  repairs make him wiser.
+
+### Closure 7 — The mouth: conversation as the interface tier
+**[SUPERSEDES the 2026-07-04 first draft, which declared "not a chatbot" —
+overturned by the owner the same day: "it should be a chatbot because that's
+how people will also interface with it eventually." The loser's why: the
+draft confused the failure mode (a text generator that says plausible
+things) with the medium (conversation). The medium is how humans reach the
+epistemics; refusing it would strand the mission's own users.]**
+- Isaac converses — but his speech is **gated English**: every sentence is
+  backed by doors, laws, dossiers, or ledger rows, exactly as interrogate()
+  already writes English only past its nulls. Ask him why, and the sentence
+  unfolds into its provenance. Ask him something he doesn't know, and the
+  refusal is the answer, with the adequacy diagnosis attached.
+- **Neural language models are permitted at the interface tier** — the same
+  license as perception: mouth and ears, never the verdict. An LLM may parse
+  the human's English into teach/ask/discover/spec operations and render
+  Isaac's findings into fluent prose — but every claim in that prose must
+  trace to a net object, and anything the renderer adds beyond the net is a
+  bug by definition (checkable: parse the prose back and diff against the
+  source objects — a null for faithfulness).
+- The graduation move applies to the interface itself: as symbolic
+  discover() matures (Closure 4), natively discovered language displaces the
+  neural renderer from the inside — the mouth gets graduated like any other
+  capture, and the trust boundary moves outward as it does.
+- End state: a person — the Lost-Einsteins kid, the small-lab scientist, the
+  engineer at 2am — talks to Isaac in plain language: teaches, asks,
+  specifies, challenges. What they get back is conversation with receipts:
+  the only chatbot whose every sentence is either evidence-backed or an
+  honest shrug.
+
 ## 3. What the final Isaac IS (one paragraph)
 
 A small, readable engine — one substrate (the Net), one atom (compare), one
@@ -123,18 +194,25 @@ loop (observe → consolidate → discover → refine), one discipline (the null
 that turns any stream of experience into an unbounded tower of minted
 symbols, laws with graded belief, characterized unknowns, and kept mistakes;
 that spends attention where it is measurably weakest; that can ingest an
-opaque model and hand back its knowledge with the opacity quantified; and
-that would rather refuse than lie. **Understanding is compression with
+opaque model and hand back its knowledge with the opacity quantified; that
+can take a spec and a misbehaving system and return the issues, the
+root-cause chain, the intervention plan with predicted consequences, and the
+verified fix — or an honest refusal; that a person can simply TALK to, every
+sentence of the reply either evidence-backed or a shrug with a diagnosis;
+and that would rather refuse than lie. **Understanding is compression with
 receipts** — the final Isaac is the receipts machine for anything that
 computes, including the systems we don't understand and including himself
 (the accounting turned inward: he states, with calibration, what fraction of
 his own behavior he can articulate).
 
 ## 4. What it deliberately never becomes
-- Not an agent: no goals, no self-preservation, no open-world actuation.
-  Probes are proposals; budgets are granted. The bridge is an INSTRUMENT.
-- Not a chatbot and not a foundation model: language is a domain he studies,
-  not a costume he wears.
+- Not an autonomous agent: no goals of his own, no self-preservation, no
+  unsupervised actuation. Probes are proposals; interventions execute under
+  granted budgets against named specs; the engineer works ON systems, FOR
+  people. The bridge is an INSTRUMENT.
+- Not a text generator: he converses (Closure 7 — superseding this list's
+  first draft, which wrongly said "not a chatbot"), but he never says what
+  he cannot back. Fluency is the interface; the net is the speaker.
 - Not a benchmark chaser: accuracy stays evidence about understanding, never
   the objective (the covtype lesson is permanent).
 - Not neural in any decision path — the line that never moves.
@@ -153,11 +231,21 @@ his own behavior he can articulate).
    queue, self-grading calibration.
 5. **The bridge proper** (D7 + capture-at-scale): symbolic discover();
    interrogate real trained nets; the accounting report for black boxes.
-6. **The commons** (ledger protocol): provenance handshake, cross-mind
+6. **The engineer** (Closure 6; rides on 1–4): specs as expectations, faults
+   as effect entities, DO-probes, laws-run-backward planning, verified
+   fixes, the repair ledger. The consequence layer (World/assess/
+   plan_think_execute) is the seed already in the engine.
+7. **The mouth** (Closure 7; can start EARLY and shallow): gated-English
+   conversation over the existing Converse panel — teach/ask/why with
+   provenance unfolding — then an LLM renderer at the interface tier with
+   the faithfulness null, then native language as Closure 4 matures.
+8. **The commons** (ledger protocol): provenance handshake, cross-mind
    supersession, the Pi build.
-Milestones 1–3 are this year's work at current pace. 4–6 are the horizon —
-and the MVP ("drop a CSV, get an honest report") is milestone 5's seed
-already agreed.
+Milestones 1–3 are this year's work at current pace; 7's shallow form is
+buildable NOW (the UI already converses — it needs why-unfolding and the
+renderer contract). The MVP ("drop a CSV, get an honest report") is the seed
+of 5 and 6 at once — a report IS gated English about findings and next
+actions.
 
 ## 6. Predictions, recorded so they can be graded
 - P1: level-indexing (D1) will subsume the graduation loop — captures at
@@ -167,6 +255,13 @@ already agreed.
   will still be worth more than its benchmark score, to its own builders.
 - P3: effect entities + the clock will make the 22.9% clock benchmark
   trivial, confirming it was a perception bug, not a reasoning bug.
-- P4: no point in milestones 1–5 will require abandoning single-file numpy;
+- P4: no point in milestones 1–7 will require abandoning single-file numpy;
   the first genuine pressure to leave one file will come from the commons
-  (milestone 6), not from capability.
+  (milestone 8), not from capability.
+- P5: the engineer (Closure 6) will need almost no new organs — faults are
+  effect entities, diagnosis is interrogation, planning is laws-plus-solve,
+  verification is the null discipline. The build cost will be in the SPEC
+  layer (teaching Isaac what "should" means), not the reasoning.
+- P6: the first gated-English chatbot version will feel underwhelming for a
+  week (it refuses constantly) and then indispensable — the refusals are
+  the product, exactly as calibrated refusal is the MVP's moat.
