@@ -16,6 +16,39 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — THE LIFT AND THE PATTERN NET (owner: 2D→3D "but it needs
+## to work on 2d to 2d abstraction too... it can learn the spatial pattern net")
+
+One mechanism, two regimes (`pattern3d_battery.py` **9/9**; suite 11/11;
+spatial 13/13; all six other batteries green):
+- **2D→3D lift** in observe_spatial: Tomasi–Kanade + metric upgrade,
+  TRIGGER-gated (attempted only when 2D perception finds NOTHING locked —
+  an unconditional lift broke the four-bar, suite caught it) and
+  TRIPLE-null-gated (planar refuses; non-rigid refuses; the RANK-CLIFF
+  null — rank-3 reconstruction is rigid by construction, so random walks
+  were being fabricated into rigid bodies until s3 >= 5*s4 was required;
+  battery L3 caught it). Rotating rigid body: recovered 3D distances
+  constant (cv 0.0000 vs 26% variation in 2D); same body across motions
+  SAME, different body DIFFERENT — viewpoint-invariant recognition from
+  2D tracks.
+- **The SPATIAL PATTERN NET (2D→2D)**: learn_pattern/recognize_pattern —
+  instances are views of a canonical form; ICP-lite registration factors
+  the transform out; parts admitted past a scrambled-view null; pattern =
+  net structure; recognition abstains at the measured chance-registration
+  bar. Rotation freedom is class-dependent (n_rot=1 for digits — a 6 IS
+  an upside-down 9). Glyphs 90%; junk 19/20 shrugged; MNIST keypoints
+  under transform: 56.2% where answered (48/200 — trustworthy floor) vs
+  38.5% unregistered baseline.
+- Three battery-caught corrections, recorded: unconditional lift broke
+  planar mechanisms (→ the nothing-locked trigger); low residual alone
+  fabricated rigidity from noise (→ rank-cliff null); free ICP scale
+  collapsed matches to fake low residuals, 25%→56% on digits when
+  clamped to [0.8, 1.25].
+- Honest remaining gaps (D8's open half): the TRACKER (pixels →
+  identified tracks; farthest-point ink keypoints are unstable —
+  structural keypoints next), multi-body SfM, texture/color percepts
+  (CIFAR needs more than shape), clock readout.
+
 ## 2026-07-04 — C1 + C2 IN ENGINE: arrangement and binding (the two the audits kept converging on)
 
 - **C1 — uptake composition** (`uptake_battery.py` **10/10** = rebuild B's

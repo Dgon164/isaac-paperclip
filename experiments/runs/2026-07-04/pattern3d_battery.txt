@@ -1,0 +1,25 @@
+
+L1 — the 3D lift on a rotating rigid body
+  [PASS] lift admits depth — z_extent=0.809
+  [PASS] recovered 3D distances constant through rotation — cv=0.0000 (2D distances varied 0.26)
+  [PASS] same body across motions -> SAME — gap=0.001
+  [PASS] different body -> DIFFERENT — gap=0.105
+
+L2 — planar refuses the third coordinate
+  [PASS] planar: depth refused — planar: two components already explain the tracks
+
+L3 — random walks refuse
+  [PASS] noise: lift refused AND no relations taught — 0 facts, why=no rank-3 cliff (s3/s4 = 1.5) — structur
+
+P1 — 2D→2D abstraction: glyphs
+  [PASS] fresh transformed glyphs recognized >= 90% — 59/60
+
+P2 — junk points get a shrug
+  [PASS] junk mostly refused (>= 15/20 shrugs) — 19/20
+
+P3 — digits: keypoint pattern nets vs unregistered baseline
+    registered pattern nets: 56.2% on the 48/200 it answered; unregistered baseline 38.5%
+  [PASS] registration beats the unregistered baseline by >= 15 pts — 0.562 vs 0.385
+
+============================================================
+PATTERN/3D BATTERY: 9/9 passed

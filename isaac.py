@@ -2253,14 +2253,120 @@ class Isaac:
             counts.append(v)
         return min(counts)
 
-    def observe_spatial(self, frames, label="scene", machine_eps=1e-9):
+    def _lift_depth(self, F, machine_eps=1e-9):
+        """2D→3D (owner's caveat build, 2026-07-04): Tomasi–Kanade
+        factorization with metric upgrade, NULL-GATED. Rotation is the
+        condition under which depth becomes recoverable — if one rigid
+        3D body explains the 2D tracks, reconstruct per-frame 3D
+        trajectories; a genuinely FLAT scene must refuse the third
+        coordinate (its z-variance is noise-sized). Returns
+        (frames3, report). frames3 is None when depth is refused."""
+        T, n, d = F.shape
+        rep = dict(lifted=False)
+        if d != 2 or n < 4 or T < 8:
+            rep["why"] = "needs 2D tracks, >=4 points, >=8 frames"
+            return None, rep
+        # noise floor from temporal jitter of the tracks themselves
+        nf = float(np.sqrt(max(np.diff(F, axis=0).var(), 0.0) / 2.0))
+        C = F - F.mean(axis=1, keepdims=True)       # remove per-frame drift
+        W = np.concatenate([C[:, :, 0], C[:, :, 1]], axis=0)   # (2T, n)
+        U, s, Vt = np.linalg.svd(W, full_matrices=False)
+        # planar null: does the 3rd component carry more than noise?
+        resid2 = float(np.sqrt((s[2:] ** 2).sum() / W.size))
+        resid3 = float(np.sqrt((s[3:] ** 2).sum() / W.size)) if len(s) > 3 else 0.0
+        gate = max(nf * (1 + 4 / np.sqrt(T)), machine_eps)
+        rep["resid_planar"], rep["resid_3d"], rep["gate"] = resid2, resid3, gate
+        if resid2 <= gate:
+            rep["why"] = "planar: two components already explain the tracks"
+            return None, rep
+        if resid3 > gate * 3:
+            rep["why"] = "not one rigid body: rank-3 leaves structure"
+            return None, rep
+        # the rank-gap null: rank-3 reconstruction is rigid BY CONSTRUCTION,
+        # so small residual alone cannot certify a rigid body — random walks
+        # decay smoothly across components and would be FABRICATED into a
+        # rigid shape (battery L3 caught exactly this). A real rigid body
+        # has a cliff after component 3; no cliff, no lift.
+        rep["rank_gap"] = float(s[2] / (s[3] + 1e-12)) if len(s) > 3 else np.inf
+        if len(s) > 3 and s[2] < 5.0 * s[3]:
+            rep["why"] = (f"no rank-3 cliff (s3/s4 = {rep['rank_gap']:.1f}) "
+                          f"— structure is not one rigid body")
+            return None, rep
+        M = U[:, :3] * s[:3]                        # (2T, 3) camera rows
+        S = Vt[:3]                                  # (3, n) affine shape
+        # metric upgrade: find G (3x3 sym, = QQ^T) with M rows orthonormal
+        A_rows, b_rows = [], []
+        def _quad(u, v):
+            return [u[0]*v[0], u[1]*v[1], u[2]*v[2],
+                    u[0]*v[1] + u[1]*v[0],
+                    u[0]*v[2] + u[2]*v[0],
+                    u[1]*v[2] + u[2]*v[1]]
+        for f in range(T):
+            i_f, j_f = M[f], M[T + f]
+            A_rows += [_quad(i_f, i_f), _quad(j_f, j_f), _quad(i_f, j_f)]
+            b_rows += [1.0, 1.0, 0.0]
+        sol, *_ = np.linalg.lstsq(np.array(A_rows), np.array(b_rows),
+                                  rcond=None)
+        G = np.array([[sol[0], sol[3], sol[4]],
+                      [sol[3], sol[1], sol[5]],
+                      [sol[4], sol[5], sol[2]]])
+        w, V = np.linalg.eigh(G)
+        if (w <= 0).any():                           # not metrically upgradable
+            rep["why"] = "metric upgrade failed (degenerate motion)"
+            return None, rep
+        Q = V @ np.diag(np.sqrt(w))
+        S3 = np.linalg.inv(Q) @ S                    # metric shape (3, n)
+        Mq = M @ Q
+        frames3 = np.empty((T, n, 3))
+        for f in range(T):
+            i_f = Mq[f] / (np.linalg.norm(Mq[f]) + 1e-12)
+            j_raw = Mq[T + f]
+            j_f = j_raw - (j_raw @ i_f) * i_f
+            j_f /= (np.linalg.norm(j_f) + 1e-12)
+            k_f = np.cross(i_f, j_f)
+            R = np.stack([i_f, j_f, k_f])
+            frames3[f] = (R @ S3).T
+        rep["lifted"] = True
+        rep["z_extent"] = float(S3[2].std())
+        return frames3, rep
+
+    def observe_spatial(self, frames, label="scene", machine_eps=1e-9,
+                        lift="auto"):
         """THE BRIDGE: watch trajectories, store only what refuses to vary.
         Teaches facts (locked_to / bounded_with / contains / hinge_at /
         anchored_at) via teach() — indexed AND observed, so doors form —
         and a scale-free signature on a scene node. If nothing survives
         the nulls, NOTHING is taught (perception that can refuse).
+        lift='auto' (2026-07-04): 2D tracks are first offered the 3D lift
+        (_lift_depth, null-gated) — a rotating rigid body's true locked
+        distances live in 3D; a flat scene refuses and stays 2D.
         Returns the relation bundle."""
         F = np.asarray(frames, float)               # (T, n_points, dims)
+        if lift == "auto" and F.ndim == 3 and F.shape[2] == 2:
+            # THE TRIGGER (same discipline as compound doors): attempt the
+            # lift ONLY when flat perception hits its ceiling — a 2D scene
+            # with NOTHING locked. A real planar mechanism has locked bars
+            # and never triggers (the four-bar broke when the lift ran
+            # unconditionally — suite caught it); a rotating 3D body has
+            # no locked 2D pairs, which is precisely the shortfall depth
+            # exists to explain.
+            Tt = F.shape[0]
+            any_locked = False
+            for i_ in range(F.shape[1]):
+                if any_locked:
+                    break
+                for j_ in range(i_ + 1, F.shape[1]):
+                    ds_ = np.linalg.norm(F[:, i_] - F[:, j_], axis=1)
+                    nf_ = float(np.sqrt(max(np.diff(ds_).var(), 0.0) / 2.0))
+                    gate_ = max(nf_ * (1 + 4 / np.sqrt(Tt)),
+                                machine_eps * max(float(ds_.mean()), 1e-12))
+                    if float(ds_.std()) <= gate_:
+                        any_locked = True
+                        break
+            if not any_locked:
+                F3, lift_rep = self._lift_depth(F, machine_eps)
+                if F3 is not None:
+                    F = F3
         T, n, _ = F.shape
         rng = np.random.default_rng(1234)
         verdicts, scale = {}, 0.0
@@ -2363,6 +2469,163 @@ class Isaac:
                 and ta["n_hinges"] == tb["n_hinges"])
         return dict(verdict="SAME" if same else "DIFFERENT",
                     signature_gap=round(gap, 4))
+
+    # ── the SPATIAL PATTERN NET: 2D→2D abstraction (owner, 2026-07-04:
+    # "it needs to work on 2d to 2d abstraction too... it can learn the
+    # spatial pattern net because it's always really struggled with that")
+    # Instances of a class are VIEWS of a canonical form; registration
+    # factors the view-transform out; the canonical part-set that recurs
+    # past a null crystallizes into the net as pattern:<label> with part
+    # doors. Depth (the 3D lift) is the special case where the residual
+    # across views earns a new coordinate; here the residual IS instance
+    # variation, and what survives it is the pattern.
+
+    @staticmethod
+    def _norm_points(P):
+        """Center + unit-RMS scale (the self-calibrating scale rule)."""
+        P = np.asarray(P, float)
+        P = P - P.mean(0)
+        return P / (np.sqrt((P ** 2).sum(1).mean()) + 1e-12)
+
+    @staticmethod
+    def _register_points(canon, P, n_rot=8, iters=5):
+        """ICP-lite similarity registration of P onto canon (both
+        normalized): try n_rot starting rotations, iterate nearest-
+        neighbour correspondence + Procrustes. Returns (aligned P,
+        matches, mean residual)."""
+        best = (None, None, np.inf)
+        for r in range(n_rot):
+            th = 2 * np.pi * r / n_rot
+            R0 = np.array([[np.cos(th), -np.sin(th)],
+                           [np.sin(th), np.cos(th)]])
+            Q = P @ R0.T
+            for _ in range(iters):
+                d2 = ((Q[:, None, :] - canon[None, :, :]) ** 2).sum(-1)
+                m = d2.argmin(1)                     # each pt -> canon part
+                A, B = canon[m], Q
+                U, s, Vt = np.linalg.svd(B.T @ A)
+                if np.linalg.det(U @ Vt) < 0:
+                    U[:, -1] *= -1
+                R = U @ Vt
+                # both sides are unit-RMS normalized; free scale here
+                # invites ICP scale-collapse (shrink toward the centroid
+                # to fake a low residual) — clamp it near 1
+                sc = np.clip(s.sum() / max((B ** 2).sum(), 1e-12),
+                             0.8, 1.25)
+                Q = (B @ R) * sc
+            res = float(np.sqrt(((Q - canon[m]) ** 2).sum(-1).mean()))
+            if res < best[2]:
+                best = (Q, m, res)
+        return best
+
+    @staticmethod
+    def _keypoints_from_image(img, k=16, thresh=0.5):
+        """Ink pixels → k keypoints by farthest-point sampling (a
+        tracker-free front end for glyph-like images)."""
+        img = np.asarray(img, float)
+        ys, xs = np.where(img > thresh * img.max())
+        if len(ys) == 0:
+            return np.zeros((0, 2))
+        pts = np.column_stack([xs, -ys]).astype(float)   # y up
+        if len(pts) <= k:
+            return pts
+        chosen = [int(np.argmax(((pts - pts.mean(0)) ** 2).sum(1)))]
+        d = ((pts - pts[chosen[0]]) ** 2).sum(1)
+        for _ in range(k - 1):
+            nxt = int(np.argmax(d))
+            chosen.append(nxt)
+            d = np.minimum(d, ((pts - pts[nxt]) ** 2).sum(1))
+        return pts[chosen]
+
+    def learn_pattern(self, views, label, n_null=20, n_rot=8):
+        """Learn a SPATIAL PATTERN NET from 2D instances (no
+        correspondence given): register every view onto a growing
+        canonical form; a canonical part is admitted only if its
+        cross-view position spread beats the spread of the same
+        registration run on NULL views (same point counts, positions
+        scrambled uniformly) — chance alignment refuses. The pattern is
+        NET STRUCTURE: pattern:<label> node, part:<label>.k nodes with
+        position meta, plus the training residual (the pattern's own
+        abstention bar for recognition)."""
+        views = [self._norm_points(v) for v in views if len(v) >= 4]
+        if len(views) < 3:
+            return None
+        canon = views[0].copy()
+        hits = [[canon[i]] for i in range(len(canon))]
+        resids = []
+        for P in views[1:]:
+            Q, m, res = self._register_points(canon, P, n_rot=n_rot)
+            resids.append(res)
+            for qi, ci in enumerate(m):
+                hits[ci].append(Q[qi])
+            canon = np.array([np.mean(h, axis=0) for h in hits])
+        spread = np.array([np.mean(np.linalg.norm(
+            np.array(h) - np.mean(h, axis=0), axis=1)) for h in hits])
+        # the null: the same registration story on scrambled views — both
+        # the part-spread gate AND the residual bar recognition abstains
+        # at come from what CHANCE registration achieves.
+        rng = np.random.default_rng(17)
+        null_spread, null_res = [], []
+        for _ in range(n_null):
+            fake = [self._norm_points(
+                rng.uniform(-1.5, 1.5, size=(len(v), 2))) for v in views]
+            nc = fake[0].copy()
+            nh = [[nc[i]] for i in range(len(nc))]
+            for P in fake[1:]:
+                Q, m, r_ = self._register_points(nc, P, n_rot=4, iters=3)
+                null_res.append(r_)
+                for qi, ci in enumerate(m):
+                    nh[ci].append(Q[qi])
+                nc = np.array([np.mean(h, axis=0) for h in nh])
+            null_spread.append(np.median([np.mean(np.linalg.norm(
+                np.array(h) - np.mean(h, axis=0), axis=1)) for h in nh]))
+        gate = float(np.percentile(null_spread, 5))   # tighter than chance
+        keep = spread < gate
+        if not keep.any():
+            return None                               # perception refuses
+        canon = canon[keep]
+        pname = f"pattern:{label}"
+        for ki in range(len(canon)):
+            part = f"part:{label}.{ki}"
+            self.net.add_door(pname, part, tag="part")
+            self.net.set_meta(part, "pos", canon[ki].tolist())
+        self.net.set_meta(pname, "canon", canon)
+        self.net.set_meta(pname, "train_resid",
+                          float(np.percentile(resids, 95)) if resids else 0.1)
+        self.net.set_meta(pname, "null_resid",
+                          float(np.percentile(null_res, 5)) if null_res
+                          else 0.3)
+        self.net.set_meta(pname, "n_rot", n_rot)
+        self.net.set_meta(pname, "n_views", len(views))
+        return pname
+
+    def recognize_pattern(self, points, patterns=None, n_rot=None):
+        """Register the instance against each learned pattern; best mean
+        residual wins — WITH ABSTENTION: a match that cannot beat what
+        CHANCE registration achieves (the pattern's measured null_resid
+        bar) is a shrug, not a guess. n_rot defaults to what the pattern
+        was learned with — rotation freedom is part of the CLASS (a 6 is
+        an upside-down 9; digits are learned with n_rot=1)."""
+        P = self._norm_points(points)
+        if patterns is None:
+            patterns = [n for n in self.net.all_nodes()
+                        if isinstance(n, str) and n.startswith("pattern:")]
+        best, best_res = None, np.inf
+        scores = {}
+        for pname in patterns:
+            canon = self.net.get_meta(pname, "canon")
+            if canon is None or len(P) < 3:
+                continue
+            nr = n_rot if n_rot is not None else \
+                self.net.get_meta(pname, "n_rot", 8)
+            _, _, res = self._register_points(np.asarray(canon), P, n_rot=nr)
+            scores[pname] = res
+            if res < best_res:
+                best, best_res = pname, res
+        if best is not None and \
+                best_res >= self.net.get_meta(best, "null_resid", 0.3):
+            return None, scores                       # honest shrug
+        return best, scores
 
     # ── the capture net: a stopgap that exists to be destroyed ─────────
     # Audit 2.8, built 2026-07-03 at the owner's prompt. THE NO-NETS LAW

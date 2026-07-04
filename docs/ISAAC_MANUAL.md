@@ -320,12 +320,46 @@ trajectories and stores only what refuses to vary.
   cannot matter because they were never stored. Self-test: the same
   four-bar at 2.4× scale, rotated and translated → SAME (signature gap
   0.0); a rigid plate on a pin → DIFFERENT.
-- Limits (honest): 2D/3D point trajectories with identities given (the
-  pixel bridge — render → tracker → these methods — is the named next
-  keystone); all-pairs cost O(n²) per frame set; bounded certification
-  needs enough revisits (weak evidence is refused, by design — earn more
-  frames or probe deliberately); sprung classification exists in the
-  harness (`spatial/engine.py`) but not yet in-engine.
+- **The 2D→3D lift (owner's build, 2026-07-04; battery
+  `experiments/pattern3d_battery.py` 9/9).** `observe_spatial` on 2D
+  tracks now attempts depth recovery behind a TRIGGER (same discipline
+  as compound doors): only when flat perception hits its ceiling —
+  nothing locked in 2D (a planar mechanism has locked bars and never
+  triggers; the four-bar broke under an unconditional lift — suite
+  caught it). `_lift_depth` = Tomasi–Kanade factorization + metric
+  upgrade, TRIPLE-null-gated: planar scenes refuse (2 components
+  suffice), non-rigid scenes refuse (rank-3 leaves structure), and
+  smooth noise refuses via the **rank-cliff null** (rank-3
+  reconstruction is rigid BY CONSTRUCTION, so small residual alone
+  proves nothing — random walks were being FABRICATED into rigid
+  bodies until s3≫s4 was required; battery L3). Verified: a rotating
+  rigid body's recovered 3D distances are constant (cv 0.0000 where 2D
+  distances varied 26%); same body across different motions → SAME;
+  different body → DIFFERENT.
+- **The SPATIAL PATTERN NET — 2D→2D abstraction (owner: "it needs to
+  work on 2d to 2d abstraction too... it can learn the spatial pattern
+  net").** `learn_pattern(views, label, n_rot=)`: instances of a class
+  are VIEWS of a canonical form; ICP-lite similarity registration
+  factors the view-transform out; a canonical part is admitted only if
+  its cross-view spread beats scrambled-view registration (the null);
+  the pattern is NET STRUCTURE (pattern:/part: nodes + doors).
+  `recognize_pattern(points)` — best registration residual wins, WITH
+  ABSTENTION at the pattern's measured chance-registration bar (junk
+  19/20 shrugged). Rotation freedom is part of the CLASS (n_rot=1 for
+  digits — a 6 is an upside-down 9). Glyphs: 90% on fresh transformed
+  instances. MNIST keypoints under shift+scale+tilt: **56.2% where he
+  answers (48/200 answered — a trustworthy floor)** vs 38.5%
+  unregistered; the honest gap is keypoint quality (farthest-point ink
+  sampling is unstable — structural keypoints are the named next
+  step). ICP note: free scale invites collapse (shrink to fake a low
+  residual) — clamped to [0.8, 1.25]; battery caught it at 25%→56%.
+- Limits (honest): trajectories need identities given (the tracker half
+  of the pixel bridge is still open); the lift is single-rigid-body
+  (multi-body SfM not built); all-pairs cost O(n²) per frame set;
+  bounded certification needs enough revisits; sprung classification
+  exists in the harness (`spatial/engine.py`) but not yet in-engine;
+  pattern-net keypoints are geometry-only (no texture/color — CIFAR
+  needs more than shape).
 - The full spatial suite (solver, occlusion inference, materials, maps,
   circuits, the null battery) lives in `spatial/` — 13 standalone tests.
   The GM plays mechanism worlds against this capability:

@@ -108,9 +108,15 @@ honesty, or capability debt.
 - [ ] **D7. Symbolic/token challenges in discover()** — the discovery stack is
       numeric-only. (Manual §12.)
 - [ ] **D8. Learned-invariant perception (phase 4)** + **the pixel bridge**
-      (render → tracker → observe_spatial) — the perception keystone; the
-      22.9% clock readout is a known harness bug awaiting this. (Manual §12;
-      handoff #4.)
+      — the perception keystone. **HALF-CLOSED 2026-07-04** (pattern3d
+      battery 9/9): the 2D→3D lift is in observe_spatial (trigger-gated,
+      triple-null incl. the rank-cliff) and the 2D→2D SPATIAL PATTERN NET
+      (owner's caveat) learns canonical part-forms with abstention —
+      digits 56.2% where answered vs 38.5% unregistered. STILL OPEN: the
+      tracker (pixels → identified point tracks — keypoints are
+      farthest-point ink sampling, unstable; structural keypoints next),
+      multi-body SfM, texture/color percepts (CIFAR needs more than
+      shape), and the 22.9% clock readout.
 - [ ] **D9. Effect entities (the shadow pipeline)** — expect → subtract →
       perceive-the-delta; signed; owner's design, NEXT #1 in the handoff.
 - [ ] **D10. Scaling curves for every capability** — measured for waves/doors/
