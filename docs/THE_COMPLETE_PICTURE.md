@@ -292,7 +292,7 @@ results above can be believed.
 ## 8. Run it
 
 ```
-python isaac.py            # from the repo root; expect: 10/10 capability areas passed
+python isaac.py            # from the repo root; expect: 11/11 capability areas passed
 ```
 (This doc was written in the 6/6 era; the suite grew to 10 areas on
 2026-07-01/02 — see docs/ISAAC_MANUAL.md for the current capability list.)

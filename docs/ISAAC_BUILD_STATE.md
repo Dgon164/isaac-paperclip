@@ -6,7 +6,7 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 > **NOTE (2026-07-03):** this is a HISTORICAL ledger; dated entries keep the
 > paths and expectations as they were at the time. In THIS repo the engine is
 > `isaac.py` at the repo root, the harness is `experiments/`, and the self-test
-> expects **10/10**. For current verified state, read
+> expects **11/11** (spatial joined 2026-07-03). For current verified state, read
 > `experiments/RESULTS_LEDGER.md` and `docs/VERDICT_SHEET.md`; for the
 > capability reference, `docs/ISAAC_MANUAL.md`.
 
@@ -15,6 +15,25 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 > repo: `isaac.py` at root, byte-identical.
 
 ---
+
+## 2026-07-03 (later) — SPATIAL PERCEPTION IN THE ENGINE (suite 11/11)
+
+- **observe_spatial(frames, label=)** + **compare_scenes(a, b)** migrated
+  into `isaac.py` after harness validation (`spatial/test_isaac_bridge.py`
+  4/4 + `spatial/test_null_battery.py` clean). Relations cross, coordinates
+  never do: locked/bounded edges (null-gated — variance-ratio vs own noise
+  floor; increment-shuffle surrogate for bounded), parts (pairwise-locked
+  cliques), hinges, anchors, scale-free ratio signature. Facts enter via
+  teach(); nothing survives the nulls → NOTHING taught.
+- **New self-test area `spatial` (suite 10 → 11):** four-bar perceived (4
+  bars incl. undeclared ground, 4 hinges, anchors, queryable facts);
+  recognition across 2.4× scale + rotation + translation (signature gap
+  0.0); rigid plate discriminated; random walkers teach 0 facts.
+- Spatial GM worlds (`experiments/world_gm_spatial.py`): generator =
+  sandbox forward solver, player = perceiver, GM grades; 3/3 incl. occluded
+  crank 1.316 vs true 1.312 via 36 BOUGHT fold/extend probe angles.
+- Registration 16×16 caveat RESOLVED (see §5 of the manual): 84.4%
+  vindicated by the rebuilt committed harness.
 
 ## 2026-07-03 — the accounting + audit fixes (suite 10/10, discovery 8/8)
 
@@ -65,7 +84,8 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 - **Windows:** prefix scripts with `PYTHONUTF8=1` (the box-drawing output errors
   on cp1252 otherwise). Not a bug in Isaac.
 - Engine self-test (in this repo): from the repo root, `PYTHONUTF8=1 python isaac.py` →
-  expect **10/10** (the "6/6" of this entry's date grew to 10 areas by 07-02).
+  expect **11/11** (the "6/6" of this entry's date grew to 10 areas by 07-02,
+  11 with spatial on 07-03).
 
 ---
 
@@ -103,7 +123,7 @@ one piece deliberately bracketed for later.
 | Problem solving: forward/backward/gap-fill/multi-step | SOLID | `isaac.py` |
 | Persistence: consequence assessment, plan/think/execute | SOLID | `isaac.py` |
 | `check` vs `lookup` (validate a claim vs retrieve best) | SOLID | `isaac.py` |
-| Self-test | **6/6 RAN** (at this entry's date; **10/10** as of 07-02, re-verified 07-03) | `python isaac.py` |
+| Self-test | **6/6 RAN** (at this entry's date; **11/11** as of 07-03) | `python isaac.py` |
 
 ### Built / extended this session
 | capability | status | where | result |

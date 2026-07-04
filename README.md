@@ -14,7 +14,7 @@ full picture, read the manual and the docs below.
 ## What's here
 
 ```
-isaac.py                    the engine — one file, one class (self-test: python isaac.py → 10/10)
+isaac.py                    the engine — one file, one class (self-test: python isaac.py → 11/11)
 PAPERCLIP_MANUAL.md         the narrative manual (Starter / Operation / Reference / Theory)
 docs/
   ISAAC_MANUAL.md              THE capability reference — every method, every limit
@@ -59,7 +59,7 @@ ui/
 ## Run it
 
 ```bash
-python isaac.py                       # engine self-test → 10/10 capability areas
+python isaac.py                       # engine self-test → 11/11 capability areas
 
 python demos/crystal_in_isaac.py      # net-lens into Isaac (sklearn digits; instant, CPU)
 python demos/unsup_discover.py        # equation discovery on a toy collider (no data needed)
@@ -83,7 +83,7 @@ Requirements: Python 3.10+, `numpy`, `scikit-learn` (the vision-lens work also u
 ## Honest status (what's proven, what's open)
 
 **Verified / runs:**
-- Engine self-test 10/10 (language, math, logic, reasoning, decompose, persistence,
+- Engine self-test 11/11 (language, math, logic, reasoning, decompose, persistence,
   waves, tracking, discovery, rivalry), and it generalizes (computes `999×999` by
   decomposition; novel objects via verb-level).
 - Perception lens: held-out digits ~90%; frozen ResNet18/CIFAR features read at 71%
@@ -115,7 +115,7 @@ outside this snapshot. Start with `PAPERCLIP_MANUAL.md`, then `docs/THE_COMPLETE
 
 ## Update — 2026-07-01/02: the discovery stack
 
-The engine grew four capability areas in two days (self-test now **10/10**),
+The engine grew four capability areas in two days (self-test now **11/11** — spatial perception joined the suite 2026-07-03),
 all numpy, all null-gated, no trained networks anywhere:
 
 - **discover()** — the challenge loop: given examples of something it cannot

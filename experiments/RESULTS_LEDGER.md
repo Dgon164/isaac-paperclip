@@ -22,7 +22,7 @@ per-row notes below.
 
 | Claim | Script | Status | Verified | Observed |
 |---|---|---|---|---|
-| Self-test 10/10 capability areas | `python isaac.py` (repo root) | **VERIFIED** | 2026-07-03 | 10/10, 9.2 s (`runs/2026-07-03/selftest.txt`); discovery area 8/8 after the accounting was added |
+| Self-test 11/11 capability areas | `python isaac.py` (repo root) | **VERIFIED** | 2026-07-03 | 11/11 (spatial area added same day: bridge 4/4 in-engine — perceive, recognize across pose+scale, discriminate, refuse); discovery 8/8 with the accounting |
 | **THE ACCOUNTING (audit 2.8): articulated% + captured% + noise% = 100 per discover(), residual dossier attached** | in-engine, self-test (g) | **VERIFIED** | 2026-07-03 | planted law + known 26.5% noise share → measured articulated 72.7% (true 73.5%), sums to 100; pure noise → 0/0/100; red team + E9 0/20 unchanged after the capture-null fix |
 | Kepler `T = a^1.5` UNDERSTOOD, R² 1.0000 | inside `cross_domain.py` retest | **VERIFIED** | 2026-07-03 | UNDERSTOOD, families found: 3 |
 | Pluto 248.0 yr predicted via inherited ledger law / web UI | ledger+UI demo flow (`ui/isaac_ui.py`) | RECORDED | 2026-07-02 | 247.96 via web form (UI now in repo; demo flow not scripted) |
@@ -107,5 +107,5 @@ per-row notes below.
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
 - Covtype "79.1% row-index control" → superseded by the sharp control: **94.8%** (see row above). Quoting 94–95% covtype exemplar accuracy without the leakage row next to it is dishonest — the articulated tier (56–59%) is the achievement.
 - Registration "86.5%" novel-bigger → the rebuilt harness observes 85.4%; quote the observed number.
-- "Self-test 5/5, 6/6, 7/7, 9/9" in older docs → the suite is 10/10 (grew over 07-01/02).
+- "Self-test 5/5, 6/6, 7/7, 9/9, 10/10" in older docs → the suite is 11/11 (spatial joined 2026-07-03).
 - Engine "~2,900 lines" → ~3,500 (accounting added 07-03).

@@ -1,7 +1,7 @@
 # THE ISAAC MANUAL
 ### The complete, current capability reference — every part, every method, honestly scoped
 **Engine:** `isaac.py` (repo root) (one file, one class, numpy only, no neural nets in any decision path)
-**Self-test:** `PYTHONIOENCODING=utf-8 python isaac.py` → expect **10/10**
+**Self-test:** `PYTHONIOENCODING=utf-8 python isaac.py` → expect **11/11**
 **UI:** `python ui/isaac_ui.py` → http://127.0.0.1:8674
 
 > **MAINTENANCE RULE (same as ISAAC_BUILD_STATE.md):** when a capability is
@@ -13,8 +13,8 @@
 **Verification status legend** (every capability section below is tagged):
 - **[VERIFIED 2026-07-03 — re-run from this repo]** — re-executed from this
   repo on 2026-07-03; output logs in `experiments/runs/2026-07-03/`.
-- **[VERIFIED IN ENGINE SELF-TEST 10/10]** — exercised by `python isaac.py`
-  (re-run 2026-07-03 from this repo: "10/10 capability areas passed").
+- **[VERIFIED IN ENGINE SELF-TEST 11/11]** — exercised by `python isaac.py`
+  (re-run 2026-07-03 from this repo: "11/11 capability areas passed").
 - **[HARNESS-ONLY — experiments/, not wired into engine]** — the capability
   lives in a harness script under `experiments/`, not in `isaac.py`.
 - **[RECORDED — script not in this repo or data required; not independently
@@ -43,7 +43,7 @@ can enter further discoveries). Four laws govern every mechanism:
 
 ---
 
-## 1. The mind's substrate — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 1. The mind's substrate — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 | part | what it is | key methods |
 |---|---|---|
@@ -53,7 +53,7 @@ can enter further discoveries). Four laws govern every mechanism:
 | `World` | mutable entity states + taught actions | `set_state/clear_state/has_state`, `teach_action`, `execute` |
 | findings | the scientific memory (see §8) | `record_finding/recall_findings/load_ledger` |
 
-## 2. Sensing (how experience enters) — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 2. Sensing (how experience enters) — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 - `observe(tokens)` — sequence → sequential doors; dirty-marking; immediate
   type-slotting (`_sense`); auto-`tick`s each token with its type doors.
@@ -67,7 +67,7 @@ can enter further discoveries). Four laws govern every mechanism:
   circle is being followed (§6), advances the clock and opens statuses.
   **Caveat:** clock ticks are sensory ticks — keep one stream per episode.
 
-## 3. Consolidation (idle mode — "sleep") — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 3. Consolidation (idle mode — "sleep") — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 - `consolidate()` / `crystallize()` — FCA-style type discovery from door
   profiles (dirty-scoped or full). Types are nodes; membership doors both
@@ -103,7 +103,7 @@ can enter further discoveries). Four laws govern every mechanism:
   returned. Falls back to the node's flat `seq` door-set when no sense
   matches.
 
-## 4. Thinking (query paths) — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 4. Thinking (query paths) — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 - `lookup(context)` / `check(context, target)` — argmax / specific-cell read
   through the think loop (recall → process → evaluate) over the compiled
@@ -174,14 +174,57 @@ can enter further discoveries). Four laws govern every mechanism:
   **Registration number caveat [RECORDED — script not in this repo]:**
   the headline 84–87% (digits under position+scale, up from ~5–15% raw)
   came from a 16×16-canvas variant of the harness that was never
-  committed. The committed `experiments/registration_perception.py` is
-  the 8×8 version, which shows only ~5–15% → 21–53% (re-run 2026-07-03)
-  — because on an 8×8 canvas the shifts clip pixels off the edge:
-  information destruction, not a registration failure. The mechanism is
-  demonstrated by the committed script; the headline number awaits the
-  16×16 harness being rebuilt and committed.
+  committed. **RESOLVED same day:** the 16×16 harness was rebuilt as
+  `experiments/registration_perception_16.py` and the numbers vindicated —
+  raw canvas 23.7% → registered **84.4%** (recorded 84.4 exact), novel
+  bigger sizes 85.4%, tiny sizes 58.3% (information floor). The 8×8 script
+  remains as the edge-clipping caveat case (~5–15% → 21–53%: information
+  destruction, not registration failure).
 
-## 6. The clock, statuses, expectation — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 5b. Spatial perception — the bridge (relations from motion) — [VERIFIED IN ENGINE SELF-TEST 11/11]
+
+The perception wall, crossed (2026-07-03; validated in harness first —
+`spatial/test_isaac_bridge.py` — then migrated into the engine). The rule:
+**coordinates are scratch, relations are storage.** The engine watches point
+trajectories and stores only what refuses to vary.
+
+- `observe_spatial(frames, label=)` — frames = (T × n_points × dims) array
+  of positions over time (any dimensionality; assumes temporally
+  continuous observation — adjacent frames close in time). Classifies
+  every point pair, **null-gated, no hand-tuned thresholds**:
+  - **locked** — total variation explained by measurement noise alone
+    (variance-ratio test against the pair's own noise floor, estimated
+    from its first differences);
+  - **bounded** — repeatable extremes (hysteresis-counted) that beat an
+    increment-shuffle surrogate null (a random walk CAN revisit extremes
+    by luck; the surrogate is the test);
+  - **free** — the rest.
+  Then: parts = maximal pairwise-locked cliques (grown from edges);
+  hinges = single-point clique overlaps; anchors = points whose
+  coordinate variation is noise-sized (same calibrated gate). Teaches
+  facts via `teach()` (indexed AND observed, so doors form):
+  `locked_to / bounded_with / contains / hinge_at / anchored_at`, plus a
+  **scale-free signature** (sorted locked-length ratios) on a
+  `scene:<label>` node. **If nothing survives the nulls, NOTHING is
+  taught** — perception that can refuse (random walkers teach 0 facts).
+- `compare_scenes(a, b)` — SAME/DIFFERENT from stored relations only:
+  signature + part-size multiset + hinge count. Pose, scale and position
+  cannot matter because they were never stored. Self-test: the same
+  four-bar at 2.4× scale, rotated and translated → SAME (signature gap
+  0.0); a rigid plate on a pin → DIFFERENT.
+- Limits (honest): 2D/3D point trajectories with identities given (the
+  pixel bridge — render → tracker → these methods — is the named next
+  keystone); all-pairs cost O(n²) per frame set; bounded certification
+  needs enough revisits (weak evidence is refused, by design — earn more
+  frames or probe deliberately); sprung classification exists in the
+  harness (`spatial/engine.py`) but not yet in-engine.
+- The full spatial suite (solver, occlusion inference, materials, maps,
+  circuits, the null battery) lives in `spatial/` — 13 standalone tests.
+  The GM plays mechanism worlds against this capability:
+  `experiments/world_gm_spatial.py` (3/3 incl. hidden-link recovery via
+  bought probe angles).
+
+## 6. The clock, statuses, expectation — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 - `follow(circle)` — attend to a discovered circle: phases ordered by
   `wave_next`, members and learned dwell loaded; registers live in Scratch.
@@ -194,7 +237,7 @@ can enter further discoveries). Four laws govern every mechanism:
 - Self-test: phase 100% through occlusion; statuses 94.1%/tick;
   `blocks(disk) ← cloud` queryable in `fact_index`.
 
-## 7. Discovery — the challenge loop (the thing that learns things) — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 7. Discovery — the challenge loop (the thing that learns things) — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 - `discover(X, y, name=)` — given examples of something he cannot do:
   - **atom library**: variables; products to degree 3; sin/cos at scale
@@ -264,7 +307,7 @@ can enter further discoveries). Four laws govern every mechanism:
   autocorrelated targets (cap + pending block-perm); rational functions
   admit usable trig surrogates (range-valid).
 
-## 8. Memory that outlives the process — [VERIFIED IN ENGINE SELF-TEST 10/10]
+## 8. Memory that outlives the process — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
 - **Findings ledger** — `record_finding` fires automatically on every
   discover (laws AND verdicts — negative knowledge included), confirm

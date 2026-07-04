@@ -1,7 +1,7 @@
 # The Operation Paperclip Manual
 > **NOTE (2026-07-02):** this manual is the NARRATIVE/STARTER guide, written
 > in the 5/5-era. The engine has since grown five capability generations
-> (self-test now 10/10: discovery loop with four verdicts, rivals+probes,
+> (self-test now 11/11: discovery loop with four verdicts, rivals+probes,
 > waves/clock/statuses, findings ledger, save/load/fork, the UI). The
 > complete, CURRENT capability reference — kept up to date by rule — is
 > **`docs/ISAAC_MANUAL.md`**. Read that for what he can do; read this for
@@ -124,7 +124,7 @@ You need Python 3.10+, `numpy`, and (for the lenses) `scikit-learn` and `torch`.
 Verified environment: Python 3.12, numpy 2.4, sklearn 1.9, torch 2.5 (CUDA 12.1).
 
 ```
-# The cortex — expect: 10/10 capability areas passed
+# The cortex — expect: 11/11 capability areas passed
 # (run from the repo root — the engine is isaac.py at the root)
 set PYTHONUTF8=1        # Windows: avoids box-drawing character errors
 python isaac.py
@@ -509,7 +509,7 @@ These rules are *why* the numbers below can be believed.
 
 Every number here was produced by a real run during this session.
 
-**Cortex — 10/10 capability areas, generalizes.**
+**Cortex — 11/11 capability areas, generalizes.**
 - `999 × 999 = 998001` computed by decomposition (outside the memorized 100×100 table).
 - Novel objects (`me smash computer → caution`) resolved by verb-level fallback.
 - *(The preserver/persistence subsystem was disabled this session — see below.)*

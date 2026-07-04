@@ -200,7 +200,7 @@ re-verification (raw outputs: `experiments/runs/2026-07-03/`).
 
 ```
 set PYTHONUTF8=1
-python isaac.py                          # engine self-test: expect 10/10 (~9 s)
+python isaac.py                          # engine self-test: expect 11/11 (~10 s; spatial area added 07-03)
 
 cd experiments
 python doors_proximity.py                # rebuild A: expect WORKS 4/4    (<1 s)
