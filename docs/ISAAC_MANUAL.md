@@ -361,10 +361,12 @@ trajectories and stores only what refuses to vary.
   steering signal). Each round: (1) fan candidate probes past the hull
   and let `law_confidence` pick the WEAKEST region; (2) spend budget
   asking the instrument (`ask(X)->y`; non-finite answers discarded);
-  (3) re-derive on everything known; (4) accept only through the **Occam
-  gate** — decisively better by F-test, or tied AND simpler ("simpler
-  with the same accuracy or better is better"); (5) the displaced law is
-  SUPERSEDED with the why, never erased. Ends with an Occam prune
+  (3) re-derive on everything known; (4) **Occam as a preference, not a
+  gate** ("its not only. its just preferred"): accuracy decides by
+  F-test; at ties the simpler form is preferred for use; a candidate
+  that is not preferred is RETAINED on the law's `alternatives` list
+  with the why — nothing is rejected into nothing; (5) the displaced law
+  is SUPERSEDED with the why, never erased. Ends with an Occam prune
   (`_prune_terms`: greedily drop terms that survive an F-tie on held-out
   data). **Measured** (`experiments/refinement_audit.py`, 100-world
   deck): beyond-range hold 50% → **75%** with mean terms flat (2.8) and
