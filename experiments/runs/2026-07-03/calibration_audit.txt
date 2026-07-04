@@ -1,0 +1,36 @@
+CALIBRATION AUDIT — 100 worlds, external grading, seeds fixed
+
+  ... 20/100 worlds played [1s]
+  ... 40/100 worlds played [1s]
+  ... 60/100 worlds played [2s]
+  ... 80/100 worlds played [7s]
+  ... 100/100 worlds played [10s]
+======================================================================
+VERDICT MIX (his claims across the deck)
+======================================================================
+  UNDERSTOOD   54  (exp, linsum, outclass, poly, power, trig)
+  PARTIAL      28  (exp, linsum, outclass, poly, trig)
+  CAPTURED      0  (—)
+  NO RULE      18  (noise, outclass)
+======================================================================
+THE TRUST NUMBERS (externally graded, hidden data)
+======================================================================
+  claimed FORM-TRUE and it HELD beyond his data:   36/53  = 68%   <- THE trust number
+  claimed UNDERSTOOD and it held INSIDE his data:  54/54  = 100%
+  noise worlds falsely given a law:                0/15
+  out-of-class worlds claimed form-true & failed:  2/15
+  linear-sum worlds (known pathology) that fooled him: 0/15
+======================================================================
+ACCOUNTING CALIBRATION (claimed articulated% vs GM truth)
+======================================================================
+  worlds with a kept law: 82;  mean |claimed - true| = 2.4 pts;  median 0.2;  worst 75.9
+    error   0- 10 pts:  80 worlds
+    error  10- 25 pts:   1 worlds
+    error  25-100 pts:   1 worlds
+======================================================================
+SCOPE LABEL CALIBRATION (does the label predict beyond-range fate?)
+======================================================================
+  labeled range-valid: 1/1 held beyond (100%)
+  labeled form-true  : 36/53 held beyond (68%)
+
+[10s total]

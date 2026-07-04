@@ -119,6 +119,13 @@ per-row notes below.
 | **Supersession, not overwrite** ("if there is a and b, and b works better, use b" — and A is kept, wearing its defeat) | `crystallizer_battery.py` C6 | **VERIFIED** | 2026-07-03 | pendulum overturn: cosine in use; the defeated parabola preserved on the law's `superseded` list with why ("overturned by rival 'cosine' on new evidence: SSE 3.198 vs 1253") |
 | Crystallizer scale knee, measured (untouched — no optimizing before limits, per owner) | `crystallizer_battery.py` C5 | **VERIFIED** (as measurement) | 2026-07-03 | **0.04 s @ 50 nodes, 2.9 s @ 200, ~420 s @ 800** — the knee is known and deliberately left alone until a real limit bites |
 
+## THE CALIBRATION AUDIT (owner's priority 4, tier 5.2 — 2026-07-03)
+
+| Claim | Script | Status | Verified | Observed |
+|---|---|---|---|---|
+| **The ONE trust number: when Isaac claims form-true, it holds beyond his data 68% of the time** (36/53 over a 100-world externally-graded deck) | `calibration_audit.py` (10 s, seeds fixed) | **VERIFIED** | 2026-07-03 | Full instrument panel: **UNDERSTOOD-inside 54/54 = 100%** (within his data, a claimed law always held); **noise false discoveries 0/15** (refusal fully trustworthy); accounting calibration **median error 0.2 pts / mean 2.4** vs GM truth (1 outlier at 76); out-of-class overclaims 2/15; **linear-sum pathology 0/15 fooled on symmetric support** — refines the GM finding: the product-impostor trap is POSITIVE-support-specific (the exchange world's regime), not universal |
+| The scope label is the miscalibrated part: "range-valid" was used 1/54 times; "form-true" is the default and is only 68% reliable | `calibration_audit.py` | **VERIFIED** | 2026-07-03 | the internal edge check (outer quartile of observed data) is too easy to pass — 1 in 3 form-true labels fails real extrapolation. Fix candidates (owner to choose): rename to "edges-hold"; earn "form-true" via beyond-hull probes (the GM-style scope self-check, now proven in world_gm.py); or attach the measured 68% reliability to the label itself |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
