@@ -3439,12 +3439,24 @@ class Isaac:
 
     # ── sense routing: internal node routers (conditional / binding) ──
 
-    def crystallize_senses(self, node, min_shared=2):
-        """Split a node's flat doors into SENSE-SECTIONS, stored ON the node.
-        Each occurrence of the node carries the context it appeared in; cluster
-        occurrences by shared context (the crystallizer, turned inward on one
-        node); each cluster is a sense with its own in-doors and out-doors.
-        This is what gives the node internal structure instead of a flat pile."""
+    def crystallize_senses(self, node, min_shared=2, n_shuffles=20):
+        """SENSES ARE THINGS (2026-07-04). Split a node's occurrences into
+        sense-sections and mint each as a FIRST-CLASS NODE with directed
+        doors — not a meta side-channel. Each occurrence carries its context;
+        occurrences sharing >= min_shared context tokens link into candidate
+        senses (the crystallizer turned inward). Then the owner's laws:
+        - NULL-GATED ADMISSION: each candidate is scored against a chance
+          null that destroys exactly the claimed structure — the same
+          occurrences with their context tokens reshuffled (context sizes and
+          token frequencies preserved), scored by the BEST sense chance
+          produces (selection-corrected). Failures are KEPT and classified
+          wrong with the why (`isaac.wrong_senses`), never deleted.
+        - DOORS, NOT BLOBS: sense node `sense:<node>#<gen>.<k>` gets
+          node→sense (tag "sense"), pred→sense and sense→succ (tag
+          "sense_seq" — direction is real doors now), sense→context tokens
+          (tag "sense_ctx"). Every net-walker can see sense structure.
+        - SUPERSESSION on re-run: the previous generation is demoted
+          (verdict "superseded", kept in the net), never overwritten."""
         occ = []  # (context_set, pred, succ) per occurrence
         for seq in self.observed_sequences:
             for k, t in enumerate(seq):
@@ -3453,37 +3465,118 @@ class Isaac:
                                 seq[k - 1] if k > 0 else None,
                                 seq[k + 1] if k + 1 < len(seq) else None))
         n = len(occ)
-        parent = list(range(n))
-        def find(x):
-            while parent[x] != x:
-                parent[x] = parent[parent[x]]; x = parent[x]
-            return x
-        for a in range(n):              # link occurrences sharing >= min_shared context words
-            for b in range(a + 1, n):
-                if len(occ[a][0] & occ[b][0]) >= min_shared:
-                    parent[find(a)] = find(b)
-        comps = defaultdict(lambda: {"in": set(), "out": set(), "context": set()})
-        for i, (ctx, p, s) in enumerate(occ):
-            r = find(i)
-            if p: comps[r]["in"].add(p)
-            if s: comps[r]["out"].add(s)
-            comps[r]["context"] |= ctx
-        senses = list(comps.values())
+
+        def _cluster(contexts):
+            parent = list(range(len(contexts)))
+            def find(x):
+                while parent[x] != x:
+                    parent[x] = parent[parent[x]]; x = parent[x]
+                return x
+            for a in range(len(contexts)):
+                for b in range(a + 1, len(contexts)):
+                    if len(contexts[a] & contexts[b]) >= min_shared:
+                        parent[find(a)] = find(b)
+            comps = defaultdict(list)
+            for i in range(len(contexts)):
+                comps[find(i)].append(i)
+            return list(comps.values())
+
+        def _score(members, contexts):
+            # coherence = (extra occurrences) x (context core ALL of them share)
+            if len(members) < 2:
+                return 0
+            core = set(contexts[members[0]])
+            for m in members[1:]:
+                core &= contexts[m]
+            return (len(members) - 1) * len(core)
+
+        contexts = [c for c, _, _ in occ]
+        clusters = _cluster(contexts)
+
+        # the chance null: same context sizes, same token pool, membership
+        # destroyed — what does the BEST shuffled sense score?
+        pool = [t for c in contexts for t in sorted(c)]  # sorted: the null
+        # must not depend on set iteration order (hash randomization)
+        chance_best = 0
+        if pool and n >= 2:
+            srng = np.random.default_rng(len(pool) * 31 + n)
+            for _ in range(n_shuffles):
+                sh = list(srng.permutation(pool))
+                shuffled, pos = [], 0
+                for c in contexts:
+                    shuffled.append(set(sh[pos:pos + len(c)]))
+                    pos += len(c)
+                for members in _cluster(shuffled):
+                    chance_best = max(chance_best,
+                                      _score(members, shuffled))
+
+        # supersession: the previous generation is demoted, never erased
+        gen = (self.net.get_meta(node, "sense_gen") or 0) + 1
+        for old in self.net.get_doors(node, tag="sense"):
+            if self.net.get_meta(old, "verdict") != "superseded":
+                self.net.set_meta(old, "verdict", "superseded")
+                self.net.set_meta(old, "superseded_by_gen", gen)
+        self.net.set_meta(node, "sense_gen", gen)
+
+        if not hasattr(self, "wrong_senses"):
+            self.wrong_senses = {}
+        senses = []
+        for k, members in enumerate(clusters):
+            s = {"in": set(), "out": set(), "context": set()}
+            for i in members:
+                ctx, p, su = occ[i]
+                if p: s["in"].add(p)
+                if su: s["out"].add(su)
+                s["context"] |= ctx
+            score = _score(members, contexts)
+            name = f"sense:{node}#{gen}.{k}"
+            s["name"], s["n_occurrences"], s["score"] = name, len(members), score
+            if score <= chance_best:
+                s["verdict"] = "wrong"
+                s["why_wrong"] = (f"context coherence {score} within chance "
+                                  f"(best shuffled sense scores {chance_best})"
+                                  f" — token co-occurrence alone explains it")
+                self.wrong_senses[name] = s
+                self.net.set_meta(name, "why_wrong", s["why_wrong"])
+            else:
+                s["verdict"] = "sound"
+            # the doors — direction is net structure, not an annotation
+            self.net.add_door(node, name, tag="sense")
+            for p in s["in"]:
+                self.net.add_door(p, name, tag="sense_seq")
+            for su in s["out"]:
+                self.net.add_door(name, su, tag="sense_seq")
+            for c in s["context"]:
+                self.net.add_door(name, c, tag="sense_ctx")
+            self.net.set_meta(name, "verdict", s["verdict"])
+            self.net.set_meta(name, "of_node", node)
+            self.net.set_meta(name, "n_occurrences", len(members))
+            self.net.set_meta(name, "score", score)
+            senses.append(s)
+        # legacy mirror (pre-2026-07-04 readers); the doors are authoritative
         self.net.set_meta(node, "senses", senses)
         return senses
 
     def route(self, node, incoming):
-        """Route through the node by which sense the incoming context matches.
-        incoming = a token or a set of context tokens. Returns that sense's
-        out-doors; falls back to the flat door-set if no sense matches."""
-        senses = self.net.get_meta(node, "senses") or []
+        """Route through the node by which sense the incoming context matches
+        — READ FROM THE DOORS. Only SOUND senses compete (wrong and
+        superseded are demoted from the comparison set, never deleted —
+        law 4). incoming = a token or a set of context tokens. Returns the
+        winning sense's out-doors; falls back to the flat door-set when no
+        sound sense matches."""
         inc = {incoming} if isinstance(incoming, str) else set(incoming)
         best, best_ov = None, 0
-        for sense in senses:
-            ov = len(inc & (sense["in"] | sense["context"]))
+        for sense in self.net.get_doors(node, tag="sense"):
+            if self.net.get_meta(sense, "verdict") != "sound":
+                continue
+            in_doors = self.net.get_predecessors(sense, tag="sense_seq")
+            ctx = self.net.get_doors(sense, tag="sense_ctx")
+            ov = len(inc & (in_doors | ctx))
             if ov > best_ov:
                 best_ov, best = ov, sense
-        return best["out"] if best else set(self.net.get_doors(node, tag="seq"))
+        if best is None:
+            return set(self.net.get_doors(node, tag="seq"))
+        return set(self.net.get_doors(best, tag="sense_seq"))
 
     # ── logic ───────────────────────────────────────────────────
 
@@ -4079,7 +4172,31 @@ def test_language():
     # Type inference
     result = isaac.infer("dog", "sat")
     print(f"\n  dog→sat inferred: {result['inferred']} via {result.get('via')}")
-    return True
+
+    # Polysemy: senses as first-class nodes (null-gated, doors not blobs)
+    poly = Isaac()
+    for s in [["river", "water", "flows", "past", "the", "bank", "shore"],
+              ["muddy", "river", "bank", "erodes", "water", "slowly"],
+              ["the", "river", "bank", "flooded", "water", "rose"],
+              ["fish", "swim", "near", "the", "river", "bank", "water"],
+              ["boat", "moored", "river", "bank", "water", "calm"],
+              ["money", "deposit", "at", "the", "bank", "teller"],
+              ["bank", "loan", "money", "interest", "teller", "counter"],
+              ["the", "bank", "vault", "holds", "money", "teller"],
+              ["savings", "money", "bank", "account", "teller", "opened"],
+              ["cash", "money", "withdrawn", "bank", "teller", "queue"]]:
+        poly.observe(s)
+    senses = poly.crystallize_senses("bank")
+    sound = [s for s in senses if s["verdict"] == "sound"]
+    r = poly.route("bank", {"river", "water"})
+    m = poly.route("bank", {"money", "teller"})
+    ok_senses = (len(sound) == 2
+                 and r <= {"shore", "erodes", "flooded", "water"}
+                 and m <= {"teller", "loan", "vault", "account"})
+    print(f"\n  Polysemy: {len(sound)} sound senses of 'bank'; "
+          f"river→{sorted(r)} money→{sorted(m)} "
+          f"({'ok' if ok_senses else 'WRONG'})")
+    return ok_senses
 
 
 def test_math():

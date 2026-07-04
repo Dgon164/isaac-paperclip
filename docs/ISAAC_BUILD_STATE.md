@@ -16,6 +16,33 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — SENSES ARE THINGS (polysemy rebuilt on doors; suite 11/11)
+
+The polysemy mechanism (crystallize_senses/route, 2026-06-23) audited on the
+owner's question — "it should not be flat as such, but directed; that was the
+point of the doors" — and found half-right: direction WAS preserved per sense,
+but senses lived as set-blobs on node meta that only route() could read; every
+other net-walker saw a flat door pile. Rebuilt to the standing laws:
+- **Senses are first-class nodes** `sense:<node>#<gen>.<k>` with real doors:
+  node→sense (`sense`), pred→sense / sense→succ (`sense_seq` — direction is
+  net structure now), sense→context (`sense_ctx`). compare_nodes sees them.
+- **Null-gated admission** (the old fixed-count limit was flagged in the
+  manual since day one): a sense's coherence — (occurrences−1) × shared
+  context core — must beat the best sense from context tokens reshuffled
+  across occurrences (sizes + frequencies preserved; selection-corrected).
+  0/20 false senses on random contexts. Found + fixed a hash-randomization
+  nondeterminism in the null's shuffle pool (sets → sorted).
+- **Wrong is kept and classified** — failed senses filed in
+  `isaac.wrong_senses` with the why on the node meta; **supersession** on
+  re-crystallize (old generation demoted `superseded`, never erased);
+  **route() demotes** wrong/superseded from the comparison set (law 4) and
+  reads winners from the doors, falling back to flat when nothing sound.
+Battery: `experiments/sense_battery.py` **14/14** (planted polysemy, noise
+refusal, doors-visible, supersession, mixed real+noise); polysemy check now
+inside the language self-test area; save/load round-trip verified.
+Remaining honest limits: candidate LINKING still fixed-count (admission is
+the test); batch re-run, not incremental; membership door one-way.
+
 ## 2026-07-04 — THE CORRECTION-AND-REUSE ARC (suite 11/11 throughout)
 
 One day, eight capabilities, every one owner-specified and battery-proven:

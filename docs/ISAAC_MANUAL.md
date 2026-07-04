@@ -136,19 +136,35 @@ can enter further discoveries). Four laws govern every mechanism:
   Operating envelope (battery-measured): period ≥ 9 ticks, instantaneous
   handoffs, non-overlapping groups, fire rate ≥ 0.7, ≲4 concurrent
   aperiodic waves, T ≥ ~1000. Movement claims: 0/20 false on noise.
-- `crystallize_senses(node, min_shared=2)` — the crystallizer turned
-  inward on ONE node: every occurrence of the node (from
-  `observed_sequences`) carries the context it appeared in; occurrences
-  sharing ≥ `min_shared` context tokens are linked into clusters; each
-  cluster becomes a SENSE (its own in-doors, out-doors, context) stored
-  on the node's meta. Returns the sense list. Gives a node internal
-  structure instead of one flat door pile. **Limit:** the link rule is a
-  fixed count, not a statistical test (pre-dates law 2).
-- `route(node, incoming)` — read through a node BY SENSE: `incoming` (one
-  token or a set of context tokens) is overlap-matched against each
-  sense's in-doors + context; the best-matching sense's out-doors are
-  returned. Falls back to the node's flat `seq` door-set when no sense
-  matches.
+- `crystallize_senses(node, min_shared=2)` — **SENSES ARE THINGS
+  (rebuilt 2026-07-04; battery `experiments/sense_battery.py` 14/14).**
+  The crystallizer turned inward on ONE node: occurrences (from
+  `observed_sequences`) sharing ≥ `min_shared` context tokens link into
+  candidate senses — and each candidate is minted as a **first-class
+  node** `sense:<node>#<gen>.<k>` with real directed doors, not a meta
+  blob: node→sense (tag `sense`), pred→sense and sense→succ (tag
+  `sense_seq` — direction is net structure), sense→context (tag
+  `sense_ctx`). Every net-walker (`compare_nodes`, the crystallizer,
+  inference) can see sense structure now. **Admission is null-gated**:
+  each sense's coherence score ((occurrences−1) × shared context core)
+  must beat the BEST sense produced by reshuffling context tokens across
+  occurrences (sizes and token frequencies preserved — the null destroys
+  exactly the claimed assignment; selection-corrected max over shuffles;
+  0/20 false senses on random contexts). Failures are **kept and
+  classified wrong** with the why (`isaac.wrong_senses` + node meta).
+  Re-crystallizing **supersedes** the old generation (verdict
+  `superseded`, kept in the net), never overwrites. Verified in the
+  engine self-test (language area) incl. save/load round-trip.
+  **Remaining limits:** candidate *linking* is still the fixed
+  `min_shared` count (only *admission* is a test); re-run is batch, not
+  incremental; membership door is node→sense only.
+- `route(node, incoming)` — read through a node BY SENSE, **from the
+  doors**: `incoming` (one token or a set of context tokens) is
+  overlap-matched against each sense node's in-doors + context doors;
+  only SOUND senses compete (wrong and superseded are demoted from the
+  comparison set — law 4 — never deleted); the winning sense's
+  `sense_seq` out-doors are returned. Falls back to the node's flat
+  `seq` door-set when no sound sense matches.
 
 ## 4. Thinking (query paths) — [VERIFIED IN ENGINE SELF-TEST 11/11]
 
@@ -489,12 +505,13 @@ ledger at `data/findings.jsonl`.
 
 ## 10. Test map (what proves what)
 
-- Engine self-test (10 areas): language, math, logic, reasoning, decompose,
-  persistence, waves, tracking, discovery, rivalry.
+- Engine self-test (11 areas): language, math, logic, reasoning, decompose,
+  persistence, waves, tracking, discovery, rivalry, spatial.
 - Harness (`experiments/`): six rebuild proofs (doors, composition,
   enumerator, waves, interference, entity-status); batteries with per-run
   CSVs (`wave_battery`, `discovery_battery`); adversarial
-  `redteam_discovery`; real-data (`covtype_*`, `higgs_real_test`,
+  `redteam_discovery`; `sense_battery` (senses-as-nodes, 14 checks);
+  real-data (`covtype_*`, `higgs_real_test`,
   `experiments/gauntlet.py` — 10 datasets, one pipeline);
   `experiments/cross_domain.py`; `condensation_scaling`;
   `experiments/clock_world.py`; `registration_perception`;
@@ -518,7 +535,7 @@ readable end to end.
 No abstention in classify_features; no compound doors in-engine; uptake
 composition harness-only; no FCA lattice (overlap merging); no
 shrug→discover reflex; no block-permutation null; no symbolic/token
-challenges in discover(); no CAPTURED→law graduation loop; no
+challenges in discover(); no
 learned-invariant perception (phase 4); no curiosity — challenges arrive
 from outside, and the probe queue is proposals only. The clock-reading
 harness readout is broken (22.9% — harness bug, engine unimplicated).

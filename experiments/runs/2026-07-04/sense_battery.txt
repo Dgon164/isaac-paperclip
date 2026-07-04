@@ -1,0 +1,27 @@
+
+S1 — planted polysemy ('bank'), enough evidence to beat chance
+  [PASS] two sound senses crystallized — 2 sound of 2 total
+  [PASS] routing disambiguates river context — ['erodes', 'flooded', 'shore', 'water']
+  [PASS] routing disambiguates money context — ['account', 'loan', 'teller', 'vault']
+  [PASS] direction is preserved (in-doors != out-doors per sense)
+
+S2 — noise refusal: random contexts, 20 trials
+  [PASS] 0 sound senses from pure chance co-occurrence — 0 false senses across 20 trials
+
+S3 — the doors are real
+  [PASS] compare_nodes works on sense nodes (the atom sees them)
+  [PASS] sense nodes live in the net
+  [PASS] membership doors node->sense exist
+
+S4 — re-crystallization supersedes the old generation
+  [PASS] old generation KEPT in the net
+  [PASS] old generation demoted to 'superseded'
+  [PASS] routing works through the new generation — ['erodes', 'flooded', 'shore', 'water']
+
+S5 — wrong is kept and classified
+  [PASS] the real sense survives among noise — 1 sound
+  [PASS] chance clusters filed wrong WITH the why — 1 filed
+  [PASS] routing demotes wrong senses (sound one wins on its context)
+
+============================================================
+SENSE BATTERY: 14/14 passed
