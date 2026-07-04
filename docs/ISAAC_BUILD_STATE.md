@@ -16,6 +16,26 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-04 — FULL AND HOLLOW: the shape vocabulary (owner, same day)
+
+"What if it had full and hollow bones? circle vs disc vs sphere vs
+ball... teach it the basic shapes and it could see the 8 is two circles
+maybe one a bit squished." Battery `shapes_battery.py` **11/11**.
+- `describe_shape`: holes→rings (squish+angle), blobs→discs, strokes→
+  bars; arrangement = ink connectivity (a fact of the ink — the first
+  cut thresholded center distances and missed the 8's own join, battery
+  H2); decomposition ASSEMBLES into the net via C1 (whole + shape parts
+  + touching/above/below edges) with gated English on the whole node.
+  **The 8: "two rings, stacked, one squished (0.66)" — the owner's
+  sentence, said by the engine.** The 0: one ring. Ring vs disc exact.
+- `classify_solid`: sphere shell (radius cv→0) vs solid ball (cv≈0.26,
+  the exact uniform-density value) with an honest middle-band refusal.
+- Real handwriting (MNIST): hole counting agrees with canonical digit
+  topology 86%; signature-only road 38.5% at 299/300 coverage. NAMED
+  NEXT: the two-tier road — topology filters candidates (near-total
+  coverage), bone patterns decide within the class (74.2% precision) —
+  composition should beat both parents.
+
 ## 2026-07-04 — THE WIREFRAME (owner's 2D-transformer design, same day)
 
 Owner's spec, verbatim commitments: "create a wireframe concept of the

@@ -2835,6 +2835,200 @@ class Isaac:
         ids = sorted(model)
         return ids, np.array([model[i] for i in ids])
 
+    # ── FULL AND HOLLOW: the shape vocabulary (owner, 2026-07-04:
+    # "what if it had full and hollow bones? circle vs disc vs sphere vs
+    # ball... we can teach it the basic shapes and it could see the 8 is
+    # two circles maybe one a bit squished"). Topology is identity,
+    # geometry is framing: a HOLE is what makes a ring a ring; a shell
+    # is all-surface at one radius; a ball fills its radii. Decomposed
+    # glyphs become WHOLES with arranged shape-parts (the C1 machinery),
+    # sayable in gated English.
+
+    @staticmethod
+    def _ink_components(mask):
+        """4-connected components of a boolean mask (iterative flood)."""
+        mask = mask.copy()
+        comps = []
+        H, W = mask.shape
+        for y0 in range(H):
+            for x0 in range(W):
+                if not mask[y0, x0]:
+                    continue
+                stack, comp = [(y0, x0)], []
+                mask[y0, x0] = False
+                while stack:
+                    y, x = stack.pop()
+                    comp.append((y, x))
+                    for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                        ny, nx = y + dy, x + dx
+                        if 0 <= ny < H and 0 <= nx < W and mask[ny, nx]:
+                            mask[ny, nx] = False
+                            stack.append((ny, nx))
+                comps.append(np.array(comp))
+        return comps
+
+    @classmethod
+    def _holes(cls, ink):
+        """Background components NOT touching the border = holes."""
+        bg = ~ink
+        H, W = ink.shape
+        border = np.zeros_like(bg)
+        seen = bg.copy()
+        stack = [(y, x) for y in range(H) for x in (0, W - 1) if bg[y, x]]
+        stack += [(y, x) for x in range(W) for y in (0, H - 1) if bg[y, x]]
+        for y, x in stack:
+            seen[y, x] = False
+        while stack:
+            y, x = stack.pop()
+            border[y, x] = True
+            for dy, dx in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                ny, nx = y + dy, x + dx
+                if 0 <= ny < H and 0 <= nx < W and seen[ny, nx]:
+                    seen[ny, nx] = False
+                    stack.append((ny, nx))
+        return cls._ink_components(bg & ~border)
+
+    def describe_shape(self, img, thresh=0.5, teach_label=None,
+                       min_hole=3):
+        """Decompose a glyph into TAUGHT shape primitives: rings (hollow —
+        one per hole, squish = minor/major axis ratio), discs (full —
+        compact hole-less blobs), bars (thin strokes), plus arrangement
+        (touching / above / beside). Returns the parts, the arrangement,
+        and a gated-English sentence; with teach_label the decomposition
+        is ASSEMBLED into the net (a whole whose parts are shapes).
+        The 8 answers: two rings, stacked, maybe one squished."""
+        img = np.asarray(img, float)
+        ink = img > thresh * img.max() if img.max() > 0 else img > 0.5
+        if not ink.any():
+            return None
+        parts = []
+        for h in self._holes(ink):
+            if len(h) < min_hole:
+                continue
+            pts = np.column_stack([h[:, 1], -h[:, 0]]).astype(float)
+            c = pts.mean(0)
+            if len(pts) >= 2:
+                _, sv, Vt = np.linalg.svd(pts - c, full_matrices=False)
+                sd = sv / np.sqrt(len(pts))
+                squish = float(sd[1] / (sd[0] + 1e-9))
+                angle = float(np.degrees(np.arctan2(Vt[0, 1], Vt[0, 0])))
+            else:
+                squish, angle, sd = 1.0, 0.0, np.array([1.0, 1.0])
+            parts.append(dict(kind="ring", center=c.tolist(),
+                              size=float(sd[0] * 4), squish=round(squish, 2),
+                              angle=round(angle, 1)))
+        # strokes and discs from what remains
+        skel = self._skeletonize(img, thresh)
+        if parts:
+            hole_pts = np.vstack([np.column_stack([h[:, 1], -h[:, 0]])
+                                  for h in self._holes(ink)
+                                  if len(h) >= min_hole])
+            ys, xs = np.where(skel > 0)
+            sk = np.column_stack([xs, -ys]).astype(float)
+            if len(sk):
+                d2 = ((sk[:, None, :] - hole_pts[None, :, :]) ** 2).sum(-1)
+                ring_r = max(np.sqrt(len(hole_pts) / np.pi), 2.0)
+                far = np.sqrt(d2.min(1)) > ring_r * 1.2
+                keep = np.zeros_like(skel)
+                for (x, y), f in zip(sk, far):
+                    if f:
+                        keep[int(-y), int(x)] = 1
+                skel = keep
+        for comp in self._ink_components(skel > 0):
+            if len(comp) < 4:
+                continue
+            pts = np.column_stack([comp[:, 1], -comp[:, 0]]).astype(float)
+            c = pts.mean(0)
+            _, sv, Vt = np.linalg.svd(pts - c, full_matrices=False)
+            sd = sv / np.sqrt(len(pts))
+            parts.append(dict(kind="bar", center=c.tolist(),
+                              length=float(sd[0] * 4),
+                              angle=round(float(np.degrees(
+                                  np.arctan2(Vt[0, 1], Vt[0, 0]))), 1)))
+        if not parts:                                  # hole-less blob
+            for comp in self._ink_components(ink.copy()):
+                if len(comp) < 6:
+                    continue
+                pts = np.column_stack([comp[:, 1], -comp[:, 0]]).astype(float)
+                c = pts.mean(0)
+                _, sv, _ = np.linalg.svd(pts - c, full_matrices=False)
+                sd = sv / np.sqrt(len(pts))
+                aspect = float(sd[1] / (sd[0] + 1e-9))
+                kind = "disc" if aspect > 0.55 else "bar"
+                parts.append(dict(kind=kind, center=c.tolist(),
+                                  size=float(sd[0] * 4),
+                                  squish=round(aspect, 2)))
+        # arrangement between parts: TOUCHING = carved from the same
+        # connected ink component (no radius arithmetic — connectivity is
+        # a fact of the ink, not an estimate; the first cut used
+        # center-distance thresholds and missed the 8's own join)
+        comps = self._ink_components(ink.copy())
+        labels = np.full(ink.shape, -1)
+        for ci, comp in enumerate(comps):
+            labels[comp[:, 0], comp[:, 1]] = ci
+        iy, ix_ = np.where(ink)
+        ink_px = np.column_stack([ix_, -iy]).astype(float)
+
+        def comp_of(center):
+            c = np.asarray(center)
+            j = int(np.argmin(((ink_px - c) ** 2).sum(1)))
+            return labels[int(-ink_px[j, 1]), int(ink_px[j, 0])]
+
+        part_comp = [comp_of(p["center"]) for p in parts]
+        edges = []
+        for a in range(len(parts)):
+            for b in range(a + 1, len(parts)):
+                if part_comp[a] != part_comp[b]:
+                    continue
+                ca = np.array(parts[a]["center"])
+                cb = np.array(parts[b]["center"])
+                dy, dx = cb[1] - ca[1], cb[0] - ca[0]
+                rel = ("above" if dy > abs(dx) else
+                       "below" if -dy > abs(dx) else "beside")
+                edges.append((a, b, rel))
+        # gated English
+        kinds = [p["kind"] for p in parts]
+        segs = []
+        for k in sorted(set(kinds)):
+            n_k = kinds.count(k)
+            segs.append(f"{['zero','one','two','three','four','five'][n_k] if n_k < 6 else n_k} {k}{'s' if n_k != 1 else ''}")
+        english = ", ".join(segs)
+        rings = [p for p in parts if p["kind"] == "ring"]
+        if len(rings) == 2 and edges:
+            sq = sorted(r["squish"] for r in rings)
+            english += f", stacked" if any(e[2] in ("above", "below")
+                                           for e in edges) else ", touching"
+            if sq[0] < 0.8 <= sq[1]:
+                english += f", one squished ({sq[0]:.2f})"
+        result = dict(parts=parts, arrangement=edges, english=english,
+                      n_holes=len(rings))
+        if teach_label:
+            names = []
+            for pi, p in enumerate(parts):
+                pn = f"{teach_label}.{p['kind']}{pi}"
+                self.register_part(pn, {p["kind"]: ()})
+                self.net.set_meta(pn, "shape_params", p)
+                names.append(pn)
+            up = [(names[a], rel, names[b]) for a, b, rel in edges]
+            self.assemble(teach_label, names, up)
+            self.net.set_meta(f"whole:{teach_label}", "english", english)
+        return result
+
+    @staticmethod
+    def classify_solid(points):
+        """3D full-vs-hollow: sphere (shell) vs ball (solid). A shell's
+        radii concentrate at one value (cv → 0); a uniform solid ball's
+        radii spread (cv ≈ 0.26, exact for uniform density). The middle
+        band refuses — an honest 'neither'."""
+        P = np.asarray(points, float)
+        r = np.linalg.norm(P - P.mean(0), axis=1)
+        cv = float(r.std() / (r.mean() + 1e-12))
+        if cv < 0.10:
+            return dict(kind="shell", cv=cv)          # hollow: sphere
+        if cv > 0.18:
+            return dict(kind="solid", cv=cv)          # full: ball
+        return dict(kind="uncertain", cv=cv)
+
     # ── the capture net: a stopgap that exists to be destroyed ─────────
     # Audit 2.8, built 2026-07-03 at the owner's prompt. THE NO-NETS LAW
     # HOLDS: the net is never the deliverable — it is quarantined inside

@@ -1,0 +1,23 @@
+
+H1 — circle vs disc
+  [PASS] a drawn circle is a RING (hollow) — one ring
+  [PASS] a filled circle is a DISC (full) — one disc
+
+H2 — the 8 is two circles, one a bit squished
+  [PASS] two rings seen — two rings, stacked, one squished (0.66)
+  [PASS] stacked arrangement seen — [(0, 1, 'below')]
+  [PASS] the squish is measured (one rounder, one squashed) — squish [0.66, 0.88]
+  [PASS] the 0 is ONE ring — one ring
+  [PASS] decomposition assembled into the net (a whole with shape parts) — two rings, stacked, one squished (0.66)
+
+H3 — shell vs solid in 3D
+  [PASS] point shell reads HOLLOW (sphere) — cv=0.027
+  [PASS] filled points read FULL (ball) — cv=0.242
+
+H4 — topology as identity on real digits
+    hole-count agreement with canonical digit topology: 86.0%  |  signature road: 38.5% on 299/300
+  [PASS] hole counting is reliable on real handwriting (>= 75%) — 258/300
+  [PASS] signature road far above chance (>= 30% where answered) — 0.385
+
+============================================================
+SHAPES BATTERY: 11/11 passed

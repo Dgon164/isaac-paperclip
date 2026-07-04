@@ -375,6 +375,24 @@ trajectories and stores only what refuses to vary.
     (Procrustes, both depth signs tried — the factorization sign
     ambiguity); machine-exact on ground truth (1.3e-15); refuses when
     overlap is too thin.
+- **FULL AND HOLLOW — the shape vocabulary (owner, 2026-07-04: "circle
+  vs disc vs sphere vs ball... it could see the 8 is two circles maybe
+  one a bit squished"; battery `experiments/shapes_battery.py` 11/11).**
+  Topology is identity, geometry is framing — a HOLE is what makes a
+  ring a ring. `describe_shape(img)`: holes → rings (with squish =
+  axis ratio and angle), hole-less compact blobs → discs, thin strokes
+  → bars; arrangement = INK CONNECTIVITY (parts of one component touch
+  — a fact, not a radius estimate; the first cut thresholded center
+  distances and missed the 8's own join); output is parts +
+  arrangement + gated English, and with teach_label the decomposition
+  ASSEMBLES into the net (a whole whose parts are shapes — the C1
+  machinery). The 8 answers: **"two rings, stacked, one squished
+  (0.66)"**. `classify_solid(points)`: 3D shell (sphere, radius cv→0)
+  vs solid (ball, cv≈0.26 exact for uniform), middle band refuses.
+  Real handwriting: hole-count agrees with canonical digit topology
+  **86%**; the raw signature road alone scores 38.5% at 299/300
+  coverage — the natural two-tier (topology filters, bone patterns
+  decide) is the named next step.
 - Limits (honest): trajectories need identities given (the tracker half
   of the pixel bridge is still open); the lift is single-rigid-body
   (multi-body SfM not built — stitch_views covers the multi-VIEW case,
