@@ -1,0 +1,25 @@
+======================================================================
+L1 — y = 2*ln(x0) + 1 over two decades (0.1..10)
+======================================================================
+  cold (no log in the library): UNDERSTOOD (R2 1.00)
+  with log(x0) registered:      UNDERSTOOD (R2 0.999)
+  equation: +2.00*log(x0) +1.00
+======================================================================
+L2 — y = sin(2*(x0/x1)): the dependence flows through the RATIO
+======================================================================
+  cold: PARTIAL (R2 0.76)
+    - the pattern lives in x0 (72%), x1 (25%) — the rest of the columns are bystanders
+    - x0 and x1 act JOINTLY (interaction carries 32% of their effect) — not a sum of separate influences
+    - the dependence flows through the ratio x0/x1 ONLY (invariance 0.83, beats its null 0.40); along that axis the response is periodic, roughly 1.08 rad/unit
+  graduate: GRADUATED (via composite) -> +1.00*sin(2*(x0/x1)) -0.00
+======================================================================
+L3 — log composite where x0 goes negative: honest domain handling
+======================================================================
+  rows in x0's log-domain: 306/600 — engine used the honest subset, verdict UNDERSTOOD (R2 0.999)
+  equation: +2.00*x1 +0.01
+======================================================================
+L1 logarithmic law, exact and legible : PASS
+L2 ratio found, then said exactly     : PASS
+L3 out-of-domain handled honestly     : PASS
+VERDICT: WORKS — the op family is open: values, logs, ratios, collectives
+======================================================================

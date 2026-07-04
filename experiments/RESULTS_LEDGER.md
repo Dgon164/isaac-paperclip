@@ -139,6 +139,8 @@ per-row notes below.
 
 | **Collective signals: the common mode enumerated — signed, gated, minted, reused** | `collective_battery.py` | **VERIFIED** | 2026-07-04 | K1: 8 faint columns → "the 8 drivers move TOGETHER: +3.82 up / −3.34 down, 6.1× any single feature, beats sign-scrambled 2.87" + `mean(x0..x7)` minted; K2: −2·mean reported as DARKENING (up-shift −2.40) — the sign is the fact; K3: x0−x1+x2 (mixed signs, no common mode) correctly REFUSED; K4: cold CAPTURED 0.38 → with the learned collective **UNDERSTOOD `+1.00*cos(3*mean(x0..x7))` exact**; suite 11/11, interrogation/capture/reuse batteries green |
 
+| **The op family is open: log + ratio composites, domain-guarded** ("instead of just sub... values or logs or other things") | `numberfunc_battery.py` | **VERIFIED** | 2026-07-04 | L1: y=2·ln(x0)+1 → **`+2.00*log(x0) +1.00` exact and legible** (cold surrogates it with powers at 1.00 in-range — see the log-is-a-power note in the manual); L2: sin(2·(x0/x1)) cold PARTIAL 0.76 → interrogation finds "flows through the ratio x0/x1 ONLY, periodic" → graduated **`+1.00*sin(2*(x0/x1))` exact**; L3: log on data with negatives → 306/600 in-domain rows used honestly, no crash, no false claim; suite 11/11, all composite-family batteries green |
+
 ## Known-stale numbers — do NOT quote
 
 - "0/40 false discoveries across two batteries" → the verifiable number is 0/20 (discovery battery E9) plus a clean red team and zero wave noise admissions.
