@@ -77,3 +77,15 @@ CONTRAST gate 0.0207
   MET 0.070 LOWER   lep_pT 0.069 LOWER  j2_btag 0.050 LOWER ...
 17 channels differ; indistinguishable: lep_eta, lep_phi, MET_phi, j1_phi,
 j1_btag, j2_phi, j3_pT, j3_phi, j4_phi, j4_btag, m_lv
+
+THE ENUMERATION (2026-07-05, 2M events): expect background, subtract,
+the delta IS the particle (the effect-entity move, run by hand):
+  m_bb : EXCESS past null (gate 0.0219) - RESONANCE at 0.849 norm units,
+         width 0.079, holding 26.5% of signal events; continuum deficit
+         spans 0.16-2.85 (the events the bump displaced)
+  m_wbb: excess at 0.928, width 0.051 (the resonance seen through Wbb)
+  m_jj : excess 1.4% at 0.97 (W->jj lives in BOTH classes - correctly
+         near-flat)
+Units caveat: the dataset normalized all mass columns; the peak location
+is in the data's own units - 125 GeV is not recoverable without the
+stripped normalization constant.
