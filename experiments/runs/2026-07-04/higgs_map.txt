@@ -1,0 +1,79 @@
+
+======================================================================
+PART 2 — the sensor map, labels never used
+======================================================================
+  ch 1 [lep_pT  ] -> magnitude (one-sided)
+  ch 2 [lep_eta ] -> signed measure
+  ch 3 [lep_phi ] -> angle (bounded, flat)
+  ch 4 [MET     ] -> magnitude (one-sided)
+  ch 5 [MET_phi ] -> angle (bounded, flat)
+  ch 6 [j1_pT   ] -> magnitude (one-sided)
+  ch 7 [j1_eta  ] -> signed measure
+  ch 8 [j1_phi  ] -> angle (bounded, flat)
+  ch 9 [j1_btag ] -> counter (3 levels)
+  ch10 [j2_pT   ] -> magnitude (one-sided)
+  ch11 [j2_eta  ] -> signed measure
+  ch12 [j2_phi  ] -> angle (bounded, flat)
+  ch13 [j2_btag ] -> counter (3 levels)
+  ch14 [j3_pT   ] -> magnitude (one-sided)
+  ch15 [j3_eta  ] -> signed measure
+  ch16 [j3_phi  ] -> angle (bounded, flat)
+  ch17 [j3_btag ] -> counter (3 levels)
+  ch18 [j4_pT   ] -> magnitude (one-sided)
+  ch19 [j4_eta  ] -> signed measure
+  ch20 [j4_phi  ] -> angle (bounded, flat)
+  ch21 [j4_btag ] -> counter (3 levels)
+  ch22 [m_jj    ] -> magnitude (one-sided)
+  ch23 [m_jjj   ] -> magnitude (one-sided)
+  ch24 [m_lv    ] -> magnitude (one-sided)
+  ch25 [m_jlv   ] -> magnitude (one-sided)
+  ch26 [m_bb    ] -> magnitude (one-sided)
+  ch27 [m_wbb   ] -> magnitude (one-sided)
+  ch28 [m_wwbb  ] -> magnitude (one-sided)
+
+  wiring (MI > 2x the 99.9th-pct null 0.0026); top 15:
+    m_wbb    -- m_wwbb    MI 0.811
+    m_bb     -- m_wbb     MI 0.248
+    m_jlv    -- m_wbb     MI 0.242
+    m_jlv    -- m_wwbb    MI 0.238
+    m_jj     -- m_jjj     MI 0.175
+    m_jjj    -- m_wbb     MI 0.141
+    m_jjj    -- m_wwbb    MI 0.136
+    j1_pT    -- m_wbb     MI 0.130
+    m_bb     -- m_wwbb    MI 0.123
+    j1_phi   -- j2_phi    MI 0.112
+    j1_pT    -- m_wwbb    MI 0.112
+    j1_pT    -- j2_pT     MI 0.101
+    j2_pT    -- m_wbb     MI 0.092
+    j4_eta   -- j4_btag   MI 0.085
+    lep_phi  -- j1_phi    MI 0.078
+  [1s]
+
+======================================================================
+PART 3 — the wiring of the derived channels (blind discover())
+======================================================================
+  m_jj   : NO RULE    R2 -0.137  uses chans ['lep_eta', 'j1_eta', 'j2_pT', 'j3_pT', 'j3_eta', 'j3_btag']  [59s]
+           eq: +0.57*x9*x13 +10.71*cosh(0.155591*(x6-x14)) +0.00*cosh(2.28131*(x6-x9))*cosh(1.52087*(x6-x14)) +0.00
+  m_jjj  : NO RULE    R2 0.108  uses chans ['j1_pT', 'j1_eta', 'j1_btag', 'j2_pT', 'j2_eta', 'j2_btag']  [74s]
+           eq: -3.35*x5*x13 +3.43*x5*x13*cosh(0.105002*(x6-x14)) +0.05*x9*x16 +0.19*cosh(0.5*(x10-x18)) +0.05*x9*x1
+  m_lv   : PARTIAL    R2 0.856  uses chans ['lep_pT', 'lep_eta', 'lep_phi', 'MET', 'MET_phi', 'j1_pT']  [130s]
+           eq: +0.29*x0*x3 -0.29*x0*x3*cos(1.7*(x2-x4)) -0.19*x2*x4 -0.04*x0 +0.08*x2*x2 +0.07*x4*x4 +0.05*cos(3.22
+  m_jlv  : PARTIAL    R2 0.344  uses chans ['lep_pT', 'lep_eta', 'MET', 'MET_phi', 'j1_pT', 'j1_eta']  [105s]
+           eq: +0.10*x3*x5 -23.55*x5*x8 +23.67*x5*x8*cosh(0.057648*(x1-x6)) +0.08*x0*x9 +0.06*x3*x13 -4.01*x9*x12 +
+  m_bb   : PARTIAL    R2 0.700  uses chans ['j1_pT', 'j1_eta', 'j1_phi', 'j1_btag', 'j2_pT', 'j2_eta']  [121s]
+           eq: +0.17*x9*x12 +0.22*x13 +0.28*x5*x8 -0.24*sin(1929.41*x8) +0.07*x13*x16 +0.12*x8*x9*x12 +0.10*x17*x20
+  m_wbb  : PARTIAL    R2 0.501  uses chans ['lep_pT', 'lep_eta', 'MET', 'j1_pT', 'j1_eta', 'j1_btag']  [133s]
+           eq: +0.16*x5 +0.06*x3*x9 -8.76*x5*x8 +0.09*x9*x12 +0.02*x13*x17 +0.04*x6*x6 +0.05*x13*x16 +8.85*x5*x8*co
+  m_wwbb : PARTIAL    R2 0.459  uses chans ['lep_pT', 'lep_eta', 'MET', 'j1_pT', 'j1_eta', 'j1_btag']  [134s]
+           eq: +0.11*x5 +0.05*x3*x9 +0.08*x0*x13 -0.20*cos(0.648025*(x1-x6)) +0.06*x5*x8 -0.04*x1*x14 +0.03*x14*x14
+
+EXTERNAL GRADE (the mind never saw this): m_jj should wire to jets; m_lv to lepton+MET; m_bb to b-tagged jets.
+
+PART 1 (recaptured - tail clipped the first run's top):
+CONTRAST gate 0.0207
+  m_bb     TV 0.266  signal LOWER      m_wbb  TV 0.172  LOWER
+  m_wwbb   TV 0.168  LOWER             m_jjj  TV 0.149  HIGHER
+  m_jlv    TV 0.124  LOWER             j1_pT  TV 0.071  HIGHER
+  MET 0.070 LOWER   lep_pT 0.069 LOWER  j2_btag 0.050 LOWER ...
+17 channels differ; indistinguishable: lep_eta, lep_phi, MET_phi, j1_phi,
+j1_btag, j2_phi, j3_pT, j3_phi, j4_phi, j4_btag, m_lv

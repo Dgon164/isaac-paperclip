@@ -47,6 +47,13 @@ honesty, or capability debt.
       still a threshold. (Manual §3.)
 - [ ] **A7. `crystallize_senses` is batch, not incremental** — must re-run (and
       supersede) after new observations; no dirty-scoped sense update.
+- [ ] **A8. Refinement scale runaway on discrete channels** — found on the
+      HIGGS map (2026-07-05): `_refine_term` hill-climbed a sine to
+      k=1929 on a 3-level b-tag channel — a lookup table in a trig
+      costume (the "frequency reach ≈ 2× grid max" limit assumed the
+      grid bounds k; refinement doesn't honor it). Fix: bound refined
+      scales by grid reach, and refuse scale-refinement on counter-kind
+      channels (the kinds map now exists to tell it which those are).
 
 ## B. Stopgaps by design — exist to be destroyed (each has a named successor)
 

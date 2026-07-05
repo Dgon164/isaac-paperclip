@@ -16,6 +16,40 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-05 — HIGGS: THE CONTRAST AND THE BLIND SENSOR MAP
+
+Owner: "it's got the answer sheet... find out what is different between
+them? maybe... create a physical map of the sensors." Run:
+`experiments/higgs_map.py` (log in runs/, 400k events sampled of 11M).
+- **The contrast (labels used), physics-correct end to end**: top
+  discriminators m_bb > m_wbb > m_wwbb (the Higgs decays to b-quark
+  pairs — its mass peak IS the signal); **every phi channel
+  indistinguishable** (the physics is rotation-symmetric — Isaac
+  found azimuthal invariance from the answer sheet); **m_lv
+  indistinguishable** (both signal and background contain a real
+  W→lν — textbook). 17 of 28 channels differ past the
+  selection-corrected null; signed directions reported.
+- **The blind kinds map (labels never used): 28/28 correct.** All five
+  phi channels → "angle (bounded, flat)"; all four b-tags → "counter
+  (3 levels)"; etas → signed; pT/MET/masses → one-sided magnitudes.
+- **The blind wiring**: derived-mass cluster correctly interlinked
+  (m_wbb–m_wwbb MI 0.81), jets to composites, phi–phi coupling (angles
+  relate only through differences), and j4_eta–j4_btag — a real
+  detector-acceptance correlation.
+- **The formula road (blind discover per derived channel)**: m_lv →
+  **`+0.29*x0*x3 − 0.29*x0*x3*cos(1.7*(x2−x4))` = pT·MET·(1 −
+  cos Δφ(lep,MET)) — THE TRANSVERSE-MASS FORMULA, said** (R² 0.856,
+  correct wiring lepton+MET; short of UNDERSTOOD only because the
+  stored channel is m not m²). m_bb/m_wbb/m_wwbb PARTIAL with the
+  right channel families (jets+btags; lepton+MET+jets); m_jj/m_jjj
+  failed (heavy-tailed squared targets; jet-pairing assumption) —
+  recorded, not hidden.
+- **New methods finding (filed as checklist A8)**: hill-climb
+  refinement pushed a sine to k=1929 on a DISCRETE channel (btag) —
+  a lookup-table surrogate wearing a trig costume. Refinement must be
+  bounded by the grid's frequency reach / refuse scale-refinement on
+  counter-kind channels.
+
 ## 2026-07-04 — LINES, RECTANGLES, RELATIONAL ROTATION (owner, same day)
 
 "A slanted 8 is just two circles at 15 degrees, a 7 is a 25 degree 1 with
