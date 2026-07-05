@@ -3291,6 +3291,42 @@ class Isaac:
         s = sum(weights.values()) or 1.0
         weights = {k: v / s for k, v in weights.items()}
         self.net.set_meta("crystal", "glyph_weights", weights)
+        # PAIR JUDGES (the decision autopsy, 2026-07-05: 60% of fusion
+        # errors had the truth in SECOND place — a channel knew and was
+        # outvoted). Global weights say who is reliable in general;
+        # 4-vs-9 has its own best witness. Per class pair, measure each
+        # channel's binary accuracy on the calibration glyphs; close
+        # calls get re-decided by the pair's own weights (rivals +
+        # differentia, at decision time).
+        cal_posts = {}
+        for ix in cal:
+            _, posts = self.recognize_glyph(images[ix])
+            cal_posts[int(ix)] = (labels[ix], posts)
+        pair_w = {}
+        cl = list(classes)
+        for ai in range(len(cl)):
+            for bi in range(ai + 1, len(cl)):
+                a, b = cl[ai], cl[bi]
+                per = {}
+                n_ab = 0
+                for ix, (truth, posts) in cal_posts.items():
+                    if truth not in (a, b):
+                        continue
+                    n_ab += 1
+                    for k, p in posts.items():
+                        pick = a if p[ai] >= p[bi] else b
+                        per.setdefault(k, [0, 0])
+                        per[k][1] += 1
+                        if pick == truth:
+                            per[k][0] += 1
+                if n_ab < 12:
+                    continue
+                w = {k: max(h / t - 0.5, 0.0) for k, (h, t) in per.items()}
+                s2 = sum(w.values())
+                if s2 > 0:
+                    pair_w[(int(a), int(b))] = {k: v / s2
+                                                for k, v in w.items()}
+        self.net.set_meta("crystal", "glyph_pair_weights", pair_w)
         return [f"concept:{c}" for c in classes]
 
     def recognize_glyph(self, img, verbose=False):
@@ -3365,6 +3401,21 @@ class Isaac:
             posts[k] = p
             total += wts.get(k, 1.0) * np.log(p + 1e-12)
         best = int(np.argmax(total))
+        # contested decision -> the PAIR JUDGE re-decides between the two
+        # contenders with weights measured for exactly that pair
+        order = np.argsort(-total)
+        pair_w = self.net.get_meta("crystal", "glyph_pair_weights") or {}
+        if len(order) >= 2:
+            i1, i2 = int(order[0]), int(order[1])
+            a, b = classes[i1], classes[i2]
+            key = (int(min(a, b)), int(max(a, b)))
+            pw = pair_w.get(key)
+            if pw:
+                sa = sum(pw.get(k, 0.0) * np.log(p[i1] + 1e-12)
+                         for k, p in posts.items())
+                sb = sum(pw.get(k, 0.0) * np.log(p[i2] + 1e-12)
+                         for k, p in posts.items())
+                best = i1 if sa >= sb else i2
         if verbose:
             for k, p in posts.items():
                 print(f"    {k:9s} votes {classes[int(np.argmax(p))]} "
