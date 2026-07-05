@@ -3832,6 +3832,130 @@ class Isaac:
                   f"{'  CONTESTED' if contested else ''}")
         return classes[best], posts
 
+    # ── IDENTITY BY INTERACTION (owner, 2026-07-05: "you have to
+    # understand how a thing interacts with other things... which may be
+    # the part that we are missing... what are the translation factors of
+    # an effect? lack of rain means no fireworks... not a direct result,
+    # but a preemptive signal"). A thing's identity includes its SIGNED
+    # effect profile on everything else; an observed link may be a CHAIN
+    # mediated through translation factors, whose final hop can be
+    # anticipatory (a response to risk) rather than physical.
+
+    def interaction_map(self, X, names=None, n_perm=40, pct=99):
+        """The signed interaction graph: for every pair, dependence past
+        a selection-corrected permutation null, with SIGN (signed deltas
+        — suppresses and promotes are different facts). Teaches
+        affects(+/-) facts; refuses on noise."""
+        X = np.asarray(X, float)
+        n, d = X.shape
+        names = names or [f"x{j}" for j in range(d)]
+        rng = np.random.default_rng(29)
+        C = np.corrcoef(X.T)
+        null_max = []
+        for _ in range(n_perm):
+            j = rng.integers(0, d)
+            k = rng.integers(0, d - 1)
+            k += (k >= j)
+            null_max.append(abs(np.corrcoef(
+                X[:, j], rng.permutation(X[:, k]))[0, 1]))
+        gate = float(np.percentile(null_max, pct))
+        edges = []
+        for a in range(d):
+            for b_ in range(a + 1, d):
+                r = float(C[a, b_])
+                if abs(r) > gate:
+                    sign = "+" if r > 0 else "-"
+                    edges.append((names[a], names[b_], sign, round(r, 3)))
+                    self.teach(names[a], f"affects{sign}", names[b_])
+        self.net.set_meta("interactions", "gate", gate)
+        return dict(edges=edges, gate=gate)
+
+    def explain_link(self, x, y, X, names, n_bins=5, n_perm=30):
+        """THE TRANSLATION FACTORS: is the x→y link direct, or does it
+        translate through mediators? For each candidate z: stratify on z
+        and re-test x↔y inside the strata. If the link DIES under
+        conditioning, z is a translation factor and the chain is said;
+        a near-threshold discrete terminal hop is named a PREEMPTIVE
+        SIGNAL, not a consequence."""
+        X = np.asarray(X, float)
+        ix, iy = names.index(x), names.index(y)
+        rng = np.random.default_rng(31)
+
+        def strata(z):
+            edges_ = np.percentile(X[:, z],
+                                   np.linspace(0, 100, n_bins + 1))
+            out = []
+            for k in range(n_bins):
+                m = (X[:, z] >= edges_[k]) & (X[:, z] <= edges_[k + 1])
+                if m.sum() >= 12:
+                    out.append(np.where(m)[0])
+            return out
+
+        def cond_r(a, bvals, groups):
+            rs, ws = [], []
+            for g in groups:
+                sa, sb = X[g, a], bvals[g]
+                if sa.std() < 1e-9 or sb.std() < 1e-9:
+                    continue
+                rs.append(np.corrcoef(sa, sb)[0, 1])
+                ws.append(len(g))
+            return float(np.average(rs, weights=ws)) if rs else 0.0
+
+        raw = float(np.corrcoef(X[:, ix], X[:, iy])[0, 1])
+        null = [abs(np.corrcoef(X[:, ix],
+                                rng.permutation(X[:, iy]))[0, 1])
+                for _ in range(n_perm)]
+        gate = float(np.percentile(null, 95))
+        mediators = []
+        for iz, z in enumerate(names):
+            if iz in (ix, iy):
+                continue
+            groups = strata(iz)
+            rc = cond_r(ix, X[:, iy], groups)
+            # the null that matches the CLAIM: permute y WITHIN strata —
+            # what conditional correlation does chance produce once z is
+            # held? (the raw-shuffle gate was wrongly strict and called
+            # the fireworks chain 'direct' — battery caught it)
+            null_c = []
+            for _ in range(n_perm):
+                yp = X[:, iy].copy()
+                for g in groups:
+                    yp[g] = yp[rng.permutation(g)]
+                null_c.append(abs(cond_r(ix, yp, groups)))
+            gate_c = float(np.percentile(null_c, 95))
+            if abs(raw) > gate and abs(rc) <= gate_c:
+                mediators.append((z, round(rc, 3)))
+        # chain order: mediators sorted by closeness to the cause
+        mediators.sort(key=lambda t: -abs(np.corrcoef(
+            X[:, ix], X[:, names.index(t[0])])[0, 1]))
+        direct = not mediators
+        preemptive = None
+        if mediators:
+            z = mediators[0][0]
+            iz = names.index(z)
+            zx, yy = X[:, iz], X[:, iy]
+            if len(np.unique(yy)) <= 3:               # a discrete response
+                lo = yy[zx < np.median(zx)].mean()
+                hi = yy[zx >= np.median(zx)].mean()
+                if abs(hi - lo) > 0.5 * (yy.std() + 1e-9):
+                    preemptive = z
+        if direct:
+            english = (f"{x}→{y} (r={raw:+.2f}) survives conditioning on "
+                       f"every candidate: DIRECT as far as these "
+                       f"variables can tell.")
+        else:
+            chain = " → ".join([x] + [m[0] for m in mediators] + [y])
+            english = (f"{x}→{y} (r={raw:+.2f}) is NOT direct: it dies "
+                       f"under conditioning — it translates through "
+                       f"{', '.join(m[0] for m in mediators)} "
+                       f"(the chain: {chain}).")
+            if preemptive:
+                english += (f" The final hop is a near-threshold response "
+                            f"to {preemptive}: a PREEMPTIVE SIGNAL, not a "
+                            f"physical consequence.")
+        return dict(raw_r=raw, direct=direct, mediators=mediators,
+                    preemptive=preemptive, english=english)
+
     # ── THE INFORMATION LEDGER (owner, 2026-07-05: "something that
     # tells us how much information is missing still and how much we can
     # extract, and where we can go to extract it"). The mathematics:

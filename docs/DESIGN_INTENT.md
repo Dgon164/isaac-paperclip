@@ -88,6 +88,14 @@ ANYTHING, ask: where else does this apply RIGHT NOW? Then apply it.
   ceiling + where). train_readout/extract_readout: ONE softmax layer over
   node outputs as the comparator, extracted LOSSLESSLY into signed
   evidence equations (linear = the net IS the equation).
+- **Interaction**: interaction_map (signed affects+/- graph, null-gated,
+  noise refuses) + explain_link (translation factors: a link that DIES
+  under stratum-matched conditioning is a CHAIN; near-threshold discrete
+  terminal hops named PREEMPTIVE SIGNALS — the fireworks law). Identity
+  includes the effect profile. STILL OPEN from the owner's same message:
+  metastructure crystallization (components→humanity→civilization — the
+  D1 tower), edges-of-things (boundary finding), interaction-as-identity
+  recursed to every level.
 - **Trust**: calibration audit; law_confidence (measured decay curve);
   0/20 false discoveries on noise; refusals are answers.
 

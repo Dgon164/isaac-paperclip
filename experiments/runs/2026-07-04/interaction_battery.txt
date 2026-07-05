@@ -1,0 +1,23 @@
+
+I1 — the signed interaction graph
+  [PASS] rain suppresses dryness (signed)
+  [PASS] dryness promotes fire_risk
+  [PASS] bystander earns NO edges — 6 edges total
+
+I2 — the fireworks chain
+   rain→fireworks_ban (r=-0.53) is NOT direct: it dies under conditioning — it translates through fire_risk (the chain: rain → fire_risk → fireworks_ban). The final hop is a near-threshold response to fire_risk: a PREEMPTIVE SIGNAL, not a physical consequence.
+  [PASS] rain->ban recognized as NOT direct
+  [PASS] fire_risk found as the translation factor
+  [PASS] the terminal hop named PREEMPTIVE
+
+I3 — a direct hop stays direct
+  [PASS] dryness->fire_risk DIRECT — dryness→fire_risk (r=+0.98) survives conditioning on every c
+
+I4 — nothing to explain
+  [PASS] no-link pair: raw r ~ 0 and direct(trivially) — r=+0.01
+
+I5 — noise refuses the graph
+  [PASS] pure noise: 0 interaction edges — 0 edges
+
+============================================================
+INTERACTION BATTERY: 9/9 passed
