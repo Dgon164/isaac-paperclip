@@ -1,0 +1,26 @@
+
+D1 — line / arc / circle / spiral / s-curve
+  [PASS] line -> line — got line (turn -0.0, k_mean -0.00, slope -0.000)
+  [PASS] arc -> arc — got arc (turn 1.7, k_mean 0.19, slope 0.000)
+  [PASS] circle -> circle — got circle (turn 5.8, k_mean 0.20, slope -0.000)
+  [PASS] clothoid spiral -> spiral — got spiral (turn 6.2, k_mean 1.04, slope 0.335)
+  [PASS] s-curve -> s-curve — got s-curve (turn -1.6, k_mean -0.39, slope -0.809)
+
+D2 — trajectories: the spiral vs the straight run
+  [PASS] Archimedean trajectory reads spiral-family (spiral/compound, curvature marching) — spiral, turn 11.7
+  [PASS] straight run reads line — line
+
+D3 — the dynamics channel in the fused vote (complete numbers)
+    COMPLETE numbers over all 500 test digits:
+      bones    : 29.2%
+      density  : 81.0%
+      dynamics : 61.8%
+      exemplar : 85.6%
+      topology : 52.2%
+      FUSED    : 92.2%   (was 90.6 without dynamics)
+      truth in shortlist: 98.0%
+  [PASS] dynamics alone is a real channel (> 40% complete) — 61.8%
+  [PASS] fusion does not lose with the new channel (>= 89.6%) — 92.2%
+
+============================================================
+DYNAMICS BATTERY: 9/9 passed

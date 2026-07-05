@@ -3216,6 +3216,140 @@ class Isaac:
             return dict(kind="solid", cv=cv)          # full: ball
         return dict(kind="uncertain", cv=cv)
 
+    # ── RATE OF CHANGE (owner, 2026-07-05: "curve, acceleration, jerk,
+    # etc. being able to detect linear or compound spirals"). The
+    # derivative tower along any traced path: tangent angle θ(s) →
+    # curvature κ(s)=dθ/ds → curvature rate dκ/ds. The tower IS a curve
+    # vocabulary: line κ≈0; arc/circle κ≈const; spiral κ changing
+    # steadily; s-curve κ crossing zero; compound = a κ-profile in
+    # segments. Independent of densities/topology/bones — those see
+    # where ink IS; this sees how it FLOWS.
+
+    @staticmethod
+    def path_dynamics(path, smooth=2):
+        """Arc-length resample a path, then the derivative tower.
+        Returns kind + measured parameters, or None for stubs."""
+        P = np.asarray(path, float)
+        if len(P) < 8:
+            return None
+        d = np.linalg.norm(np.diff(P, axis=0), axis=1)
+        s = np.concatenate([[0], np.cumsum(d)])
+        L = float(s[-1])
+        if L <= 1e-9:
+            return None
+        n = int(max(16, min(64, len(P))))
+        ss = np.linspace(0, L, n)
+        Q = np.column_stack([np.interp(ss, s, P[:, 0]),
+                             np.interp(ss, s, P[:, 1])])
+        for _ in range(smooth):
+            Q[1:-1] = 0.5 * Q[1:-1] + 0.25 * (Q[2:] + Q[:-2])
+        T = np.diff(Q, axis=0)
+        th = np.unwrap(np.arctan2(T[:, 1], T[:, 0]))
+        ds = L / (n - 1)
+        kappa = np.diff(th) / ds
+        turn = float(th[-1] - th[0])
+        km, ks = float(kappa.mean()), float(kappa.std())
+        x = np.arange(len(kappa), dtype=float)
+        slope = float(np.polyfit(x, kappa, 1)[0]) / ds
+        signs = np.sign(kappa[np.abs(kappa) > 0.25 * (ks + 1e-12)])
+        flips = int((np.diff(signs[signs != 0]) != 0).sum())
+        # relative gates (scale-free): how much does κ vary vs its level?
+        flat = ks < 0.15 * abs(km) + 1e-9
+        if abs(km) * L < 0.35 and ks * L < 0.6:
+            kind = "line"
+        elif flat and abs(turn) >= 1.6 * np.pi:
+            kind = "circle"
+        elif flat:
+            kind = "arc"
+        elif flips == 0 and abs(slope) * L * L > 2.0 * ks:
+            kind = "spiral"          # curvature marches one way
+        elif flips == 1:
+            kind = "s-curve"
+        else:
+            kind = "compound"
+        return dict(kind=kind, length=L, turn=turn, kappa_mean=km,
+                    kappa_std=ks, kappa_slope=slope, sign_flips=flips,
+                    profile=kappa)
+
+    def _skeleton_paths(self, img, thresh=0.5):
+        """Ordered stroke paths from a glyph (skeleton → peel diameter
+        paths), for the dynamics tower."""
+        from collections import deque
+        S = (self._skeletonize(img, thresh) > 0).astype(np.uint8)
+        paths = []
+        for comp in self._ink_components(S == 1, conn=8):
+            cset = {(int(y), int(x)) for y, x in comp}
+            while len(cset) >= 8:
+                def far(start):
+                    par, dist = {start: None}, {start: 0}
+                    q = deque([start])
+                    fa = start
+                    while q:
+                        p = q.popleft()
+                        if dist[p] > dist[fa]:
+                            fa = p
+                        for dy in (-1, 0, 1):
+                            for dx in (-1, 0, 1):
+                                if (dy, dx) == (0, 0):
+                                    continue
+                                w = (p[0] + dy, p[1] + dx)
+                                if w in cset and w not in dist:
+                                    dist[w] = dist[p] + 1
+                                    par[w] = p
+                                    q.append(w)
+                    return fa, par
+                a0, _ = far(next(iter(cset)))
+                b0, par = far(a0)
+                chain = []
+                p = b0
+                while p is not None:
+                    chain.append(p)
+                    p = par[p]
+                if len(chain) < 8:
+                    break
+                paths.append(np.array([(x, -y) for y, x in chain], float))
+                for p in chain:
+                    cset.discard(p)
+                cset = {p for p in cset
+                        if any((p[0] + dy, p[1] + dx) in cset
+                               for dy in (-1, 0, 1) for dx in (-1, 0, 1)
+                               if (dy, dx) != (0, 0))}
+        return paths
+
+    def dynamics_features(self, img):
+        """The glyph's flow signature: length-weighted tangent histogram
+        + curvature statistics over all strokes. 10 numbers; the
+        'dynamics' evidence channel."""
+        paths = self._skeleton_paths(img)
+        f = np.zeros(10)
+        if not paths:
+            return f
+        wsum = 0.0
+        for P in paths:
+            dyn = self.path_dynamics(P)
+            if dyn is None:
+                continue
+            L = dyn["length"]
+            wsum += L
+            T = np.diff(P, axis=0)
+            th = np.arctan2(T[:, 1], T[:, 0]) % np.pi
+            seg = np.linalg.norm(T, axis=1)
+            hb = np.zeros(4)
+            for t_, w_ in zip(th, seg):
+                hb[int(t_ / (np.pi / 4)) % 4] += w_
+            f[0:4] += hb
+            f[4] += abs(dyn["kappa_mean"]) * L
+            f[5] += dyn["kappa_std"] * L
+            f[6] += abs(dyn["turn"])
+            f[7] += dyn["sign_flips"]
+            f[8] += abs(dyn["kappa_slope"]) * L
+        f[9] = len(paths)
+        if wsum > 0:
+            f[0:4] /= wsum
+            f[4:6] /= wsum
+            f[8] /= wsum
+        return f
+
     # ── ALL METHODS, ONE CONCEPT (owner, 2026-07-05): "it should be
     # using all methods... the doors are just pointer connections. a door
     # between bones and a door between textures or patterns and a door
@@ -3238,6 +3372,12 @@ class Isaac:
         flat = images.reshape(len(images), -1)
         self.crystallize_features(flat, labels, compounds="off")
         classes = np.unique(labels)
+        # the RATE-OF-CHANGE channel: flow signatures, density-doored
+        dynF = np.array([self.dynamics_features(im) for im in images])
+        qs_d = np.linspace(0, 100, 9)[1:-1]
+        dyn_edges = np.stack([np.percentile(dynF[:, j], qs_d)
+                              for j in range(dynF.shape[1])])
+        self.net.set_meta("crystal", "dyn_edges", dyn_edges)
         for c in classes:
             node = f"concept:{c}"
             imgs = images[labels == c]
@@ -3265,6 +3405,13 @@ class Isaac:
             ex = flat[labels == c][:max_exemplars]
             ex = ex / (np.linalg.norm(ex, axis=1, keepdims=True) + 1e-9)
             self.net.set_meta(node, "exemplars", ex)
+            dF = dynF[labels == c]
+            ldd = np.empty((dynF.shape[1], 8))
+            for j in range(dynF.shape[1]):
+                cnt = np.bincount(np.searchsorted(dyn_edges[j], dF[:, j]),
+                                  minlength=8).astype(float)
+                ldd[j] = np.log((cnt + 1.0) / (cnt.sum() + 8))
+            self.net.set_meta(node, "dyn_doors", ldd)
         self.net.set_meta("crystal", "glyph_classes", list(classes))
         # measured reliability weights (calibration, not opinion): each
         # channel's vote is weighted by what it DEMONSTRATES on held-out
@@ -3419,6 +3566,19 @@ class Isaac:
             if not np.isnan(res).all():
                 res = np.where(np.isnan(res), np.nanmax(res), res)
                 chan["bones"] = -res
+        # 3b. rate of change: the flow signature
+        de = self.net.get_meta("crystal", "dyn_edges")
+        if de is not None:
+            fd = self.dynamics_features(img)
+            ixd = np.array([int(np.searchsorted(de[j], fd[j]))
+                            for j in range(len(fd))])
+            jd = np.arange(len(fd))
+            dsc = []
+            for c in classes:
+                ldd = self.net.get_meta(f"concept:{c}", "dyn_doors")
+                dsc.append(float(ldd[jd, ixd].sum())
+                           if ldd is not None else 0.0)
+            chan["dynamics"] = np.array(dsc)
         # 4. exemplars (presence, not average)
         f = flat[0] / (np.linalg.norm(flat[0]) + 1e-9)
         ex_s = []
