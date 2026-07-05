@@ -52,6 +52,17 @@ ANYTHING, ask: where else does this apply RIGHT NOW? Then apply it.
 - No optimizing before measured limits; no importance-telling.
 - Expand, compress, expand, compress (the Intellon rhythm).
 - Settle design disputes by BATTERY, not argument.
+- **Everything relative; absolute is one correction factor** (owner,
+  2026-07-05). Compute in relative space — ratios, signed deltas,
+  fractional rates: robust, calibration-free. Any absolute value =
+  relative value × ONE factor from a single known anchor (a size, a
+  distance, a speed), applied LAST — never baked into the structure.
+  Multiple anchors must resolve to the SAME factor (a null); a wrong
+  factor scales all absolutes uniformly and leaves every relative
+  relationship exact (the graceful failure). Generalizes #9 — the
+  relation is the identity, scale is a separate report. (Measured:
+  relative range 0.15% vs absolute 18% on the looming test — the error
+  lived entirely in an early scale bake-in.)
 
 ## Reporting rules (hard)
 - **COMPLETE numbers only**: accuracy against the WHOLE task; coverage
