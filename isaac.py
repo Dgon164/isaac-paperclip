@@ -2599,6 +2599,47 @@ class Isaac:
         self.net.set_meta(pname, "n_views", len(views))
         return pname
 
+    def learn_pattern_variants(self, views, label, n_rot=8, max_variants=6):
+        """REFINING STRUCTURES (owner, 2026-07-05): "jens numbers are
+        different than franks... but they are all numbers." One canonical
+        per class SMUSHES genuinely different styles into a form nobody
+        writes (the abc/abd law applies: a style is a real thing of its
+        own, under the parent by hierarchy, never dissolved into it).
+        Views cluster by registration residual (leader clustering with a
+        bar measured from the data's own pairwise residuals); each style
+        with >=3 views becomes its own null-gated pattern
+        pattern:<label>.v<k>, doored variant_of -> the parent concept."""
+        views = [self._norm_points(v) for v in views if len(v) >= 4]
+        if len(views) < 3:
+            return []
+        # the bar: what does 'same style' look like in THIS data?
+        probe = []
+        for a in range(min(10, len(views))):
+            for b in range(a + 1, min(10, len(views))):
+                probe.append(self._register_points(views[a], views[b],
+                                                   n_rot=n_rot, iters=3)[2])
+        bar = float(np.median(probe)) * 1.15
+        clusters = [[views[0]]]
+        canons = [views[0]]
+        for v in views[1:]:
+            res = [self._register_points(c, v, n_rot=n_rot, iters=3)[2]
+                   for c in canons]
+            k = int(np.argmin(res))
+            if res[k] < bar or len(canons) >= max_variants:
+                clusters[k].append(v)
+            else:
+                clusters.append([v])
+                canons.append(v)
+        names = []
+        for k, cl in enumerate(clusters):
+            if len(cl) < 3:
+                continue
+            pn = self.learn_pattern(cl, f"{label}.v{k}", n_rot=n_rot)
+            if pn:
+                names.append(pn)
+                self.net.add_door(pn, f"concept:{label}", tag="variant_of")
+        return names
+
     def recognize_pattern(self, points, patterns=None, n_rot=None):
         """Register the instance against each learned pattern; best mean
         residual wins — WITH ABSTENTION: a match that cannot beat what
@@ -3212,12 +3253,44 @@ class Isaac:
             self.net.set_meta(node, "topo_counts", topo)
             self.net.set_meta(node, "topo_total", int(sum(topo.values())))
             if len(views) >= 3:
-                self.learn_pattern(views, f"glyph{c}", n_rot=1)
-                self.net.add_door(node, f"pattern:glyph{c}", tag="evidence")
+                # variants, not a smushed mean: Jens's 3 and Frank's 3 are
+                # both 3s (owner, 2026-07-05); each style its own pattern
+                vnames = self.learn_pattern_variants(views, f"glyph{c}",
+                                                     n_rot=1)
+                for vn in vnames:
+                    self.net.add_door(node, vn, tag="evidence")
+                self.net.set_meta(node, "variants", vnames)
             ex = flat[labels == c][:max_exemplars]
             ex = ex / (np.linalg.norm(ex, axis=1, keepdims=True) + 1e-9)
             self.net.set_meta(node, "exemplars", ex)
         self.net.set_meta("crystal", "glyph_classes", list(classes))
+        # measured reliability weights (calibration, not opinion): each
+        # channel's vote is weighted by what it DEMONSTRATES on held-out
+        # glyphs — equal weighting let a sharp-but-weak channel veto
+        # strong ones (fusion battery caught the 4-point drop)
+        rng = np.random.default_rng(3)
+        # calibrate ONLY on glyphs outside the exemplar store — a stored
+        # glyph self-matches at similarity 1.0 and would gift the
+        # exemplar channel a perfect (fake) reliability score
+        beyond = []
+        for c in classes:
+            idx_c = np.where(labels == c)[0]
+            beyond.extend(idx_c[max_exemplars:])
+        pool = np.array(beyond) if len(beyond) >= 50 else np.arange(len(images))
+        cal = rng.choice(pool, min(300, len(pool)), replace=False)
+        hits = {}
+        for ix in cal:
+            _, posts = self.recognize_glyph(images[ix])
+            for k, p in posts.items():
+                hits.setdefault(k, [0, 0])
+                hits[k][1] += 1
+                if classes[int(np.argmax(p))] == labels[ix]:
+                    hits[k][0] += 1
+        chance = 1.0 / len(classes)
+        weights = {k: max(h / t - chance, 0.0) for k, (h, t) in hits.items()}
+        s = sum(weights.values()) or 1.0
+        weights = {k: v / s for k, v in weights.items()}
+        self.net.set_meta("crystal", "glyph_weights", weights)
         return [f"concept:{c}" for c in classes]
 
     def recognize_glyph(self, img, verbose=False):
@@ -3258,12 +3331,16 @@ class Isaac:
             P = self._norm_points(kp)
             res = []
             for c in classes:
-                canon = self.net.get_meta(f"pattern:glyph{c}", "canon")
-                if canon is None:
-                    res.append(np.nan)
-                    continue
-                res.append(self._register_points(np.asarray(canon), P,
-                                                 n_rot=1)[2])
+                vnames = self.net.get_meta(f"concept:{c}", "variants") or []
+                best = np.nan
+                for vn in vnames:                     # nearest STYLE wins
+                    canon = self.net.get_meta(vn, "canon")
+                    if canon is None:
+                        continue
+                    r_ = self._register_points(np.asarray(canon), P,
+                                               n_rot=1)[2]
+                    best = r_ if np.isnan(best) else min(best, r_)
+                res.append(best)
             res = np.array(res)
             if not np.isnan(res).all():
                 res = np.where(np.isnan(res), np.nanmax(res), res)
@@ -3276,7 +3353,9 @@ class Isaac:
             ex_s.append(float((ex @ f).max()) if ex is not None and
                         len(ex) else -np.inf)
         chan["exemplar"] = np.array(ex_s)
-        # the vote: standardized scores -> per-channel posterior -> sum
+        # the vote: standardized scores -> per-channel posterior ->
+        # RELIABILITY-WEIGHTED sum (weights measured at learn time)
+        wts = self.net.get_meta("crystal", "glyph_weights") or {}
         total = np.zeros(len(classes))
         posts = {}
         for k, s in chan.items():
@@ -3284,7 +3363,7 @@ class Isaac:
             p = np.exp(z - z.max())
             p = p / p.sum()
             posts[k] = p
-            total += np.log(p + 1e-12)
+            total += wts.get(k, 1.0) * np.log(p + 1e-12)
         best = int(np.argmax(total))
         if verbose:
             for k, p in posts.items():
