@@ -4,6 +4,16 @@
 designs — variants, normals, negative structure, all-methods-one-concept —
 that the machinery had computed, discarded, or siloed.)
 
+## THE LAW ABOVE THE CHECKLIST (owner, 2026-07-05)
+**"There is no separation. Everything is all mixed together. There is no
+different thing. Everything should always be universally applied if it
+can."** No mechanism is domain-siloed: the readout is not a glyph tool
+(it is for ANY channels — covtype jumped +11.4 the day it was applied
+there); dynamics is not stroke-only (any path or series); variants are
+not digit-only (any pattern class); nevers, normals, duels, ledgers —
+if the inputs exist, the mechanism applies. When building or testing
+ANYTHING, ask: where else does this apply RIGHT NOW? Then apply it.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
