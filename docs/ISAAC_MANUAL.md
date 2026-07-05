@@ -404,6 +404,17 @@ trajectories and stores only what refuses to vary.
   now scores **52–58% at 299/300 coverage** (was 38.5 pre-fix) — the
   two-tier road (topology filters, bone patterns decide) is the named
   next step.
+- **ALL METHODS, ONE CONCEPT (owner, 2026-07-05; battery
+  `experiments/fusion_battery.py` 2/2).** "The doors are just pointer
+  connections... they all point to the same nodes." `learn_glyphs` puts
+  EVERY channel's evidence on the same concept nodes — pixel-density
+  doors, topology/line signatures, bones pattern nets, exemplars — and
+  `recognize_glyph` sums every channel's posterior into one vote (the
+  vote is returned readable, channel by channel). COMPLETE numbers
+  (whole test set, 200 training glyphs/class, 500 test): topology
+  55.8%, bones 10.0%, density 79.4%, exemplar 85.4%, **FUSED 88.6%**
+  — the sum beats every specialist. Channels are not rival classifiers;
+  they are doors on one node.
 - Limits (honest): trajectories need identities given (the tracker half
   of the pixel bridge is still open); the lift is single-rigid-body
   (multi-body SfM not built — stitch_views covers the multi-VIEW case,

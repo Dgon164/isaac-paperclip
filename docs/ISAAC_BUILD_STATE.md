@@ -16,6 +16,26 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-05 — ALL METHODS, ONE CONCEPT (owner's architecture correction)
+
+Owner: "is it not using all methods? it should be using all methods...
+the doors are just pointer connections... they all point to the same
+nodes. we don't care what or where or how the information is sorted, we
+only care that the information is represented." The separate "roads"
+(density/topology/bones/exemplar reported as rival classifiers) were the
+HARNESS'S framing, not the design — recognize_doors always said a
+concept fires from whatever doors are present. Built:
+`learn_glyphs` (every channel attaches evidence to the SAME concept:<c>
+nodes) + `recognize_glyph` (each channel's standardized scores → a
+posterior; summed log-posteriors decide; the vote returned readable).
+Battery `fusion_battery.py` 2/2 — COMPLETE numbers (whole 500-digit test
+set, 200 train/class, the owner's same-day reporting rule):
+  topology 55.8% | bones 10.0% | density 79.4% | exemplar 85.4%
+  **FUSED 88.6%** — the sum beats every specialist channel.
+Also this session, the owner's reporting rule adopted permanently:
+complete numbers only (coverage multiplied through, per-class wins as
+their share of the whole task), no padding, no consolation comparisons.
+
 ## 2026-07-05 — A RECORDED CLAIM OVERTURNED: the "detector equation" was a net
 
 Audit triggered by the owner's dissatisfaction ("match extraction on

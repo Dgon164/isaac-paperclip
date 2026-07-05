@@ -3175,6 +3175,123 @@ class Isaac:
             return dict(kind="solid", cv=cv)          # full: ball
         return dict(kind="uncertain", cv=cv)
 
+    # ── ALL METHODS, ONE CONCEPT (owner, 2026-07-05): "it should be
+    # using all methods... the doors are just pointer connections. a door
+    # between bones and a door between textures or patterns and a door
+    # between topology and a door between sensor values, they all point
+    # to the same nodes. we don't care what or where or how the
+    # information is sorted, we only care that the information is
+    # represented." Every extracted structure writes evidence for the
+    # SAME concept nodes; recognition sums what every channel says.
+
+    def learn_glyphs(self, images, labels, max_exemplars=60):
+        """One concept node per class; EVERY channel attaches evidence to
+        it: pixel densities (crystallize_features doors), topology+line
+        signatures (describe_shape), bones pattern nets, and raw
+        exemplars. No channel is a separate classifier — they are doors
+        on the same node."""
+        images = np.asarray(images, float)
+        labels = np.asarray(labels)
+        flat = images.reshape(len(images), -1)
+        self.crystallize_features(flat, labels, compounds="off")
+        classes = np.unique(labels)
+        for c in classes:
+            node = f"concept:{c}"
+            imgs = images[labels == c]
+            topo = {}
+            views = []
+            for im in imgs:
+                r = self.describe_shape(im)
+                if r is not None:
+                    nl = sum(1 for p in r["parts"] if p["kind"] == "line")
+                    sig = (r["n_holes"], min(nl, 4))
+                    topo[sig] = topo.get(sig, 0) + 1
+                kp = self.keypoints_structural(im, k_min=10)
+                if len(kp) >= 4:
+                    views.append(kp)
+            self.net.set_meta(node, "topo_counts", topo)
+            self.net.set_meta(node, "topo_total", int(sum(topo.values())))
+            if len(views) >= 3:
+                self.learn_pattern(views, f"glyph{c}", n_rot=1)
+                self.net.add_door(node, f"pattern:glyph{c}", tag="evidence")
+            ex = flat[labels == c][:max_exemplars]
+            ex = ex / (np.linalg.norm(ex, axis=1, keepdims=True) + 1e-9)
+            self.net.set_meta(node, "exemplars", ex)
+        self.net.set_meta("crystal", "glyph_classes", list(classes))
+        return [f"concept:{c}" for c in classes]
+
+    def recognize_glyph(self, img, verbose=False):
+        """ALL channels vote on the SAME concepts: each channel's class
+        scores become a posterior (softmax of standardized scores); the
+        concept with the highest SUMMED log-posterior wins. Returns
+        (label, {channel: posterior vector}) so the vote is readable."""
+        img = np.asarray(img, float)
+        classes = self.net.get_meta("crystal", "glyph_classes")
+        calib = self.net.get_meta("crystal", "calib")
+        flat = img.reshape(1, -1)
+        chan = {}
+        # 1. pixel-density doors
+        H = self.apply_lens(calib["lens"], flat)
+        e = calib["edges"]
+        dens = []
+        for c in classes:
+            ld = self.net.get_meta(f"concept:{c}", "doors")
+            s = 0.0
+            for j in range(H.shape[1]):
+                s += ld[j][int(np.searchsorted(e[j], H[0, j]))]
+            dens.append(s)
+        chan["density"] = np.array(dens)
+        # 2. topology / line signature
+        r = self.describe_shape(img)
+        if r is not None:
+            nl = sum(1 for p in r["parts"] if p["kind"] == "line")
+            sig = (r["n_holes"], min(nl, 4))
+            tp = []
+            for c in classes:
+                cnts = self.net.get_meta(f"concept:{c}", "topo_counts") or {}
+                tot = self.net.get_meta(f"concept:{c}", "topo_total") or 0
+                tp.append(np.log((cnts.get(sig, 0) + 1.0) / (tot + 20.0)))
+            chan["topology"] = np.array(tp)
+        # 3. bones pattern registration
+        kp = self.keypoints_structural(img, k_min=10)
+        if len(kp) >= 4:
+            P = self._norm_points(kp)
+            res = []
+            for c in classes:
+                canon = self.net.get_meta(f"pattern:glyph{c}", "canon")
+                if canon is None:
+                    res.append(np.nan)
+                    continue
+                res.append(self._register_points(np.asarray(canon), P,
+                                                 n_rot=1)[2])
+            res = np.array(res)
+            if not np.isnan(res).all():
+                res = np.where(np.isnan(res), np.nanmax(res), res)
+                chan["bones"] = -res
+        # 4. exemplars (presence, not average)
+        f = flat[0] / (np.linalg.norm(flat[0]) + 1e-9)
+        ex_s = []
+        for c in classes:
+            ex = self.net.get_meta(f"concept:{c}", "exemplars")
+            ex_s.append(float((ex @ f).max()) if ex is not None and
+                        len(ex) else -np.inf)
+        chan["exemplar"] = np.array(ex_s)
+        # the vote: standardized scores -> per-channel posterior -> sum
+        total = np.zeros(len(classes))
+        posts = {}
+        for k, s in chan.items():
+            z = (s - s.mean()) / (s.std() + 1e-9)
+            p = np.exp(z - z.max())
+            p = p / p.sum()
+            posts[k] = p
+            total += np.log(p + 1e-12)
+        best = int(np.argmax(total))
+        if verbose:
+            for k, p in posts.items():
+                print(f"    {k:9s} votes {classes[int(np.argmax(p))]} "
+                      f"(p={p.max():.2f})")
+        return classes[best], posts
+
     # ── the capture net: a stopgap that exists to be destroyed ─────────
     # Audit 2.8, built 2026-07-03 at the owner's prompt. THE NO-NETS LAW
     # HOLDS: the net is never the deliverable — it is quarantined inside
