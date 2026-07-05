@@ -1,0 +1,23 @@
+
+C1 — role profiles from the interaction organs
+    rain          : ['deg3', 'skewed_source']
+    fire_risk     : ['deg3', 'translator', 'risk_carrier', 'skewed_source']
+    fireworks_ban : ['deg3', 'discrete_response', 'skewed_source']
+    breaker_trip  : ['deg3', 'discrete_response', 'skewed_source']
+    birdsong      : ['deg0']
+  [PASS] responses read discrete across all worlds
+  [PASS] risk variables read as risk carriers
+
+C2 — the EXISTING crystallizer, one level up
+  [PASS] ONE concept holds ban+trip+fever (zero shared vocabulary) — type:breaker_trip_cortisol[12]
+  [PASS] multiple concepts span worlds — 7 cross-world
+
+C3 — the concept is nameable
+    type:breaker_trip_cortisol[12] named preemptive_responder; members: ['breaker_trip', 'cortisol', 'dryness', 'failure_risk', 'fever_response', 'fire_risk', 'fireworks_ban', 'heat', 'illness_risk', 'load', 'rain', 'stress']
+  [PASS] queryable via the net
+
+C4 — bystanders join no role concept
+  [PASS] bystanders not absorbed into role concepts
+
+============================================================
+CONCEPTS BATTERY: 6/6 passed

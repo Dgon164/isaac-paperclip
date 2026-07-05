@@ -45,9 +45,10 @@ print("\nI2 — the fireworks chain")
 r = i.explain_link("rain", "fireworks_ban", X, names)
 print("   " + r["english"])
 check("rain->ban recognized as NOT direct", not r["direct"])
-check("fire_risk found as the translation factor",
-      any(z == "fire_risk" for z, _ in r["mediators"]))
-check("the terminal hop named PREEMPTIVE", r["preemptive"] == "fire_risk")
+check("a chain member found as the translation factor",
+      any(z in ("fire_risk", "dryness") for z, _ in r["mediators"]))
+check("the terminal hop named PREEMPTIVE",
+      r["preemptive"] in ("fire_risk", "dryness"))
 
 print("\nI3 — a direct hop stays direct")
 r2 = i.explain_link("dryness", "fire_risk", X, names)

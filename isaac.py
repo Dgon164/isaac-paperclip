@@ -3870,7 +3870,7 @@ class Isaac:
         self.net.set_meta("interactions", "gate", gate)
         return dict(edges=edges, gate=gate)
 
-    def explain_link(self, x, y, X, names, n_bins=5, n_perm=30):
+    def explain_link(self, x, y, X, names, n_bins=12, n_perm=30):
         """THE TRANSLATION FACTORS: is the x→y link direct, or does it
         translate through mediators? For each candidate z: stratify on z
         and re-test x↔y inside the strata. If the link DIES under
@@ -3931,7 +3931,10 @@ class Isaac:
         direct = not mediators
         preemptive = None
         if mediators:
-            z = mediators[0][0]
+            # the PROXIMAL mediator (nearest the response) is what the
+            # terminal hop responds to
+            z = max(mediators, key=lambda t: abs(np.corrcoef(
+                X[:, names.index(t[0])], X[:, iy])[0, 1]))[0]
             iz = names.index(z)
             zx, yy = X[:, iz], X[:, iy]
             if len(np.unique(yy)) <= 3:               # a discrete response
