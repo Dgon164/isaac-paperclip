@@ -1,0 +1,19 @@
+
+I1/I2 — MNIST: what the fused vote misses, and where it lives
+    said       89.6%
+    caught     83.2%   (exemplar witness)
+    reachable  86.6%   (quarantined net witness)
+    ceiling    91.6%   (Cover-Hart estimate)
+    -> said 89.6% of the whole task — MORE than any current witness proves (exemplar 83.2%, quarantined net 86.6%): the witnesses are exhausted; nothing further is PROVABLY extractable today. Ceiling estimate 91.6% leaves 2.0 points of UNPROVEN headroom — finding them requires a stronger witness (richer percepts, more data), and the witnessed misses point at channels [657, 486, 655, 242, 656, 270].
+  [PASS] witnesses <= ceiling (estimates coherent)
+  [PASS] the ledger states the correct branch (proven gap OR exhausted witnesses + headroom) — gap 0.0 pts, headroom 2.0 pts
+  [PASS] the WHERE names channels — top channels [657, 486, 655, 242] from 32 witnessed misses
+
+I3 — solved task: nothing missing
+  [PASS] solved: unsaid gap ~0 (< 3 points) — said 99.2%, gap 0.0
+
+I4 — noise: no witness can prove information that is not there
+  [PASS] noise: no tier rises meaningfully above chance (all < 60%) — said 53 caught 52 reachable 52
+
+============================================================
+INFORMATION BATTERY: 5/5 passed

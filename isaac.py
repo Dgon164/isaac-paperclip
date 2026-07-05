@@ -3292,6 +3292,116 @@ class Isaac:
                       f"(p={p.max():.2f})")
         return classes[best], posts
 
+    # ── THE INFORMATION LEDGER (owner, 2026-07-05: "something that
+    # tells us how much information is missing still and how much we can
+    # extract, and where we can go to extract it"). The mathematics:
+    # total information is never upper-boundable (absence of structure
+    # is unprovable), but WITNESSES prove floors — any method achieving
+    # X% proves X% is extractable — and the 1-NN error bounds the
+    # irreducible noise from below (Cover–Hart: Bayes error >= NN_err/2).
+    # So the ledger reads  SAID <= CAUGHT <= REACHABLE <= CEILING, every
+    # gap names the organ that closes it, and error-conditioned contrast
+    # names WHERE the missing information lives.
+
+    def information_ledger(self, X_tr, y_tr, X_te, y_te, pred_articulated,
+                           hidden=48, steps=800, top_where=6):
+        """pred_articulated = the engine's own SAID predictions on X_te.
+        Computes: caught (1-NN witness), reachable (quarantined capture
+        net witness — never the deliverable, exists to MEASURE), ceiling
+        (Cover–Hart estimate), the gaps, and the WHERE (channels ranked
+        by contrast between events the witness solves and the doors
+        miss). All numbers are COMPLETE numbers."""
+        X_tr = np.asarray(X_tr, float)
+        X_te = np.asarray(X_te, float)
+        y_tr = np.asarray(y_tr)
+        y_te = np.asarray(y_te)
+        mu, sd = X_tr.mean(0), X_tr.std(0) + 1e-9
+        A = (X_tr - mu) / sd
+        B = (X_te - mu) / sd
+        said = float((np.asarray(pred_articulated) == y_te).mean())
+        # CAUGHT: the exemplar witness (presence, not average)
+        d2 = (B ** 2).sum(1)[:, None] - 2 * B @ A.T + (A ** 2).sum(1)[None, :]
+        nn = np.argmin(d2, axis=1)
+        pred_nn = y_tr[nn]
+        caught = float((pred_nn == y_te).mean())
+        # CEILING: Cover–Hart — Bayes error >= (1-NN error)/2, so no
+        # method can exceed 1 - nn_err/2 (asymptotic estimate, labelled)
+        ceiling = float(1.0 - (1.0 - caught) / 2.0)
+        # REACHABLE: a quarantined softmax capture net (the stopgap that
+        # exists to measure; THE NO-NETS LAW HOLDS — this is a witness,
+        # never a deliverable)
+        classes = np.unique(y_tr)
+        Y = (y_tr[:, None] == classes[None, :]).astype(float)
+        rng = np.random.default_rng(7)
+        W1 = rng.normal(0, 0.1, (X_tr.shape[1], hidden))
+        b1 = np.zeros(hidden)
+        W2 = rng.normal(0, 0.1, (hidden, len(classes)))
+        b2 = np.zeros(len(classes))
+        vW1 = np.zeros_like(W1); vW2 = np.zeros_like(W2)
+        lr, mom = 0.05, 0.9
+        for _ in range(steps):
+            Hh = np.tanh(A @ W1 + b1)
+            Z = Hh @ W2 + b2
+            Z -= Z.max(1, keepdims=True)
+            P = np.exp(Z); P /= P.sum(1, keepdims=True)
+            G = (P - Y) / len(A)
+            gW2 = Hh.T @ G; gb2 = G.sum(0)
+            GH = (G @ W2.T) * (1 - Hh ** 2)
+            gW1 = A.T @ GH; gb1 = GH.sum(0)
+            vW2 = mom * vW2 - lr * gW2; W2 += vW2; b2 -= lr * gb2
+            vW1 = mom * vW1 - lr * gW1; W1 += vW1; b1 -= lr * gb1
+        pred_net = classes[np.argmax(np.tanh(B @ W1 + b1) @ W2 + b2, 1)]
+        reachable = float((pred_net == y_te).mean())
+        # WHERE: the events a witness solves and the doors miss HOLD the
+        # missing information; contrast them per channel (nulls via
+        # label scrambles of the two groups)
+        witness_pred = pred_net if reachable >= caught else pred_nn
+        missed = (np.asarray(pred_articulated) != y_te) & \
+                 (witness_pred == y_te)
+        got = (np.asarray(pred_articulated) == y_te)
+        where = []
+        if missed.sum() >= 10 and got.sum() >= 10:
+            for j in range(X_te.shape[1]):
+                a_, b_ = B[missed, j], B[got, j]
+                lo, hi = np.percentile(B[:, j], [1, 99])
+                if hi <= lo:
+                    continue
+                e = np.linspace(lo, hi, 13)[1:-1]
+                ha = np.bincount(np.searchsorted(e, a_), minlength=12)
+                hb = np.bincount(np.searchsorted(e, b_), minlength=12)
+                tv = 0.5 * np.abs(ha / max(ha.sum(), 1)
+                                  - hb / max(hb.sum(), 1)).sum()
+                where.append((float(tv), j))
+            where.sort(reverse=True)
+        best_wit = max(caught, reachable)
+        gap_say = max(0.0, best_wit - said)     # PROVEN present, unsaid
+        headroom = max(0.0, ceiling - max(said, best_wit))  # unproven room
+        if gap_say > 0.005:
+            english = (f"said {said*100:.1f}% of the whole task; witnesses "
+                       f"PROVE {best_wit*100:.1f}% is extractable (exemplar "
+                       f"{caught*100:.1f}%, quarantined net "
+                       f"{reachable*100:.1f}%) — {gap_say*100:.1f} points are "
+                       f"PRESENT but not yet said, concentrated in channels "
+                       f"{[j for _, j in where[:top_where]]}. Ceiling "
+                       f"estimate {ceiling*100:.1f}% (Cover–Hart); a further "
+                       f"{headroom*100:.1f} points may exist, unproven.")
+        else:
+            english = (f"said {said*100:.1f}% of the whole task — MORE than "
+                       f"any current witness proves (exemplar "
+                       f"{caught*100:.1f}%, quarantined net "
+                       f"{reachable*100:.1f}%): the witnesses are exhausted; "
+                       f"nothing further is PROVABLY extractable today. "
+                       f"Ceiling estimate {ceiling*100:.1f}% leaves "
+                       f"{headroom*100:.1f} points of UNPROVEN headroom — "
+                       f"finding them requires a stronger witness (richer "
+                       f"percepts, more data), and the witnessed misses "
+                       f"point at channels "
+                       f"{[j for _, j in where[:top_where]]}.")
+        return dict(said=said, caught=caught, reachable=reachable,
+                    ceiling=ceiling, gap_unsaid=gap_say, headroom=headroom,
+                    where=where[:top_where],
+                    n_missed_witnessed=int(missed.sum()), english=english)
+
     # ── the capture net: a stopgap that exists to be destroyed ─────────
     # Audit 2.8, built 2026-07-03 at the owner's prompt. THE NO-NETS LAW
     # HOLDS: the net is never the deliverable — it is quarantined inside
