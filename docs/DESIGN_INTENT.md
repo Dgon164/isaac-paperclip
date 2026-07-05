@@ -75,12 +75,15 @@ that the machinery had computed, discarded, or siloed.)
   the same concept nodes (density, topology, bones, dynamics, exemplars);
   measured channel weights; pair judges; shortlist tournament; certified
   NEVERS veto; readable votes. information_ledger (said/caught/reachable/
-  ceiling + where).
+  ceiling + where). train_readout/extract_readout: ONE softmax layer over
+  node outputs as the comparator, extracted LOSSLESSLY into signed
+  evidence equations (linear = the net IS the equation).
 - **Trust**: calibration audit; law_confidence (measured decay curve);
   0/20 false discoveries on noise; refusals are answers.
 
 ## Where things stand (complete numbers, 2026-07-05)
-MNIST fused 91.6–92.2 (n=500 spread) | truth-in-shortlist ~97–98 |
+MNIST fused **95.0–95.2** (trained+extracted readout over node outputs;
+hand-calibrated 92.2; pixel-softmax 86.0) | truth-in-shortlist ~97–98 |
 covtype 59.1 | HIGGS classify 66.2 (doors ceiling; eqn road: transverse
 mass SAID) | CIFAR 32.6 (needs texture percepts) | clocks 22.9 (pixel
 bridge open) | Kepler/planted laws EXACT | nets NOT matched anywhere.
