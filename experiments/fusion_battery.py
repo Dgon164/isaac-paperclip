@@ -31,7 +31,8 @@ print("learning all channels onto one set of concept nodes "
       f"({len(tr_idx)} training glyphs)...")
 i.learn_glyphs(X[tr_idx], y[tr_idx])
 
-hits = {"density": 0, "topology": 0, "bones": 0, "exemplar": 0, "FUSED": 0}
+hits = {"density": 0, "topology": 0, "bones": 0, "exemplar": 0,
+        "dynamics": 0, "FUSED": 0}
 n = len(te_idx)
 for ix in te_idx:
     got, posts = i.recognize_glyph(X[ix])
@@ -45,7 +46,7 @@ for ix in te_idx:
             hits[k] += 1
 
 print(f"\nCOMPLETE numbers over all {n} test digits:")
-for k in ("topology", "bones", "density", "exemplar", "FUSED"):
+for k in ("topology", "bones", "dynamics", "density", "exemplar", "FUSED"):
     print(f"  {k:9s}: {hits[k]/n*100:5.1f}%")
 
 results = []

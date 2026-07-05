@@ -1,0 +1,18 @@
+S1 — softmax layer on raw pixels (784 -> 10, nothing hidden)
+    complete: 86.0%   [2s]
+S2 — one hidden layer (784 -> 128 -> 10) on raw pixels
+    complete: 89.4%   [15s]
+S3 — softmax layer on the NODE STRUCTURE OUTPUTS
+    complete: 95.2%   (hand-calibrated fusion on the same test: 92.2%)   [26s]
+    the trained layer's weights are READABLE — total |weight| per channel:
+      bones       85.9
+      density    119.9
+      dynamics   110.8
+      exemplar   136.3
+      topology    93.9
+
+summary (complete numbers, 500-digit test):
+  softmax on pixels         86.0%
+  1-hidden-layer on pixels  89.4%
+  softmax on node outputs   95.2%
+  hand-calibrated fusion    92.2%

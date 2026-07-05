@@ -3397,6 +3397,7 @@ class Isaac:
         labels = np.asarray(labels)
         self.net.set_meta("crystal", "glyph_pair_weights", {})
         self.net.set_meta("crystal", "glyph_pair_diff", {})
+        self.net.set_meta("crystal", "readout_W", None)
         flat = images.reshape(len(images), -1)
         self.crystallize_features(flat, labels, compounds="off")
         classes = np.unique(labels)
@@ -3570,10 +3571,93 @@ class Isaac:
         self.net.set_meta("crystal", "glyph_pair_weights", pair_w)
         return [f"concept:{c}" for c in classes]
 
+    def train_readout(self, images, labels, steps=2000, lr=0.5):
+        """THE TRAINED COMPARATOR (owner, 2026-07-05): one softmax layer
+        over the node structure outputs — 'how information from multiple
+        sources is compared to total activation.' Linear, so the
+        extraction back into ratios/doors is EXACT (see
+        extract_readout). Trained only on glyphs outside the exemplar
+        store (no self-match bias)."""
+        images = np.asarray(images, float)
+        labels = np.asarray(labels)
+        self.net.set_meta("crystal", "readout_W", None)   # no stale layer
+        classes = list(self.net.get_meta("crystal", "glyph_classes"))
+        CH = ["bones", "density", "dynamics", "exemplar", "topology"]
+        self.net.set_meta("crystal", "readout_channels", CH)
+        pool = []
+        for c in classes:
+            idx_c = np.where(labels == c)[0]
+            pool.extend(idx_c[60:])
+        pool = np.array(pool if len(pool) >= 100 else range(len(images)))
+        A, Y1 = [], []
+        for ix in pool:
+            _, posts = self.recognize_glyph(images[ix])
+            v = [posts.get(k) if posts.get(k) is not None
+                 else np.full(len(classes), 1.0 / len(classes)) for k in CH]
+            A.append(np.concatenate(v))
+            Y1.append((labels[ix] == np.array(classes)).astype(float))
+        A, Y1 = np.array(A), np.array(Y1)
+        r = np.random.default_rng(7)
+        W = r.normal(0, 0.01, (A.shape[1], len(classes)))
+        b = np.zeros(len(classes))
+        vW = np.zeros_like(W)
+        for _ in range(steps):
+            Z = A @ W + b
+            Z -= Z.max(1, keepdims=True)
+            P = np.exp(Z)
+            P /= P.sum(1, keepdims=True)
+            G = (P - Y1) / len(A)
+            vW = 0.9 * vW - lr * (A.T @ G + 1e-4 * W)
+            W += vW
+            b -= lr * G.sum(0)
+        self.net.set_meta("crystal", "readout_W", W)
+        self.net.set_meta("crystal", "readout_b", b)
+        return W
+
+    def extract_readout(self, top_k=4):
+        """THE NET-EXTRACTOR TURNED ON OUR OWN NET (owner: 'analyze that
+        net using the net extractor method... still human readable...
+        essentially an equation'). The layer is linear, so extraction is
+        LOSSLESS: each class's decision IS the equation
+        score_c = Σ w·evidence + b. Writes signed evidence doors into the
+        net (evid:<channel>[<class>] → concept, weight on meta — signed
+        deltas law: excitation and INHIBITION are different facts) and
+        returns the equations + ratio profiles in gated English."""
+        W = self.net.get_meta("crystal", "readout_W")
+        b = self.net.get_meta("crystal", "readout_b")
+        CH = self.net.get_meta("crystal", "readout_channels")
+        classes = list(self.net.get_meta("crystal", "glyph_classes"))
+        if W is None:
+            return None
+        nC = len(classes)
+        report = []
+        for ci, c in enumerate(classes):
+            w = W[:, ci]
+            terms = []
+            for kk, k in enumerate(CH):
+                for j in range(nC):
+                    terms.append((float(w[kk * nC + j]), k, classes[j]))
+            terms.sort(key=lambda t: -abs(t[0]))
+            eq = " ".join(f"{t[0]:+.2f}·{t[1]}[{t[2]}]"
+                          for t in terms[:top_k])
+            inhib = [t for t in terms if t[0] < -0.5][:2]
+            line = f"decide {c}: {eq} {b[ci]:+.2f}"
+            if inhib:
+                line += ("  | inhibited by " +
+                         ", ".join(f"{t[1]}[{t[2]}]" for t in inhib))
+            report.append(line)
+            for t in terms[:top_k]:
+                en = f"evid:{t[1]}[{t[2]}]"
+                self.net.add_door(en, f"concept:{c}", tag="readout")
+                self.net.set_meta(f"{en}->{c}", "weight", t[0])
+        return report
+
     def recognize_glyph(self, img, verbose=False):
         """ALL channels vote on the SAME concepts: each channel's class
         scores become a posterior (softmax of standardized scores); the
-        concept with the highest SUMMED log-posterior wins. Returns
+        concept with the highest SUMMED log-posterior wins — or, when a
+        trained readout exists (train_readout), the READABLE LINEAR
+        LAYER over the same channel outputs decides. Returns
         (label, {channel: posterior vector}) so the vote is readable."""
         img = np.asarray(img, float)
         classes = self.net.get_meta("crystal", "glyph_classes")
@@ -3653,6 +3737,17 @@ class Isaac:
             p = p / p.sum()
             posts[k] = p
             total += wts.get(k, 1.0) * np.log(p + 1e-12)
+        # the trained READABLE layer, when present, is the comparator
+        # (train_readout/extract_readout — the layer IS an equation)
+        W_r = self.net.get_meta("crystal", "readout_W")
+        readout_used = False
+        if W_r is not None:
+            CHo = self.net.get_meta("crystal", "readout_channels")
+            v = np.concatenate([posts.get(k, np.full(len(classes),
+                                                     1.0 / len(classes)))
+                                for k in CHo])
+            total = v @ W_r + self.net.get_meta("crystal", "readout_b")
+            readout_used = True
         # THE OVERLAP STRUCTURE (owner, 2026-07-05: "for things it
         # genuinely can't resolve it can rank... then the bones can
         # select because it knows what the answer is compared to the
@@ -3710,9 +3805,13 @@ class Isaac:
             return lo_i if m >= 0 else hi_i
 
         wins = {ii: 0 for ii in S}
-        for ai in range(len(S)):
-            for bi in range(ai + 1, len(S)):
-                wins[duel(S[ai], S[bi])] += 1
+        if readout_used:
+            for rank, ii in enumerate(S):     # the layer already compared
+                wins[ii] = len(S) - 1 - rank
+        else:
+            for ai in range(len(S)):
+                for bi in range(ai + 1, len(S)):
+                    wins[duel(S[ai], S[bi])] += 1
         top_wins = max(wins.values())
         finalists = [ii for ii in S if wins[ii] == top_wins]
         best = finalists[0] if len(finalists) == 1 else \

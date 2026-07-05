@@ -415,6 +415,22 @@ trajectories and stores only what refuses to vary.
   55.8%, bones 10.0%, density 79.4%, exemplar 85.4%, **FUSED 88.6%**
   — the sum beats every specialist. Channels are not rival classifiers;
   they are doors on one node.
+- **THE TRAINED READOUT + THE EXTRACTOR (owner, 2026-07-05; study
+  `experiments/single_layer_study.py`).** "How information from multiple
+  sources is compared to total activation": `train_readout` fits ONE
+  softmax layer over the node structure outputs (5 channels × classes,
+  named inputs; trained only on glyphs outside the exemplar store).
+  Because it is linear, `extract_readout` is LOSSLESS — the layer IS an
+  equation set: per class, signed weighted evidence terms (signed-deltas
+  law: inhibition is a fact), written as readout doors and said in
+  English ("decide 8: +6.5·density[8] +4.7·topology[8]... inhibited by
+  bones[5]"). Learned inhibitions mirror the measured confusion pairs.
+  COMPLETE numbers (200/class train, 500 test): softmax on raw pixels
+  86.0; one-hidden-layer on pixels 89.4; **softmax on node outputs
+  95.0–95.2 — the percepts beat raw data by +9 under the identical
+  linear model**, and the trained comparator beats hand calibration by
+  ~3. When a readout exists, recognize_glyph uses it as the comparator
+  (vetoes and shortlist semantics kept on top).
 - Limits (honest): trajectories need identities given (the tracker half
   of the pixel bridge is still open); the lift is single-rigid-body
   (multi-body SfM not built — stitch_views covers the multi-VIEW case,
