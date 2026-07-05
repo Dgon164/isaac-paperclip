@@ -1,0 +1,22 @@
+learning all channels onto one set of concept nodes (2000 training glyphs)...
+
+COMPLETE numbers over all 500 test digits:
+  topology :  55.8%
+  bones    :  30.6%
+  density  :  79.4%
+  exemplar :  85.4%
+  FUSED    :  90.6%
+
+  [PASS] fusion does not lose to its best single channel — fused 453/500 vs best single 427/500
+  [PASS] fusion is a real classifier (>= 85% complete) — 90.6%
+
+one glyph's vote, in the open:
+    density   votes 2 (p=0.26)
+    topology  votes 3 (p=0.21)
+    bones     votes 9 (p=0.21)
+    exemplar  votes 3 (p=0.45)
+    shortlist [(np.int64(2), 2), (np.int64(3), 1), (np.int64(9), 0)]
+    -> 2 (truth 2)
+
+============================================================
+FUSION BATTERY: 2/2 passed

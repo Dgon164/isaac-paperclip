@@ -3282,6 +3282,8 @@ class Isaac:
         for ix in cal:
             _, posts = self.recognize_glyph(images[ix])
             for k, p in posts.items():
+                if str(k).startswith("_"):
+                    continue
                 hits.setdefault(k, [0, 0])
                 hits[k][1] += 1
                 if classes[int(np.argmax(p))] == labels[ix]:
@@ -3314,6 +3316,8 @@ class Isaac:
                         continue
                     n_ab += 1
                     for k, p in posts.items():
+                        if str(k).startswith("_"):
+                            continue
                         pick = a if p[ai] >= p[bi] else b
                         per.setdefault(k, [0, 0])
                         per[k][1] += 1
@@ -3400,26 +3404,50 @@ class Isaac:
             p = p / p.sum()
             posts[k] = p
             total += wts.get(k, 1.0) * np.log(p + 1e-12)
-        best = int(np.argmax(total))
-        # contested decision -> the PAIR JUDGE re-decides between the two
-        # contenders with weights measured for exactly that pair
+        # THE OVERLAP STRUCTURE (owner, 2026-07-05: "for things it
+        # genuinely can't resolve it can rank... then the bones can
+        # select because it knows what the answer is compared to the
+        # others"). The fused vote names a ranked SHORTLIST; the measured
+        # pair judges duel it round-robin (each duel decided by the
+        # channels that demonstrably separate that pair); the tournament
+        # winner answers. A split tournament is DECLARED, ranking kept.
         order = np.argsort(-total)
         pair_w = self.net.get_meta("crystal", "glyph_pair_weights") or {}
-        if len(order) >= 2:
-            i1, i2 = int(order[0]), int(order[1])
-            a, b = classes[i1], classes[i2]
-            key = (int(min(a, b)), int(max(a, b)))
-            pw = pair_w.get(key)
-            if pw:
-                sa = sum(pw.get(k, 0.0) * np.log(p[i1] + 1e-12)
-                         for k, p in posts.items())
-                sb = sum(pw.get(k, 0.0) * np.log(p[i2] + 1e-12)
-                         for k, p in posts.items())
-                best = i1 if sa >= sb else i2
+        S = [int(order[t]) for t in range(min(3, len(order)))]
+
+        def duel(ia, ib):
+            a, b = classes[ia], classes[ib]
+            pw = pair_w.get((int(min(a, b)), int(max(a, b))))
+            if not pw:
+                return ia if total[ia] >= total[ib] else ib
+            sa = sum(pw.get(k, 0.0) * np.log(p[ia] + 1e-12)
+                     for k, p in posts.items())
+            sb = sum(pw.get(k, 0.0) * np.log(p[ib] + 1e-12)
+                     for k, p in posts.items())
+            return ia if sa >= sb else ib
+
+        wins = {ii: 0 for ii in S}
+        for ai in range(len(S)):
+            for bi in range(ai + 1, len(S)):
+                wins[duel(S[ai], S[bi])] += 1
+        top_wins = max(wins.values())
+        finalists = [ii for ii in S if wins[ii] == top_wins]
+        best = finalists[0] if len(finalists) == 1 else \
+            int(S[int(np.argmin([S.index(f) for f in finalists]))])
+        contested = len(finalists) > 1
+        ranked = sorted(S, key=lambda ii: (-wins[ii],
+                                           list(order).index(ii)))
+        posts["_shortlist"] = [(classes[ii], int(wins[ii]))
+                               for ii in ranked]
+        posts["_contested"] = contested
         if verbose:
             for k, p in posts.items():
+                if str(k).startswith("_"):
+                    continue
                 print(f"    {k:9s} votes {classes[int(np.argmax(p))]} "
                       f"(p={p.max():.2f})")
+            print(f"    shortlist {[(c, w) for c, w in posts['_shortlist']]}"
+                  f"{'  CONTESTED' if contested else ''}")
         return classes[best], posts
 
     # ── THE INFORMATION LEDGER (owner, 2026-07-05: "something that

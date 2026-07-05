@@ -39,6 +39,8 @@ for ix in te_idx:
     if got == y[ix]:
         hits["FUSED"] += 1
     for k, p in posts.items():
+        if str(k).startswith("_"):
+            continue
         if classes[int(np.argmax(p))] == y[ix]:
             hits[k] += 1
 
