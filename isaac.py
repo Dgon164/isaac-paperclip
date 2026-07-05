@@ -2584,12 +2584,19 @@ class Isaac:
         if not keep.any():
             return None                               # perception refuses
         canon = canon[keep]
+        # THE BONE'S NORMAL (owner, 2026-07-05): each part's measured
+        # cross-view spread IS its acceptance radius — scale-relative
+        # (views are unit-normalized), kept instead of discarded. A match
+        # is judged part by part: within the normal, just beyond, or far.
+        spreads = np.maximum(spread[keep], 1e-3)
         pname = f"pattern:{label}"
         for ki in range(len(canon)):
             part = f"part:{label}.{ki}"
             self.net.add_door(pname, part, tag="part")
             self.net.set_meta(part, "pos", canon[ki].tolist())
+            self.net.set_meta(part, "normal", float(spreads[ki]))
         self.net.set_meta(pname, "canon", canon)
+        self.net.set_meta(pname, "spreads", spreads)
         self.net.set_meta(pname, "train_resid",
                           float(np.percentile(resids, 95)) if resids else 0.1)
         self.net.set_meta(pname, "null_resid",
@@ -2639,6 +2646,27 @@ class Isaac:
                 names.append(pn)
                 self.net.add_door(pn, f"concept:{label}", tag="variant_of")
         return names
+
+    def _pattern_normal_fit(self, pname, P, n_rot=None):
+        """Score a registered match part by part in units of each bone's
+        NORMAL: z = distance / that part's measured spread. Unmatched
+        canonical parts count as far (z=3). Lower is better."""
+        canon = self.net.get_meta(pname, "canon")
+        if canon is None or len(P) < 3:
+            return np.inf
+        canon = np.asarray(canon)
+        spreads = self.net.get_meta(pname, "spreads")
+        if spreads is None:
+            spreads = np.full(len(canon),
+                              self.net.get_meta(pname, "train_resid", 0.1))
+        nr = n_rot if n_rot is not None else \
+            self.net.get_meta(pname, "n_rot", 8)
+        Q, m, _ = self._register_points(canon, P, n_rot=nr)
+        zs = np.full(len(canon), 3.0)
+        for qi, ci in enumerate(m):
+            z = np.linalg.norm(Q[qi] - canon[ci]) / (spreads[ci] + 1e-6)
+            zs[ci] = min(zs[ci], min(z, 3.0))
+        return float(zs.mean())
 
     def recognize_pattern(self, points, patterns=None, n_rot=None):
         """Register the instance against each learned pattern; best mean
@@ -3394,6 +3422,7 @@ class Isaac:
                     views.append(kp)
             self.net.set_meta(node, "topo_counts", topo)
             self.net.set_meta(node, "topo_total", int(sum(topo.values())))
+            self.net.set_meta(node, "pred_counts", topo)  # for the nevers
             if len(views) >= 3:
                 # variants, not a smushed mean: Jens's 3 and Frank's 3 are
                 # both 3s (owner, 2026-07-05); each style its own pattern
@@ -3413,6 +3442,33 @@ class Isaac:
                 ldd[j] = np.log((cnt + 1.0) / (cnt.sum() + 8))
             self.net.set_meta(node, "dyn_doors", ldd)
         self.net.set_meta("crystal", "glyph_classes", list(classes))
+        # NEGATIVE STRUCTURE (owner, 2026-07-05): "it says it is this and
+        # or this, but never this." A predicate a class NEVER shows across
+        # all its training — while common elsewhere — is a certified
+        # positive negative (the penguin law for patterns), written as a
+        # not_ door past a binomial null at 1%. Candidates exhibiting a
+        # certified never are VETOED at recognition.
+        marg, totals = {}, {}
+        per_class = {int(c): {} for c in classes}
+        for c in classes:
+            topo = self.net.get_meta(f"concept:{c}", "topo_counts") or {}
+            for (h, l), n_ in topo.items():
+                for pred in (("holes", int(h)), ("lines", int(l))):
+                    marg[pred] = marg.get(pred, 0) + n_
+                    totals[pred[0]] = totals.get(pred[0], 0) + n_
+                    per_class[int(c)][pred] = \
+                        per_class[int(c)].get(pred, 0) + n_
+        for c in classes:
+            n_c = self.net.get_meta(f"concept:{c}", "topo_total") or 0
+            nevers = []
+            for pred, cnt in marg.items():
+                p = cnt / max(totals[pred[0]], 1)
+                if per_class[int(c)].get(pred, 0) == 0 and n_c > 0 \
+                        and (1 - p) ** n_c < 0.01:
+                    nevers.append(pred)
+                    self.net.add_door(f"concept:{c}",
+                                      f"not_{pred[0]}={pred[1]}", tag="neg")
+            self.net.set_meta(f"concept:{c}", "never", nevers)
         # measured reliability weights (calibration, not opinion): each
         # channel's vote is weighted by what it DEMONSTRATES on held-out
         # glyphs — equal weighting let a sharp-but-weak channel veto
@@ -3537,9 +3593,11 @@ class Isaac:
         chan["density"] = np.array(dens)
         # 2. topology / line signature
         r = self.describe_shape(img)
+        sig_seen = None
         if r is not None:
             nl = sum(1 for p in r["parts"] if p["kind"] == "line")
             sig = (r["n_holes"], min(nl, 4))
+            sig_seen = sig
             tp = []
             for c in classes:
                 cnts = self.net.get_meta(f"concept:{c}", "topo_counts") or {}
@@ -3554,13 +3612,10 @@ class Isaac:
             for c in classes:
                 vnames = self.net.get_meta(f"concept:{c}", "variants") or []
                 best = np.nan
-                for vn in vnames:                     # nearest STYLE wins
-                    canon = self.net.get_meta(vn, "canon")
-                    if canon is None:
-                        continue
-                    r_ = self._register_points(np.asarray(canon), P,
-                                               n_rot=1)[2]
-                    best = r_ if np.isnan(best) else min(best, r_)
+                for vn in vnames:     # nearest STYLE, judged bone by bone
+                    z_ = self._pattern_normal_fit(vn, P, n_rot=1)
+                    if np.isfinite(z_):
+                        best = z_ if np.isnan(best) else min(best, z_)
                 res.append(best)
             res = np.array(res)
             if not np.isnan(res).all():
@@ -3605,6 +3660,23 @@ class Isaac:
         # pair judges duel it round-robin (each duel decided by the
         # channels that demonstrably separate that pair); the tournament
         # winner answers. A split tournament is DECLARED, ranking kept.
+        # NEGATIVE STRUCTURE: "it is this or this, but NEVER that" — a
+        # candidate exhibiting a certified never-predicate is vetoed
+        # (hard demotion; ranking kept, nothing deleted)
+        vetoed = []
+        if sig_seen is not None:
+            preds = {("holes", int(sig_seen[0])),
+                     ("lines", int(sig_seen[1]))}
+            for ci_, c in enumerate(classes):
+                nev = {tuple(x) for x in
+                       (self.net.get_meta(f"concept:{c}", "never") or [])}
+                hit = preds & nev
+                if hit:
+                    vetoed.append((c, sorted(hit)))
+            if len(vetoed) < len(classes):            # never veto everyone
+                for c, _ in vetoed:
+                    total[list(classes).index(c)] -= 50.0
+        posts["_never"] = vetoed
         order = np.argsort(-total)
         pair_w = self.net.get_meta("crystal", "glyph_pair_weights") or {}
         pair_diff = self.net.get_meta("crystal", "glyph_pair_diff") or {}
