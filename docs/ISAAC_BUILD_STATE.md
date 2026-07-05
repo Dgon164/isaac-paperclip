@@ -16,6 +16,27 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-05 — A RECORDED CLAIM OVERTURNED: the "detector equation" was a net
+
+Audit triggered by the owner's dissatisfaction ("match extraction on
+current record neural nets?"). The record carried "detector eqn: AUC
+0.848 (2M) / ~0.88 full" from the 2026-06-28 era. Verified against the
+surviving scripts (`equation_discovery/code/build_detector.py`,
+`full_detector.py`): **both are trained torch MLPs** (256/512-wide, Adam,
+dropout) whose output banners call the network "THE DETECTOR EQUATION —
+~100k pinned constants." That is the 06-28 drift the no-nets law was
+written against, preserved in the record wearing an equation costume.
+The claim is OVERTURNED and kept here with its why (supersession law
+applies to the RECORD too). Honest standing on HIGGS classification
+within the laws: **doors AUC 0.729** (re-verified 2026-07-05, 500k
+sample; compounds honestly refused — 0 conjunctions survived their
+null). The deep-net benchmark ~0.885 is unmatched by ~0.156 AUC, and no
+lawful road currently closes it. The lawful route to the number exists
+but is different in kind: CAPTURE a record-grade net as a quarantined
+stopgap, then interrogate/graduate — the accounting then names exactly
+how much of the record is articulable. That is omega milestone 5, not a
+benchmark chase.
+
 ## 2026-07-05 — HIGGS: THE CONTRAST AND THE BLIND SENSOR MAP
 
 Owner: "it's got the answer sheet... find out what is different between
