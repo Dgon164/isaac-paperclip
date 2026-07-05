@@ -3233,6 +3233,8 @@ class Isaac:
         on the same node."""
         images = np.asarray(images, float)
         labels = np.asarray(labels)
+        self.net.set_meta("crystal", "glyph_pair_weights", {})
+        self.net.set_meta("crystal", "glyph_pair_diff", {})
         flat = images.reshape(len(images), -1)
         self.crystallize_features(flat, labels, compounds="off")
         classes = np.unique(labels)
@@ -3300,25 +3302,56 @@ class Isaac:
         # channel's binary accuracy on the calibration glyphs; close
         # calls get re-decided by the pair's own weights (rivals +
         # differentia, at decision time).
-        cal_posts = {}
-        for ix in cal:
-            _, posts = self.recognize_glyph(images[ix])
-            cal_posts[int(ix)] = (labels[ix], posts)
-        pair_w = {}
+        # DIFFERENTIA per pair (owner's fix chain, 2026-07-05): a 4 and a
+        # 9 share most of their ink — shared ink is NOISE in that duel.
+        # From the density doors themselves, find the channels where the
+        # two classes' observed distributions differ; the duel gains a
+        # 'differentia' voter that judges on those channels ONLY.
+        calib = self.net.get_meta("crystal", "calib")
+        pair_diff = {}
         cl = list(classes)
         for ai in range(len(cl)):
             for bi in range(ai + 1, len(cl)):
                 a, b = cl[ai], cl[bi]
+                pa = np.exp(self.net.get_meta(f"concept:{a}", "doors"))
+                pb = np.exp(self.net.get_meta(f"concept:{b}", "doors"))
+                tv = 0.5 * np.abs(pa - pb).sum(1)
+                pair_diff[(int(a), int(b))] = \
+                    np.argsort(-tv)[:40].astype(int)
+        self.net.set_meta("crystal", "glyph_pair_diff", pair_diff)
+        cal_posts = {}
+        Hcal = self.apply_lens(calib["lens"],
+                               images[cal].reshape(len(cal), -1))
+        e_ = calib["edges"]
+        IXcal = np.column_stack([np.searchsorted(e_[j], Hcal[:, j])
+                                 for j in range(Hcal.shape[1])])
+        for ci, ix in enumerate(cal):
+            _, posts = self.recognize_glyph(images[ix])
+            cal_posts[int(ix)] = (labels[ix], posts, IXcal[ci])
+        pair_w = {}
+        for ai in range(len(cl)):
+            for bi in range(ai + 1, len(cl)):
+                a, b = cl[ai], cl[bi]
+                lda = self.net.get_meta(f"concept:{a}", "doors")
+                ldb = self.net.get_meta(f"concept:{b}", "doors")
+                top = pair_diff[(int(a), int(b))]
                 per = {}
                 n_ab = 0
-                for ix, (truth, posts) in cal_posts.items():
+                m_ds = []
+                for ix, (truth, posts, bins_) in cal_posts.items():
                     if truth not in (a, b):
                         continue
                     n_ab += 1
+                    votes = {}
                     for k, p in posts.items():
                         if str(k).startswith("_"):
                             continue
-                        pick = a if p[ai] >= p[bi] else b
+                        votes[k] = a if p[ai] >= p[bi] else b
+                    m_d = float(lda[top, bins_[top]].sum()
+                                - ldb[top, bins_[top]].sum())
+                    m_ds.append(m_d)
+                    votes["differentia"] = a if m_d >= 0 else b
+                    for k, pick in votes.items():
                         per.setdefault(k, [0, 0])
                         per[k][1] += 1
                         if pick == truth:
@@ -3328,8 +3361,9 @@ class Isaac:
                 w = {k: max(h / t - 0.5, 0.0) for k, (h, t) in per.items()}
                 s2 = sum(w.values())
                 if s2 > 0:
-                    pair_w[(int(a), int(b))] = {k: v / s2
-                                                for k, v in w.items()}
+                    pw_ = {k: v / s2 for k, v in w.items()}
+                    pw_["_sd_d"] = float(np.std(m_ds) + 1e-9)
+                    pair_w[(int(a), int(b))] = pw_
         self.net.set_meta("crystal", "glyph_pair_weights", pair_w)
         return [f"concept:{c}" for c in classes]
 
@@ -3346,13 +3380,13 @@ class Isaac:
         # 1. pixel-density doors
         H = self.apply_lens(calib["lens"], flat)
         e = calib["edges"]
+        ix_bins = np.array([int(np.searchsorted(e[j], H[0, j]))
+                            for j in range(H.shape[1])])
+        jj = np.arange(H.shape[1])
         dens = []
         for c in classes:
             ld = self.net.get_meta(f"concept:{c}", "doors")
-            s = 0.0
-            for j in range(H.shape[1]):
-                s += ld[j][int(np.searchsorted(e[j], H[0, j]))]
-            dens.append(s)
+            dens.append(float(ld[jj, ix_bins].sum()))
         chan["density"] = np.array(dens)
         # 2. topology / line signature
         r = self.describe_shape(img)
@@ -3413,18 +3447,35 @@ class Isaac:
         # winner answers. A split tournament is DECLARED, ranking kept.
         order = np.argsort(-total)
         pair_w = self.net.get_meta("crystal", "glyph_pair_weights") or {}
+        pair_diff = self.net.get_meta("crystal", "glyph_pair_diff") or {}
         S = [int(order[t]) for t in range(min(3, len(order)))]
 
         def duel(ia, ib):
+            # the PROVEN log-margin duel (binary votes lost the
+            # confidence magnitudes and dropped 5 points — battery),
+            # plus the DIFFERENTIA margin as a fifth term, judging only
+            # on the channels where these two classes differ,
+            # scale-normalized by its own calibration spread
             a, b = classes[ia], classes[ib]
-            pw = pair_w.get((int(min(a, b)), int(max(a, b))))
+            key = (int(min(a, b)), int(max(a, b)))
+            pw = pair_w.get(key)
             if not pw:
                 return ia if total[ia] >= total[ib] else ib
-            sa = sum(pw.get(k, 0.0) * np.log(p[ia] + 1e-12)
-                     for k, p in posts.items())
-            sb = sum(pw.get(k, 0.0) * np.log(p[ib] + 1e-12)
-                     for k, p in posts.items())
-            return ia if sa >= sb else ib
+            lo_i, hi_i = (ia, ib) if a <= b else (ib, ia)
+            m = 0.0
+            for k, p in posts.items():
+                if str(k).startswith("_") or k not in pw:
+                    continue
+                m += pw[k] * (np.log(p[lo_i] + 1e-12)
+                              - np.log(p[hi_i] + 1e-12))
+            if "differentia" in pw and key in pair_diff:
+                lda = self.net.get_meta(f"concept:{classes[lo_i]}", "doors")
+                ldb = self.net.get_meta(f"concept:{classes[hi_i]}", "doors")
+                top = pair_diff[key]
+                m_d = float(lda[top, ix_bins[top]].sum()
+                            - ldb[top, ix_bins[top]].sum())
+                m += pw["differentia"] * (m_d / pw.get("_sd_d", 1.0))
+            return lo_i if m >= 0 else hi_i
 
         wins = {ii: 0 for ii in S}
         for ai in range(len(S)):
