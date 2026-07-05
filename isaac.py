@@ -3008,7 +3008,8 @@ class Isaac:
             a, b = path[i], path[j]
             ab = b - a
             L = np.linalg.norm(ab) + 1e-12
-            d = np.abs(np.cross(ab / L, path[i:j + 1] - a))
+            u = ab / L; diff = path[i:j + 1] - a       # 2-D cross (numpy 2 removed it):
+            d = np.abs(u[0] * diff[:, 1] - u[1] * diff[:, 0])
             k = int(np.argmax(d))
             if d[k] > tol and 2 <= k <= j - i - 2:
                 rec(i, i + k)
