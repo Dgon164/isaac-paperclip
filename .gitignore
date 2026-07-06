@@ -22,3 +22,5 @@ emb_cache.npz
 *_out.txt
 
 research/isaac_state.pkl
+
+research/data/
