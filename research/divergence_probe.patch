@@ -1,0 +1,57 @@
+﻿diff --git a/isaac.py b/isaac.py
+index 1f08491..8ffa78f 100644
+--- a/isaac.py
++++ b/isaac.py
+@@ -1879,6 +1879,52 @@ class Isaac:
+         conf = np.where(delta <= 0, boundary, boundary * surv)
+         return conf
+ 
++    def divergence_probe(self, X, y, X_query, k=8, frac=0.75, seed=0):
++        """PER-LAW extrapolation confidence from ensemble DISAGREEMENT.
++
++        law_confidence() uses a population survival curve keyed only on
++        distance-out-of-hull — honest on average but BLIND per law: a
++        surrogate that explodes out of range and a genuine recovery get the
++        same score (measured: 0.42 vs 0.41 on 1/(1+x^2) vs sin). This fits k
++        subsample laws on the SAME challenge, pushes each to X_query, and
++        measures how much they DISAGREE out there, normalized by the signal
++        scale. Stable (real) laws agree -> high confidence, EVEN IF THEY GROW
++        (a true parabola is fine); surrogates fan out -> low confidence. The
++        point of maximum disagreement IS the discriminating experiment to run.
++
++        Returns dict(confidence, divergence, discriminating_x, k_used,
++        ensemble_mean, ensemble_std) or None if fewer than 3 laws fit.
++        Uses only discover()/apply_law() — no new machinery, no gradients."""
++        X = np.asarray(X, float); y = np.asarray(y, float)
++        Xq = np.asarray(X_query, float)
++        if Xq.ndim == 1:
++            Xq = Xq.reshape(-1, 1)
++        rng = np.random.default_rng(seed)
++        y_scale = float(y.std()) or 1.0
++        m = max(int(frac * len(y)), 20)
++        preds = []
++        for i in range(k):
++            idx = rng.choice(len(y), size=min(m, len(y)), replace=False)
++            mind = type(self)()
++            try:
++                mind.discover(X[idx], y[idx], name=f"_dp{i}")
++                p = mind.apply_law(f"_dp{i}", Xq)
++            except Exception:
++                p = None
++            if p is not None and np.all(np.isfinite(p)):
++                preds.append(np.asarray(p, float))
++        if len(preds) < 3:
++            return None
++        P = np.asarray(preds)
++        ens_mean = P.mean(0); ens_std = P.std(0)
++        divergence = float(np.median(ens_std) / y_scale)
++        confidence = float(np.clip(1.0 / (1.0 + divergence), 0.0, 1.0))
++        j = int(np.argmax(ens_std))
++        return dict(confidence=round(confidence, 3),
++                    divergence=round(divergence, 4),
++                    discriminating_x=Xq[j].tolist(), k_used=len(preds),
++                    ensemble_mean=ens_mean, ensemble_std=ens_std)
++
+     def _fit_terms(self, specs, terms, X, y):
+         """Least-squares refit of a term set; returns (coefs, intercept,
+         predictions_fn ingredients). Shared by pruning and refinement."""
