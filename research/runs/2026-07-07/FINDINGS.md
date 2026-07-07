@@ -4,9 +4,10 @@ TODO #1 from `HANDOFF.md`: extend the honesty red-team to the *new* gates (the c
 the assembler, tool-creation), with dated runs. Done, and not made easy — several trials
 were designed to **find** failures. Run log: `redteam_all.txt` (this folder).
 
-**Grand total: 25 held, 1 failed, 3 known-limit (of 29 trials, 4 batteries).**
-The one FAIL is a naive-baseline null kept visible *on purpose*, with its cure passing in
-the adjacent row. Read the tables, not the totals.
+**Grand total: 30 held, 1 failed, 3 known-limit (of 34 trials, 5 batteries)** — including a
+REAL-DATA battery (5/5) graded against published science. The one FAIL is a naive-baseline
+null kept visible *on purpose*, with its cure passing in the adjacent row. Read the tables,
+not the totals.
 
 To reproduce: `.venv\Scripts\python.exe research\redteam_all.py` (`$env:PYTHONUTF8=1`).
 
@@ -68,7 +69,27 @@ To reproduce: `.venv\Scripts\python.exe research\redteam_all.py` (`$env:PYTHONUT
 
 ---
 
-## Bonus: the real-data result re-validated under the honest null
+## Real data — the gates graded against known science (`redteam_realdata.py`)
+
+Synthetic tests prove a *mechanism*; real data is where the traps show up at once and where a
+lie costs something. Selection rule: only datasets whose honest answer is already known, so a
+gate that lies can be caught. Datasets (gitignored, in `research/data/`):
+
+- **Mauna Loa CO₂** (NOAA GML, 1958–) — `co2_mm_mlo.csv`. The textbook trend+cycle+fluctuation
+  signal. Gate results: trend **+1.67 ppm/yr, REAL** under the honest null (known: rising ✓);
+  annual **cycle found**, ~2.8 ppm amplitude, spring peak (known ✓); and the **fluctuation
+  layer measured** — the leftover after removing trend+cycle has lag-1 autocorrelation **+0.40**
+  (it is *sticky*, exactly the memory the naive null ignored — the thing that was missed, now
+  quantified on real data).
+- **Sunspots** (SILSO monthly, 1749–) — `SN_m_tot_V2.0.csv`. The dataset that caused the original
+  runaway. Gate results: a linear trend is **correctly REFUSED** (known: none — here *both* nulls
+  refuse, because the true slope really is ~0, so no drama, just the honest answer); the dominant
+  **cycle period = 11.1 yr** — the Schwabe cycle recovered from real data (known: ~11 yr ✓).
+
+Fetch (once): `co2_mm_mlo.csv` from `gml.noaa.gov/webdata/ccgg/trends/co2/`, `SN_m_tot_V2.0.csv`
+from `sidc.be/SILSO/DATA/`. `redteam_all.py` skips this battery gracefully if the files are absent.
+
+## Bonus: the weather result re-validated under the honest null
 
 The project's flagship real result — Frankfurt **+3.29 °C/century** warming — was originally
 gated by the (now-known-invalid) iid null. Annual means have lag-1 autocorrelation **0.50**,

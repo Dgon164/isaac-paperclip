@@ -62,8 +62,20 @@
   6 held, 0 failed, 0 known-limit  (of 6)
 ====================================================================================================
 
+====================================================================================================
+  RED TEAM — REAL DATA (clock gates vs known science)
+====================================================================================================
+  [PASS]  CO2 trend -> REAL rising       expect: REAL, ~1.5-2.5 ppm/yr        got: +1.67 ppm/yr real=True
+  [PASS]  CO2 cycle -> annual found      expect: ~3 ppm amp, spring peak      got: UNDERSTOOD amp=2.8ppm peak~month 3.7
+  [PASS]  CO2 fluctuation is sticky      expect: residual has memory (ac1>0.2) got: lag-1 autocorr = +0.40
+  [PASS]  sunspots trend -> REFUSE       expect: no real linear trend         got: iid says real=False  ->  block says real=False
+  [PASS]  sunspots cycle ~11 yr          expect: dominant period 9-13 yr      got: dominant period = 11.1 yr
+----------------------------------------------------------------------------------------------------
+  5 held, 0 failed, 0 known-limit  (of 5)
+====================================================================================================
+
 ####################################################################################################
-#  GRAND TOTAL:  25 held, 1 failed, 3 known-limit   (of 29 trials across 4 batteries)
+#  GRAND TOTAL:  30 held, 1 failed, 3 known-limit   (of 34 trials across 5 batteries)
 #  Failures/limits carried this run:
 #   - clock: the IID trend null LIES on autocorrelated data (AR1 56% false-REAL);
 #     the block-permutation null built this session fixes the stationary case

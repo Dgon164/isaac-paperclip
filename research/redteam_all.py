@@ -14,9 +14,11 @@ is an honest boundary we name rather than hide. Read the tables, not just the to
 """
 import sys, os, io, datetime, contextlib
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-import redteam, redteam_clock, redteam_assembler, redteam_tools
+import redteam, redteam_clock, redteam_assembler, redteam_tools, redteam_realdata
 
-BATTERIES = [redteam, redteam_clock, redteam_assembler, redteam_tools]
+# Synthetic batteries (self-contained) then the real-data battery (needs the gitignored
+# datasets in research/data/ — skipped gracefully if absent on a fresh checkout).
+BATTERIES = [redteam, redteam_clock, redteam_assembler, redteam_tools, redteam_realdata]
 
 
 def main():
@@ -28,7 +30,11 @@ def main():
         print("#" * 100)
         for mod in BATTERIES:
             print()
-            p, f, l = mod.report(mod.run(), mod.TITLE)
+            try:
+                p, f, l = mod.report(mod.run(), mod.TITLE)
+            except FileNotFoundError as e:
+                print(f"  [SKIP] {mod.TITLE}  — data not present ({os.path.basename(str(e).split(chr(39))[1]) if chr(39) in str(e) else e})")
+                continue
             grand[0] += p; grand[1] += f; grand[2] += l
         print("\n" + "#" * 100)
         print(f"#  GRAND TOTAL:  {grand[0]} held, {grand[1]} failed, {grand[2]} known-limit"
