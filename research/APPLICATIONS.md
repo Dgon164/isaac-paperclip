@@ -82,7 +82,44 @@ stretches. Marked **[strong] / [medium] / [stretch]**, honestly.
 
 ---
 
-## C. The honest north star for choosing among these
+## C. System management & control — the ACTIVE side (closing the "use" seam)
+
+Everything above is *passive*: discover structure that's already there. **System
+management is active**: learn a live system's mechanics and **act to optimize it** toward
+objectives. This is the frontier the theory itself flagged as open — the **"use" seam**
+(ordering over outcomes doesn't reduce to comparison; it must be *seeded* by an objective).
+
+**Isaac's fit — and why it differs from reinforcement learning:**
+- **Model-based & legible, not a black-box policy.** Learn the system's *causal laws*
+  (discover + the clock + interaction-map), then optimize using those readable laws. You
+  can *see why* it acts — and it can say *"I don't understand this lever yet."*
+- **Causal, not correlational.** Control needs BEST-GUESS's discipline: **you cannot
+  optimize a confounded lever.** The direct-vs-confound test is the gate on what to actuate.
+  (The confound-vs-mediation limit from the red team matters MORE here — actuating a
+  mediator and a common-cause have opposite consequences.)
+- **Learn-from-consequences is already in the engine** — the self-test's *persistence*
+  (act → outcome → proceed/caution) is the seed of a closed control loop.
+- **Objectives are the seed** (honest: unbounded preference stays given). Bounded control =
+  pursue the given objective; flag where the mechanics are unresolved; and turn the
+  resolution-path into an **action** — actively *probe the system* to learn the lever it
+  doesn't yet understand (experimental design, but on a live system).
+- **Honest control is the differentiator** — optimize what it understands, and *refuse /
+  flag* what it doesn't, instead of confidently actuating an unvalidated lever.
+
+**The test approach (yours, sharpened) — a control gauntlet:** a *simulated system* with
+**hidden underlying mechanisms**, a **live data feed**, an **objective**, and a **ruleset**.
+Isaac must (1) reverse-engineer which inputs *causally* move the objective (real levers vs
+confounds), (2) build a legible model, (3) optimize toward the objective, (4) honestly flag
+what it can't yet explain and propose the experiment that would resolve it. Grade it: few
+hidden mechanisms → many; static → drifting; clean → noisy/partial feeds — null-gated so it
+never "optimizes" a spurious lever. **Applications:** process control, energy / HVAC / grid
+optimization, ops & logistics, resource management, autonomous experiment loops,
+game-playing agents. **Caveats:** needs *safe exploration* (don't break the system while
+learning), a solid causal gate, and a well-posed objective.
+
+---
+
+## D. The honest north star for choosing among these
 
 Pick the ones where **"a legible law + an honest 'here's what I can't explain and what to
 measure next'"** is worth more than a raw prediction. That's scientific discovery, high-
