@@ -109,6 +109,13 @@ a shaped hole = the agenda for autonomy) / **irrelevant** (absent, no expectatio
    REMAINING: non-stationary/unit-root trend handling (block null only partly cures a random
    walk, 91→68%); batteries for `best_guess`, `meaningful_absence`, `self_verify`.
 2. **Real-data breadth.** 2–3 more real datasets beyond weather, verified where possible.
+   *(2026-07-07: Mauna Loa CO2 + sunspots added, graded vs known science in `redteam_realdata.py`.)*
+   Still want a domain the OWNER cares about (fire / tree ecology raised) — unknown-answer data.
+1b. **The layered decomposer** *(new, from the trend-null work).* Split any time signal into
+   trend + cycles + **fluctuation**, and MEASURE the fluctuation (its size and its stickiness —
+   the memory layer the naive null ignored). Then gate every trend/cycle claim against what that
+   measured fluctuation could actually fake. Subsumes the block-permutation patch; the honest
+   version of the trend gate. CO2/sunspots are the proving grounds.
 3. **Graduate survivors** into `isaac.py` + the 11/11 self-test — stop being a parallel folder.
 4. **Integration.** Compose the chain end-to-end in the orchestrator:
    `assemble → detect time/place → discover → judge (verdict) → persist`, accumulating
