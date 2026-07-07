@@ -96,10 +96,18 @@ a shaped hole = the agenda for autonomy) / **irrelevant** (absent, no expectatio
 
 ## TODO (priority order)
 
-1. **Proof layer catch-up (HIGHEST).** Extend `redteam.py` to the *new* gates: the clock
-   (plant a spurious cycle + a sparse-data fake trend — must refuse), the assembler
-   (`pad` must never fabricate), tool-creation (a surrogate must NOT be minted). Add
-   per-capability batteries with dated runs in `research/runs/` (mirror `experiments/`).
+1. **Proof layer catch-up (HIGHEST).** ~~Extend `redteam.py` to the new gates.~~
+   **DONE 2026-07-07** — per-capability batteries built (`redteam_clock.py`,
+   `redteam_assembler.py`, `redteam_tools.py`), `redteam.py` refactored, `redteam_all.py`
+   aggregates + archives dated runs (`research/runs/2026-07-07/`, see `FINDINGS.md`).
+   Result: **25 held / 1 failed / 3 limit** of 29. The gates that matter HELD (tool-creation
+   surrogate gate 6/6; assembler no-fabrication; cycle gate). Two real findings:
+   (a) the **iid trend null LIES on autocorrelated data** (AR1 56%, random walk 91% false-REAL)
+   → built the **block-permutation null** (`trend_gate(null="block")`), fixes AR1 to 11% with
+   100% trend power; the weather +3.29 C/century warming **survives** the honest null (re-validated).
+   (b) `complete` under **collider selection fabricates** a −0.51 corr from independent vars.
+   REMAINING: non-stationary/unit-root trend handling (block null only partly cures a random
+   walk, 91→68%); batteries for `best_guess`, `meaningful_absence`, `self_verify`.
 2. **Real-data breadth.** 2–3 more real datasets beyond weather, verified where possible.
 3. **Graduate survivors** into `isaac.py` + the 11/11 self-test — stop being a parallel folder.
 4. **Integration.** Compose the chain end-to-end in the orchestrator:

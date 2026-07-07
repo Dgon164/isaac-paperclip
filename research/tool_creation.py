@@ -101,26 +101,27 @@ PROBLEMS = [
     ("v_shape_2   ", make_v(5),    (-2, 2), (-4, -2)),  # reuse the forged key, 1 move
 ]
 
-print("="*82)
-print("  TOOL CREATION — forge keys from shaped holes (out-of-range gated)")
-print("="*82)
-print(f"  start keys: {list(BASE)}\n")
-for name, g, tr, te in PROBLEMS:
-    res = solve(g, tr, te)
-    if res:
-        how, key, eq = res
-        label = {"forged-key": "solved (1 move) via FORGED/MINTED key",
-                 "base-key": "solved via base key", "MINTED": "cracked by chain -> MINTED"}[how]
-        print(f"  {name}: {label} '{key}'  ->  {eq[:36]}")
-    else:
-        fr = forge(g, tr, te)
-        if fr:
-            print(f"  {name}: no key fit -> FORGED primitive '{fr[0]}'  ->  {fr[2][:32]}")
+if __name__ == "__main__":
+    print("="*82)
+    print("  TOOL CREATION — forge keys from shaped holes (out-of-range gated)")
+    print("="*82)
+    print(f"  start keys: {list(BASE)}\n")
+    for name, g, tr, te in PROBLEMS:
+        res = solve(g, tr, te)
+        if res:
+            how, key, eq = res
+            label = {"forged-key": "solved (1 move) via FORGED/MINTED key",
+                     "base-key": "solved via base key", "MINTED": "cracked by chain -> MINTED"}[how]
+            print(f"  {name}: {label} '{key}'  ->  {eq[:36]}")
         else:
-            print(f"  {name}: idk — nothing (even the stock) reaches it")
+            fr = forge(g, tr, te)
+            if fr:
+                print(f"  {name}: no key fit -> FORGED primitive '{fr[0]}'  ->  {fr[2][:32]}")
+            else:
+                print(f"  {name}: idk — nothing (even the stock) reaches it")
 
-print("\n" + "-"*82)
-print(f"  base keys now: {list(BASE)}")
-print(f"  minted keys:   {list(FORGED)}")
-print("  Repeats solved in one move via the keys it made. The toolkit grew itself.")
-print("="*82)
+    print("\n" + "-"*82)
+    print(f"  base keys now: {list(BASE)}")
+    print(f"  minted keys:   {list(FORGED)}")
+    print("  Repeats solved in one move via the keys it made. The toolkit grew itself.")
+    print("="*82)

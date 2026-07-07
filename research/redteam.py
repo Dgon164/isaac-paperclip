@@ -37,65 +37,77 @@ def cond_kill(X, names, tgt, pred):
         if rc < worst[1]: worst = (names[zi], rc)
     return marg, worst
 
-rng = np.random.default_rng(7)
-results = []  # (name, expect, got, status)  status in PASS/FAIL/LIMIT
+TITLE = "RED TEAM — core honesty gates (discover / confound / absence)"
 
-# 1. NOISE must be NO RULE
-X = rng.uniform(-2, 2, (400, 2)); y = rng.normal(size=400)
-v = disc(X, y)["verdict"]
-results.append(("noise -> refuse", "NO RULE", v, "PASS" if v == "NO RULE" else "FAIL"))
 
-# 2. SURROGATE, tested FAR out of range -> gate must catch
-_rs = np.random.default_rng(3)
-_xt = _rs.uniform(-2, 2, 400).reshape(-1, 1); gtr = (_xt, 1.0 / (1.0 + _xt[:, 0] ** 2))
-_xf = _rs.uniform(3, 6, 200).reshape(-1, 1); gte_far = (_xf, 1.0 / (1.0 + _xf[:, 0] ** 2))
-ir, orr = out_of_range(gtr, gte_far)
-results.append(("surrogate, FAR test -> catch", "in fits, out collapses",
-                f"in {ir:.2f} out {orr:.2f}", "PASS" if (ir >= 0.9 and orr < 0.5) else "FAIL"))
+def run():
+    rng = np.random.default_rng(7)
+    results = []  # (name, expect, got, status)  status in PASS/FAIL/LIMIT
 
-# 3. SAME SURROGATE, tested NEAR out of range -> does the gate still catch? (reach matters)
-_xn = _rs.uniform(2.05, 2.6, 200).reshape(-1, 1); gte_near = (_xn, 1.0 / (1.0 + _xn[:, 0] ** 2))
-ir2, orn = out_of_range(gtr, gte_near)
-near_caught = (ir2 >= 0.9 and orn < 0.5)
-results.append(("surrogate, NEAR test -> reach", "gate needs enough reach",
-                f"in {ir2:.2f} out {orn:.2f}", "PASS" if near_caught else "LIMIT"))
+    # 1. NOISE must be NO RULE
+    X = rng.uniform(-2, 2, (400, 2)); y = rng.normal(size=400)
+    v = disc(X, y)["verdict"]
+    results.append(("noise -> refuse", "NO RULE", v, "PASS" if v == "NO RULE" else "FAIL"))
 
-# 4. CONFOUND A<-C->B must be flagged (link dies under conditioning)
-C = rng.uniform(-2, 2, 1500); A = 2*C + .3*rng.normal(size=1500); B = 3*C + .3*rng.normal(size=1500)
-E = rng.uniform(-2, 2, 1500); D = 2*E + .3*rng.normal(size=1500)
-Xc = np.column_stack([A, B, C, D, E]); nm = ["A", "B", "C", "D", "E"]
-marg, (zk, rc) = cond_kill(Xc, nm, "B", "A")
-results.append(("confound B<-A -> BEST-GUESS", "link dies under conditioning",
-                f"|corr| {marg:.2f}->{rc:.2f} on {zk}", "PASS" if rc < 0.3*marg else "FAIL"))
+    # 2. SURROGATE, tested FAR out of range -> gate must catch
+    _rs = np.random.default_rng(3)
+    _xt = _rs.uniform(-2, 2, 400).reshape(-1, 1); gtr = (_xt, 1.0 / (1.0 + _xt[:, 0] ** 2))
+    _xf = _rs.uniform(3, 6, 200).reshape(-1, 1); gte_far = (_xf, 1.0 / (1.0 + _xf[:, 0] ** 2))
+    ir, orr = out_of_range(gtr, gte_far)
+    results.append(("surrogate, FAR test -> catch", "in fits, out collapses",
+                    f"in {ir:.2f} out {orr:.2f}", "PASS" if (ir >= 0.9 and orr < 0.5) else "FAIL"))
 
-# 5. GENUINE DIRECT must NOT be false-flagged
-marg2, (zk2, rc2) = cond_kill(Xc, nm, "D", "E")
-results.append(("direct D<-E -> keep", "survives conditioning",
-                f"|corr| {marg2:.2f}->{rc2:.2f} (worst {zk2})", "PASS" if rc2 > 0.5*marg2 else "FAIL"))
+    # 3. SAME SURROGATE, tested NEAR out of range -> does the gate still catch? (reach matters)
+    _xn = _rs.uniform(2.05, 2.6, 200).reshape(-1, 1); gte_near = (_xn, 1.0 / (1.0 + _xn[:, 0] ** 2))
+    ir2, orn = out_of_range(gtr, gte_near)
+    near_caught = (ir2 >= 0.9 and orn < 0.5)
+    results.append(("surrogate, NEAR test -> reach", "gate needs enough reach",
+                    f"in {ir2:.2f} out {orn:.2f}", "PASS" if near_caught else "LIMIT"))
 
-# 6. MEDIATION A->M->B: link ALSO dies under conditioning on M -> indistinguishable from confound
-M = 2*A + .3*rng.normal(size=1500); Bm = 3*M + .3*rng.normal(size=1500)
-Xm = np.column_stack([A, Bm, M]); nmm = ["A", "Bm", "M"]
-mg, (zk3, rc3) = cond_kill(Xm, nmm, "Bm", "A")
-results.append(("mediation A->M->B", "dies under M — SAME signature as confound",
-                f"|corr| {mg:.2f}->{rc3:.2f} on {zk3}", "LIMIT"))
+    # 4. CONFOUND A<-C->B must be flagged (link dies under conditioning)
+    C = rng.uniform(-2, 2, 1500); A = 2*C + .3*rng.normal(size=1500); B = 3*C + .3*rng.normal(size=1500)
+    E = rng.uniform(-2, 2, 1500); D = 2*E + .3*rng.normal(size=1500)
+    Xc = np.column_stack([A, B, C, D, E]); nm = ["A", "B", "C", "D", "E"]
+    marg, (zk, rc) = cond_kill(Xc, nm, "B", "A")
+    results.append(("confound B<-A -> BEST-GUESS", "link dies under conditioning",
+                    f"|corr| {marg:.2f}->{rc:.2f} on {zk}", "PASS" if rc < 0.3*marg else "FAIL"))
 
-# 7. NO STRUCTURE -> no 'meaningful absence' to claim (must not invent gaps)
-Xn = rng.uniform(0, 12, (300, 1)); yn = rng.normal(size=300)
-rn = disc(Xn, yn, "nostruct")
-results.append(("no-structure -> no gaps", "NO RULE => no absence expectation",
-                rn["verdict"], "PASS" if rn["verdict"] != "UNDERSTOOD" else "FAIL"))
+    # 5. GENUINE DIRECT must NOT be false-flagged
+    marg2, (zk2, rc2) = cond_kill(Xc, nm, "D", "E")
+    results.append(("direct D<-E -> keep", "survives conditioning",
+                    f"|corr| {marg2:.2f}->{rc2:.2f} (worst {zk2})", "PASS" if rc2 > 0.5*marg2 else "FAIL"))
 
-print("="*88)
-print("  RED TEAM — do the honesty gates refuse when they should?")
-print("="*88)
-for name, expect, got, status in results:
-    tag = {"PASS": "[PASS] ", "FAIL": "[FAIL] ", "LIMIT": "[LIMIT]"}[status]
-    print(f"  {tag} {name:34s} expect: {expect:34s} got: {got}")
-p = sum(s == "PASS" for *_, s in results); f = sum(s == "FAIL" for *_, s in results); l = sum(s == "LIMIT" for *_, s in results)
-print("-"*88)
-print(f"  {p} held, {f} failed, {l} known-limit  (of {len(results)})")
-print("  LIMITs are honest boundaries, not bugs: (3) the out-of-range gate only catches a")
-print("  surrogate if tested far enough to make it diverge; (6) observation alone cannot")
-print("  tell a confound from a mediation — both die under conditioning. Both need naming.")
-print("="*88)
+    # 6. MEDIATION A->M->B: link ALSO dies under conditioning on M -> indistinguishable from confound
+    M = 2*A + .3*rng.normal(size=1500); Bm = 3*M + .3*rng.normal(size=1500)
+    Xm = np.column_stack([A, Bm, M]); nmm = ["A", "Bm", "M"]
+    mg, (zk3, rc3) = cond_kill(Xm, nmm, "Bm", "A")
+    results.append(("mediation A->M->B", "dies under M — SAME signature as confound",
+                    f"|corr| {mg:.2f}->{rc3:.2f} on {zk3}", "LIMIT"))
+
+    # 7. NO STRUCTURE -> no 'meaningful absence' to claim (must not invent gaps)
+    Xn = rng.uniform(0, 12, (300, 1)); yn = rng.normal(size=300)
+    rn = disc(Xn, yn, "nostruct")
+    results.append(("no-structure -> no gaps", "NO RULE => no absence expectation",
+                    rn["verdict"], "PASS" if rn["verdict"] != "UNDERSTOOD" else "FAIL"))
+    return results
+
+
+def report(results, title=TITLE):
+    print("=" * 88)
+    print(f"  {title}")
+    print("=" * 88)
+    for name, expect, got, status in results:
+        tag = {"PASS": "[PASS] ", "FAIL": "[FAIL] ", "LIMIT": "[LIMIT]"}[status]
+        print(f"  {tag} {name:34s} expect: {expect:34s} got: {got}")
+    p = sum(s == "PASS" for *_, s in results); f = sum(s == "FAIL" for *_, s in results); l = sum(s == "LIMIT" for *_, s in results)
+    print("-" * 88)
+    print(f"  {p} held, {f} failed, {l} known-limit  (of {len(results)})")
+    print("  LIMITs are honest boundaries, not bugs: (3) the out-of-range gate only catches a")
+    print("  surrogate if tested far enough to make it diverge; (6) observation alone cannot")
+    print("  tell a confound from a mediation — both die under conditioning. Both need naming.")
+    print("=" * 88)
+    return p, f, l
+
+
+if __name__ == "__main__":
+    report(run())

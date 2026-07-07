@@ -1,0 +1,76 @@
+####################################################################################################
+#  RESEARCH-LINE RED TEAM — full run   (2026-07-07)
+####################################################################################################
+
+========================================================================================
+  RED TEAM — core honesty gates (discover / confound / absence)
+========================================================================================
+  [PASS]  noise -> refuse                    expect: NO RULE                            got: NO RULE
+  [PASS]  surrogate, FAR test -> catch       expect: in fits, out collapses             got: in 1.00 out -169.83
+  [PASS]  surrogate, NEAR test -> reach      expect: gate needs enough reach            got: in 1.00 out -31.61
+  [PASS]  confound B<-A -> BEST-GUESS        expect: link dies under conditioning       got: |corr| 0.99->0.01 on C
+  [PASS]  direct D<-E -> keep                expect: survives conditioning              got: |corr| 0.99->0.99 (worst None)
+  [LIMIT] mediation A->M->B                  expect: dies under M — SAME signature as confound got: |corr| 1.00->0.00 on M
+  [PASS]  no-structure -> no gaps            expect: NO RULE => no absence expectation  got: NO RULE
+----------------------------------------------------------------------------------------
+  6 held, 0 failed, 1 known-limit  (of 7)
+  LIMITs are honest boundaries, not bugs: (3) the out-of-range gate only catches a
+  surrogate if tested far enough to make it diverge; (6) observation alone cannot
+  tell a confound from a mediation — both die under conditioning. Both need naming.
+========================================================================================
+
+============================================================================================
+  RED TEAM — THE CLOCK (trend + cycle gates)
+============================================================================================
+  [PASS]  real trend -> REAL               expect: beats null                     got: +2.05/century real=True
+  [PASS]  flat iid noise -> refuse         expect: FPR ~5%                        got: false-REAL 4.0% of 200
+  [PASS]  sparse (6yr) noise -> refuse     expect: FPR ~5%, not inflated          got: false-REAL 4.0% of 300
+  [FAIL]  AR(1) noise, IID null -> LIES    expect: iid null invalid on autocorr   got: false-REAL 56.5% of 200
+  [PASS]  AR(1) noise, BLOCK null -> refuse expect: block null restores calibration got: false-REAL 11.5% of 200
+  [PASS]  real trend, BLOCK null -> keep   expect: power retained >=90%           got: true-REAL 100.0% of 100
+  [LIMIT] random walk (unit root)          expect: block helps, not a full cure   got: iid 91% -> block 68% false-REAL
+  [PASS]  real cycle -> found              expect: UNDERSTOOD/strong              got: UNDERSTOOD R2 1.00
+  [PASS]  phase vs noise -> refuse         expect: not UNDERSTOOD                 got: NO RULE R2 -0.00
+  [PASS]  linear ramp on phase axis        expect: a real law, not a fake cycle   got: UNDERSTOOD R2 1.00
+--------------------------------------------------------------------------------------------
+  8 held, 1 failed, 1 known-limit  (of 10)
+============================================================================================
+
+====================================================================================================
+  RED TEAM — THE MATRIX-CREATOR (no-fabrication gates)
+====================================================================================================
+  [PASS]  complete: exact rows, no NaN       expect: rows==519, finite                  got: rows=519 finite=True
+  [PASS]  pad: flag == presence, no NaN      expect: flag exact & finite                got: flag_match=True finite=True
+  [PASS]  pad noise -> no law                expect: not UNDERSTOOD                     got: NO RULE R2 -0.00
+  [PASS]  MNAR: absence surfaces as flag     expect: flag carries, value doesn't        got: UNDERSTOOD |c_flag|=0.98 |c_val|=0.01 flag_in_eq=True
+  [PASS]  pad impute: slope not corrupted    expect: slope~=2.00                        got: PARTIAL pad-slope=2.00 (true 2.00)
+  [LIMIT] complete: collider selection bias  expect: independent -> subset INVENTS corr got: full r=-0.00 complete-subset r=-0.51 fabricated=True
+----------------------------------------------------------------------------------------------------
+  5 held, 0 failed, 1 known-limit  (of 6)
+====================================================================================================
+
+====================================================================================================
+  RED TEAM — TOOL CREATION (out-of-range surrogate gate)
+====================================================================================================
+  [PASS]  combo_lock -> MINT chain         expect: MINTED diff.log                  got: MINTED:diff.log
+  [PASS]  genuine law -> SOLVED            expect: via reciprocal key               got: base-key:reciprocal
+  [PASS]  Runge surrogate -> reject far    expect: in-range crowned, gate kills     got: in=UNDERSTOOD/1.00 gate_rejects=True
+  [PASS]  noise -> nothing born            expect: solve=None forge=None            got: solve=None forge=None
+  [PASS]  tanh -> no false law             expect: idk OR re-verifiable             got: idk (no false law)
+  [PASS]  Runge surrogate, NEAR window     expect: reach limit if it slips          got: identity_slips_near=False
+----------------------------------------------------------------------------------------------------
+  6 held, 0 failed, 0 known-limit  (of 6)
+====================================================================================================
+
+####################################################################################################
+#  GRAND TOTAL:  25 held, 1 failed, 3 known-limit   (of 29 trials across 4 batteries)
+#  Failures/limits carried this run:
+#   - clock: the IID trend null LIES on autocorrelated data (AR1 56% false-REAL);
+#     the block-permutation null built this session fixes the stationary case
+#     (11%) while keeping 100% power on real trends. A non-stationary random walk
+#     (unit root) is only partly cured (91% -> 68%) — it needs explicit
+#     non-stationarity handling, documented as a LIMIT.
+#   - assembler: complete-case assembly under COLLIDER selection invents a
+#     correlation from independent variables (r 0.00 -> -0.51) — a limit of
+#     complete mode (assumes missingness independent of the relationship).
+####################################################################################################

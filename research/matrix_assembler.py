@@ -51,18 +51,19 @@ def ask(df, target, predictors, mode="complete"):
     return (f"{target} <- {predictors} [{mode}]  rows used {len(y)} (of {n_avail:,} present)\n"
             f"      -> {r['verdict']} R2 {r['r2']:.2f}   {target} = {eq[:74]}")
 
-df = coerce(load_raw(GZ), NUM)
-print("="*84)
-print("  MATRIX-CREATOR — assemble discover-ready matrices from RAW data (no global drop)")
-print("="*84)
-print("  per-column presence (how ragged the raw is):")
-for c in NUM: print(f"     {c:5s}: {int(df[c].notna().sum()):>8,} of {len(df):,} present")
+if __name__ == "__main__":
+    df = coerce(load_raw(GZ), NUM)
+    print("="*84)
+    print("  MATRIX-CREATOR — assemble discover-ready matrices from RAW data (no global drop)")
+    print("="*84)
+    print("  per-column presence (how ragged the raw is):")
+    for c in NUM: print(f"     {c:5s}: {int(df[c].notna().sum()):>8,} of {len(df):,} present")
 
-print("\n  ASK questions; the assembler builds each matrix per-question:\n")
-print("  " + ask(df, "dwpt", ["temp", "rhum"], "complete"))            # dense -> the law
-print("\n  " + ask(df, "prcp", ["temp", "rhum", "pres"], "complete"))  # SPARSE column, now askable
-print("\n  " + ask(df, "dwpt", ["temp", "rhum", "wpgt", "prcp"], "pad"))  # absent-as-dimension
-print("\n" + "="*84)
-print("  Global .dropna() across all columns would have kept ~0 rows (prcp/snow/wpgt/tsun")
-print("  are mostly absent). Per-question assembly keeps what each question actually needs.")
-print("="*84)
+    print("\n  ASK questions; the assembler builds each matrix per-question:\n")
+    print("  " + ask(df, "dwpt", ["temp", "rhum"], "complete"))            # dense -> the law
+    print("\n  " + ask(df, "prcp", ["temp", "rhum", "pres"], "complete"))  # SPARSE column, now askable
+    print("\n  " + ask(df, "dwpt", ["temp", "rhum", "wpgt", "prcp"], "pad"))  # absent-as-dimension
+    print("\n" + "="*84)
+    print("  Global .dropna() across all columns would have kept ~0 rows (prcp/snow/wpgt/tsun")
+    print("  are mostly absent). Per-question assembly keeps what each question actually needs.")
+    print("="*84)
