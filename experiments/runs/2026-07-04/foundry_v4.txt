@@ -1,0 +1,19 @@
+forging the world (seed 1, faithful port, truth_dag verified)...
+  182,423 usable views, mean size 23.9  [8s]
+
+BLIND CLIMB (the solver sees only views):
+  level 1: 427 groups certified (z-gate 5.1)  [38s]
+  level 2: 910 groups certified (z-gate 5.4)  [82s]
+  level 3: 1315 groups certified (z-gate 5.6)  [96s]
+  level 4: 1537 groups certified (z-gate 5.6)  [103s]
+  level 5: 1390 groups certified (z-gate 5.7)  [109s]
+
+SCORING against unique truth extents per layer:
+  recovered groups total: 1232
+  truth layer 1 (60 unique groups): EXACT  11.7%  J>=0.8  15.0%  J>=0.5  81.7%  mean best-J 0.626
+  truth layer 2 (146 unique groups): EXACT   2.1%  J>=0.8   8.2%  J>=0.5  37.0%  mean best-J 0.463
+  truth layer 3 (292 unique groups): EXACT   0.0%  J>=0.8   0.0%  J>=0.5   2.7%  mean best-J 0.279
+  truth layer 4 (791 unique groups): EXACT   0.0%  J>=0.8   0.0%  J>=0.5   0.0%  mean best-J 0.197
+  precision: 4.1% of recovered groups match a true group at J>=0.8 (mean 0.491)
+
+total time 115s
