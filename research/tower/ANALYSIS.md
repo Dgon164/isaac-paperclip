@@ -113,6 +113,34 @@ substrate as it climbs.
 
 ---
 
+## 5b. Competing hypotheses (owner's challenge, 2026-07-07 — record before deciding)
+
+The analysis above (§2–§3) leans on **substrate-impurity from sequential bottom-up
+composition**. The owner challenges the load-bearing beam: *"the order/layer you built from
+doesn't matter — detection and potential matter."* This is a real, decidable fork. Both are
+recorded; the experiment decides.
+
+- **H-A (direction / substrate — the §2–§3 story).** Recovery is compositional; L2 fails
+  because it is mined from dirty, incomplete L1 tokens; the fix is to purify the substrate
+  (top-down) before climbing. *Presupposes* that recovery must proceed floor-by-floor.
+
+- **H-B (detection + potential — the owner's, and better-grounded in the theory).** Layer
+  index is **epiphenomenal** — a proxy for fragment size. A unit is recovered iff (i) its
+  per-sighting fragment is big/frequent enough (**detection** ≈ `detect^depth`) and (ii) the
+  system can hold it as an unconfirmed **potential** (`⁻⁰`, the x-ledger) and accumulate
+  sparse fragments across a long span until it crystallizes. Deep units fail because each
+  sighting is a tiny fragment AND Isaac's single-pass crystallizer has **no long-span
+  potential accumulation**. Build-order is irrelevant; you detect potentials at any level
+  directly from the stream.
+  - Note: §2's "every view is a top-group sample" actually SUPPORTS H-B — top units are
+    maximally present in the data, so they are detectable directly; they fail only because
+    Isaac cannot bank their sparse fragments as a held-open potential. The observation being
+    top-down is not a "wrong direction," it is evidence that direction is the wrong frame.
+
+**Discriminator = E-ORACLE.** H-A predicts clean L1 tokens make L2 jump; H-B predicts clean
+tokens barely help (the loss is detection+potential, not dirty substrate). **E-POTENTIAL**
+tests H-B's positive claim: an x-ledger on a DIRTY substrate should crack the deep layers.
+
 ## 6. Experiment plan — registered predictions (the NEXT phase)
 
 Each isolates one loss. Run blind on Foundry worlds; score extensionally (best-Jaccard per
@@ -134,18 +162,29 @@ is reported with its diagnosis.
   (e.g. 35/55/75%). *Prediction:* whole-tower recovery beats any single rate (each rate a
   focal depth). *Falsifier:* no better than the best single rate → mixed-rate prescription
   dead.
-- **E-TOPDOWN — the direction hypothesis.** Add a top-down pass: use recovered higher units to
-  purify/confirm lower tokens (bottom-up propose, top-down verify), then re-mine. *Prediction:*
-  beats pure bottom-up on L2+. *Falsifier:* no gain → direction is not the lever.
+- **E-TOPDOWN — the direction hypothesis (H-A).** Add a top-down pass: use recovered higher
+  units to purify/confirm lower tokens (bottom-up propose, top-down verify), then re-mine.
+  *Prediction:* beats pure bottom-up on L2+. *Falsifier:* no gain → direction is not the lever.
+- **E-POTENTIAL — the ledger hypothesis (H-B, the owner's positive claim).** Bolt an
+  x-ledger / potential-accumulator onto the resolver: posit unconfirmed units at ANY level
+  directly from the stream, hold them open, accumulate sparse fragments across the full span,
+  crystallize when constraints suffice — leaving the substrate DIRTY (no oracle purification).
+  *Prediction:* the deep layers crack anyway (recovery ≫ the 10×/floor curve). *Falsifier:*
+  no gain without clean substrate → potential is not sufficient; H-A's impurity term is real.
 - **E-DISEASE — landfill vs boundary at the margin.** At L2, measure precision and the
   J≥0.5-vs-exact gap. *Prediction:* high J≥0.5, low exact (boundary), with a fragment tail
   (mild landfill). Informs whether closure/counts or purification is the first fix.
 
-**Decision rule.** The pair (E-ORACLE, E-CLEAN) separates the two dominant hypotheses:
-channel-attenuation vs substrate-impurity. Whichever loss is largest is where the first fix
-goes. Only after these do we refine a solution — candidate levers, in the order the evidence
-would license them: top-down purification, the count channel, mixed-rate observation, the
-compression invariant + absorption + parsing ported from Crystallizer v4.
+**Decision rule.** (E-ORACLE, E-POTENTIAL) separate the two live hypotheses:
+- E-ORACLE jumps L2 → **H-A** (substrate impurity): first fix = top-down purification.
+- E-ORACLE barely helps but E-POTENTIAL cracks deep layers → **H-B** (detection + potential):
+  first fix = an x-ledger / potential-accumulator, plus attending to detection (E-SWEEP/E-MIX);
+  layer/order is a non-lever and substrate purity is a red herring.
+- Both help → the losses coexist; sequence fixes by measured effect size.
+
+Only after the machine decides do we refine a solution. Candidate levers, licensed in whatever
+order the evidence supports: potential-ledger, the count channel, mixed-rate observation,
+top-down purification, and the compression invariant + absorption + parsing from Crystallizer v4.
 
 ---
 
