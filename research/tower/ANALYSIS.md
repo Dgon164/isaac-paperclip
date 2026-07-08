@@ -111,6 +111,18 @@ tool.** It climbs clean substrate fine (the good-science regime closes 60/60 and
 to 12/12) and cannot climb dirty substrate, because it has no machinery to purify the
 substrate as it climbs.
 
+**The smoking gun (owner's point, 2026-07-07 — "it was never supposed to be single-use").**
+`_crystallize` is not merely single-pass by omission; it is **structurally barred from
+climbing, on two counts:**
+1. **It excludes its own output.** [isaac.py:1014] `nodes = [n for n in all_nodes() if not
+   n.startswith("type:")]` — the `type:` nodes a pass creates are removed from the node set the
+   NEXT pass would mine. The refined parts cannot re-enter as members.
+2. **Types carry no co-occurrence doors.** Phase 3 writes a type only a `type` door
+   (member→type), never a `seq` door, so even if types were re-admitted the co-occurrence
+   miner (which reads `tag="seq"`) is blind to them.
+Two locks on the same door. Phase 4 builds ONE level of subset-hierarchy among a single pass's
+types, but never re-tokenizes and re-mines — so there is no recursion, by construction.
+
 ---
 
 ## 5b. Competing hypotheses (owner's challenge, 2026-07-07 — record before deciding)
@@ -174,6 +186,14 @@ is reported with its diagnosis.
 - **E-DISEASE — landfill vs boundary at the margin.** At L2, measure precision and the
   J≥0.5-vs-exact gap. *Prediction:* high J≥0.5, low exact (boundary), with a fragment tail
   (mild landfill). Informs whether closure/counts or purification is the first fix.
+- **E-LOOP — the convergence loop (§6b, the leading fix).** Make the crystallizer iterate:
+  re-tokenize → re-admit refined parts → repeat to a fixpoint, guarded by the compression
+  invariant, carrying potentials across passes. *Prediction:* recovery climbs across
+  iterations and the ~10×/floor curve FLATTENS — deep layers recover on the dirty substrate
+  without oracle purification. *Falsifier:* recovery does not improve across passes, or the
+  loop fails to converge (oscillates / collapses to one blob despite the compression guard) →
+  looping is not sufficient; the loss is in detection (E-SWEEP/E-MIX) or a hard identifiability
+  wall (collisions), not in single-vs-multi-pass.
 
 **Decision rule.** (E-ORACLE, E-POTENTIAL) separate the two live hypotheses:
 - E-ORACLE jumps L2 → **H-A** (substrate impurity): first fix = top-down purification.
@@ -187,6 +207,39 @@ order the evidence supports: potential-ledger, the count channel, mixed-rate obs
 top-down purification, and the compression invariant + absorption + parsing from Crystallizer v4.
 
 ---
+
+## 6b. The leading design direction — the crystallizer as a CONVERGENCE LOOP (owner's, 2026-07-07)
+
+"Reprocess the structure and the refined parts until it stabilizes." The crystallizer was
+meant to run to a **fixpoint**, not once. This is the leading candidate fix because it does
+BOTH disputed cures at once, emergently — so it is orthogonal to the H-A/H-B split and likely
+supersedes it.
+
+**The loop (three changes to `_crystallize` + a wrapper):**
+1. **Re-tokenize between passes.** After a pass yields types, rewrite the observation stream in
+   terms of them (explanatory-cover parsing, Crystallizer v4) so refined parts appear as
+   **tokens with `seq`/co-occurrence doors** — the substrate the next pass mines.
+2. **Re-admit the refined parts.** Remove the `type:` exclusion (§5 lock 1) and give types
+   co-occurrence doors (§5 lock 2). A discovered unit is an eligible member/token at any level.
+3. **Iterate to a fixpoint.** Repeat until the type set AND the parse stop changing. Guards:
+   - **Compression invariant** — a pass that inflates the re-described stream is junk; roll it
+     back, do not climb on it (the 24→302 alarm as a loop-control signal).
+   - **Potentials persist across passes** — sub-threshold / Phase-3.5 "wrong" candidates are
+     not discarded; they are carried as accumulating potentials (`⁻⁰`, the x-ledger) and may
+     cross admission in a later pass as the substrate refines. This is where H-B lives.
+
+**Why it unifies H-A and H-B.** Each iteration purifies the substrate a little (H-A — but
+*bootstrapped*, never oracle-fed) AND lets held-open potentials accumulate enough sparse
+evidence to crystallize (H-B). The single-pass version stalls at exactly the floor where one
+pass of evidence runs out; the loop keeps going until the evidence is spent. No choice between
+"clean the tokens" and "bank the fragments" — the loop does both every turn.
+
+**Open design questions (to resolve in the build):** convergence criterion (type-set churn =
+0? compression delta < ε?); non-convergence handling (oscillation, or collapse-to-one-blob —
+the compression guard should catch the latter); cost (each pass is O of a crystallize; bound
+the iteration count); and whether re-tokenization should be hard (consume) or soft (annotate +
+weight) — v4 showed hard explanatory-cover beats annotation, but hard consumption interacts
+with the edge-first/union-erasure law (§overlapping groups lose shared atoms when consumed).
 
 ## 7. What this is NOT claiming (yet)
 
