@@ -47,6 +47,11 @@ swallow what you cook.** Three consequences:
   **resolves**: stop re-deriving it and just **pull up its generalized application-breakdown.**
 - Frequent concepts become cheap lookups; rare ones stay under active refinement. **Expertise
   = amortization.** ("Consultation pays rent"; a resolved concept is cheap to consult.)
+- **"Resolved" is an epistemic status, not a freeze (owner, 2026-07-07): "currently settled —
+  refined to the best of our ability, based on my experience, this is what this is."** Held
+  with epistemic humility. **Cost and epistemics are ORTHOGONAL axes:** resolution makes
+  retrieval *cheap*; it does NOT make the account *certain*. A concept can be maximally cheap
+  to pull up AND still fully provisional.
 
 ## 4. Why this answers the open loop questions (from ANALYSIS.md §6b)
 - **Convergence without runaway.** Convergence is **per-concept and incremental**, not a global
@@ -71,10 +76,14 @@ rent" / route-demotion law.
   concept from "under active refinement" to "resolved, pull up the cached breakdown."
 
 ## 6. Design tensions to honor (honest)
-- **"Resolved" ≠ "frozen."** The theory says stale confidence expires and fragmentation stays
-  repairable. Resolution must be a *cost/confidence* state: cheap to retrieve, but a
-  **contradicting touch re-dirties it** and re-opens refinement. Otherwise the amortization
-  shortcut ossifies wrong concepts.
+- **"Resolved" = currently settled, NOT frozen — and it needs no special machinery.**
+  Resolution is *"refined to the best of our ability, based on my experience — this is what
+  this is,"* held with epistemic humility (owner, 2026-07-07). It inherits the engine's NATIVE
+  honesty: a *possible* account, not THE account (the proposal principle), **scoped to the
+  experience that formed it**, and revised like any claim when experience arrives outside that
+  scope. No bolt-on "invalidate-on-contradiction" is required — that was a wrong framing that
+  conflated the two axes. Keep cost and epistemics separate and amortization cannot ossify a
+  concept: the cached account is always labelled "current best," never "true."
 - **Touch-propagation strength/decay is THE knob.** Too weak → deep concepts never get touched
   (the current collapse). Too strong → runaway. The decay of touch-strength up the holarchy is
   probably where the tower's recovery curve is actually set. It should be *learned/adaptive*,
