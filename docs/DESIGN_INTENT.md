@@ -110,12 +110,14 @@ ANYTHING, ask: where else does this apply RIGHT NOW? Then apply it.
 - **Trust**: calibration audit; law_confidence (measured decay curve);
   0/20 false discoveries on noise; refusals are answers.
 
-## Where things stand (complete numbers, 2026-07-05)
+## Where things stand (complete numbers, 2026-07-09)
 MNIST fused **95.0–95.2** (trained+extracted readout over node outputs;
 hand-calibrated 92.2; pixel-softmax 86.0) | truth-in-shortlist ~97–98 |
-covtype 59.1 | HIGGS classify 66.2 (doors ceiling; eqn road: transverse
-mass SAID) | CIFAR 32.6 (needs texture percepts) | clocks 22.9 (pixel
-bridge open) | Kepler/planted laws EXACT | nets NOT matched anywhere.
+covtype 59.1 | HIGGS classify **71.18 / AUC 0.7886** (higgs_pairs.py:
+1D signals + 220 pair doors admitted by interaction excess, printable
+softmax; 1D-only 68.07/0.7479; eqn road: transverse mass SAID; deep-net
+0.885 NOT matched) | CIFAR 32.6 (needs texture percepts) | clocks 22.9
+(pixel bridge open) | Kepler/planted laws EXACT.
 
 ## Standing next-lever list
 Full training data (free) → self-assembled patch-percept retina (CIFAR's

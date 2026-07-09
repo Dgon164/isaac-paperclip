@@ -1,0 +1,23 @@
+HIGGS: sampled 500k (400k train / 100k test), same seed as higgs_best
+
+1D doors crystallized  [1s]
+2D doors: 378 pairs scored; 220 admitted by interaction excess  [3s]
+   top-5 admitted pairs (excess beyond marginals):
+     j1_btag x j2_pT   excess 0.132
+     j1_phi x j2_phi   excess 0.090
+     MET_phi x j2_phi   excess 0.087
+     j1_btag x j3_pT   excess 0.085
+     MET_phi x j3_phi   excess 0.073
+B  1D signals (record) : 68.07%  AUC 0.7479  [22s]
+B+ 1D + 2D pair doors  : 71.18%  AUC 0.7886  [187s]
+
+   top-weighted PAIR doors in the trained layer (extracted):
+     j2_btag x j3_btag   weight 1.9
+     m_wbb x m_wwbb   weight 1.7
+     j1_eta x j4_btag   weight 1.6
+     m_bb x m_wbb   weight 1.2
+     m_jj x m_jjj   weight 1.0
+     j2_btag x m_wwbb   weight 1.0
+
+delta over record: +3.10 pts, AUC +0.0407
+deep-net benchmark ~AUC 0.885 (Baldi 2014): NOT matched

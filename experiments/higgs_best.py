@@ -18,6 +18,13 @@ Record corrections that stand: the old 'detector equation AUC 0.848'
 was a torch MLP in an equation costume - OVERTURNED 2026-07-05. The
 deep-net benchmark (~AUC 0.885, Baldi 2014) is NOT matched by any
 lawful road here.
+
+SUPERSEDED 2026-07-09 as best classification number by higgs_pairs.py:
+B+ (1D signals + 220 pair doors admitted by interaction excess, same
+printable softmax) = 71.18% / AUC 0.7886. The road-B number below
+(68.07% / AUC 0.7479) stands as the 1D-only record. Saturation curve
+measured: 60 pairs 70.02%, 150 70.73%, 220 71.18% (peak), 300 70.28%,
+378 66.43% (readout drowns). This file still reproduces A-D unchanged.
 """
 import sys, os, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
