@@ -1,0 +1,23 @@
+HIGGS: 11,000,000 rows; sampled 500k (400k train / 100k test)
+
+A. flat doors:        66.21%  AUC 0.7292  [1s]
+B. WEIGHTED SIGNALS:  68.07%  AUC 0.7479  [22s]
+   extracted (the layer IS readable) — top-weighted sensors:
+     j3_btag  weight 1.9
+     j4_btag  weight 1.4
+     m_jlv    weight 1.4
+     j2_btag  weight 1.0
+     j1_pT    weight 1.0
+     m_jj     weight 0.9
+
+C. the formula road (higgs_map.py, 2026-07-04): m_lv discovered
+   blind among 21 low-level channels as
+   +0.29*lep_pT*MET - 0.29*lep_pT*MET*cos(1.7*(lep_phi-MET_phi))
+   = pT*MET*(1 - cos(dphi)) — THE TRANSVERSE MASS, R2 0.856;
+   m_jj/m_jjj failed honestly (heavy tails, jet pairing).
+
+D. the resonance (m_bb, null gate 0.0365): peak at 0.849 (dataset units),
+   width 0.080, holding 26.5% of signal events  [0s]
+   (units caveat: columns are normalized — GeV unrecoverable)
+
+not matched: deep-net benchmark ~AUC 0.885 (Baldi 2014).
