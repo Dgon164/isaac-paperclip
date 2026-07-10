@@ -3078,6 +3078,47 @@ class Isaac:
         # on what remains. Straight strokes, corners, and T/Y branches
         # all fall out of the same loop.
         S = (skel > 0).astype(np.uint8)
+        # SOLID-VS-STROKE GATE (measured 2026-07-10): a skeleton reading
+        # is only valid for ink that IS a stroke. Ink-to-skeleton
+        # thickness ratio, measured populations: strokes top out at 14.9
+        # (MNIST; printed fonts 3.1) and solid blobs start at 25.1 —
+        # gate 20, mid-gap. A filled rectangle is a region, not a thick
+        # line. Holed components (rings/frames) are exempt: the hole
+        # reader already owns them.
+        comps0 = self._ink_components(ink.copy())
+        lbl0 = np.full(ink.shape, -1)
+        for ci, comp in enumerate(comps0):
+            lbl0[comp[:, 0], comp[:, 1]] = ci
+        holed = set()
+        for h in self._holes(ink):
+            if len(h) < min_hole:
+                continue
+            for hy, hx in h:
+                for dy in (-1, 0, 1):
+                    for dx in (-1, 0, 1):
+                        py, px = int(hy) + dy, int(hx) + dx
+                        if 0 <= py < ink.shape[0] \
+                                and 0 <= px < ink.shape[1] \
+                                and lbl0[py, px] >= 0:
+                            holed.add(int(lbl0[py, px]))
+        for ci, comp in enumerate(comps0):
+            if ci in holed or len(comp) < 6:
+                continue
+            n_sk = int(S[comp[:, 0], comp[:, 1]].sum())
+            if len(comp) / max(n_sk, 1) >= 20:
+                pts = np.column_stack([comp[:, 1], -comp[:, 0]]).astype(float)
+                c, sd, angle, squish, fill = self._region_geometry(pts)
+                if squish > 0.55:
+                    kind = "rect" if fill > 0.92 else "disc"
+                else:
+                    kind = "line"
+                parts.append(dict(kind=kind, center=c.tolist(),
+                                  size=float(sd[0] * 4),
+                                  squish=round(squish, 2),
+                                  angle=round(angle, 1),
+                                  square=bool(kind == "rect"
+                                              and squish > 0.8)))
+                S[comp[:, 0], comp[:, 1]] = 0
         from collections import deque
 
         def _bfs_far(start, cset):

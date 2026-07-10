@@ -1,0 +1,39 @@
+trained: all channels onto one set of concept nodes + readout (2000 glyphs)  [44s]
+
+V1 MNIST handwritten test (n=1000, complete numbers):
+  topology      :  57.7%
+  bones         :  35.7%
+  dynamics      :  65.4%
+  density       :  80.2%
+  exemplar      :  86.1%
+  FUSED+readout :  95.4%
+  [10s]
+
+V2 SYMBOL TEST — printed fonts, never seen (n=100, complete numbers):
+  topology      :  52.0%
+  bones         :  33.0%
+  dynamics      :  53.0%
+  density       :  57.0%
+  exemplar      :  64.0%
+  FUSED+readout :  80.0%
+  [1s]
+  (concept channels should survive the substrate change;
+   memorized-statistics channels should collapse)
+
+V3 shape language on handwritten glyphs (complete numbers):
+  '8' described with 2 hole(s): 63/105 (60.0%)
+  '0' described with 1 hole(s): 79/93 (84.9%)
+  '1' described with 0 hole(s): 117/117 (100.0%)
+  [1s]
+
+V4 shape vocabulary on clean synthetic shapes:
+  disc  : 30/30
+  ring  : 30/30
+  rect  : 28/30
+  frame : 30/30
+  line  : 30/30
+  TOTAL : 148/150 (98.7%)  [0s]
+
+string tie audit:
+  outbound: recognize_glyph returns the label object np.int64(6) (type int64) — the symbol exists at the output, as an opaque training label
+  inbound:  NO channel doors from the string "7" onto concept:7 — named gap (polysemy is one-directional today)
