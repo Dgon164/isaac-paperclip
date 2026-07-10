@@ -14,6 +14,23 @@ not digit-only (any pattern class); nevers, normals, duels, ledgers —
 if the inputs exist, the mechanism applies. When building or testing
 ANYTHING, ask: where else does this apply RIGHT NOW? Then apply it.
 
+## THE USAGE LAW (owner, 2026-07-10)
+**"Giving it the language to understand is one thing — bones and
+whatever — but telling it how to use them is not. It needs to learn how
+to represent ideas using structures that we provide. We need to learn
+how to translate something into these ideas, and if the ideas don't
+work, we need to figure out what does."** The division of labor:
+hand-built = the VOCABULARY (measuring organs: holes, bones, joints,
+curves, deltas) + the TRANSLATION (raw thing → the vocabulary's facts)
++ the epistemics (nulls, doors, admission). LEARNED = the USAGE — which
+facts and combinations carry identity is decided by Isaac's own
+null-gated machinery, never by a hand-written signature or comparison
+recipe. A hand-picked signature (e.g. "topology = holes+line-count") is
+programming the lesson — the old trap. When the vocabulary cannot say a
+difference, the measured residual/confusion IS the discovery signal:
+grow the vocabulary, don't hand-wire the usage. (Found 2026-07-10
+auditing the glyph stack: every channel's usage was hand-taught.)
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")

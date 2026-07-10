@@ -1,0 +1,10 @@
+translated 3000 images into 36 vocabulary facts  [9s]
+
+SAME learner, three inputs (complete numbers, 1000 test):
+  structure facts, usage SELF-ASSEMBLED: 76.5%  [0s]
+  raw pixels                      : 80.3%  [1s]
+  pixels + structure facts        : 88.9%  [0s]
+
+hand-taught usage of the SAME vocabulary (recorded, vision_benchmark): topology signature 57.7%, bones variants 35.7%
+P1 self-assembled beats hand-written topology usage: CONFIRMED (76.5 vs 57.7)
+P2 structure facts add to pixels through one learner: CONFIRMED (88.9 vs 80.3)
