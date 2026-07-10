@@ -431,6 +431,28 @@ trajectories and stores only what refuses to vary.
   linear model**, and the trained comparator beats hand calibration by
   ~3. When a readout exists, recognize_glyph uses it as the comparator
   (vetoes and shortlist semantics kept on top).
+- **PRINT-AND-OVERLAY: THE SYMBOL CHANNEL (owner, 2026-07-10; benchmark
+  `experiments/vision_benchmark.py`).** "Just print and overlay the
+  nearest font number... trivial for a computer." `attach_symbol_forms`
+  (or `learn_glyphs(symbol_forms=...)`) puts RENDERED forms of each
+  class's symbol on the same concept node as templates (engine
+  normalizes via `_norm_glyph`: crop→20px→center-of-mass in 28×28, soft
+  ink) and mints `symbol:<c> -names-> concept:<c>` — the string is a net
+  object; polysemy runs BOTH directions. `recognize_glyph` gains the
+  `render` channel: cosine overlay vs every form at ±2px shifts, nearest
+  print votes; the weight is measured like every channel's; pair judges
+  hire it per duel automatically. `overlay_delta` is the effect-entity
+  face (D9, vision): expectation rendered → subtracted → SIGNED delta
+  (extra ink vs missing ink are different facts) + similarity as a
+  MEASURED badness-of-drawing score. COMPLETE numbers (templates from 5
+  fonts, tested on 5 DISJOINT fonts): render alone **100%** on printed
+  digits never seen, 58.0% on handwritten; fused printed 86.0→**92.0**;
+  fused handwritten 95.4→95.6 (no regression). Honest miss: on the 150
+  worst-drawn glyphs (lowest overlay similarity, median 0.60) render
+  added +0.0 — the print is least informative exactly where the glyph
+  least resembles it; the badness NUMBER itself is the win there.
+  Rendering (fonts, PIL) stays outside the engine — it is observation
+  I/O; the engine takes images.
 - Limits (honest): trajectories need identities given (the tracker half
   of the pixel bridge is still open); the lift is single-rigid-body
   (multi-body SfM not built — stitch_views covers the multi-VIEW case,

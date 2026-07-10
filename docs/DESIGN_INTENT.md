@@ -93,7 +93,13 @@ ANYTHING, ask: where else does this apply RIGHT NOW? Then apply it.
   (+VARIANTS per style, per-bone NORMALS kept); compound doors behind
   ceiling trigger.
 - **Recognition**: learn_glyphs/recognize_glyph — ALL channels door onto
-  the same concept nodes (density, topology, bones, dynamics, exemplars);
+  the same concept nodes (density, topology, bones, dynamics, exemplars,
+  RENDER — owner 2026-07-10: "just print and overlay the nearest font
+  number"; attach_symbol_forms puts rendered symbol templates on the
+  concept, symbol:<c> -names-> concept:<c> closes polysemy inbound, and
+  overlay_delta speaks the signed leftover = expect→subtract→delta,
+  D9's vision face; render alone 100% on never-seen fonts, fused
+  printed 86→92, handwritten 95.4→95.6);
   measured channel weights; pair judges; shortlist tournament; certified
   NEVERS veto; readable votes. information_ledger (said/caught/reachable/
   ceiling + where). train_readout/extract_readout: ONE softmax layer over

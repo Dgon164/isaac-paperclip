@@ -1,0 +1,59 @@
+model A trained (no symbol forms)  [48s]
+V1  MNIST handwritten, WITHOUT render (n=1000, complete numbers):
+  topology      :  57.7%
+  bones         :  35.7%
+  dynamics      :  65.4%
+  density       :  80.2%
+  exemplar      :  86.1%
+  FUSED+readout :  95.4%
+V2  printed (5 held-out fonts), WITHOUT render (n=50, complete numbers):
+  topology      :  52.0%
+  bones         :  28.0%
+  dynamics      :  54.0%
+  density       :  62.0%
+  exemplar      :  76.0%
+  FUSED+readout :  86.0%
+  [12s]
+
+model B trained (+ symbol forms, template fonts disjoint from test fonts)  [47s]
+  measured channel weights: exemplar 0.24, density 0.24, dynamics 0.18, topology 0.13, render 0.12, bones 0.08
+V1r MNIST handwritten, WITH render (n=1000, complete numbers):
+  topology      :  57.7%
+  bones         :  35.7%
+  dynamics      :  65.4%
+  density       :  80.2%
+  exemplar      :  86.1%
+  render        :  58.0%
+  FUSED+readout :  95.6%
+V2r printed (5 held-out fonts), WITH render (n=50, complete numbers):
+  topology      :  52.0%
+  bones         :  28.0%
+  dynamics      :  54.0%
+  density       :  62.0%
+  exemplar      :  76.0%
+  render        : 100.0%
+  FUSED+readout :  92.0%
+  [12s]
+
+V5 the 150 WORST-drawn test glyphs (lowest overlay similarity, median badness 0.60):
+  fused WITHOUT render: 93.3%
+  fused WITH    render: 93.3%
+  worst glyph, spoken: truth 2, overlay says 4 (sim 0.65, extra ink 45%, missing ink 45%)  [5s]
+
+V3 shape language on handwritten glyphs (complete numbers):
+  '8' described with 2 hole(s): 63/105 (60.0%)
+  '0' described with 1 hole(s): 79/93 (84.9%)
+  '1' described with 0 hole(s): 117/117 (100.0%)
+  [1s]
+
+V4 shape vocabulary on clean synthetic shapes:
+  disc  : 30/30
+  ring  : 30/30
+  rect  : 28/30
+  frame : 30/30
+  line  : 30/30
+  TOTAL : 148/150 (98.7%)  [0s]
+
+string tie audit:
+  outbound: recognize_glyph returns np.int64(6) — the label
+  inbound:  symbol:7 (string '7') -names-> concept:7 — the name now reaches the concept; its rendered forms vote as the render channel (polysemy closed in both directions)

@@ -3429,7 +3429,126 @@ class Isaac:
     # represented." Every extracted structure writes evidence for the
     # SAME concept nodes; recognition sums what every channel says.
 
-    def learn_glyphs(self, images, labels, max_exemplars=60):
+    def _norm_glyph(self, img, size=28, box=20):
+        """MNIST-style normalization for ANY glyph image: crop to ink,
+        longest side -> `box` px (numpy bilinear), centered by mass in a
+        `size` x `size` field. Both observed glyphs and rendered symbol
+        forms pass through here, so overlays compare like with like."""
+        a = np.asarray(img, float)
+        mx = a.max()
+        if mx <= 0:
+            return np.zeros((size, size))
+        a = a / mx
+        ys, xs = np.where(a > 0.1)
+        if len(ys) == 0:
+            return np.zeros((size, size))
+        a = a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
+        h, w = a.shape
+        s = box / max(h, w)
+        nh, nw = max(1, int(round(h * s))), max(1, int(round(w * s)))
+        yy = np.linspace(0, h - 1, nh)
+        xx = np.linspace(0, w - 1, nw)
+        y0 = np.floor(yy).astype(int)
+        x0 = np.floor(xx).astype(int)
+        y1 = np.minimum(y0 + 1, h - 1)
+        x1 = np.minimum(x0 + 1, w - 1)
+        fy = (yy - y0)[:, None]
+        fx = (xx - x0)[None, :]
+        r = (a[np.ix_(y0, x0)] * (1 - fy) * (1 - fx)
+             + a[np.ix_(y1, x0)] * fy * (1 - fx)
+             + a[np.ix_(y0, x1)] * (1 - fy) * fx
+             + a[np.ix_(y1, x1)] * fy * fx)
+        out = np.zeros((size, size))
+        Y, X = np.mgrid[:nh, :nw]
+        m = r.sum()
+        cy, cx = (Y * r).sum() / m, (X * r).sum() / m
+        ty, tx = int(round(size / 2 - cy)), int(round(size / 2 - cx))
+        ys0, xs0 = max(0, ty), max(0, tx)
+        ys1, xs1 = min(size, ty + nh), min(size, tx + nw)
+        out[ys0:ys1, xs0:xs1] = r[ys0 - ty:ys1 - ty, xs0 - tx:xs1 - tx]
+        return out
+
+    @staticmethod
+    def _soft_glyph(a):
+        """3x3 box blur: soft ink so overlays reward NEAR misses."""
+        p = np.pad(a, 1)
+        out = np.zeros_like(a)
+        for dy in range(3):
+            for dx in range(3):
+                out += p[dy:dy + a.shape[0], dx:dx + a.shape[1]]
+        return out / 9.0
+
+    def attach_symbol_forms(self, forms):
+        """THE PRINT-AND-OVERLAY CHANNEL (owner, 2026-07-10: "just print
+        and overlay the nearest font number... trivial for a computer").
+        Rendered forms of each class's SYMBOL become templates on the
+        SAME concept node — no new classifier, a new door. The string
+        becomes a first-class net object (symbol:<c> -names-> concept:<c>
+        — inbound polysemy: the name now reaches the concept), and
+        recognition gains a `render` channel: overlay the nearest
+        rendered form; the leftover after subtraction is a SIGNED DELTA
+        (overlay_delta) — expectation, subtraction, perceived difference.
+        `forms`: dict class -> list of rendered images (any size; the
+        engine normalizes). Rendering itself is I/O and stays outside
+        the engine, like any other observation."""
+        for c, imgs in forms.items():
+            T = []
+            for im in imgs:
+                t = self._soft_glyph(self._norm_glyph(im))
+                n = np.linalg.norm(t)
+                if n > 0:
+                    T.append(t / n)
+            if not T:
+                continue
+            node = f"concept:{c}"
+            self.net.set_meta(node, "symbol_forms", np.array(T))
+            self.net.add_door(f"symbol:{c}", node, tag="names")
+            self.net.set_meta(f"symbol:{c}", "string", str(c))
+
+    def overlay_delta(self, img, label=None):
+        """Expect -> subtract -> perceive the delta (the effect-entity
+        move, in vision). Overlays the nearest symbol form of `label`
+        (or the best-fitting class) at the best shift and returns the
+        SIGNED difference — extra ink (the glyph has it, the symbol
+        doesn't: style, flourish) and missing ink (the symbol expects
+        it, the glyph lacks it: breaks, damage) — plus the delta image
+        itself. Signed deltas law: the two directions are different
+        facts."""
+        classes = self.net.get_meta("crystal", "glyph_classes")
+        obs = self._soft_glyph(self._norm_glyph(img))
+        n = np.linalg.norm(obs)
+        if n == 0 or classes is None:
+            return None
+        obsn = obs / n
+        cands = [label] if label is not None else list(classes)
+        best = None
+        for c in cands:
+            T = self.net.get_meta(f"concept:{c}", "symbol_forms")
+            if T is None or not len(T):
+                continue
+            for t in T:
+                for dy in (-2, -1, 0, 1, 2):
+                    for dx in (-2, -1, 0, 1, 2):
+                        s = float((np.roll(np.roll(obsn, dy, 0), dx, 1)
+                                   * t).sum())
+                        if best is None or s > best[0]:
+                            best = (s, c, t, dy, dx)
+        if best is None:
+            return None
+        sim, c, t, dy, dx = best
+        o = np.roll(np.roll(obs, dy, 0), dx, 1)
+        tn = t * (o.sum() / max(t.sum(), 1e-9))       # match ink mass
+        delta = o - tn
+        ink = max(o.sum(), 1e-9)
+        return dict(label=c, similarity=round(sim, 3), delta=delta,
+                    extra_ink=round(float(np.clip(delta, 0, None).sum())
+                                    / ink, 3),
+                    missing_ink=round(float(np.clip(-delta, 0, None).sum())
+                                      / ink, 3),
+                    shift=(int(dy), int(dx)))
+
+    def learn_glyphs(self, images, labels, max_exemplars=60,
+                     symbol_forms=None):
         """One concept node per class; EVERY channel attaches evidence to
         it: pixel densities (crystallize_features doors), topology+line
         signatures (describe_shape), bones pattern nets, and raw
@@ -3512,6 +3631,10 @@ class Isaac:
                     self.net.add_door(f"concept:{c}",
                                       f"not_{pred[0]}={pred[1]}", tag="neg")
             self.net.set_meta(f"concept:{c}", "never", nevers)
+        # print-and-overlay: attach BEFORE calibration so the render
+        # channel's reliability is MEASURED like every other channel's
+        if symbol_forms:
+            self.attach_symbol_forms(symbol_forms)
         # measured reliability weights (calibration, not opinion): each
         # channel's vote is weighted by what it DEMONSTRATES on held-out
         # glyphs — equal weighting let a sharp-but-weak channel veto
@@ -3625,6 +3748,9 @@ class Isaac:
         self.net.set_meta("crystal", "readout_W", None)   # no stale layer
         classes = list(self.net.get_meta("crystal", "glyph_classes"))
         CH = ["bones", "density", "dynamics", "exemplar", "topology"]
+        if any(self.net.get_meta(f"concept:{c}", "symbol_forms")
+               is not None for c in classes):
+            CH.append("render")
         self.net.set_meta("crystal", "readout_channels", CH)
         pool = []
         for c in classes:
@@ -3768,6 +3894,29 @@ class Isaac:
             ex_s.append(float((ex @ f).max()) if ex is not None and
                         len(ex) else -np.inf)
         chan["exemplar"] = np.array(ex_s)
+        # 5. print-and-overlay: the SYMBOL channel (owner, 2026-07-10).
+        # The engine overlays each class's rendered symbol forms at the
+        # best small shift; the nearest print IS the vote. Cosine on
+        # soft ink, max over forms and shifts.
+        obs_r = self._soft_glyph(self._norm_glyph(img))
+        n_r = np.linalg.norm(obs_r)
+        if n_r > 0:
+            obs_r = obs_r / n_r
+            Sh = np.array([np.roll(np.roll(obs_r, dy, 0), dx, 1).ravel()
+                           for dy in (-2, -1, 0, 1, 2)
+                           for dx in (-2, -1, 0, 1, 2)])
+            rsc, have = [], False
+            for c in classes:
+                T = self.net.get_meta(f"concept:{c}", "symbol_forms")
+                if T is None or not len(T):
+                    rsc.append(np.nan)
+                    continue
+                have = True
+                rsc.append(float((T.reshape(len(T), -1) @ Sh.T).max()))
+            if have:
+                rsc = np.array(rsc)
+                rsc = np.where(np.isnan(rsc), np.nanmin(rsc), rsc)
+                chan["render"] = rsc
         # the vote: standardized scores -> per-channel posterior ->
         # RELIABILITY-WEIGHTED sum (weights measured at learn time)
         wts = self.net.get_meta("crystal", "glyph_weights") or {}

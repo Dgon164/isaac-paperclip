@@ -4,18 +4,21 @@ All numbers COMPLETE numbers (accuracy against the whole task).
 
 V1  MNIST recognition, per channel + fused + trained readout
     (the standing road; train 200/class, test 1000 unseen)
-V2  THE SYMBOL TEST (owner, 2026-07-10: "7 should be '7'"):
-    concepts trained ONLY on handwriting are shown PRINTED digits in
-    10 fonts they have never seen. A channel that carries the CONCEPT
-    (topology, bones, shape) should survive the substrate change; a
-    channel that memorized handwriting statistics (density, exemplars)
-    should collapse. This measures concept-vs-memorization directly.
-V3  Shape language on real glyphs: "the 8 is two circles" — % of test
-    8s described with 2 holes; 0s with 1 hole; 1s with 0 holes.
-V4  Shape vocabulary on clean synthetic shapes (ring/disc/frame/rect/
-    line), % of kinds named correctly.
-Also recorded: the string tie as it stands — outbound label only; NO
-inbound string channel (nothing doors from "7" onto concept:7).
+V2  THE SYMBOL TEST (owner: "7 should be '7'"): concepts trained ONLY
+    on handwriting shown PRINTED digits in 5 fonts nobody trained on.
+V1r/V2r  THE PRINT-AND-OVERLAY CHANNEL (owner, 2026-07-10: "just print
+    and overlay the nearest font number"): same model + symbol forms
+    rendered from 5 DIFFERENT fonts (template fonts and test fonts are
+    disjoint). Registered predictions: render tops V2; fused V2 rises;
+    V1 fused does not fall.
+V5  THE BADLY-DRAWN TEST (owner: "at worst... see this is a badly
+    drawn 7 vs a bunch of other badly drawn numbers"): the 150 WORST
+    drawn test glyphs (lowest overlay similarity — badness is now a
+    measured number), fused accuracy without vs with render.
+V3  Shape language on real glyphs (8=two holes, 0=one, 1=zero).
+V4  Shape vocabulary on clean synthetic shapes.
+Plus the string-tie audit: inbound polysemy now exists
+(symbol:<c> -names-> concept:<c>) and overlay_delta speaks the delta.
 """
 import sys, os, time
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -31,83 +34,106 @@ y = d.target.astype(int)
 tr_idx = np.concatenate([np.where(y[:40000] == c)[0][:200] for c in range(10)])
 te_idx = rng.choice(np.where(np.arange(len(y)) > 40000)[0], 1000, replace=False)
 
-t0 = time.time()
-i = Isaac()
-i.learn_glyphs(X[tr_idx], y[tr_idx])
-i.train_readout(X[tr_idx], y[tr_idx])
-classes = i.net.get_meta("crystal", "glyph_classes")
-print(f"trained: all channels onto one set of concept nodes + readout "
-      f"({len(tr_idx)} glyphs)  [{time.time()-t0:.0f}s]\n")
+from PIL import Image, ImageDraw, ImageFont
+TEMPLATE_FONTS = ["arial.ttf", "times.ttf", "cour.ttf", "calibri.ttf",
+                  "georgia.ttf"]
+TEST_FONTS = ["verdana.ttf", "tahoma.ttf", "consola.ttf", "comic.ttf",
+              "segoeui.ttf"]
 
-CHANNELS = ("topology", "bones", "dynamics", "density", "exemplar")
+def render_digit(ch, fontfile, size=48):
+    """Raw render only — the ENGINE does the normalization now."""
+    font = ImageFont.truetype(os.path.join("C:/Windows/Fonts", fontfile), size)
+    img = Image.new("L", (96, 96), 0)
+    dr = ImageDraw.Draw(img)
+    x0, y0, x1, y1 = dr.textbbox((0, 0), ch, font=font)
+    dr.text((48 - (x0 + x1) / 2, 48 - (y0 + y1) / 2), ch, fill=255, font=font)
+    return np.asarray(img, float)
 
-def bench(images, labels, title):
+symbol_forms = {c: [render_digit(str(c), f) for f in TEMPLATE_FONTS]
+                for c in range(10)}
+
+CHANNELS = ("topology", "bones", "dynamics", "density", "exemplar",
+            "render")
+
+def bench(i, classes, images, labels, title):
     hits = {k: 0 for k in CHANNELS}
     hits["FUSED+readout"] = 0
     n = len(images)
+    wrong = []
     for im, truth in zip(images, labels):
         got, posts = i.recognize_glyph(im)
         if got == truth:
             hits["FUSED+readout"] += 1
+        else:
+            wrong.append((truth, got))
         for k in CHANNELS:
             p = posts.get(k)
             if p is not None and classes[int(np.argmax(p))] == truth:
                 hits[k] += 1
     print(f"{title} (n={n}, complete numbers):")
     for k in CHANNELS + ("FUSED+readout",):
-        print(f"  {k:14s}: {hits[k]/n*100:5.1f}%")
-    return hits, n
+        if hits[k] or k in ("FUSED+readout",):
+            print(f"  {k:14s}: {hits[k]/n*100:5.1f}%")
+    return hits, n, wrong
 
-# ── V1: the standing road ───────────────────────────────────────────
+# ── model A: without symbol forms (the standing road) ───────────────
 t0 = time.time()
-h1, n1 = bench(X[te_idx], y[te_idx], "V1 MNIST handwritten test")
+iA = Isaac()
+# font test set: the 5 fonts NO model trained on, passed through the
+# engine's own glyph normalizer (recognition expects 28x28)
+font_imgs = np.array([iA._norm_glyph(render_digit(str(c), f)) * 255
+                      for f in TEST_FONTS for c in range(10)])
+font_labels = np.array([c for f in TEST_FONTS for c in range(10)])
+iA.learn_glyphs(X[tr_idx], y[tr_idx])
+iA.train_readout(X[tr_idx], y[tr_idx])
+clA = iA.net.get_meta("crystal", "glyph_classes")
+print(f"model A trained (no symbol forms)  [{time.time()-t0:.0f}s]")
+t0 = time.time()
+h1, n1, _ = bench(iA, clA, X[te_idx], y[te_idx],
+                  "V1  MNIST handwritten, WITHOUT render")
+h2, n2, _ = bench(iA, clA, font_imgs, font_labels,
+                  "V2  printed (5 held-out fonts), WITHOUT render")
 print(f"  [{time.time()-t0:.0f}s]\n")
 
-# ── V2: the symbol test — printed digits, never seen ────────────────
-from PIL import Image, ImageDraw, ImageFont
-FONTS = ["arial.ttf", "times.ttf", "cour.ttf", "calibri.ttf", "georgia.ttf",
-         "verdana.ttf", "tahoma.ttf", "consola.ttf", "comic.ttf",
-         "segoeui.ttf"]
-
-def render_digit(ch, fontfile, size=48):
-    font = ImageFont.truetype(os.path.join("C:/Windows/Fonts", fontfile), size)
-    img = Image.new("L", (96, 96), 0)
-    dr = ImageDraw.Draw(img)
-    x0, y0, x1, y1 = dr.textbbox((0, 0), ch, font=font)
-    dr.text((48 - (x0 + x1) / 2, 48 - (y0 + y1) / 2), ch, fill=255, font=font)
-    a = np.asarray(img, float)
-    ys, xs = np.where(a > 20)
-    a = a[ys.min():ys.max() + 1, xs.min():xs.max() + 1]
-    # MNIST style: longest side -> 20 px, centered by mass in 28x28
-    hgt, wid = a.shape
-    s = 20.0 / max(hgt, wid)
-    im2 = Image.fromarray(a.astype(np.uint8)).resize(
-        (max(1, int(round(wid * s))), max(1, int(round(hgt * s)))),
-        Image.BILINEAR)
-    a = np.asarray(im2, float)
-    out = np.zeros((28, 28))
-    ys, xs = np.mgrid[:a.shape[0], :a.shape[1]]
-    m = a.sum()
-    cy, cx = (ys * a).sum() / m, (xs * a).sum() / m
-    ty, tx = int(round(14 - cy)), int(round(14 - cx))
-    for yy in range(a.shape[0]):
-        for xx in range(a.shape[1]):
-            py, px = yy + ty, xx + tx
-            if 0 <= py < 28 and 0 <= px < 28:
-                out[py, px] = a[yy, xx]
-    return out
-
-font_imgs, font_labels = [], []
-for f in FONTS:
-    for c in range(10):
-        font_imgs.append(render_digit(str(c), f))
-        font_labels.append(c)
+# ── model B: + print-and-overlay channel (5 template fonts) ─────────
 t0 = time.time()
-h2, n2 = bench(np.array(font_imgs), np.array(font_labels),
-               "V2 SYMBOL TEST — printed fonts, never seen")
-print(f"  [{time.time()-t0:.0f}s]")
-print("  (concept channels should survive the substrate change;")
-print("   memorized-statistics channels should collapse)\n")
+i = Isaac()
+i.learn_glyphs(X[tr_idx], y[tr_idx], symbol_forms=symbol_forms)
+i.train_readout(X[tr_idx], y[tr_idx])
+classes = i.net.get_meta("crystal", "glyph_classes")
+w = i.net.get_meta("crystal", "glyph_weights")
+print(f"model B trained (+ symbol forms, template fonts disjoint from "
+      f"test fonts)  [{time.time()-t0:.0f}s]")
+print("  measured channel weights: " +
+      ", ".join(f"{k} {v:.2f}" for k, v in sorted(w.items(),
+                                                  key=lambda kv: -kv[1])))
+t0 = time.time()
+h1r, _, _ = bench(i, classes, X[te_idx], y[te_idx],
+                  "V1r MNIST handwritten, WITH render")
+h2r, _, _ = bench(i, classes, font_imgs, font_labels,
+                  "V2r printed (5 held-out fonts), WITH render")
+print(f"  [{time.time()-t0:.0f}s]\n")
+
+# ── V5: the badly-drawn test ────────────────────────────────────────
+t0 = time.time()
+sims = []
+for ix in te_idx:
+    r = i.overlay_delta(X[ix], label=int(y[ix]))
+    sims.append(r["similarity"] if r else 0.0)
+worst = np.argsort(sims)[:150]          # measured badness, not opinion
+okA = sum(1 for k in worst
+          if iA.recognize_glyph(X[te_idx[k]])[0] == y[te_idx[k]])
+okB = sum(1 for k in worst
+          if i.recognize_glyph(X[te_idx[k]])[0] == y[te_idx[k]])
+print(f"V5 the 150 WORST-drawn test glyphs (lowest overlay similarity, "
+      f"median badness {np.median([sims[k] for k in worst]):.2f}):")
+print(f"  fused WITHOUT render: {okA/150*100:.1f}%")
+print(f"  fused WITH    render: {okB/150*100:.1f}%")
+d0 = i.overlay_delta(X[te_idx[int(worst[0])]])
+print(f"  worst glyph, spoken: truth {y[te_idx[int(worst[0])]]}, overlay "
+      f"says {d0['label']} (sim {d0['similarity']}, extra ink "
+      f"{d0['extra_ink']*100:.0f}%, missing ink "
+      f"{d0['missing_ink']*100:.0f}%)  [{time.time()-t0:.0f}s]\n")
 
 # ── V3: shape language on real glyphs ───────────────────────────────
 t0 = time.time()
@@ -174,11 +200,11 @@ for k in kinds:
     print(f"  {k:6s}: {per[k][0]}/{per[k][1]}")
 print(f"  TOTAL : {ok}/{tot} ({ok/tot*100:.1f}%)  [{time.time()-t0:.0f}s]\n")
 
-# ── the string tie, as it stands ────────────────────────────────────
+# ── the string tie, after the build ─────────────────────────────────
 got, _ = i.recognize_glyph(X[te_idx[0]])
+sym = i.net.get_meta("symbol:7", "string")
 print("string tie audit:")
-print(f"  outbound: recognize_glyph returns the label object "
-      f"{got!r} (type {type(got).__name__}) — the symbol exists at the "
-      f"output, as an opaque training label")
-print("  inbound:  NO channel doors from the string \"7\" onto concept:7 "
-      "— named gap (polysemy is one-directional today)")
+print(f"  outbound: recognize_glyph returns {got!r} — the label")
+print(f"  inbound:  symbol:7 (string {sym!r}) -names-> concept:7 — the "
+      f"name now reaches the concept; its rendered forms vote as the "
+      f"render channel (polysemy closed in both directions)")
