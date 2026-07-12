@@ -969,3 +969,17 @@ replays THROUGH the restore correctly). Measured: keep-3 224 KB vs
 full-log 378 KB on the same 6-generation run. Prunes are content-
 free ops events. Battery `isaac_store/test_retention.py` = 10/10.
 Promotion gates: engine + 14 batteries.
+
+**The Honest Report — how people use Isaac (owner MVP, built
+2026-07-12):** `python askisaac.py data.csv [--target col]` — drop a
+CSV, get the report: VERDICT FIRST (refusals are real answers with a
+diagnosis), the equation IN THE USER'S COLUMN NAMES ("energy =
++3.00*alpha*beta +1.00*alpha*alpha"), complete numbers (r2, held-out
+edge, rows), calibrated confidence with its calibration note, the
+accounting when present, live rivals with their settling probes, a
+NEXT-EXPERIMENT suggestion, and a provenance appendix (rows, cols,
+data hash, engine, date — every report traceable). Module:
+`isaac_store.report` (load_csv/challenge/render_text). Battery
+`isaac_store/test_report.py` = 11/11 (noise -> NO RULE refusal
+report, never a fake equation). Promotion gates: engine + 15
+batteries.
