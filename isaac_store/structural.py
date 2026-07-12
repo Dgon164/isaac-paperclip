@@ -217,6 +217,10 @@ def analyze_level(seq, n_perm=50, seed=3):
         chart.append(f"{a} ... {b} (nested)")
     if "global_period" in cons:
         chart.append(f"repeats every {cons['global_period']} atoms")
+    for a, p_ in sorted(cons.get("periodic", {}).items())[:6]:
+        chart.append(f"{a} returns every {p_} atoms")
+    for a, b in cons.get("never_follows", [])[:4]:
+        chart.append(f"{a} never followed by {b}")
     return dict(pattern=ptype, constraints=cons, chart=chart,
                 n_atoms=len(set(seq)), length=len(seq))
 

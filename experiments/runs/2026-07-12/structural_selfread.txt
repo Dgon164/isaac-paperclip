@@ -1,0 +1,9 @@
+ISAAC READS HIS OWN RECORD — structural pass, 2026-07-12
+
+  fleet_frames_prime/journal: 59 events -> NO STRUCTURE
+
+  fleet_higgs_prime/journal: 40 events -> REPEAT
+      admitted:put returns every 1 atoms
+
+  data/findings.jsonl: 5 events -> TOO SHORT
+
