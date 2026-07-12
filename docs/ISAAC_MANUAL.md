@@ -852,3 +852,15 @@ best-effort pattern classes — the structural quarantine underneath
 does not depend on scrubber perfection. Battery
 `isaac_store/test_scrubber.py` = 19/19; promotion gates now include
 it (engine + 5 batteries = 91 checks + 11/11).
+
+**Skills — roles are loadouts (owner, 2026-07-12):** every worker IS
+Prime with a checkbox of skills loaded. A skill = a plain record in
+Prime's net (`skill:<name>`: learned things + preloaded structures),
+published through the normal queue (`isaac_store.publish_skill`) and
+pulled by workers like any node (`pull_skill(cache, name)` — same
+LiveCache, same 30-min recheck, same job pinning, same HTTP doorway).
+The scrubber is the first skill: its module patterns are only the
+SEED (`seed_skill()`); `scrub(payload, vocabulary=<pulled record>)`
+runs on Prime's living vocabulary, so educating Prime re-equips every
+worker at its next recheck. Battery `isaac_store/test_skills.py` =
+7/7. Promotion gates: engine + 7 batteries = 107/107.

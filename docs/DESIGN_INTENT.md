@@ -162,6 +162,21 @@ end) or USER-HELD (persisted only on the user's side, encrypted, key
 user-side); **logging is a leak channel**: ops events from a
 security-net worker carry counts/timing ONLY, never content.
 
+**SKILLS — THE WORKER MODEL (owner, 2026-07-12, ninth message):**
+"the scrubber is just a specialized skill, but it belongs to prime.
+all information any worker will do is just prime, but its a specific
+checkbox of things... its learned things and preloaded structures and
+you just pull and access that directly for the net to be able to
+process." ROLES ARE LOADOUTS, NOT SPECIES: every worker IS Prime with
+a checkbox of skills loaded. A skill = a named record in Prime's net
+(`skill:<name>`, learned things + preloaded structures) pulled
+through the SAME partial-loading/caching path as any node — no
+separate machinery. Educating Prime updates the skill record
+(supersession); workers pick it up on their recheck; a pinned job
+keeps its loadout until the job boundary. The scrubber's pattern
+vocabulary is the first skill record; hand-coded module defaults are
+only the SEED Prime is educated with.
+
 **THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
 thread soon, NOT now):** "we will have to train the scrubber... teach
 it what counts as personal or not and generalize the information."
