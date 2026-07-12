@@ -1047,3 +1047,22 @@ never silent. Every item carries provenance (source/sha/bytes).
 accepts any source (multi-table folders/zips report each table).
 Battery `isaac_store/test_intake.py` = 19/19. Promotion gates:
 engine + 20 batteries.
+
+**Multicycle structural patterning (owner design, 2026-07-12):**
+`isaac_store.structural.analyze(x)` — the flow-logic road: atoms ->
+constraint families each behind its own admission rule
+(always-follows links via shuffle null; forks via family gate +
+per-fork null; EXACT periodicity, chance-proof by construction;
+balanced pairs requiring >=3 DEEP nesting episodes — the ballot
+problem cannot fake repeated depth; certified never-follows only
+where chance says the pair should have touched) -> the pattern type
+that satisfies the admitted set (CHAIN / CYCLE / BRANCH / HIERARCHY
+/ REPEAT / NO STRUCTURE as an honest refusal) + the chart itself
+("check -> {fail | pass}"). MULTICYCLE: admitted chains COLLAPSE
+into higher atoms and the cycle reruns — the tower (level 1 finds
+the motifs, level 2 finds their rhythm). Text mode: rare tokens
+become the <slot> atom, so templates emerge without memorizing
+names ("open -> the ; the -> file ; file -> <slot>"). Noise: 0/10
+false structures. askisaac now reads text items' structure. Battery
+`isaac_store/test_structural.py` = 12/12. Promotion gates: engine +
+21 batteries.

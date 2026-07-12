@@ -43,9 +43,14 @@ def main():
         texts = [i for i in got["items"] if i["kind"] == "text"]
         for s in got["skipped"]:
             print(f"[skipped] {s['source']} — {s['why']}")
+        from isaac_store.structural import analyze
         for tx in texts:
+            st = analyze(tx["text"])
+            chart = " ; ".join(st["levels"][0]["chart"][:5]) \
+                if st.get("levels") else ""
             print(f"[text] {tx['name']} ({tx['provenance']['bytes']} "
-                  f"bytes) — the text road is not wired to reports yet")
+                  f"bytes) — structure: {st['pattern']}"
+                  + (f" | {chart}" if chart else ""))
         if not tables:
             print("no numeric tables found to challenge.")
             return

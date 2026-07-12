@@ -304,6 +304,25 @@ Local = nothing leaves the machine. Budgeted like every
 environment (the GM pattern: interaction costs budget; sessions
 end).
 
+**MULTICYCLE STRUCTURAL PATTERNING (owner, 2026-07-12):** "basically
+a flowlogic chart... find the atoms of different things, then go
+through the cycle to select the constraints that he can set and
+output the pattern type that satisfies those constraints." The
+general structural road (and the text road's engine): (1) ATOMS of
+the thing (tokens/events/items — vocabulary per modality, as
+always); (2) THE CYCLE measures constraint families, each behind its
+own shuffle null — always-follows (determinism), forks (A then B or
+C, never D), periodicity, balanced pairs (nesting), certified
+never-follows (negatives first-class); constraints Isaac CAN SET =
+the ones that pass; (3) the PATTERN TYPE is whatever satisfies the
+admitted constraint set — chain / cycle / branch (the flow chart) /
+hierarchy / repeat — or NO STRUCTURE as an honest refusal; the
+output carries the chart itself (nodes + admitted links). (4)
+MULTICYCLE: admitted patterns COLLAPSE into higher atoms and the
+cycle runs again — patterns of patterns, the tower (this is the
+metastructure/D1 thread given its mechanism). Reuse note: this is
+discover()'s shape pointed at structure instead of quantity.
+
 **THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
 thread soon, NOT now):** "we will have to train the scrubber... teach
 it what counts as personal or not and generalize the information."
