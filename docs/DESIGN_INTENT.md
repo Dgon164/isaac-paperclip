@@ -97,6 +97,27 @@ never overwrites — the wisdom laws as a file layout). Immutability is
 what makes live pulls safe with zero locking. stdlib only, no
 dependencies (the Raspberry-Pi line).
 
+**THE LEARNED SOCIETY (owner, 2026-07-12 — the organizing design):**
+"basically this should be designed like a scholastic scientific...
+society? like the royal institute of science or whatever." The
+system IS a learned society (the Royal Society is the model), and
+the existing organs already hold the offices: **CRAWLERS =
+ARCHIVISTS** — settled by owner: "the crawler is just a router. it
+crawls and builds and navigates the mind web. and it can spool up
+and assign things. they are archivists. they manage the
+information. they assign workers and scientists to do the work" —
+v1 (router + division) ACCEPTED as-is; the assign/spool-up duty
+(archivists dispatching workers/scientists to jobs) is their next
+organ. **WORKERS** = the laboratory hands; **SCIENTISTS** = the
+discover/seeker roles; **SCRUBBERS** = the ethics office; **the
+admission gate = peer review**; **the journal = the society's
+Proceedings** (append-only, refereed, corrections kept — never
+retracted into nothing); **the findings ledger = the publication of
+record**; **rivals = open disputes**; **batteries = replication
+before acceptance**; **promotion = publication**. Design decisions
+should keep consulting this map: when a new mechanism is needed,
+ask what office a learned society would give it.
+
 **MIND CRAWLERS (owner, 2026-07-12):** "maybe we need multiple
 orchestrators... when one is unable to keep up they divide the
 section and have specialized sections they manage and specialize
