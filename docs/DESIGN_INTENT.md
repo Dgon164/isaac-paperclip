@@ -97,6 +97,21 @@ never overwrites — the wisdom laws as a file layout). Immutability is
 what makes live pulls safe with zero locking. stdlib only, no
 dependencies (the Raspberry-Pi line).
 
+**MIND CRAWLERS (owner, 2026-07-12):** "maybe we need multiple
+orchestrators... when one is unable to keep up they divide the
+section and have specialized sections they manage and specialize
+in, and they can make requests to other orchestrators... a page
+file that has the data storage location for their section of the
+web and do drive pulls." Prime federates: each crawler = a full
+orchestrator (own journal + packs + ops = its PAGE FILE; the lazy
+state = its drive pulls) owning a KEY RANGE. When a section
+outgrows capacity it DIVIDES at its median key — splits are
+journaled events (the lineage is wrong-kept); specialization
+emerges from key locality (namespaced keys cluster: law:*, skill:*,
+node:glyph:*). Requests between sections route through the range
+table (the federation's own page file, an append-only split log).
+Admission stays per-crawler — the gate travels with the section.
+
 **CUSTOMER SUBNETS — the privacy quarantine (owner, 2026-07-11, fourth
 message; ELEVATED 2026-07-12: "those containers are going to be what
 is required for user application" — the tier architecture is THE

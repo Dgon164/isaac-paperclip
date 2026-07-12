@@ -1120,3 +1120,19 @@ Prime; cold-start lazy; single-node recall; the mind rebuilt FROM
 PRIME answers identically (laws + facts); SESSION TWO grows the
 same Prime and a third cold start holds old AND new — permanent
 memory across sessions. Promotion gates: engine + 24 batteries.
+
+**Mind crawlers — Prime federates (owner design, 2026-07-12):**
+`isaac_store.MindCrawlers(dir, capacity)` — multiple orchestrators,
+each owning a KEY RANGE. A section that outgrows capacity DIVIDES at
+its median key into a new crawler; splits are journaled in
+crawl.jsonl (the lineage wrong-kept: parent, boundary, records
+moved) and a cold start rebuilds the exact federation from that log.
+Each crawler is a full Orchestrator — its pack index is its PAGE
+FILE, its lazy state does the DRIVE PULLS, its journal keeps its own
+wrong; admission travels with the section (proven: a gated edit dies
+in ITS OWN crawler's journal, even after splits). Specialization is
+emergent from key locality (namespaced keys form CONTIGUOUS
+territories — proven). Battery `isaac_store/test_crawlers.py` =
+12/12 (1,400 records through repeated divisions, ZERO lost, every
+value exact after cold start). Promotion gates: engine + 25
+batteries.
