@@ -323,6 +323,30 @@ cycle runs again — patterns of patterns, the tower (this is the
 metastructure/D1 thread given its mechanism). Reuse note: this is
 discover()'s shape pointed at structure instead of quantity.
 
+**INCOMPLETE INFORMATION ACROSS DATASETS (owner, 2026-07-12 — TODO,
+a research thread):** "variable x that is explored in a different
+dataset entirely, and it is only through comparing a and b datasets
+together that you can resolve it. where they are both halves of the
+same whole, but not contained in any single domain." Triangulation
+as an engine capability. Canonical examples (assistant-supplied):
+parallax (two viewpoints resolve the depth neither sees);
+Eratosthenes (shadow angle in one city + distance between cities =
+the Earth's circumference, in neither dataset alone); two laws with
+a shared unknown (A: y=x·a up to scale, B: y=x+b up to offset —
+identified only jointly). Mechanism sketch on existing organs: (1)
+the MISSING-VARIABLE SHADOW in A is already detected (adequacy
+diagnosis + residual dossier) — the new move is hypothesizing the
+shadow LIVES in B; (2) the alignment problem (shared key / time /
+entity — or distribution-level registration when no key; the
+comparison-as-registration theory is the theory of exactly this);
+(3) joint resolution: x = what is CONSISTENT WITH BOTH (constraint
+intersection; laws-run-backward; Understanding-as-Closure says it
+plainly — x is in the closure of A∪B but of neither alone); (4) THE
+NULL: permute the pairing between A and B — a real resolution dies
+under scrambled alignment, a fake one survives. Battery when built:
+plant x across two synthetic datasets, neither sufficient, jointly
+exact; scrambled-pairing kill; refusal when no alignment exists.
+
 **THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
 thread soon, NOT now):** "we will have to train the scrubber... teach
 it what counts as personal or not and generalize the information."
@@ -510,4 +534,5 @@ Full training data (free) → self-assembled patch-percept retina (CIFAR's
 door type) → per-variant duels → captures as ledger witnesses +
 interrogation at scale → effect entities (D9, the engineer's core) →
 SRBench (the differentiated lane).
+
 

@@ -1081,3 +1081,24 @@ writes from it, skills equipping across the wire, and the
 Provenance Gate recreation upgrade against a remote public record.
 The client side is now location-independent. Promotion gates:
 engine + 22 batteries.
+
+**Triangulation — incomplete information across datasets (owner
+design, built under carte blanche 2026-07-12):**
+`isaac_store.triangulate(table_a, table_b)` — "both halves of the
+same whole, not contained in any single domain," resolved. Two
+roads: COMPLETION (A's missing variable is B's COLUMN: join on the
+shared key, joint discovery; gain must beat the SCRAMBLED-PAIRING
+null — battery: alone r2 0.000 -> joint 1.000, law said exactly);
+HALVES (the latent lives in NEITHER: each side's articulated
+residual is a different mixture of the same hidden pair; agreement
+across the join, CONFIRMED independently in both halves of the data
+each against its own null, unmixes them — battery: x recovered
+r2 0.9915 and s r2 0.9866 from two datasets each holding only ~0.61
+of x). Refusals: NO ALIGNMENT (no shared key / poor coverage), NO
+CLOSURE (0 false closures; scrambled pairing recovers nothing).
+KNOWN LIMIT, kept honestly (found by the battery itself):
+equal-variance Gaussian latents in sum/difference mixtures are
+unresolvable IN PRINCIPLE (the ICA identifiability limit) — the
+refusal there is mathematically correct. Battery
+`isaac_store/test_triangulate.py` = 11/11. Promotion gates: engine
++ 23 batteries.
