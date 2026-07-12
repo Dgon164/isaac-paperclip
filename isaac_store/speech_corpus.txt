@@ -1,0 +1,104 @@
+# The teacher's corpus — paired examples Isaac LEARNS speech from.
+# Format: feature1,feature2|sentence with PLACEHOLDERS
+# This file is TRAINING DATA. Change the words here and Isaac's
+# speech changes; no wording exists anywhere in code.
+
+verdict:UNDERSTOOD|I understand this data about TARGET
+verdict:UNDERSTOOD|good news I understand this data about TARGET
+verdict:UNDERSTOOD|I understand this data about TARGET fully
+verdict:UNDERSTOOD|yes I understand this data about TARGET
+
+verdict:NO_RULE|I could not find a reliable relationship for TARGET and I will not pretend to
+verdict:NO_RULE|sadly I could not find a reliable relationship for TARGET and I will not pretend to
+verdict:NO_RULE|I could not find a reliable relationship for TARGET and I will not pretend to at all
+verdict:NO_RULE|no I could not find a reliable relationship for TARGET and I will not pretend to
+
+verdict:PARTIAL|I found part of the pattern in TARGET but not all of it
+verdict:PARTIAL|so far I found part of the pattern in TARGET but not all of it
+verdict:PARTIAL|I found part of the pattern in TARGET but not all of it yet
+verdict:PARTIAL|honestly I found part of the pattern in TARGET but not all of it
+
+verdict:CAPTURED|I can predict TARGET but I cannot yet say the rule as a formula
+verdict:CAPTURED|oddly I can predict TARGET but I cannot yet say the rule as a formula
+verdict:CAPTURED|I can predict TARGET but I cannot yet say the rule as a formula for now
+verdict:CAPTURED|so I can predict TARGET but I cannot yet say the rule as a formula
+
+atom:var|NAME on its own
+atom:var|just NAME on its own
+atom:var|NAME on its own simply
+atom:var|plainly NAME on its own
+
+atom:pow2|the square of NAME
+atom:pow2|notably the square of NAME
+atom:pow2|the square of NAME here
+atom:pow2|indeed the square of NAME
+
+atom:root|the square root of NAME
+atom:root|notably the square root of NAME
+atom:root|the square root of NAME here
+atom:root|indeed the square root of NAME
+
+atom:log|the logarithm of NAME
+atom:log|notably the logarithm of NAME
+atom:log|the logarithm of NAME here
+atom:log|indeed the logarithm of NAME
+
+atom:sin|a repeating wave in NAME
+atom:sin|notably a repeating wave in NAME
+atom:sin|a repeating wave in NAME here
+atom:sin|indeed a repeating wave in NAME
+
+atom:cos|a repeating wave in NAME
+atom:cos|notably a repeating wave in NAME
+atom:cos|a repeating wave in NAME too
+atom:cos|indeed a repeating wave in NAME
+
+atom:exp|an exponential change in NAME
+atom:exp|notably an exponential change in NAME
+atom:exp|an exponential change in NAME here
+atom:exp|indeed an exponential change in NAME
+
+atom:cosd|the alignment between NAME and NAME2
+atom:cosd|notably the alignment between NAME and NAME2
+atom:cosd|the alignment between NAME and NAME2 here
+atom:cosd|indeed the alignment between NAME and NAME2
+
+atom:sind|the alignment between NAME and NAME2
+atom:sind|notably the alignment between NAME and NAME2
+atom:sind|the alignment between NAME and NAME2 too
+atom:sind|indeed the alignment between NAME and NAME2
+
+atom:coshd|steep growth with the gap between NAME and NAME2
+atom:coshd|notably steep growth with the gap between NAME and NAME2
+atom:coshd|steep growth with the gap between NAME and NAME2 here
+atom:coshd|indeed steep growth with the gap between NAME and NAME2
+
+join:product|NAME times NAME2
+join:product|NAME2 times NAME
+join:product|maybe NAME times NAME2 combined
+join:product|surely NAME2 times NAME combined
+
+sign:pos|BODY raises TARGET with weight VALUE
+sign:pos|here BODY raises TARGET with weight VALUE
+sign:pos|clearly BODY raises TARGET with weight VALUE
+sign:pos|BODY raises TARGET with weight VALUE overall
+
+sign:neg|BODY lowers TARGET with weight VALUE
+sign:neg|here BODY lowers TARGET with weight VALUE
+sign:neg|clearly BODY lowers TARGET with weight VALUE
+sign:neg|BODY lowers TARGET with weight VALUE overall
+
+fit|the fit explains ROWS rows with r squared R2
+fit|overall the fit explains ROWS rows with r squared R2
+fit|the fit explains ROWS rows with r squared R2 cleanly
+fit|so the fit explains ROWS rows with r squared R2
+
+conf|on your own data my confidence is CONF
+conf|and on your own data my confidence is CONF
+conf|on your own data my confidence is CONF exactly
+conf|note on your own data my confidence is CONF
+
+next|what I would do next is this NEXT
+next|and what I would do next is this NEXT
+next|so what I would do next is this NEXT
+next|then what I would do next is this NEXT

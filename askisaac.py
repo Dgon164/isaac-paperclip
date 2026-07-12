@@ -15,8 +15,10 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
-from isaac_store.report import challenge, render_text  # noqa: E402
-from isaac_store.speech import speak                   # noqa: E402
+from isaac_store import bridge                          # noqa: E402
+from isaac_store.report import challenge, render_text   # noqa: E402
+from isaac_store.speech_learn import (learn_speech,     # noqa: E402
+                                      speak_learned)
 
 
 def main():
@@ -25,18 +27,31 @@ def main():
     p.add_argument("--target", default=None)
     p.add_argument("--json", action="store_true")
     p.add_argument("--speak", action="store_true",
-                   help="plain-English response (native gated English), "
-                        "with the full report attached beneath")
+                   help="LEARNED speech (trained from the corpus, all "
+                        "or nothing) with the full report beneath")
     a = p.parse_args()
-    rep = challenge(a.csv, target=a.target)
+    mod = bridge.load_isaac_module()
+    rep = challenge(a.csv, target=a.target, mod=mod)
     if a.json:
         print(json.dumps(rep, default=str, indent=2))
     elif a.speak:
-        out = speak(rep)
-        print(out["response"])
-        if not out["faithful"]:  # the null even distrusts ourselves
-            print(f"\n[faithfulness check FAILED: {out['problems']} — "
-                  f"trust the report below]")
+        mind = mod.Isaac()
+        corpus = open(os.path.join(HERE, "isaac_store",
+                                   "speech_corpus.txt"),
+                      encoding="utf-8").read()
+        learn_speech(mind, corpus)
+        out = speak_learned(mind, rep)
+        if out["can_speak"]:
+            print(out["response"])
+            if out["unspoken"]:
+                print(f"\n[not yet taught to speak: {out['unspoken']} — "
+                      f"see the report below]")
+            if not out["faithful"]:
+                print(f"\n[faithfulness check FAILED: {out['problems']}"
+                      f" — trust the report below]")
+        else:
+            print("[Isaac has not been taught to speak this verdict "
+                  "— the report follows.]")
         print("\n" + "-" * 60 + "\n" + render_text(rep))
     else:
         print(render_text(rep))

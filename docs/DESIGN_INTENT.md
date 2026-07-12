@@ -251,7 +251,26 @@ the Provenance Gate; scrubber still runs on intake (public ≠
 identity-free). Real-web search backend = an owner dependency call
 (API key vs none); the mechanism is provider-pluggable.
 
-**THE TRANSLATION LAYER (owner, 2026-07-12 — road 2 v1 BUILT same day):** "what is
+**SPEECH IS LEARNED OR IT IS NOT SPEECH (owner, 2026-07-12, the
+correction):** "well then it doesnt speak now does it? its all or
+nothing. you dont get to choose. that is called programming and
+thats not what isaac is about." The template realizer (speech.py v1,
+hand-written phrase table) is NOT Isaac speaking — it is my English,
+programmed; DEMOTED to scaffold, wrong-kept with this why. The usage
+law applied to language: hand-built = the word vocabulary's
+DELIVERY (placeholder translation NAME/VALUE/R2, assembly order,
+admission nulls, the faithfulness null); LEARNED = WHICH WORDS
+EXPRESS WHICH STRUCTURES, from paired examples, through Isaac's own
+evidence machinery (co-occurrence past a permutation null; fragments
+stored as knowledge in the net; persists via packs). ALL OR NOTHING:
+an untaught structure gets SILENCE and the raw report — never a
+hand-coded phrase. The proof standard: the wording must exist in the
+TRAINING CORPUS ONLY (grep the code for the words — absent); swap
+the corpus and the speech changes; withhold training and he cannot
+say it.
+
+**THE TRANSLATION LAYER (owner, 2026-07-12 — road 2 v1 BUILT same day;
+v1 DEMOTED same day, see the correction above):** "what is
 reported vs what actually gets responded need to be different. we
 need a translation layer. either an llm, or we need to train isaac
 on how to speak english." The REPORT (internal: complete, technical,

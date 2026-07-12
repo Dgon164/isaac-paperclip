@@ -1000,3 +1000,22 @@ report attached beneath as ground truth. Battery
 `isaac_store/test_speech.py` = 20/20. LLM-mouth (road 1) stays the
 fallback design if native speech hits its ceiling. Promotion gates:
 engine + 16 batteries.
+
+**LEARNED SPEECH — the correction applied (owner, 2026-07-12: "its
+all or nothing. you dont get to choose. that is called programming
+and thats not what isaac is about"):** speech.py (template realizer)
+DEMOTED to deprecated scaffold — it is programming, not speech.
+`isaac_store.speech_learn` is the real road 2: Isaac LEARNS wording
+from paired examples (`speech_corpus.txt` = the teacher's data;
+format "features|sentence with PLACEHOLDERS"). learn_speech() admits
+a fragment for a feature only past a permutation null vs the rest of
+the corpus (placeholder-only fragments inadmissible — a slot is not
+a word); fragments live IN THE NET (speech:<feature> meta — persist
+via packs, supersedable). speak_learned() = ALL OR NOTHING: untaught
+atom = silence + listed unspoken; untaught verdict = cannot speak,
+fall back to the report. PROOF STANDARD (battery 20/20): the grep
+proof (spoken words absent from code — even a code comment got
+caught), corpus swap changes the words, withheld lessons produce
+silence, retention across save/load, faithfulness null on numbers.
+`askisaac --speak` uses learned speech only. Promotion gates: engine
++ 18 batteries.
