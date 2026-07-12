@@ -1,0 +1,24 @@
+FRAME DUEL — 2026-07-12, 7 masses x 2 frames, 5000 rows/job + 2000 held-out, real HIGGS
+
+  m_jj    y : NO RULE  held-out r2=None
+          y2: NO RULE  held-out r2=None   WINNER: y (+0.000)
+
+  m_jjj   y : NO RULE  held-out r2=None
+          y2: NO RULE  held-out r2=None   WINNER: y (+0.000)
+
+  m_lv    y : UNDERSTOOD held-out r2=0.9043
+          y2: UNDERSTOOD held-out r2=0.8548   WINNER: y (-0.049)
+
+  m_jlv   y : NO RULE  held-out r2=None
+          y2: NO RULE  held-out r2=None   WINNER: y (+0.000)
+
+  m_bb    y : PARTIAL  held-out r2=0.665
+          y2: PARTIAL  held-out r2=0.5453   WINNER: y (-0.120)
+
+  m_wbb   y : PARTIAL  held-out r2=0.4946
+          y2: PARTIAL  held-out r2=0.3087   WINNER: y (-0.186)
+
+  m_wwbb  y : PARTIAL  held-out r2=0.391
+          y2: PARTIAL  held-out r2=0.3315   WINNER: y (-0.059)
+
+  wall 70.1s | worker-busy 247.3s | utilization 3.53x (4 workers)

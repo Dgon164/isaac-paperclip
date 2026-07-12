@@ -49,10 +49,25 @@ def run_job(mod, job):
         rows = job["rows"]
         X = np.asarray(arr[:rows, job["input_cols"]], dtype=np.float64)
         y = np.asarray(arr[:rows, job["target_col"]], dtype=np.float64)
+        # target FRAME: "y" (identity) or "y2" — the frame duel lets a
+        # sqrt-shaped law be said as its square, judged back in y-space
+        frame = job.get("frame", "y")
+        y_t = y ** 2 if frame == "y2" else y
         mind = mod.Isaac()
-        mind.discover(X, y, name=job["name"])
+        mind.discover(X, y_t, name=job["name"])
         finding = dict(mind.findings[-1])  # verdict/equation/r2/accounting
-        return {"finding": finding,
+        r2_orig = None
+        if mind.net.get_meta(f"law:{job['name']}", "model") is not None:
+            ho = slice(rows, rows + 2000)  # held-out rows, never trained on
+            Xh = np.asarray(arr[ho, job["input_cols"]], dtype=np.float64)
+            yh = np.asarray(arr[ho, job["target_col"]], dtype=np.float64)
+            pred = mind.apply_law(job["name"], Xh)
+            if pred is not None:
+                pred_y = np.sqrt(np.clip(pred, 0, None)) if frame == "y2" else pred
+                ss = float(np.sum((yh - pred_y) ** 2))
+                tot = float(np.sum((yh - yh.mean()) ** 2))
+                r2_orig = round(1.0 - ss / tot, 4) if tot > 0 else None
+        return {"finding": finding, "frame": frame, "r2_orig": r2_orig,
                 "seconds": round(_t.perf_counter() - t0, 2)}
     rng = np.random.default_rng(job["seed"])
     X = rng.uniform(-2, 2, (job["rows"], 2))
