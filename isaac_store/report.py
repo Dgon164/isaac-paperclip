@@ -75,6 +75,15 @@ def challenge(csv_text_or_path, target=None, name="challenge", mod=None):
     eq = f.get("equation")
     if eq:
         rep["equation"] = f"{target_name} = {_rename(eq, names)}"
+    if m is not None:
+        # the structure itself, as plain data — speech realizes from
+        # THIS, never from parsing strings
+        rep["terms"] = [
+            dict(coef=float(c),
+                 atoms=[dict(zip(("kind", "i", "j", "k"), m["specs"][a]))
+                        for a in t])
+            for t, c in zip(m["terms"], m["coefs"])]
+        rep["intercept"] = float(m.get("intercept", 0.0))
     if isinstance(f.get("r2"), float):
         rep["fit"] = dict(r2=round(f["r2"], 4),
                           r2_edge=f.get("r2_edge"))

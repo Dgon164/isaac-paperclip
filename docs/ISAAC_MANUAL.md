@@ -983,3 +983,20 @@ data hash, engine, date — every report traceable). Module:
 `isaac_store/test_report.py` = 11/11 (noise -> NO RULE refusal
 report, never a fake equation). Promotion gates: engine + 15
 batteries.
+
+**Native gated English — road 2 v1 (2026-07-12):**
+`isaac_store.speech.speak(report)` — Isaac REALIZES structure as
+speech: every sentence produced from a report field by a fixed
+compositional realizer (verdict framing first; terms spoken from
+the MODEL dict in the user's column names — "mainly, alpha times
+beta raises it (weight 3.00); also, the square of alpha..."; atom
+vocabulary: wave/logarithm/square/root/decay/alignment-between/
+gap-between; complete numbers; refusals spoken with the same
+directness). Faithfulness BY CONSTRUCTION plus verify_faithful() as
+the null: every number spoken must exist in the report — a tampered
+response fails (proven). Gated omission: missing fields are never
+spoken. `askisaac.py --speak` prints the response with the full
+report attached beneath as ground truth. Battery
+`isaac_store/test_speech.py` = 20/20. LLM-mouth (road 1) stays the
+fallback design if native speech hits its ceiling. Promotion gates:
+engine + 16 batteries.

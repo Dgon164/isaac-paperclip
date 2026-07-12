@@ -1,4 +1,4 @@
-# DESIGN INTENT — the standing sheet
+﻿# DESIGN INTENT — the standing sheet
 **Load this first. Every build is checked against this BEFORE it is written.**
 (Created 2026-07-05 after the owner had to manually re-inject his own settled
 designs — variants, normals, negative structure, all-methods-one-concept —
@@ -251,6 +251,22 @@ the Provenance Gate; scrubber still runs on intake (public ≠
 identity-free). Real-web search backend = an owner dependency call
 (API key vs none); the mechanism is provider-pluggable.
 
+**THE TRANSLATION LAYER (owner, 2026-07-12 — road 2 v1 BUILT same day):** "what is
+reported vs what actually gets responded need to be different. we
+need a translation layer. either an llm, or we need to train isaac
+on how to speak english." The REPORT (internal: complete, technical,
+verdict/accounting/provenance) and the RESPONSE (user-facing plain
+language) are separate artifacts. Two roads, per the standing Omega
+design: (a) an LLM as MOUTH ONLY — mouth-with-faithfulness-null:
+it may rephrase, it may NEVER originate or alter a verdict, number,
+or equation; a faithfulness check compares every claim in the
+response against the report and refuses/falls back to the raw
+report on any mismatch; (b) native gated English — grow Isaac's own
+speech (the interrogate() road already produces gated-English
+enumeration; this is its extension, pairs with the learned-scrubber
+research thread). Either road, the report remains the ground truth
+attached beneath every response.
+
 **THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
 thread soon, NOT now):** "we will have to train the scrubber... teach
 it what counts as personal or not and generalize the information."
@@ -438,3 +454,4 @@ Full training data (free) → self-assembled patch-percept retina (CIFAR's
 door type) → per-variant duels → captures as ledger witnesses +
 interrogation at scale → effect entities (D9, the engineer's core) →
 SRBench (the differentiated lane).
+
