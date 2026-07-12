@@ -822,3 +822,19 @@ Battery `isaac_store/test_leaf.py` = 13/13, headline = the QUARANTINE
 PROOF: full private teach/observe/answer cycle with a planted secret,
 then a byte-scan of every file outside the user's directory — zero
 hits (ephemeral mode: zero hits on ANY disk).
+
+**PrimeServer (the between-programs doorway, 2026-07-12):**
+`isaac_store.PrimeServer` — Prime's orchestrator served over HTTP
+(stdlib only) so Workers/Scrubbers/front-ends run as separate
+programs. Endpoints: GET /api/watermark (cheap recheck), /api/journal
+?since=N (delta), /api/record?key= (single-record live pull); POST
+/api/submit (queued edit -> admission -> verdict returned),
+/api/compact. Contract: REFUSALS ARE ANSWERS — rejections and misses
+are HTTP 200 with ok:false + why (wrong-kept in the journal); 400/401
+only for malformed/unauthed; no stack traces leave the process.
+Security defaults: binds 127.0.0.1 only; optional bearer token
+(mandatory before any non-localhost bind); access log = method+path
+only, never query strings or content (the Identity Law applied to
+logging). Wire format = the codec's JSON (tuples/sets/arrays survive).
+Battery `isaac_store/test_server.py` = 17/17. All four store
+batteries: 29+13+13+17 = 72/72.
