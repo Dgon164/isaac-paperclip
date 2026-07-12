@@ -1031,3 +1031,19 @@ refusals arrive as 200 answers with the refusal spoken, access log
 is method+path only (no query strings, no content). Stdlib only,
 localhost only. Battery `isaac_store/test_face.py` = 7/7. Promotion
 gates: engine + 19 batteries.
+
+**Intake — every format through one door (owner ask, 2026-07-12:
+"file formats and data converters... direct files, folders, zips,
+raw text and rich text"):** `isaac_store.intake.ingest(source)` —
+csv/tsv/json/jsonl/npy/npz/xlsx -> numeric tables (headers detected,
+non-numeric columns dropped AND ACCOUNTED); txt/md/log/html/rtf/docx
+-> text (docx and xlsx parsed as what they are: zips of XML, stdlib
+only); folders recursed; zips walked in memory with the zip-bomb
+guard (per-entry byte cap, file-count and total-byte budgets); raw
+text auto-dispatched (delimited numbers -> table, prose -> text).
+Everything unsupported or over budget is SKIPPED WITH ITS WHY —
+never silent. Every item carries provenance (source/sha/bytes).
+`table_csv(item)` feeds report.challenge() directly; askisaac.py now
+accepts any source (multi-table folders/zips report each table).
+Battery `isaac_store/test_intake.py` = 19/19. Promotion gates:
+engine + 20 batteries.
