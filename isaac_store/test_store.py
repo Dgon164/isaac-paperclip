@@ -148,7 +148,8 @@ def test_orchestrator(tmp):
     o.process()
     o2 = Orchestrator(d, admission=gate)  # cold start: pack + tail replay
     check("RECOVERY INVARIANT: pack + tail == live state",
-          canon(o2.state) == canon(o.state), f"{len(o2.state)} records")
+          canon(dict(o2.state.items())) == canon(dict(o.state.items())),
+          f"{len(o2.state)} records")
 
 
 def build_mind(mod):

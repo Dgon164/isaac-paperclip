@@ -11,6 +11,7 @@ is NEVER modified; a new version supersedes it (old kept).
 """
 import json
 import os
+import zlib
 
 from .codec import enc, dec
 
@@ -37,8 +38,12 @@ def latest_pack(directory):
     return best, best_path
 
 
-def write_pack(directory, version, records, meta):
-    """Write records {name: value} + meta as an immutable pack. Returns path."""
+def write_pack(directory, version, records, meta, compress=True):
+    """Write records {name: value} + meta as an immutable pack.
+    compress=True (default): each record zlib'd INDIVIDUALLY, so the
+    index still seeks straight to any single record — partial loading
+    survives, only the bytes shrink. Old uncompressed packs stay
+    readable forever. Returns the path."""
     os.makedirs(directory, exist_ok=True)
     final = pack_path(directory, version)
     if os.path.exists(final):
@@ -51,10 +56,13 @@ def write_pack(directory, version, records, meta):
         for name, value in records.items():
             blob = json.dumps(enc(value), ensure_ascii=False,
                               sort_keys=True).encode("utf-8")
+            if compress:
+                blob = zlib.compress(blob, 6)
             index[name] = [f.tell(), len(blob)]
             f.write(blob)
         index_off = f.tell()
-        f.write(json.dumps({"meta": meta, "index": index},
+        f.write(json.dumps({"meta": meta, "index": index,
+                            "z": int(bool(compress))},
                            ensure_ascii=False).encode("utf-8"))
         f.seek(len(MAGIC))
         f.write(str(index_off).rjust(_OFF_LEN, "0").encode("ascii"))
@@ -77,6 +85,7 @@ class PackReader:
         tail = json.loads(self._f.read().decode("utf-8"))
         self.meta = tail["meta"]
         self.index = tail["index"]
+        self._z = tail.get("z", 0)  # old packs: 0 — readable forever
 
     def names(self):
         return list(self.index.keys())
@@ -84,7 +93,10 @@ class PackReader:
     def get(self, name):
         off, length = self.index[name]
         self._f.seek(off)
-        return dec(json.loads(self._f.read(length).decode("utf-8")))
+        raw = self._f.read(length)
+        if self._z:
+            raw = zlib.decompress(raw)
+        return dec(json.loads(raw.decode("utf-8")))
 
     def load_all(self):
         return {name: self.get(name) for name in self.index}

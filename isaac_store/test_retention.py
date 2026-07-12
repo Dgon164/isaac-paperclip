@@ -74,7 +74,8 @@ def main():
         o.process()  # a post-compact tail event
         o2 = Orchestrator(d3)
         check("cold start == live state on the TRIMMED journal",
-              o2.state == o.state, f"{len(o2.state)} records")
+              dict(o2.state.items()) == dict(o.state.items()),
+              f"{len(o2.state)} records")
 
         print("N3. full-log mode prunes nothing")
         dF = os.path.join(tmp, "full")
@@ -96,7 +97,7 @@ def main():
               len(ev) == 1 and ev[0][1]["edit"]["op"] == "restore")
         o3 = Orchestrator(d3)
         check("cold start replays THROUGH the restore correctly",
-              o3.state == o.state)
+              dict(o3.state.items()) == dict(o.state.items()))
 
         print("N5. the storage numbers")
         b3, bF = dir_bytes(d3), dir_bytes(dF)

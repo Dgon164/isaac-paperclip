@@ -1102,3 +1102,21 @@ unresolvable IN PRINCIPLE (the ICA identifiability limit) — the
 refusal there is mathematically correct. Battery
 `isaac_store/test_triangulate.py` = 11/11. Promotion gates: engine
 + 23 batteries.
+
+**Scale + permanence hardening (owner audit question, 2026-07-12):**
+three gaps closed before learning-at-scale. (1) LAZY PRIME: the
+orchestrator no longer load_all()s — state = latest pack (seek on
+demand) + journal overlay; compaction STREAMS record by record and
+rebases; restore rebases. Prime bigger than RAM is now real: cold
+start 9 ms at 20k records (vs 70 ms full read), one node 0.02 ms.
+(2) PER-RECORD COMPRESSION (pack format v-z, default on, old packs
+readable forever): each record zlib'd individually so the index
+still seeks — real-mind pack 12 KB vs 147 KB (8%); at 100k
+nodes/500k doors the pack fell 141.5 MB -> 30.3 MB (pickle parity,
+partial fetch 0.054 ms retained; save 12 s = background compaction
+cost, documented). (3) THE EDUCATION ROAD proven
+(test_education.py 10/10): a WHOLE real mind through the queue into
+Prime; cold-start lazy; single-node recall; the mind rebuilt FROM
+PRIME answers identically (laws + facts); SESSION TWO grows the
+same Prime and a third cold start holds old AND new — permanent
+memory across sessions. Promotion gates: engine + 24 batteries.

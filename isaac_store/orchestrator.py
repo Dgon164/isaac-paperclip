@@ -21,6 +21,73 @@ def _admit_all(edit, state):
     return True, "default admission (no gate installed)"
 
 
+class _LazyState:
+    """Prime bigger than RAM: base = the latest pack (records seek on
+    demand), overlay = every edit since. Only touched records live in
+    memory; compaction streams; a cold start opens in milliseconds
+    regardless of mind size."""
+
+    def __init__(self, reader=None):
+        self.reader = reader
+        self.over = {}
+        self.dead = set()
+
+    def get(self, k, default=None):
+        if k in self.dead:
+            return default
+        if k in self.over:
+            return self.over[k]
+        if self.reader is not None and k in self.reader.index:
+            return self.reader.get(k)
+        return default
+
+    def __getitem__(self, k):
+        v = self.get(k, _MISSING)
+        if v is _MISSING:
+            raise KeyError(k)
+        return v
+
+    def __contains__(self, k):
+        if k in self.dead:
+            return False
+        return k in self.over or (self.reader is not None
+                                  and k in self.reader.index)
+
+    def __iter__(self):
+        yield from self.over
+        if self.reader is not None:
+            for k in self.reader.index:
+                if k not in self.over and k not in self.dead:
+                    yield k
+
+    def __len__(self):
+        return sum(1 for _ in self)
+
+    def items(self):
+        for k in self:
+            yield k, self.get(k)
+
+    def put(self, k, v):
+        self.over[k] = v
+        self.dead.discard(k)
+
+    def delete(self, k):
+        self.over.pop(k, None)
+        self.dead.add(k)
+
+    def rebase(self, reader):
+        """A new base truth (fresh compact or a restore): the overlay
+        is baked in / superseded — start clean on the new pack."""
+        old = self.reader
+        self.reader = reader
+        self.over = {}
+        self.dead = set()
+        return old
+
+
+_MISSING = object()
+
+
 class Orchestrator:
     def __init__(self, directory, admission=None, retention_keep=3):
         """retention_keep: the owner's restore-point cache (2026-07-12)
@@ -44,11 +111,11 @@ class Orchestrator:
         version, path = latest_pack(self.packs_dir)
         self.pack_version = version
         watermark = 0
+        reader = None
         if path:
-            r = PackReader(path)
-            self.state = r.load_all()
-            watermark = r.meta["watermark"]
-            r.close()
+            reader = PackReader(path)  # index only — NO load_all:
+            watermark = reader.meta["watermark"]
+        self.state = _LazyState(reader)
         for _seq, event in self.journal.read_since(watermark):
             if event.get("verdict") == "admitted":
                 self._apply(event["edit"])
@@ -105,24 +172,27 @@ class Orchestrator:
     def _apply(self, edit):
         op, key = edit["op"], edit["key"]
         if op == "put":
-            self.state[key] = edit["value"]
+            self.state.put(key, edit["value"])
         elif op == "inc":
-            self.state[key] = self.state.get(key, 0) + edit.get("value", 1)
+            self.state.put(key, self.state.get(key, 0)
+                           + edit.get("value", 1))
         elif op == "del":
             # supersession, not erasure: the journal keeps the history
-            self.state.pop(key, None)
+            self.state.delete(key)
         elif op == "restore":
-            # rewind as an APPEND: state becomes the named restore
-            # point; the rewind itself is on the record
+            # rewind as an APPEND: rebase onto the named restore point
             r = PackReader(os.path.join(self.packs_dir,
                                         f"mind.v{edit['value']}.isaacpack"))
-            self.state = r.load_all()
-            r.close()
+            old = self.state.rebase(r)
+            if old is not None:
+                old.close()
         else:
             raise ValueError(f"unknown op {op!r}")
 
     def compact(self, engine_version="unknown"):
-        """Publish the current state as the next immutable pack."""
+        """Publish the current state as the next immutable pack —
+        STREAMED record by record (Prime never needs the whole mind
+        in memory), then rebase the lazy state onto the new pack."""
         t0 = time.perf_counter()
         version = self.pack_version + 1
         path = write_pack(self.packs_dir, version, self.state, meta={
@@ -133,6 +203,9 @@ class Orchestrator:
             "records": len(self.state),
         })
         self.pack_version = version
+        old = self.state.rebase(PackReader(path))
+        if old is not None:
+            old.close()  # release before retention prunes old packs
         self.ops.event("compact", version=version, records=len(self.state),
                        bytes=os.path.getsize(path),
                        ms=round((time.perf_counter() - t0) * 1000, 3))
