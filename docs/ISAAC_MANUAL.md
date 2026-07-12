@@ -921,3 +921,20 @@ rank + veto + abstention: MATCH (clear winner), AMBIGUOUS
 a single answer; unknown planet abstains until told/discovered).
 Battery `experiments/gravity_family_battery.py` = 13/13. Promotion
 gates: engine + 11 batteries.
+
+**The Provenance Gate + recreation check (owner design, 2026-07-12):**
+shareability is ANCESTRY, not appearance. Every leaf node carries
+source tiers (prime/client/user/public; FAIL-CLOSED: unknown =
+user). `leaf.exportable(node)`: closure within {prime, public} =
+game; ANY user tier = banned FROM EXPORT (never from local use).
+`share_candidate(law)` = first defense on the share path (before
+the scrubber): record released only on GAME, verdict filed either
+way. `recreation_check(law)` (owner: "see if it can recreate the
+information from public sources too"): attempts the rebuild from
+prime/client-held knowledge alone — a form+constants match means
+the user data was NOT necessary, provenance upgrades, export
+unlocks; no match, ban stands. Defense order: Provenance Gate ->
+scrubber -> Prime identity_gate. Battery
+`isaac_store/test_provenance.py` = 13/13 (incl. literal
+reconstruction: a prime-only leaf rebuilds the identical law).
+Promotion gates: engine + 12 batteries.

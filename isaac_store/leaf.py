@@ -91,6 +91,104 @@ class LeafIsaac:
     # (teach/observe/discover/lookup run on self.mind directly; every
     #  write lands in the local net and nowhere else)
 
+    # ---- the Provenance Gate (owner, 2026-07-12) --------------------
+    # "if its something that can be reconstructed exclusively from
+    #  isaac source nodes, its game. if it requires any user nodes it
+    #  should be banned" — shareability is ANCESTRY, not appearance.
+    EXPORT_OK = {"prime", "public"}
+
+    def tiers_of(self, node):
+        """Source tiers of a node. FAIL-CLOSED: unknown = user."""
+        t = self.mind.net.meta.get(node, {}).get("tiers")
+        return set(t) if t else {"user"}
+
+    def _set_tiers(self, node, tiers):
+        self.mind.net.meta[node]["tiers"] = sorted(set(tiers))
+
+    def leaf_discover(self, X, y, name, data_tiers=("user",)):
+        """Discover with declared data provenance (default user —
+        fail-closed). The law inherits the UNION of its data tiers."""
+        self.mind.discover(X, y, name=name)
+        self._set_tiers(f"law:{name}", data_tiers)
+        return self.mind.findings[-1]
+
+    def leaf_tell(self, name, equation, d=None, tiers=("user",)):
+        """tell_law with declared provenance (default user)."""
+        r = self.mind.tell_law(name, equation, d=d)
+        if r.get("status") in ("TOLD-UNVERIFIED", "VARIANT"):
+            self._set_tiers(f"law:{name}", tiers)
+        return r
+
+    def exportable(self, node):
+        """The gate: closure within {prime, public} -> game; any user
+        tier -> banned FROM EXPORT (never from local use)."""
+        t = self.tiers_of(node)
+        bad = t - self.EXPORT_OK
+        if bad:
+            return False, (f"Provenance Gate: requires {sorted(bad)} "
+                           f"nodes — banned from export"), t
+        return True, f"reconstructable from {sorted(t)} sources alone", t
+
+    def share_candidate(self, law_name):
+        """First defense on the share path (BEFORE the scrubber):
+        returns the record only if the gate passes; verdict filed
+        locally either way."""
+        node = f"law:{law_name}"
+        ok, why, t = self.exportable(node)
+        self.mind.record_finding("provenance_gate", law_name,
+                                 verdict="GAME" if ok else "BANNED",
+                                 why=why, tiers=sorted(t))
+        if not ok:
+            return {"ok": False, "why": why, "tiers": sorted(t)}
+        return {"ok": True, "why": why,
+                "record": {"meta": {"model":
+                                    self.mind.net.get_meta(node, "model")},
+                           "provenance": sorted(t)}}
+
+    def recreation_check(self, law_name):
+        """Owner: 'it should see if it can recreate the information
+        from public sources too.' Attempt the rebuild from
+        prime/client-held knowledge alone: a form+constants match
+        means the user data was NOT necessary — provenance upgrades
+        and export unlocks. No match: the ban stands."""
+        node = f"law:{law_name}"
+        m = self.mind.net.get_meta(node, "model")
+        if m is None:
+            return {"recreated": False, "why": "no such law"}
+        sig = self.mind._form_signature(m)
+        for tier_name, tier in (("prime", self.prime), ("client", self.client)):
+            if tier is None or tier.reader is None:
+                continue
+            keys = list(tier.reader.index) + list(tier._overlay)
+            for key in keys:
+                rec = tier.get(key)
+                model = None
+                if isinstance(rec, dict):
+                    model = (rec.get("meta") or {}).get("model") \
+                        if isinstance(rec.get("meta"), dict) else None
+                    if model is None:
+                        model = rec.get("model")
+                if not isinstance(model, dict) or "terms" not in model:
+                    continue
+                try:
+                    same = (self.mind._form_signature(model) == sig
+                            and self.mind._coefs_match(m, model))
+                except Exception:
+                    continue
+                if same:
+                    new_tiers = {"public"} if rec.get("public") else {tier_name}
+                    self._set_tiers(node, new_tiers)
+                    self.mind.record_finding(
+                        "recreation_check", law_name, recreated=True,
+                        source=key, tiers=sorted(new_tiers))
+                    return {"recreated": True, "source": key,
+                            "tiers": sorted(new_tiers)}
+        self.mind.record_finding("recreation_check", law_name,
+                                 recreated=False,
+                                 why="no prime/public source rebuilds it")
+        return {"recreated": False,
+                "why": "no prime/public source rebuilds it — ban stands"}
+
     def save(self):
         if self.mode != "user-held":
             raise RuntimeError(

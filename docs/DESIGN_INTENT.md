@@ -98,7 +98,11 @@ what makes live pulls safe with zero locking. stdlib only, no
 dependencies (the Raspberry-Pi line).
 
 **CUSTOMER SUBNETS — the privacy quarantine (owner, 2026-07-11, fourth
-message):** containerized deployments hold LOCAL SUBNETS that are
+message; ELEVATED 2026-07-12: "those containers are going to be what
+is required for user application" — the tier architecture is THE
+substrate for anything user-facing, not one option among many; every
+user-application decision builds on Prime → client overlay → leaf
+security net):** containerized deployments hold LOCAL SUBNETS that are
 customer-specific and NEVER feed back to Isaac — not used for
 education or any other purpose; identifiable information lives there
 and ONLY there. The isolation is STRUCTURAL, not filtered: the core
@@ -123,6 +127,30 @@ stripped, not content; wrong-kept applies to the decision record,
 never to PII). If the scrubber cannot cleanly separate abstraction
 from identity, the share is REFUSED back to the customer — refusal is
 an answer. Default with share off: no path at all.
+
+**THE PROVENANCE GATE (owner, 2026-07-12): "if its something that can
+be reconstructed exclusively from isaac source nodes, its game. if
+it requires any user nodes it should be banned."** The shareability
+criterion is ANCESTRY, not appearance: knowledge whose derivation
+closure is Prime-only may leave the container; knowledge whose
+closure touches ANY user node is banned from export (banned from
+EXPORT, not from USE — it stays fully usable inside the leaf).
+Fail-closed: unknown provenance counts as user. Every node carries
+its source tiers (prime/client/user); derived things inherit the
+UNION of their inputs' tiers (generalization through Isaac nodes
+with learned forms from user data = user in the closure = banned).
+Order of defenses: Provenance Gate FIRST (structural), scrubber
+second (content), Prime's identity_gate last (backstop). The
+criterion is LITERAL and testable: exportable things must actually
+rebuild identically in a prime-only leaf.
+**The recreation check (owner, same message): "specifically it
+should see if it can recreate the information from public sources
+too."** Recorded provenance is not the final word: a banned
+(user-provenance) piece of knowledge gets an active RECREATION
+ATTEMPT from prime/public-held sources alone — if the same knowledge
+(form + constants) rebuilds without the user data, the user data was
+NOT necessary, the provenance upgrades, and export unlocks. User
+tier bans only what genuinely CANNOT exist without the user.
 
 **WORKER CACHING (owner, same message; interval SETTLED by owner
 2026-07-11 sixth message):** workers live-load anything from the net,
