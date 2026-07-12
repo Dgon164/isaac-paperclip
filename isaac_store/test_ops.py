@@ -115,13 +115,15 @@ def main():
         s1.orch.compact(engine_version="test-shutdown")
         v1 = s1.orch.pack_version
         s1.stop()
+        seq_end = s1.orch.journal.last_seq()
         s2 = alpha.launch(ad, port=0)   # restart on the same data
         check("state survives restart (recovery invariant)",
               s2.orch.pack_version == v1
               and s2.orch.get("skill:scrubber") is not None)
+        # behavior, not history: retention may trim old journal events,
+        # so prove no-re-seed by "the restart appended NOTHING"
         check("restart did NOT re-seed (education not repeated)",
-              sum(1 for _s, e in s2.orch.journal.read_since(0)
-                  if e.get("edit", {}).get("key") == "skill:scrubber") == 1)
+              s2.orch.journal.last_seq() == seq_end)
         s2.stop()
         try:
             alpha.launch(ad, host="0.0.0.0", port=0)
