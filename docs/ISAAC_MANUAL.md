@@ -838,3 +838,17 @@ only, never query strings or content (the Identity Law applied to
 logging). Wire format = the codec's JSON (tuples/sets/arrays survive).
 Battery `isaac_store/test_server.py` = 17/17. All four store
 batteries: 29+13+13+17 = 72/72.
+
+**Scrubber (the Identity Law, enforced, 2026-07-12):**
+`isaac_store.scrubber` — `scrub(payload, deny_list)` strips
+identifiable info (email/ssn/phone/card/ip/address/honorific-names +
+customer deny_list) to category placeholders, keeps the abstraction
+byte-identical, reports categories+counts only (the report cannot
+leak); REFUSES when identity is load-bearing (in keys/node names).
+`identity_gate(inner)` = Prime's admission backstop: identity-shaped
+edits refused outright (the gate judges, never cleans), wrong-kept
+with categories not content; wraps any inner gate. Honest scope:
+best-effort pattern classes — the structural quarantine underneath
+does not depend on scrubber perfection. Battery
+`isaac_store/test_scrubber.py` = 19/19; promotion gates now include
+it (engine + 5 batteries = 91 checks + 11/11).
