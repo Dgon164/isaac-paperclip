@@ -86,6 +86,11 @@ class PrimeServer:
                         events = [{"seq": s, "e": enc(e)}
                                   for s, e in outer.orch.journal.read_since(since)]
                         self._json(200, {"ok": True, "events": events})
+                    elif url.path == "/api/keys":
+                        prefix = q.get("prefix", [""])[0]
+                        self._json(200, {"ok": True, "keys": [
+                            k for k in outer.orch.state
+                            if str(k).startswith(prefix)]})
                     elif url.path == "/api/record":
                         key = q.get("key", [None])[0]
                         if not key:

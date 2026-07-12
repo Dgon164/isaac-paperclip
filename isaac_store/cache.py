@@ -91,6 +91,13 @@ class LiveCache:
             self._cache[key] = self._fetch_base(key)
         return self._cache[key]
 
+    def keys(self, prefix=""):
+        ks = set(self._overlay)
+        if self.reader is not None:
+            ks |= set(self.reader.index)
+        ks -= self._deleted
+        return sorted(k for k in ks if str(k).startswith(prefix))
+
     def recheck(self):
         """The 30-minute pull: adopt a newer pack if published, else
         replay the journal tail and invalidate only touched keys."""

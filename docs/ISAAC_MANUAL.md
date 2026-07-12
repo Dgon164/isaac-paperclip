@@ -1066,3 +1066,18 @@ names ("open -> the ; the -> file ; file -> <slot>"). Noise: 0/10
 false structures. askisaac now reads text items' structure. Battery
 `isaac_store/test_structural.py` = 12/12. Promotion gates: engine +
 21 batteries.
+
+**Remote workers (2026-07-12):** `isaac_store.RemoteCache(url,
+token=)` — the Worker read side over the HTTP doorway: same contract
+as LiveCache (get / 30-min recheck as a journal delta / job pinning
+/ keys()), but Prime lives across the wire — workers and whole
+LEAVES can run on a different machine (`LeafIsaac(prime_url=...,
+token=...)`). PrimeServer gained /api/keys (prefix listing) so the
+recreation check works remotely. Proven (test_remote.py 16/16):
+codec-exact reads, delta rechecks dropping only touched keys,
+pinning semantics identical, clean 401 refusals without a token, a
+remote leaf grafting from Prime while Prime's journal shows ZERO
+writes from it, skills equipping across the wire, and the
+Provenance Gate recreation upgrade against a remote public record.
+The client side is now location-independent. Promotion gates:
+engine + 22 batteries.

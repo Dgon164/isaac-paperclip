@@ -25,22 +25,37 @@ from . import bridge
 
 
 class LeafIsaac:
-    def __init__(self, prime_dir, client_dir=None, mode="ephemeral",
-                 user_dir=None, isaac_module=None, clock=None):
+    def __init__(self, prime_dir=None, client_dir=None, mode="ephemeral",
+                 user_dir=None, isaac_module=None, clock=None,
+                 prime_url=None, client_url=None, token=None):
         if mode not in ("ephemeral", "user-held"):
             raise ValueError(f"unknown mode {mode!r}")
         if mode == "user-held" and not user_dir:
             raise ValueError("user-held mode needs the USER'S directory")
+        if not prime_dir and not prime_url:
+            raise ValueError("need prime_dir (same machine) or "
+                             "prime_url (the HTTP doorway)")
         self.mode = mode
         self.user_dir = user_dir
         self.mod = isaac_module or bridge.load_isaac_module()
 
         kw = {"clock": clock} if clock else {}
-        self.prime = LiveCache(os.path.join(prime_dir, "packs"),
-                               os.path.join(prime_dir, "journal.jsonl"), **kw)
-        self.client = (LiveCache(os.path.join(client_dir, "packs"),
-                                 os.path.join(client_dir, "journal.jsonl"), **kw)
-                       if client_dir else None)
+        if prime_url:  # a leaf on a DIFFERENT machine from Prime
+            from .remote import RemoteCache
+            self.prime = RemoteCache(prime_url, token=token, **kw)
+        else:
+            self.prime = LiveCache(os.path.join(prime_dir, "packs"),
+                                   os.path.join(prime_dir, "journal.jsonl"),
+                                   **kw)
+        if client_url:
+            from .remote import RemoteCache
+            self.client = RemoteCache(client_url, token=token, **kw)
+        elif client_dir:
+            self.client = LiveCache(os.path.join(client_dir, "packs"),
+                                    os.path.join(client_dir, "journal.jsonl"),
+                                    **kw)
+        else:
+            self.client = None
 
         # resume a user-held mind if one exists; otherwise fresh
         self.mind = None
@@ -157,9 +172,12 @@ class LeafIsaac:
             return {"recreated": False, "why": "no such law"}
         sig = self.mind._form_signature(m)
         for tier_name, tier in (("prime", self.prime), ("client", self.client)):
-            if tier is None or tier.reader is None:
+            if tier is None:
                 continue
-            keys = list(tier.reader.index) + list(tier._overlay)
+            try:
+                keys = tier.keys()  # LiveCache and RemoteCache alike
+            except Exception:
+                continue
             for key in keys:
                 rec = tier.get(key)
                 model = None
