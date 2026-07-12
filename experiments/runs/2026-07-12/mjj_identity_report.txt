@@ -1,0 +1,30 @@
+﻿MJJ IDENTITY PROBE — 2026-07-12 (the overturn)
+
+Claim under test (my own, from the frame duel): "m_jj refused because
+the atom frequency grid misses cosh/cos of differences at freq 1."
+
+REFUTED, two ways:
+
+1. SYNTHETIC (truth planted, 6 jet-like columns, 5000 rows):
+   y^2 frame: UNDERSTOOD r2=0.9996
+     +1.75*x0*x3*cosh(1.02637*(x1-x4)) ... (pT1*pT2*cosh(deta): the
+     TRUE structure; refine walked grid 1.5 -> 1.026 ~ 1)
+   y frame:   UNDERSTOOD r2=0.9975
+   The vocabulary + existing bracket(grid)+refine(hill-climb) SAY the
+   invariant-mass law. The engine was never the blocker.
+
+2. REAL HIGGS (100k rows): the stored m_jj is NOT computable from the
+   stored jet features. Textbook massless formula
+   sqrt(2 pT1 pT2 (cosh(a*deta) - cos(b*dphi))), scanned over jet
+   pairs (1,2),(1,3),(2,3) and scales a in [0.6,2.4], b in [1.0,2.4]:
+   best corr = 0.2358 (jets 1,2, a=1.0, b=1.9). Columns are
+   per-column standardized (phi range +-1.74 = pi/1.81) and the mass
+   was computed from full 4-vectors (jet energies/masses) absent from
+   the features.
+
+VERDICT: Isaac's NO RULE on real m_jj was CORRECT — a
+missing-variable shadow, exactly the adequacy category. Refusals are
+answers. The owner's no-preset-frequencies law stands as design
+intent; the mechanism (grid proposes, hill-climb sharpens) exists and
+is verified working. Wrong-kept: the "frequency grid missed it"
+diagnosis is superseded by this probe.

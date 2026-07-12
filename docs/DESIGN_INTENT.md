@@ -196,6 +196,30 @@ task closure × measured usage/evidence, with the information_ledger
 reporting what capability was kept vs left behind, in complete numbers
 ("this N-MB working net keeps X% of the full net on task Y").
 
+## NO PRESET FREQUENCIES (owner, 2026-07-12, tenth message)
+**"Preset cos and sin and stuff is just bad. its not that
+complicated. you can look for periodicity and periodic periodicity.
+if its a multiple that should be easy to tell by the pattern. if its
+closer to something it will deviate slower than if it was farther.
+it just needs to try and bracket and refine the answer."** A
+frequency inside sin/cos/cosh is a MEASUREMENT, not a menu choice
+(checklist #3 applied to atoms). The mechanism: BRACKET (coarse scan
+proposes the neighborhood — the beat rate says how close: near-truth
+mismatch deviates slowly, far mismatch thrashes) then REFINE (walk
+the frequency until the fit stops improving). Found 2026-07-12 when
+the frame duel suggested m_jj's blocker was the atom grid.
+**VERIFIED SAME DAY (mjj_identity_probe): the mechanism ALREADY
+EXISTS and works** — "the grid proposes, the refine pass sharpens"
+(hill-climb on every admitted term's k): on planted truth the engine
+said the invariant-mass law y²-frame UNDERSTOOD r²=0.9996, walking
+1.5 → 1.026 ≈ 1. The real-HIGGS m_jj refusal was a MISSING-VARIABLE
+SHADOW (textbook formula itself maxes corr 0.24 on the stored
+columns — per-column standardization + mass computed from 4-vector
+info absent from the features): the refusal was Isaac being RIGHT.
+This law stands as the standing principle for any future atom
+family; revisit the coarse refine ladder only if a case shows it
+stalling (no optimizing before measured limits).
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
