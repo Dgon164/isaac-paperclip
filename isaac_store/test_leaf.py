@@ -42,6 +42,16 @@ def files_containing(root, needle, exclude=None):
         for name in names:
             p = os.path.join(dirpath, name)
             try:
+                if name.endswith(".isaacpack"):
+                    # DECODED-record scan: compression must never
+                    # hide a secret from this scan, either direction
+                    from isaac_store.pack import PackReader
+                    r = PackReader(p)
+                    found = any(needle in repr(r.get(k)) for k in r.index)
+                    r.close()
+                    if found:
+                        hits.append(p)
+                    continue
                 with open(p, "rb") as f:
                     if needle_b in f.read():
                         hits.append(p)

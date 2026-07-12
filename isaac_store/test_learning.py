@@ -46,14 +46,25 @@ def check(name, ok, detail=""):
 
 
 def files_containing(root, needle):
+    """Deep scan: raw bytes for plain files, DECODED RECORDS for
+    packs — compression must never hide a leak from this scan."""
+    from isaac_store.pack import PackReader
     hits = []
     nb = needle.encode()
     for dirpath, _d, names in os.walk(root):
         for name in names:
+            p = os.path.join(dirpath, name)
             try:
-                with open(os.path.join(dirpath, name), "rb") as f:
+                if name.endswith(".isaacpack"):
+                    r = PackReader(p)
+                    found = any(needle in repr(r.get(k)) for k in r.index)
+                    r.close()
+                    if found:
+                        hits.append(p)
+                    continue
+                with open(p, "rb") as f:
                     if nb in f.read():
-                        hits.append(os.path.join(dirpath, name))
+                        hits.append(p)
             except OSError:
                 pass
     return hits
