@@ -1532,15 +1532,18 @@ class Isaac:
     def _store():
         """Persistence v2 (infrastructure arc 2026-07-11): the plain-file
         store — immutable indexed packs, per-node records, partial
-        loading by seek. Lives in the BUSINESS repo (dc); found via
-        ISAAC_DC env var or the sibling checkout next to this repo."""
+        loading by seek. Both repos are self-contained: found next to
+        this file, else via ISAAC_DC, else the sibling dc checkout."""
         import os
         import sys
         here = os.path.dirname(os.path.abspath(__file__))
-        dc = os.environ.get("ISAAC_DC") or os.path.join(
-            os.path.dirname(here), "dc")
-        if dc not in sys.path:
-            sys.path.insert(0, dc)
+        if os.path.isdir(os.path.join(here, "isaac_store")):
+            root = here
+        else:
+            root = os.environ.get("ISAAC_DC") or os.path.join(
+                os.path.dirname(here), "dc")
+        if root not in sys.path:
+            sys.path.insert(0, root)
         from isaac_store import bridge, codec, pack
         codec.register_module(sys.modules[Isaac.__module__], as_name="isaac")
         return bridge, pack
