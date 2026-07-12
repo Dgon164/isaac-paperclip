@@ -59,7 +59,7 @@ class Journal:
         number of events dropped."""
         if not os.path.exists(self.path):
             return 0
-        kept, dropped = [], 0
+        kept, dropped, last_line = [], 0, None
         with open(self.path, "r", encoding="utf-8") as f:
             for line in f:
                 if not line.endswith("\n"):
@@ -68,10 +68,17 @@ class Journal:
                     seq = json.loads(line)["seq"]
                 except (json.JSONDecodeError, KeyError):
                     break
+                last_line = line
                 if seq > keep_after_seq:
                     kept.append(line)
                 else:
                     dropped += 1
+        if not kept and last_line is not None:
+            # NEVER trim to empty: the final event preserves the seq
+            # counter (it is baked into the kept snapshot, so it never
+            # replays — but losing it would restart numbering below
+            # the pack watermark and recovery would skip new events).
+            kept, dropped = [last_line], dropped - 1
         tmp = self.path + ".tmp"
         with open(tmp, "w", encoding="utf-8") as f:
             f.writelines(kept)
