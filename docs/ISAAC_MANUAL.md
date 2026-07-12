@@ -773,3 +773,52 @@ from outside, and the probe queue is proposals only. The clock-reading
 harness readout is broken (22.9% — harness bug, engine unimplicated).
 (Closed 2026-07-04 and no longer on this list: block-permutation null,
 compound doors + trigger, uptake composition — see the checklist.)
+
+
+## Persistence v2 — packs, journal, orchestrator (2026-07-11)
+The infrastructure arc's storage layer, at `isaac_store/` next to the
+engine (plain files + stdlib only; NO pickle for new saves, NO database
+— owner constraint).
+- `mind.save_pack(directory)` / `Isaac.load_pack(directory, version=None)`
+  — the whole mind as an immutable, versioned, indexed pack file.
+  A new save SUPERSEDES (v2 beside v1), never overwrites. Old pickle
+  `save()/load()` still work; migration proven.
+- Partial loading is a property of the format: `PackReader` opens
+  header+index only, then fetches single node records by seek —
+  measured 100k-node mind: index open 28 ms, one node 0.04 ms vs
+  5.3 s full load (133,000x).
+- `isaac_store.Orchestrator` — sole-writer edit queue behind an
+  admission gate; rejections wrong-kept with why; RECOVERY INVARIANT
+  battery-proven: latest pack + journal tail == live state.
+- Battery: `isaac_store/test_store.py` = 29/29 (codec/journal/pack/
+  orchestrator/real-mind round-trip/pickle migration/engine-native);
+  engine suite 11/11 after wiring.
+- Measured cost, stated plainly (`scale_test.py`, synthetic 100k
+  nodes/500k doors): pack 141.5 MB vs pickle 27.1 MB (5.2x — the price
+  of readable typed records), save 10.1 s vs 0.5 s, full load 5.3 s vs
+  0.4 s. Compaction is background so the times are acceptable; the 5x
+  size is the known next lever (per-record compression) — not
+  optimized yet, per no-optimizing-before-measured-limits.
+
+**LiveCache (Worker read side, 2026-07-11):** `isaac_store.LiveCache`
+— workers live-load node records from Prime's packs, serve from local
+cache, recheck FIXED at 30 min (owner-settled; recheck = journal-tail
+delta, only touched keys invalidated; adopts newer packs). `with
+cache.job():` pins one consistent view per job — an overdue recheck
+waits for the job boundary. Staleness cannot corrupt: proposals are
+judged at the admission gate (battery H6: stale proposal rejected +
+wrong-kept). Battery `isaac_store/test_cache.py` = 13/13.
+
+**LeafIsaac (the security-net worker, 2026-07-11):**
+`isaac_store.LeafIsaac` — the all-in-one Isaac at the leaf tier
+(Prime -> client overlay -> leaf). pull(node) = layered read, local
+wins; shared nodes GRAFT into the local net with origin tags; private
+evidence doors onto them locally. NO upstream channel by construction
+(no orchestrator reference exists in a leaf). Modes: "ephemeral"
+(RAM-only, save() refuses) / "user-held" (packs only under the user's
+directory; resumes across sessions; encryption-at-rest = open item,
+needs a vetted crypto library — owner's call on the dependency).
+Battery `isaac_store/test_leaf.py` = 13/13, headline = the QUARANTINE
+PROOF: full private teach/observe/answer cycle with a planted secret,
+then a byte-scan of every file outside the user's directory — zero
+hits (ephemeral mode: zero hits on ANY disk).

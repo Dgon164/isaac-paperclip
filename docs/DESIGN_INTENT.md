@@ -31,6 +31,142 @@ difference, the measured residual/confusion IS the discovery signal:
 grow the vocabulary, don't hand-wire the usage. (Found 2026-07-10
 auditing the glyph stack: every channel's usage was hand-taught.)
 
+## NOMENCLATURE + THE IDENTITY LAW (owner, 2026-07-11, eighth message)
+**The roles, named:** **PRIME** = Isaac himself — the full net,
+everything (what earlier sections call "core"). **ORCHESTRATOR** =
+Prime's sole writer (queue → admission → journal → packs).
+**WORKERS** = processing on snapshots; at the leaf, a worker is a
+whole all-in-one Isaac with its security net. **SCRUBBERS** = the
+strip-identity workers (a first-class role, not just the share path).
+**CLIENT SIDE** = the customer/user side: overlays, security nets,
+user-held data.
+
+**THE IDENTITY LAW (owner's words):** "we want isaac to understand
+the world, but we dont want him to identify people, businesses or
+anything like that." Prime learns CONCEPTS AND LAWS, never identity
+dossiers. Public-facing information: usable for PROCESSING. Anything
+user-submitted: RESERVED client-side and scrubbed of identifiable
+information to the best of our abilities before anything crosses.
+**No datasets, no user info, no usage patterns ("usage ways") flow to
+Prime — ALL personalization is localized on the user's end.** Note
+what that last clause covers: even TELEMETRY/usage analytics stays
+client-side; Prime's ops ledger describes Prime's own operation, never
+user behavior. Enforcement is layered: structural quarantine (tiers) +
+scrubbers on every intake path to Prime + an identity-shaped-content
+refusal at Prime's admission gate.
+
+## THE INFRASTRUCTURE ARC (owner, 2026-07-11)
+Owner declared the next major shift: **persistence, structure
+processing, batch processing, API calls, system/operational management,
+and partial net loading for responses and processing.** Standing
+constraints on all of it: the persistence schema is the Net made
+durable — it keeps EVERY measurement, the wrong-section, and
+supersession chains (checklist #4/#6 apply to the file format);
+partial loading is the reverse index turned toward storage (recall
+pages in only the doors a query touches; partial answers must equal
+full answers or the delta is reported); ledgers are the ops organ too
+(ops events append like findings); performance is graded against the
+owner's ~3 s single-core trainer under a hard compute budget (owner,
+2026-07-11), never internal before/after alone; no optimizing before a
+measured profile. Full plan + phase batteries:
+`isaac_project/INFRASTRUCTURE_ARC_2026-07-11.md`.
+
+**The orchestrator (owner, 2026-07-11, second message):** ONE
+orchestrator owns the mind and is the SOLE WRITER. Every other process
+(discover jobs, perception/recognition batches, consolidation, API
+front-ends) does its own processing on read snapshots ("live pulls as
+needed") and routes every update or finished process through the
+orchestrator as a QUEUED PROPOSED EDIT. The queue is not a lock
+workaround — it is the admission gate made operational: every edit is
+a proposal (expand freely), the orchestrator runs the epistemics
+(compress by test: nulls, admission, supersession) before anything
+touches the Net; rejected edits are wrong-kept with their why.
+Conflicts between workers resolve by EXISTING organs: commutative
+count increments merge; contradictory claims become RIVALS, never
+overwrites. The orchestrator stays THIN — gatekeeper, not thinker;
+hand-built stays only the epistemics.
+
+**NO TRADITIONAL DATABASES (owner, 2026-07-11, third message):** owner
+has had major scaling problems with SQLite and is averse to ANY
+traditional database system. Storage is PLAIN FILES ONLY: append-only
+JSONL journal (the findings-ledger organ) + IMMUTABLE indexed pack
+snapshots (single file: header + node→offset index + records; loader
+reads the tiny index, seeks/mmaps records on demand = partial loading;
+published by write-new-then-atomic-rename; a new snapshot SUPERSEDES,
+never overwrites — the wisdom laws as a file layout). Immutability is
+what makes live pulls safe with zero locking. stdlib only, no
+dependencies (the Raspberry-Pi line).
+
+**CUSTOMER SUBNETS — the privacy quarantine (owner, 2026-07-11, fourth
+message):** containerized deployments hold LOCAL SUBNETS that are
+customer-specific and NEVER feed back to Isaac — not used for
+education or any other purpose; identifiable information lives there
+and ONLY there. The isolation is STRUCTURAL, not filtered: the core
+net is a read-only layer in the customer container; all customer
+writes go to the customer's own overlay (own journal + own packs, own
+orchestrator); the core orchestrator's queue is simply not reachable
+from customer containers. Sync is ONE-WAY, core → customer (the fork
+organ made persistent: a private branch that tracks upstream core
+snapshots and can never push).
+**The share path (owner, 2026-07-11, fifth message):** whether an
+overlay discovery ever reaches core is UP TO THE CUSTOMER — opt-in
+share setting. If share is on: the discovery is sent to the core
+orchestrator TO BE EVALUATED, which routes it to a dedicated SCRUBBER
+WORKER that finds and strips ALL identifiable information and keeps
+only the general abstraction details (the equation/relation/door
+structure and measured stats — never rows, never names, never literal
+customer values). Only the scrubbed abstraction enters the edit queue
+for normal admission (nulls, rivals). Shares land in a QUARANTINE
+INTAKE, never the Net; raw submissions are NOT retained core-side —
+what is kept is the abstraction + a scrub report (categories/counts
+stripped, not content; wrong-kept applies to the decision record,
+never to PII). If the scrubber cannot cleanly separate abstraction
+from identity, the share is REFUSED back to the customer — refusal is
+an answer. Default with share off: no path at all.
+
+**WORKER CACHING (owner, same message; interval SETTLED by owner
+2026-07-11 sixth message):** workers live-load anything from the net,
+keep it CACHED LOCALLY, and operate on the cache; **recheck FIXED at
+30 minutes** — owner's reasoning: "really it would be the worker that
+is doing the updating, not the net" — workers are the update
+producers, so they are never surprised by their own edits, and the
+net between contributions moves slowly. Owner's law: **"the longer
+isaac runs the less anything should be updated."** Recheck = replay
+the journal tail past the worker's watermark (cheap, shrinks as Isaac
+matures). Standing companions (undisputed): a worker PINS one version
+per job (rechecks between jobs, never mid-job — consistency beats
+freshness) and staleness cannot corrupt because ADMISSION is the
+arbiter (a stale proposal is rejected + wrong-kept at the gate).
+Superseded rival, kept: assistant's three-layer design (fast
+watermark heartbeat + delta refresh + 30-min backstop; per-node
+churn-driven policy) — revisit only if a measured staleness cost ever
+bites.
+
+**SECURITY NETS (owner, 2026-07-11, seventh message — "custom
+security nets"):** USER-side specific nets, one tier below customer
+subnets: information stored and processed WITH Isaac but pullable
+ONLY from the worker holding it — never from anywhere else; processed,
+learned-from, and OUTPUT to the user, but never stored upstream or
+shared. The worker acts as its own second orchestrator over its own
+local net — equivalently, it IS "the older version of Isaac": a
+classic all-in-one instance living at the leaf. THE RECURSION: core →
+customer overlay → worker security net is ONE mechanism at three
+scales (the sheet's no-separation law made literal). Spec points:
+reads LAYER one-way (local ∪ customer ∪ core; local wins; shared
+tiers can never read local); writes have NO upstream channel
+structurally (the local mini-orchestrator's queue goes nowhere);
+partial loading is what makes the leaf cheap (pull only the shared
+nodes a question touches, door private evidence onto them locally);
+two persistence modes — EPHEMERAL (RAM-only, evaporates at session
+end) or USER-HELD (persisted only on the user's side, encrypted, key
+user-side); **logging is a leak channel**: ops events from a
+security-net worker carry counts/timing ONLY, never content. the full net will be BIG
+(size unknown); working nets must be kept SMALL ENOUGH BUT CAPABLE
+ENOUGH. Deployment is the compress stroke: working-set extraction =
+task closure × measured usage/evidence, with the information_ledger
+reporting what capability was kept vs left behind, in complete numbers
+("this N-MB working net keeps X% of the full net on task Y").
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")

@@ -1528,6 +1528,53 @@ class Isaac:
         import copy
         return copy.deepcopy(self)
 
+    @staticmethod
+    def _store():
+        """Persistence v2 (infrastructure arc 2026-07-11): the plain-file
+        store next to the engine. No pickle, no database — immutable
+        indexed packs, per-node records, partial loading by seek."""
+        import os
+        import sys
+        here = os.path.dirname(os.path.abspath(__file__))
+        if here not in sys.path:
+            sys.path.insert(0, here)
+        from isaac_store import bridge, codec, pack
+        codec.register_module(sys.modules[Isaac.__module__], as_name="isaac")
+        return bridge, pack
+
+    def save_pack(self, directory, version=None):
+        """Snapshot the whole mind as the next immutable pack in
+        `directory` — versioned, supersedes (never overwrites), and
+        loadable node-by-node. Returns the pack path."""
+        bridge, pack = Isaac._store()
+        records = bridge.extract(self)
+        if version is None:
+            version = pack.latest_pack(directory)[0] + 1
+        import time
+        return pack.write_pack(directory, version, records, meta={
+            "version": version, "watermark": 0,
+            "engine": "isaac.py", "records": len(records),
+            "written": time.strftime("%Y-%m-%d %H:%M:%S")})
+
+    @staticmethod
+    def load_pack(directory, version=None):
+        """Resurrect a mind from a pack directory (latest version unless
+        one is named), exactly as it was."""
+        bridge, pack = Isaac._store()
+        from isaac_store.pack import PackReader, pack_path
+        if version is None:
+            version, path = pack.latest_pack(directory)
+            if not path:
+                raise FileNotFoundError(f"no packs in {directory}")
+        else:
+            path = pack_path(directory, version)
+        r = PackReader(path)
+        try:
+            import sys
+            return bridge.rebuild(r.load_all(), sys.modules[Isaac.__module__])
+        finally:
+            r.close()
+
     # ── the findings ledger ─────────────────────────────────────
 
     @staticmethod
