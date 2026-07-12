@@ -220,6 +220,25 @@ This law stands as the standing principle for any future atom
 family; revisit the coarse refine ladder only if a case shows it
 stalling (no optimizing before measured limits).
 
+## TOLD KNOWLEDGE = A SUPERSESSION TEST CANDIDATE (owner, 2026-07-12)
+"If you just give it the equations directly, can it use them...
+maybe it could go through and check if the submitted thing applies
+or matches any and it can be listed as a supersession test candidate
+or something." The design: direct knowledge is WELCOME but earns its
+place. `tell_law(name, equation)` accepts an equation in Isaac's own
+canonical vocabulary → (1) MATCH CHECK first: same-form as an
+existing law → filed as a confirming witness on that law, never a
+duplicate node (all methods, one concept); (2) else it enters as
+TOLD-UNVERIFIED — usable immediately (apply works), but carrying NO
+belief: law_confidence stays None until DATA arrives (belief is
+measured, never told — a told law has no ranges/edge-r² until
+validated); (3) when data arrives, the SUPERSESSION DUEL: the told
+law vs a fresh discovery on the same data, judged held-out — winner
+active, loser wrong-kept wearing its numbers (losing challenger
+files into the rivals list; superseded told laws keep provenance +
+defeat). Retention is the ordinary pack road: told laws persist and
+resume like any knowledge.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")

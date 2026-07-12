@@ -2165,6 +2165,197 @@ class Isaac:
                             status=status, n=len(y))
         return dict(status=status, r2=r2)
 
+    # ── told knowledge: the supersession test candidate ─────────
+    # (owner, 2026-07-12: "if you just give it the equations directly,
+    #  can it use them... check if the submitted thing applies or
+    #  matches any and it can be listed as a supersession test
+    #  candidate")
+
+    @staticmethod
+    def _parse_equation(eq, d=None):
+        """Equation string (Isaac's own canonical grammar, the format
+        _atom_label prints) -> a model dict apply_law can run. Raises
+        ValueError naming the exact unparseable factor — told knowledge
+        outside the vocabulary is refused loudly, never guessed at."""
+        import re
+        specs, spec_ix, terms, coefs = [], {}, [], []
+        intercept = 0.0
+        ATOMS = [
+            (re.compile(r"^x(\d+)$"), lambda m: ("var", int(m[1]), None, None)),
+            (re.compile(r"^x(\d+)\^(-?[\d.]+)$"),
+             lambda m: ("pow", int(m[1]), None, float(m[2]))),
+            (re.compile(r"^log\(x(\d+)\)$"),
+             lambda m: ("pow", int(m[1]), None, 0.0)),
+            (re.compile(r"^(sin|cos)\(([\d.]+)\*x(\d+)\)$"),
+             lambda m: (m[1], int(m[3]), None, float(m[2]))),
+            (re.compile(r"^exp\((-?[\d.]+)\*x(\d+)\)$"),
+             lambda m: ("exp", int(m[2]), None, -float(m[1]))),
+            (re.compile(r"^(sin|cos|cosh)\(([\d.]+)\*\(x(\d+)-x(\d+)\)\)$"),
+             lambda m: ({"sin": "sind", "cos": "cosd", "cosh": "coshd"}[m[1]],
+                        int(m[3]), int(m[4]), float(m[2]))),
+        ]
+
+        def split_factors(body):
+            out, depth, cur = [], 0, ""
+            for ch in body:
+                depth += (ch == "(") - (ch == ")")
+                if ch == "*" and depth == 0:
+                    out.append(cur); cur = ""
+                else:
+                    cur += ch
+            out.append(cur)
+            return out
+
+        s = eq.replace(" ", "")
+        term_strs, cur, depth = [], "", 0
+        for ch in s:
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            if ch in "+-" and depth == 0 and cur and cur[-1] not in "^*eE(":
+                term_strs.append(cur)
+                cur = ch
+            else:
+                cur += ch
+        if cur:
+            term_strs.append(cur)
+        for tm in term_strs:
+            tm = tm.strip()
+            if not tm:
+                continue
+            sign = -1.0 if tm.startswith("-") else 1.0
+            body = tm.lstrip("+-")
+            factors = split_factors(body)
+            try:
+                coef = sign * float(factors[0]); factors = factors[1:]
+            except ValueError:
+                coef = sign
+            if not factors:
+                intercept += coef
+                continue
+            t = []
+            for f in factors:
+                for rx, mk in ATOMS:
+                    m = rx.match(f)
+                    if m:
+                        spec = mk(m)
+                        if spec not in spec_ix:
+                            spec_ix[spec] = len(specs); specs.append(spec)
+                        t.append(spec_ix[spec])
+                        break
+                else:
+                    raise ValueError(f"cannot parse factor {f!r} — told "
+                                     f"knowledge must use the canonical "
+                                     f"vocabulary (x0, x0^k, log(x0), "
+                                     f"sin/cos(k*x0), exp(k*x0), "
+                                     f"sin/cos/cosh(k*(xi-xj)))")
+            terms.append(tuple(sorted(t)))
+            coefs.append(coef)
+        d_raw = d if d is not None else 1 + max(
+            [s[1] for s in specs] + [s[2] for s in specs if s[2] is not None],
+            default=-1)
+        return dict(terms=terms, coefs=np.array(coefs, float),
+                    intercept=float(intercept), specs=specs,
+                    d_raw=d_raw, composites_used=[])
+
+    @staticmethod
+    def _form_signature(m):
+        """Coefficient-free canonical form, for the match check."""
+        sig = []
+        for t in m["terms"]:
+            labels = sorted(
+                _atom_label((k, i, j, None if kk is None else round(kk, 3)))
+                for (k, i, j, kk) in (m["specs"][a] for a in t))
+            sig.append(tuple(labels))
+        return tuple(sorted(sig))
+
+    def tell_law(self, name, equation, d=None, who="told"):
+        """Direct knowledge, welcomed as a CANDIDATE. Match-checked
+        against every existing law first (a same-form submission is a
+        confirming WITNESS on that law, never a duplicate node). New
+        forms enter TOLD-UNVERIFIED: usable at once via apply_law, but
+        carrying NO belief — law_confidence stays None until data
+        earns it (belief is measured, never told)."""
+        model = self._parse_equation(equation, d)
+        sig = self._form_signature(model)
+        for node, meta in list(self.net.meta.items()):
+            if not str(node).startswith("law:"):
+                continue
+            other = meta.get("model")
+            if other and self._form_signature(other) == sig:
+                st = meta.setdefault("status", {})
+                st.setdefault("witnesses", []).append(
+                    dict(who=who, equation=equation))
+                self.record_finding("told_match", name,
+                                    matches=str(node)[4:], provenance=who)
+                return dict(status="MATCHES", law=str(node)[4:])
+        node = f"law:{name}"
+        self.net.set_meta(node, "model", model)
+        self.net.set_meta(node, "status",
+                          dict(state="TOLD-UNVERIFIED", provenance=who,
+                               equation=equation))
+        self.record_finding("told_law", name, equation=equation,
+                            provenance=who)
+        return dict(status="TOLD-UNVERIFIED", name=name)
+
+    def supersession_duel(self, name, X, y, margin=0.02):
+        """The owner's test: when data arrives, the told/incumbent law
+        faces a FRESH discovery on the same data, judged on a held-out
+        quarter. Winner is active; the loser is KEPT wearing its
+        numbers (challenger -> rivals list; superseded incumbent ->
+        'superseded' history with why). A confirmed told law finally
+        EARNS belief: ranges + edge-r2 from this data."""
+        node = f"law:{name}"
+        m = self.net.get_meta(node, "model")
+        if m is None:
+            return None
+        X = np.asarray(X, float); y = np.asarray(y, float)
+        n = len(y); cut = int(n * 0.75)
+        rng = np.random.default_rng(0)
+        order = rng.permutation(n)
+        tr, ho = order[:cut], order[cut:]
+
+        def r2_on(rows, pred):
+            yy = y[rows]
+            ss = float(np.sum((yy - yy.mean()) ** 2))
+            return 1 - float(np.sum((yy - pred) ** 2)) / max(ss, 1e-12)
+
+        inc = self.apply_law(name, X[ho])
+        r2_inc = r2_on(ho, inc) if inc is not None else -np.inf
+        scratch = Isaac()
+        scratch.discover(X[tr], y[tr], name="challenger")
+        ch = scratch.net.get_meta("law:challenger", "model")
+        p = scratch.apply_law("challenger", X[ho]) if ch else None
+        r2_ch = r2_on(ho, p) if p is not None else -np.inf
+        status = self.net.meta[node].setdefault("status", {})
+        if r2_ch > r2_inc + margin:
+            status.setdefault("superseded", []).append(dict(
+                model=m, state=status.get("state"),
+                why=f"lost the supersession duel: held-out r2 "
+                    f"{r2_inc:.4f} vs challenger {r2_ch:.4f}"))
+            self.net.set_meta(node, "model", ch)
+            status["state"] = "DISCOVERED-SUPERSEDED-TOLD"
+            verdict = "SUPERSEDED"
+            winner_r2 = r2_ch
+        else:
+            m.setdefault("rivals", [])
+            if ch:
+                m["rivals"].append(dict(model=ch, note=(
+                    f"challenger lost the duel: {r2_ch:.4f} vs {r2_inc:.4f}")))
+            m["ranges"] = [(float(X[:, c].min()), float(X[:, c].max()))
+                           for c in range(X.shape[1])]
+            m["r2_edge"] = float(max(r2_inc, 0.0))
+            status["state"] = "TOLD-CONFIRMED"
+            verdict = "CONFIRMED"
+            winner_r2 = r2_inc
+        self.record_finding("supersession_duel", name, verdict=verdict,
+                            r2_incumbent=round(float(r2_inc), 4),
+                            r2_challenger=round(float(r2_ch), 4),
+                            n_holdout=len(ho))
+        return dict(verdict=verdict, r2_incumbent=r2_inc,
+                    r2_challenger=r2_ch, r2=winner_r2)
+
     def confirm(self, name, X, y):
         """Resolve a tied law with NEW evidence — ideally sampled at the
         probe the tie names. F-tests every live rival against the chosen

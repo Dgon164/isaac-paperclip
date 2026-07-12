@@ -892,3 +892,20 @@ workers 3.5 s = **2.90x**, all 4 processes participated, 8/8 laws
 exact, zero double-claims. Prime's write path stays single-writer by
 design — edits are milliseconds; COMPUTE is what fans out. Promotion
 gates: engine + 9 batteries.
+
+**Told knowledge = supersession test candidate (owner design,
+2026-07-12):** `tell_law(name, equation, d=)` — direct equations in
+Isaac's canonical vocabulary (x0, x0^k, log, sin/cos(k*x),
+exp(k*x), sin/cos/cosh(k*(xi-xj)); unparseable factors refused
+loudly). Match check FIRST: same-form submission = confirming
+WITNESS on the existing law, never a duplicate node. New forms enter
+TOLD-UNVERIFIED: apply_law works immediately, but law_confidence
+stays None — belief is measured, never told. `supersession_duel(
+name, X, y)`: told law vs fresh discovery, judged on a held-out
+quarter; CONFIRMED = belief earned (ranges + edge-r2 from the data),
+SUPERSEDED = told law kept wearing its defeat (why + numbers),
+losing challengers file into rivals. Retention = the ordinary pack
+road (proven: save_pack/load_pack preserves law + status). Battery
+`experiments/told_knowledge_battery.py` = 13/13 (incl. round-trip:
+Isaac parses his own printed equations). Suite 11/11. Promotion
+gates: engine + 10 batteries.
