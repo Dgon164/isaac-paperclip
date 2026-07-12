@@ -113,3 +113,93 @@ commits NOT pushed (owner's standing hold — his call). isaac_project
 repo untouched this arc (its DESIGN_INTENT.md + ISAAC_MANUAL.md
 copies kept in sync). The manual gained a section per capability
 (same-step rule held all arc).
+
+## ═══ THE SECOND HALF (same day, post-handoff) — READ THIS TOO ═══
+
+**Remote workers (16/16):** RemoteCache = LiveCache's contract over
+the HTTP doorway; LeafIsaac(prime_url=, token=) puts a whole leaf on
+another machine; quarantine intact (remote leaf -> ZERO Prime
+journal writes); /api/keys added; skills + Provenance Gate work
+across the wire. Client side is location-independent.
+
+**Triangulation (11/11, built under carte blanche):**
+isaac_store/triangulate.py — the owner's incomplete-information
+design. COMPLETION road: alone r2 0.000 -> joint 1.000, scrambled-
+pairing null. HALVES road: x in NEITHER dataset, recovered r2 0.9915
+from sides each holding 0.61 (confirmation in both data halves).
+THE BATTERY FOUND REAL MATH: equal-variance Gaussian sum/diff
+mixtures are unresolvable IN PRINCIPLE (ICA identifiability limit) —
+Isaac's refusal there was correct; documented.
+
+**Scale + permanence hardening (education 10/10):** (1) LAZY PRIME —
+orchestrator state = pack reader + journal overlay, compaction
+STREAMS, cold start 9 ms at 20k records: Prime bigger than RAM on
+the WRITE side too. (2) PER-RECORD zlib (packs default-compressed,
+old packs readable): mind pack -> 8% of size; 100k-node pack
+141.5 -> 30.3 MB = pickle parity, partial fetch 0.054 ms kept.
+(3) THE EDUCATION ROAD proven: whole real mind -> queue -> Prime;
+partial recall; rebuilt identical; SESSION TWO grows the same Prime
+(permanent memory across sessions). Gate catch #4: compression made
+quarantine byte-scans blind (both directions!) — scanners now decode
+pack records.
+
+**Mind crawlers (12/12, owner design):** Prime federates —
+orchestrators own key ranges, DIVIDE at the median when over
+capacity, splits journaled (lineage wrong-kept, cold start rebuilds
+the federation), admission travels with the section, specialization
+emergent (contiguous namespaced territories). 1,400 records through
+repeated divisions, zero lost. Owner settled: crawlers ARE routers —
+"they are archivists"; their next organ = the dispatch desk
+(assigning workers/scientists to jobs).
+
+**THE LEARNED SOCIETY (owner's organizing design):** the system is a
+learned society (Royal Society model — "Nullius in verba"):
+archivists (crawlers) / scientists (discover+seeker) / workers /
+scrubbers (ethics office) / admission gate = peer review / journal =
+the Proceedings / findings ledger = publication of record / rivals =
+open disputes / batteries = replication / promotion = publication.
+Standing compass: new mechanism? ask what office the Society gives it.
+
+**Causality probe (owner: "bad with cause and effect... 5 sec then
+die and loop — fixed?"):** MEASURED, experiments/causality_probe.py:
+(1) temporal blindness real: raw discover r2=0.000 at EVERY lag k>=1;
+(2) fix proven: lag columns as vocabulary -> r2=1.000 through k=8,
+correct lag NAMED (+2.00*x_k^2) — ENGINE LEVER: lag atoms in the
+enumerator, justified not yet built; (3) die-and-loop DID NOT
+REPRODUCE: chaotic Henon in-vocabulary, one-step r2=1.0000, rollout
+honest 73 steps (near Lyapunov bound), stayed APERIODIC — historical
+looping likely = iterating captured-not-articulated models; (4)
+chains compose (A->B->C r2=0.9990).
+
+**Sheet additions this half:** Provenance Gate + recreation check
+(built 13/13); the Seeker (11/11); restore-point cache (10/10);
+account model (designed, unbuilt); translation layer -> learned
+speech (20/20, template DEMOTED by owner correction); local AI
+conversations = FOR TRAINING (TODO); incomplete information (BUILT);
+mind crawlers + learned society; multicycle structural patterning
+(12/12).
+
+## ═══ FINAL STATE ═══
+dc (LIVE): 26 gates on every promotion — engine 11/11 + 25 batteries
+= 358 checks, all green at HEAD. Run: alpha.py / face.py /
+askisaac.py / worker.py; promote.py = the only research->live road.
+paperclip (RESEARCH): ~30 local commits UNPUSHED (owner's standing
+hold). Four real bugs caught by the gate this arc (submit-envelope,
+seq-counter recovery, never-started stop(), compression-blind
+scanners) + one process rule (push waits for the gate).
+
+## ═══ NEXT (final ranking) ═══
+1. OWNER CALLS: search provider (Seeker), crypto lib (user-held
+   encryption), local 1.5-7B model (the training sparring partner),
+   tier table/prices (accounts).
+2. ENGINE LEVERS (research lane, justified by measurement): lag
+   atoms (causality probe); effect entities (07-04 #1, still the
+   deep organ for cause/effect); richer atom projections for
+   structural self-reads.
+3. THE SOCIETY'S NEXT ORGANS: archivist dispatch desk (crawlers
+   assign jobs); crawler tending (background compaction/rebalance);
+   split on queue pressure; peer-to-peer crawler requests.
+4. PRODUCT: Docker packaging, accounts build, AWS face, binary
+   uploads on face.py.
+5. RESEARCH STANDING: batch head-to-head vs the owner's ~3s trainer;
+   learned scrubber; speech-corpus growth; texture percepts.
