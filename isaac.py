@@ -1654,11 +1654,136 @@ class Isaac:
                     specs=[tuple(s) for s in m["specs"]],
                     rivals=m.get("rivals", []),
                     d_raw=int(m.get("d_raw", m["d"])),
-                    composites_used=m.get("composites_used", [])))
+                    composites_used=m.get("composites_used", []),
+                    lags_used=[[int(i), int(k)] for i, k in
+                               m.get("lags_used", [])]))
                 self.net.set_meta(node, "equation", e.get("equation", ""))
                 self._teach_fact(node, "explains", e["name"])
                 n_laws += 1
         return dict(records=len(self.findings), laws_restored=n_laws)
+
+    # ── lag atoms (2026-07-12): the temporal vocabulary ──────────
+    # The causality probe measured the old cause-and-effect failure
+    # exactly: on y(t) = f(x(t-k)) raw discover scores r2 = 0.000 at
+    # EVERY lag k >= 1 — rows are read as exchangeable, so time is
+    # invisible — while the same worlds with lagged columns offered
+    # as vocabulary heal completely (r2 = 1.000, the true lag NAMED).
+    # So discover PROPOSES lag columns from the data itself, the same
+    # expand/compress move as phase-fold periods. The proposer
+    # measures EVERY integer lag at once: FFT cross-correlation of y
+    # against vocabulary transforms of each column (x, x^2, |x| — the
+    # linear projection of any dependence shape), max over transforms
+    # per lag, admitted only past a selection-corrected
+    # CIRCULAR-SHIFT null (the max over ALL lags AND transforms,
+    # replayed on shifted y — alignment destroyed, autocorrelation
+    # texture preserved exactly). On exchangeable rows nothing
+    # survives and the vocabulary is unchanged. Proposals WIDEN the
+    # grid (expansion); every lag column still faces the admission
+    # null term by term (compression unchanged).
+    # WRONG-KEPT: v1 bracketed a coarse geometric lag ladder and
+    # refined +-1 (the no-preset-frequencies move). It LOST: on an
+    # iid driver an off-by-one lag carries ZERO signal — there is no
+    # gradient between anchors (measured: k=40 planted, anchors 29
+    # and 41, refusal). Exact full-lag measurement is cheaper AND
+    # complete; bracket-and-refine stands for SMOOTH parameter
+    # families, not integer alignment against iid drivers.
+
+    @staticmethod
+    def _lag_columns(Xraw, lags):
+        """Columns x_i shifted k rows down. The first k rows have no
+        history: NaN — a per-row refusal, dropped at discovery and
+        reported (never guessed) at apply time."""
+        n = len(Xraw)
+        cols = []
+        for i, k in lags:
+            v = np.full(n, np.nan)
+            if k < n:            # a series shorter than the lag has no
+                v[k:] = Xraw[:n - k, i]   # history at all: all-NaN,
+            cols.append(v)                # every row refuses honestly
+        return np.column_stack(cols) if cols else np.empty((n, 0))
+
+    def _propose_lags(self, X, y, n_perm=200, max_per_col=3):
+        """Null-gated lag proposal. Returns [(col, lag), ...] — empty
+        when rows carry no temporal dependence past the null. The
+        full scan (every column: best lag, its score, its gate) is
+        kept on self._last_lag_scan — refused columns wear their
+        numbers too."""
+        n = len(y)
+        self._last_lag_scan = []
+        if n < 60:
+            return []
+        ys = y - np.mean(y)
+        ys = ys / (np.std(ys) + 1e-12)
+        max_lag = n // 4
+        m_fft = 1 << int(np.ceil(np.log2(2 * n)))
+        norm = np.maximum(n - np.arange(1, max_lag + 1), 1)
+        # THE NULL IS A CIRCULAR SHIFT, not block permutation: two
+        # unrelated slow series show spurious lag alignment whose size
+        # is set by their FULL autocorrelation; block permutation
+        # breaks that structure at block seams, so its gate sits too
+        # low (measured: 3/10 false proposals on unrelated AR(1)
+        # pairs — wrong-kept). Shifting y keeps its texture EXACTLY
+        # and destroys only alignment; the shift range keeps a true
+        # peak outside the scanned window.
+        shifts = _wave_rng.integers(max_lag + 1, n - max_lag, n_perm)
+        out = []
+        for i in range(X.shape[1]):
+            xi = np.asarray(X[:, i], float)
+            if xi.std() < 1e-12:
+                continue
+            # transforms carry the dependence SHAPE into a linear
+            # statistic: x catches odd parts, x^2 and |x| even parts
+            G = []
+            for g in (xi, xi ** 2, np.abs(xi)):
+                s = g.std()
+                if s > 1e-12:
+                    G.append(np.conj(np.fft.rfft((g - g.mean()) / s,
+                                                 m_fft)))
+            if not G:
+                continue
+
+            def curve(vals):
+                vf = np.fft.rfft(vals, m_fft)
+                best = np.zeros(max_lag)
+                for gf in G:
+                    c = np.fft.irfft(vf * gf, m_fft)
+                    # c[k] = sum_t g[t] * vals[t+k]: alignment at lag k
+                    np.maximum(best, np.abs(c[1:max_lag + 1]) / norm,
+                               out=best)
+                return best
+
+            real_curve = curve(ys)
+            null = np.empty(n_perm)
+            for p in range(n_perm):
+                null[p] = curve(np.roll(ys, int(shifts[p]))).max()
+            # gate = the null's observed MAX (level ~1/(n_perm+1)):
+            # a percentile interpolated from the top of a small sample
+            # is noisy exactly where it matters (measured: a 100-draw
+            # p99 estimate sat at 0.26 when the true p99 was 0.37 —
+            # a false fire). The max needs no interpolation.
+            gate = float(null.max())
+            k_best = int(np.argmax(real_curve)) + 1
+            self._last_lag_scan.append(
+                [int(i), k_best, round(float(real_curve.max()), 4),
+                 round(gate, 4)])
+            order = np.argsort(-real_curve)
+            picks = []
+            for j in order:
+                if real_curve[j] <= gate or len(picks) >= max_per_col:
+                    break
+                kk = int(j) + 1
+                if all(abs(kk - pk) > 1 for pk in picks):
+                    picks.append(kk)
+            out += [(i, kk) for kk in sorted(picks)]
+        return out
+
+    @staticmethod
+    def _rename_lags(eq, base, lags):
+        """Equation legibility: lag columns print as x<i>[t-<k>]."""
+        for j in range(len(lags) - 1, -1, -1):
+            i, k = lags[j]
+            eq = re.sub(rf"\bx{base + j}\b", f"x{i}[t-{k}]", eq)
+        return eq
 
     # ── discovery: the challenge loop ───────────────────────────
 
@@ -1685,12 +1810,21 @@ class Isaac:
         # (sin/cos/exp/pow) can act ON combinations — the vocabulary Isaac
         # earned on past problems is offered to every new one
         d_raw = X.shape[1]
+        # lag atoms: rows read as consecutive samples; the proposal is
+        # null-gated, so exchangeable rows change nothing. Lag columns
+        # are built BEFORE any domain drop can remove interior rows —
+        # a lagged value is only true on the original spacing.
+        lags = self._propose_lags(X, y)
+        lag_cols = self._lag_columns(X, lags) if lags else None
         comps = self._applicable_composites(d_raw)
         if comps:
             X = self._augment_with(X, comps)
-            ok_rows = np.isfinite(X).all(1)       # log/ratio domains: rows
-            if not ok_rows.all():                 # outside a composite's
-                X, y = X[ok_rows], y[ok_rows]     # domain drop out honestly
+        if lags:
+            X = np.column_stack([X, lag_cols])    # [raw | comps | lags]
+        if comps or lags:
+            ok_rows = np.isfinite(X).all(1)       # composite-domain rows
+            if not ok_rows.all():                 # and history-less lag
+                X, y = X[ok_rows], y[ok_rows]     # rows drop out honestly
         half = len(y) // 2
         enum = _Enumerator()
         enum.fit(X[:half], y[:half])
@@ -1819,7 +1953,9 @@ class Isaac:
         rivals = []
         if has_law:
             rivals = enum.rival_check(y[:half])
-        eq_str = self._rename_composites(enum.equation(), d_raw, comps)
+        eq_str = self._rename_lags(enum.equation(), d_raw + len(comps),
+                                   lags)
+        eq_str = self._rename_composites(eq_str, d_raw, comps)
         if rivals and adequacy["verdict"] != "interpretable":
             adequacy["reasons"].append(
                 f"observed range too narrow to pin the form: "
@@ -1835,7 +1971,11 @@ class Isaac:
                 ranges=[[float(X[:, k].min()), float(X[:, k].max())]
                         for k in range(X.shape[1])],
                 r2_edge=r2_edge, d_raw=d_raw,
-                composites_used=[dict(c) for c in comps]))
+                composites_used=[dict(c) for c in comps],
+                lags_used=[[int(i), int(k)] for i, k in lags],
+                # the full proposal scan, refused columns included:
+                # [col, best_lag, score, null_gate] per raw column
+                lag_scan=list(getattr(self, "_last_lag_scan", []))))
             self.net.set_meta(node, "equation", eq_str)
             self.net.set_meta(node, "accounting", accounting)
             if dossier:
@@ -1859,7 +1999,8 @@ class Isaac:
             model=(dict(terms=list(enum.terms), coefs=enum.coefs,
                         intercept=enum.intercept, d=X.shape[1], r2=r2,
                         specs=list(enum.specs), d_raw=d_raw,
-                        composites_used=[dict(c) for c in comps])
+                        composites_used=[dict(c) for c in comps],
+                        lags_used=[[int(i), int(k)] for i, k in lags])
                    if has_law else None))
         capture = None
         if verdict == "CAPTURED" and name:
@@ -1871,13 +2012,19 @@ class Isaac:
 
     def apply_law(self, name, X):
         """Apply a discovered law: the challenge, now computable.
-        (Distinct from solve(), the token-problem solver.)"""
+        (Distinct from solve(), the token-problem solver.) A law with
+        lag columns reads rows as consecutive samples; its first
+        max-lag rows have no history and return NaN — per-row
+        refusals, never guesses."""
         m = self.net.get_meta(f"law:{name}", "model")
         d_raw = (m or {}).get("d_raw", (m or {}).get("d"))
         if m is None or np.asarray(X).shape[1] != d_raw:
             return None
         X = self._augment_with(np.asarray(X, float),
                                m.get("composites_used", []))
+        lu = m.get("lags_used", [])
+        if lu:
+            X = np.column_stack([X, self._lag_columns(X[:, :d_raw], lu)])
         used = sorted({a for t in m["terms"] for a in t})
         cols = {a: _atom_col(X, m["specs"][a]) for a in used}
         D = np.column_stack(
@@ -1916,8 +2063,25 @@ class Isaac:
             return None
         X = self._augment_with(np.asarray(X, float),
                                m.get("composites_used", []))
-        lo = np.array([r[0] for r in m["ranges"]])
-        hi = np.array([r[1] for r in m["ranges"]])
+        lu = m.get("lags_used", [])
+        ranges = m["ranges"]
+        if lu:
+            # only lag columns the law's admitted terms actually USE
+            # bind confidence: a proposed-but-unused lag must not
+            # demand history. Used-and-missing history -> NaN conf
+            # (an honest per-row refusal).
+            d_raw = int(m.get("d_raw", X.shape[1]))
+            X = np.column_stack([X, self._lag_columns(X[:, :d_raw], lu)])
+            used = {m["specs"][a][1] for t in m["terms"] for a in t}
+            used |= {m["specs"][a][2] for t in m["terms"] for a in t
+                     if m["specs"][a][2] is not None}
+            n_base = X.shape[1] - len(lu)
+            keep = [c for c in range(X.shape[1])
+                    if c < n_base or c in used]
+            X = X[:, keep]
+            ranges = [m["ranges"][c] for c in keep]
+        lo = np.array([r[0] for r in ranges])
+        hi = np.array([r[1] for r in ranges])
         span = np.maximum(hi - lo, 1e-12)
         exceed = np.maximum(np.maximum(lo - X, X - hi), 0.0) / span
         delta = exceed.max(axis=1)                    # hull distance / span
@@ -2005,6 +2169,15 @@ class Isaac:
         m = self.net.get_meta(node, "model")
         if m is None:
             return None
+        if m.get("lags_used"):
+            # a lag law lives on a SERIES: refine's probe road asks an
+            # oracle at points, and a lagged value is not a free axis
+            # you can set. Refusal is the answer — extend the series
+            # and re-discover instead.
+            return dict(rounds=[], accepted=0, spent=0,
+                        refused="lag law: probing points cannot set a "
+                                "lagged value; extend the series and "
+                                "re-discover")
         X = np.asarray(X, float); y = np.asarray(y, float)
         comps_m = m.get("composites_used", [])
         d_raw_m = int(m.get("d_raw", X.shape[1]))
@@ -2157,12 +2330,24 @@ class Isaac:
         if p is None:
             return None
         y = np.asarray(y, float)
+        p = np.asarray(p, float)
+        fin = np.isfinite(p)
+        refused = int((~fin).sum())    # lag laws: rows without history
+        if refused:                    # refuse — validate the answered
+            y, p = y[fin], p[fin]      # rows, REPORT the refused count
+            if not len(y):
+                return None
         ss = float(np.sum((y - y.mean()) ** 2))
         r2 = 1 - float(np.sum((y - p) ** 2)) / max(ss, 1e-12)
         status = ("HOLDS" if r2 >= 0.9 else
                   "DEGRADED" if r2 >= 0.2 else "FAILS")
-        self.record_finding("validation", name, r2=round(r2, 4),
-                            status=status, n=len(y))
+        if refused:
+            self.record_finding("validation", name, r2=round(r2, 4),
+                                status=status, n=len(y),
+                                refused_rows=refused)
+        else:
+            self.record_finding("validation", name, r2=round(r2, 4),
+                                status=status, n=len(y))
         return dict(status=status, r2=r2)
 
     # ── told knowledge: the supersession test candidate ─────────

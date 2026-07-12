@@ -508,6 +508,46 @@ trajectories and stores only what refuses to vary.
     articulated at k=1.506; **150 scattered timestamps suffice**
     (UNDERSTOOD; folding needs coverage of the cycle, not of time);
     0/5 false laws on AR noise; iid path untouched.
+    **Lag-atom proposal (2026-07-12 — the causality cure)**: the
+    causality probe measured temporal blindness exactly (on
+    y(t)=f(x(t−k)) raw discover r²=0.000 at EVERY k≥1). Now, before
+    atoms are built, EVERY integer lag 1..n/4 of each input is
+    measured at once: FFT cross-correlation of y against three
+    vocabulary transforms of the column (x, x², |x| — the linear
+    projections of any dependence shape), max per lag. A lag is
+    proposed only past a selection-corrected **circular-shift null**
+    (max over all lags AND transforms, replayed on shifted y — the
+    shift preserves autocorrelation texture exactly, destroys only
+    alignment; shift range keeps a true peak outside the window; the
+    gate is the observed MAX of 200 draws, never an interpolated
+    percentile — measured: a 100-draw p99 estimate sat at 0.26 when
+    the truth was 0.37, a false fire). Proposed lag columns join X
+    as first-class variables (`[raw | composites | lags]`; equations
+    print `x0[t-3]`), are recorded in law meta `lags_used` plus the
+    full scan — refused columns wearing their numbers — in
+    `lag_scan`, and still face the admission null term by term. Rows
+    are read as consecutive samples; on exchangeable rows nothing
+    survives (iid path untouched). **History-less rows refuse
+    per-row**: NaN from `apply_law`/`law_confidence` (which also
+    ignores proposed-but-unused lag columns), masked and counted by
+    `validate_law` (`refused_rows`); `refine()` refuses lag laws
+    whole (a point-probe cannot set a lagged value — extend the
+    series and re-discover). WRONG-KEPT ×2: (a) v1 bracketed a
+    coarse lag ladder + refine ±1 — on an iid driver an off-by-one
+    lag carries ZERO signal, no gradient between anchors (k=40
+    planted, anchors 29/41, refusal); exact full-lag FFT measurement
+    is cheaper AND complete; bracket-and-refine stands for smooth
+    parameter families only. (b) block-perm null for cross-alignment
+    — seams break the very autocorrelation that generates spurious
+    alignment (3/10 false proposals on unrelated AR(1) pairs; shift
+    null + max gate: 0/10 false LAWS end-to-end). Battery
+    `experiments/lag_battery.py` **14/14**: k=3 exact
+    (`+2.00*x0[t-3]*x0[t-3]`, r²=0.9995); mixed same-row+lagged both
+    named; two delays of one channel (x0[t-2], x0[t-6]) both said;
+    k=40 iid driver found exactly; unrelated AR(1) pairs 0/10 false
+    laws (2/10 gate-passing proposals — expansion free, admission
+    compresses); ledger round-trip identical; probe re-run: raw road
+    r²=1.000 at k=1,2,4,8, lag named every time (was 0.000).
   - **the open op family (learned combinations)**: product, sum,
     difference, **ratio** (guarded at b≈0), **log** (arity-1, guarded at
     x≤0), **mean** (arity-N collectives). Out-of-domain rows drop

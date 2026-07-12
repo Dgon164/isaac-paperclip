@@ -425,6 +425,14 @@ info absent from the features): the refusal was Isaac being RIGHT.
 This law stands as the standing principle for any future atom
 family; revisit the coarse refine ladder only if a case shows it
 stalling (no optimizing before measured limits).
+**MEASURED QUALIFICATION (2026-07-12, lag battery):** bracket+refine
+requires a GRADIENT — near-truth must deviate slower than far. Smooth
+parameter families (frequencies, decays) have one. INTEGER ALIGNMENT
+against an iid driver does NOT: an off-by-one lag carries zero signal
+(k=40 planted between ladder anchors 29/41 → refusal, wrong-kept).
+Where every candidate is cheap to measure exactly (FFT
+cross-correlation scores ALL lags at once), exact full measurement
+replaces bracketing — measuring everything is not a preset menu.
 
 ## TOLD KNOWLEDGE = A SUPERSESSION TEST CANDIDATE (owner, 2026-07-12)
 "If you just give it the equations directly, can it use them...
@@ -515,7 +523,9 @@ battery: gravity_family_battery.py 13/13).
 - **Substrate**: Net (nodes/tagged doors/meta/counts, reverse-indexed);
   compare atom; Scratch; World; findings ledger; save/load/fork.
 - **Discovery**: discover() (null-gated enumerator, block-perm valid on
-  autocorrelated targets, phase-fold period proposal, one power dial,
+  autocorrelated targets, phase-fold period proposal, LAG ATOMS —
+  2026-07-12 causality cure: every integer lag FFT-measured, shift-null
+  gated, x0[t-k] named, history-less rows refuse — one power dial,
   open op family, accounting=100%, residual dossiers, adequacy);
   rivals/confirm/refine/apply_law/validate_law; graded confidence
   (measured decay); capture→interrogate→graduate; composites minted+reused.

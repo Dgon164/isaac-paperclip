@@ -29,7 +29,13 @@ from isaac_store.structural import analyze        # noqa: E402
 
 
 def r2(truth, pred):
-    truth, pred = np.asarray(truth), np.asarray(pred)
+    """Lag laws refuse rows without history (NaN, 2026-07-12): score
+    the answered rows — refusals are answers, not crashes."""
+    truth, pred = np.asarray(truth, float), np.asarray(pred, float)
+    fin = np.isfinite(pred)
+    truth, pred = truth[fin], pred[fin]
+    if not len(truth):
+        return float("-inf")
     ss = float(np.sum((truth - truth.mean()) ** 2))
     return 1 - float(np.sum((truth - pred) ** 2)) / max(ss, 1e-12)
 
@@ -49,28 +55,37 @@ def main():
     n = 900
     lines = ["CAUSALITY PROBE — 2026-07-12", ""]
 
-    print("P1/P2. the delay curve, raw vs lag-vocabulary")
-    lines.append("P1/P2  delayed cause y(t) = 2*x(t-k)^2 + noise:")
-    lines.append("       k | raw r2 (aligned rows) | with lag columns | named lag")
+    print("P1/P2. the delay curve: raw road (engine's own lag atoms)"
+          " vs hand-lagged columns")
+    lines.append("P1/P2  delayed cause y(t) = 2*x(t-k)^2 + noise")
+    lines.append("       (2026-07-12: the engine now PROPOSES lag atoms"
+                 " itself — P1 measures the raw road healed):")
+    lines.append("       k | raw r2 | raw named | hand-lagged r2 | "
+                 "raw equation")
     x = rng.uniform(-2, 2, n)
     LAGS = 8
     for k in (0, 1, 2, 4, 8):
         y = np.array([2 * x[t - k] ** 2 if t >= k else 0.0
                       for t in range(n)]) + rng.normal(0, 0.05, n)
-        # raw: the aligned-row framing the engine sees by default
+        # raw: ONE aligned column — before lag atoms this scored
+        # r2 = 0.000 for every k >= 1 (temporal blindness, measured)
         Xr = x[LAGS:].reshape(-1, 1)
         yr = y[LAGS:]
         cut = int(len(yr) * 0.75)
-        p_raw, _ = fit_apply(mod, Xr[:cut], yr[:cut], Xr[cut:], f"raw{k}")
+        p_raw, eq_r = fit_apply(mod, Xr[:cut], yr[:cut], Xr[cut:],
+                                f"raw{k}")
         raw = r2(yr[cut:], p_raw) if p_raw is not None else 0.0
-        # lag vocabulary: x(t), x(t-1) ... x(t-8) offered as columns
+        named_r = (f"x0[t-{k}]" in str(eq_r)) if k else \
+            ("x0" in str(eq_r) and "[t-" not in str(eq_r))
+        # hand-lagged columns: the pre-fix road, kept as comparison
+        # (equations may say the same law through equivalent columns,
+        # e.g. x2[t-2] == x(t-4) — names not graded here)
         Xl = np.column_stack([x[LAGS - j:n - j] for j in range(LAGS + 1)])
-        p_lag, eq = fit_apply(mod, Xl[:cut], yr[:cut], Xl[cut:], f"lag{k}")
+        p_lag, _ = fit_apply(mod, Xl[:cut], yr[:cut], Xl[cut:], f"lag{k}")
         lag = r2(yr[cut:], p_lag) if p_lag is not None else 0.0
-        named = f"x{k}" in str(eq)  # column j IS lag j
-        lines.append(f"       {k} |        {max(raw,0):.3f}          |"
-                     f"      {max(lag,0):.3f}       | "
-                     f"{'YES' if named else 'no'}  {str(eq)[:40]}")
+        lines.append(f"       {k} |  {max(raw,0):.3f} |    "
+                     f"{'YES' if named_r else 'no '}    |      "
+                     f"{max(lag,0):.3f}     | {str(eq_r)[:38]}")
 
     print("P3. rollout drift + die-and-loop")
     # the Henon map: bounded, sustained, EXACTLY polynomial (fully in

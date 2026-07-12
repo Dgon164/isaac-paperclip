@@ -1,12 +1,13 @@
 CAUSALITY PROBE — 2026-07-12
 
-P1/P2  delayed cause y(t) = 2*x(t-k)^2 + noise:
-       k | raw r2 (aligned rows) | with lag columns | named lag
-       0 |        0.999          |      0.999       | YES  +2.00*x0*x0 -0.00
-       1 |        0.000          |      1.000       | YES  +2.00*x1*x1 -0.00
-       2 |        0.000          |      1.000       | YES  +2.00*x2*x2 +0.00
-       4 |        0.000          |      1.000       | YES  +2.00*x4*x4 +0.00
-       8 |        0.000          |      1.000       | YES  +2.00*x8*x8 -0.01
+P1/P2  delayed cause y(t) = 2*x(t-k)^2 + noise
+       (2026-07-12: the engine now PROPOSES lag atoms itself — P1 measures the raw road healed):
+       k | raw r2 | raw named | hand-lagged r2 | raw equation
+       0 |  0.999 |    YES    |      0.999     | +2.00*x0*x0 -0.00
+       1 |  1.000 |    YES    |      1.000     | +2.00*x0[t-1]*x0[t-1] -0.00
+       2 |  1.000 |    YES    |      1.000     | +2.00*x0[t-2]*x0[t-2] +0.00
+       4 |  1.000 |    YES    |      1.000     | +2.00*x0[t-4]*x0[t-4] +0.00
+       8 |  1.000 |    YES    |      1.000     | +2.00*x0[t-8]*x0[t-8] -0.00
 
 P3     one-step law quality: r2 = 1.0000, 1.0000
        drift horizon (error > 10% of signal): 73 steps

@@ -1,0 +1,15 @@
+CAUSALITY PROBE — 2026-07-12
+
+P1/P2  delayed cause y(t) = 2*x(t-k)^2 + noise:
+       k | raw r2 (aligned rows) | with lag columns | named lag
+       0 |        0.999          |      0.999       | YES  +2.00*x0*x0 -0.00
+       1 |        0.000          |      1.000       | YES  +2.00*x1*x1 -0.00
+       2 |        0.000          |      1.000       | YES  +2.00*x2*x2 +0.00
+       4 |        0.000          |      1.000       | YES  +2.00*x4*x4 +0.00
+       8 |        0.000          |      1.000       | YES  +2.00*x8*x8 -0.01
+
+P3     one-step law quality: r2 = 1.0000, 1.0000
+       drift horizon (error > 10% of signal): 73 steps
+       rollout structure: NO STRUCTURE | truth structure: NO STRUCTURE
+
+P4     hop1 (A->B): r2=0.9995 | hop2 alone (B->C): r2=0.9996 | composed (A->B->C): r2=0.9990
