@@ -2284,12 +2284,32 @@ class Isaac:
                 continue
             other = meta.get("model")
             if other and self._form_signature(other) == sig:
-                st = meta.setdefault("status", {})
-                st.setdefault("witnesses", []).append(
-                    dict(who=who, equation=equation))
-                self.record_finding("told_match", name,
-                                    matches=str(node)[4:], provenance=who)
-                return dict(status="MATCHES", law=str(node)[4:])
+                if self._coefs_match(model, other):
+                    # same form AND same constants: a confirming witness
+                    st = meta.setdefault("status", {})
+                    st.setdefault("witnesses", []).append(
+                        dict(who=who, equation=equation))
+                    self.record_finding("told_match", name,
+                                        matches=str(node)[4:], provenance=who)
+                    return dict(status="MATCHES", law=str(node)[4:])
+                # same form, DIFFERENT constants: a VARIANT in a family
+                # (Earth vs Jupiter gravity — never smushed; hierarchy
+                # law: variants are real things under a parent form)
+                import zlib
+                fam = f"lawform:{zlib.crc32(repr(sig).encode()):08x}"
+                sibling = str(node)[4:]
+                self._install_law(name, model, equation, who)
+                for member in (f"law:{name}", node):
+                    self.net.add_door(fam, member, tag="variant")
+                    self.net.meta[member].setdefault(
+                        "status", {})["family"] = fam
+                self.record_finding("law_variant", name, family=fam,
+                                    sibling=sibling, provenance=who)
+                return dict(status="VARIANT", family=fam, sibling=sibling)
+        self._install_law(name, model, equation, who)
+        return dict(status="TOLD-UNVERIFIED", name=name)
+
+    def _install_law(self, name, model, equation, who):
         node = f"law:{name}"
         self.net.set_meta(node, "model", model)
         self.net.set_meta(node, "status",
@@ -2297,7 +2317,51 @@ class Isaac:
                                equation=equation))
         self.record_finding("told_law", name, equation=equation,
                             provenance=who)
-        return dict(status="TOLD-UNVERIFIED", name=name)
+
+    @staticmethod
+    def _coefs_match(a, b, tol=0.05):
+        """Same-form models: do the CONSTANTS agree (relative, 5%)?
+        Earth's g and Jupiter's g share a form and differ here."""
+        la = {tuple(sorted(_atom_label(a["specs"][i]) for i in t)): c
+              for t, c in zip(a["terms"], a["coefs"])}
+        lb = {tuple(sorted(_atom_label(b["specs"][i]) for i in t)): c
+              for t, c in zip(b["terms"], b["coefs"])}
+        for k in la:
+            ca, cb = la[k], lb.get(k, 0.0)
+            if abs(ca - cb) > tol * max(abs(ca), abs(cb), 1e-9):
+                return False
+        ia, ib = a.get("intercept", 0.0), b.get("intercept", 0.0)
+        return abs(ia - ib) <= tol * max(abs(ia), abs(ib), 1.0)
+
+    def which_law(self, X, y, names=None, min_fit=0.5, margin=0.1):
+        """Overlapping-confusion resolver: WHICH known law does this
+        data obey? Every candidate is applied and scored; the answer
+        is rank + abstention (checklist #10): a clear winner names
+        itself, near-ties are declared AMBIGUOUS with the shortlist,
+        and if nothing fits the verdict is NONE — a new-variant
+        candidate, not a forced guess."""
+        X = np.asarray(X, float)
+        y = np.asarray(y, float)
+        ss_tot = float(np.sum((y - y.mean()) ** 2))
+        cands = names if names is not None else [
+            str(n)[4:] for n in self.net.meta if str(n).startswith("law:")]
+        scores = []
+        for nm in cands:
+            p = self.apply_law(nm, X)
+            if p is None:
+                continue
+            r2 = 1 - float(np.sum((y - p) ** 2)) / max(ss_tot, 1e-12)
+            scores.append((nm, round(r2, 4)))
+        scores.sort(key=lambda t: -t[1])
+        if not scores or scores[0][1] < min_fit:
+            verdict, name = "NONE — new variant candidate", None
+        elif len(scores) > 1 and scores[0][1] - scores[1][1] < margin:
+            verdict, name = "AMBIGUOUS", None
+        else:
+            verdict, name = "MATCH", scores[0][0]
+        self.record_finding("which_law", name or "?", verdict=verdict,
+                            ranking=scores[:5], n=len(y))
+        return dict(verdict=verdict, law=name, ranking=scores[:5])
 
     def supersession_duel(self, name, X, y, margin=0.02):
         """The owner's test: when data arrives, the told/incumbent law

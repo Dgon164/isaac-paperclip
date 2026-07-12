@@ -238,6 +238,15 @@ active, loser wrong-kept wearing its numbers (losing challenger
 files into the rivals list; superseded told laws keep provenance +
 defeat). Retention is the ordinary pack road: told laws persist and
 resume like any knowledge.
+**LAW FAMILIES (owner's overlap question, same day):** same form +
+same constants = witness; same form + DIFFERENT constants = a
+VARIANT — a sibling law doored under one `lawform:` parent (Earth /
+Jupiter / Pluto gravity; hierarchy law applied to laws, never
+smushed). `which_law(X, y)` resolves overlapping confusion by rank +
+veto + abstention: clear winner names itself, near-ties are
+AMBIGUOUS with the shortlist, nothing-fits is NONE = a new-variant
+candidate (mixed-planet data REFUSES a single-planet answer;
+battery: gravity_family_battery.py 13/13).
 
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.

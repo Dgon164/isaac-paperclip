@@ -909,3 +909,15 @@ road (proven: save_pack/load_pack preserves law + status). Battery
 `experiments/told_knowledge_battery.py` = 13/13 (incl. round-trip:
 Isaac parses his own printed equations). Suite 11/11. Promotion
 gates: engine + 10 batteries.
+
+**Law families + which_law (2026-07-12):** overlapping-confusion
+machinery. tell_law now compares CONSTANTS on a form match (5%
+relative): same form + same constants = witness; different constants
+= VARIANT doored under a `lawform:` family parent (Earth/Jupiter/
+Pluto gravity stay distinct — hierarchy, never smushed).
+`which_law(X, y)` scores every candidate law on the data and answers
+rank + veto + abstention: MATCH (clear winner), AMBIGUOUS
+(shortlist), NONE = new-variant candidate (mixed-planet data refuses
+a single answer; unknown planet abstains until told/discovered).
+Battery `experiments/gravity_family_battery.py` = 13/13. Promotion
+gates: engine + 11 batteries.
