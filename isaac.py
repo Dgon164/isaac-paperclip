@@ -508,8 +508,17 @@ class _Enumerator:
 
     def _null_perm(self, rs):
         """One draw from the admission null: iid shuffle when the residual
-        is white (block_L == 1), circular moving-block permutation when it
-        is autocorrelated (blocks of the MEASURED length, random phase)."""
+        is white (block_L == 1); when autocorrelated, circular
+        moving-block permutation with an INDEPENDENT circular roll
+        inside each block. Block order + one global roll is
+        phase-blind to sub-block PERIODICITY (measured 2026-07-12 on
+        divisibility streams: a period-2 residual was unfindable —
+        every L=18 block carried it in phase, so ~1/P of null draws
+        replicated the real alignment and the gate rose to the real
+        score; periods dividing L were fully trapped). The per-block
+        roll keeps within-block texture (ACF, circularly) — the
+        sunspot protection stands — while periodic phase cancels
+        across blocks."""
         L = self.block_L
         if L <= 1:
             return _wave_rng.permutation(rs)
@@ -520,6 +529,9 @@ class _Enumerator:
         if pad:
             r = np.concatenate([r, r[:pad]])
         blocks = r.reshape(nb, L)
+        idx = (np.arange(L)[None, :]
+               + _wave_rng.integers(0, L, nb)[:, None]) % L
+        blocks = np.take_along_axis(blocks, idx, axis=1)
         return blocks[_wave_rng.permutation(nb)].ravel()[:n]
 
     # ── E7 (2026-07-04): phase-fold period proposal ────────────────────
@@ -535,6 +547,84 @@ class _Enumerator:
     # (expansion); every proposed atom still faces the admission null
     # (compression unchanged).
 
+    def _comb_periods(self, t, ys, n_perm=100):
+        """REGULAR-GRID period proposal: the DFT comb (2026-07-12,
+        divisibility-stream probe). On a regularly sampled axis the periodogram
+        measures EVERY representable frequency at once; the geomspace
+        fold scan's ~7% coarse steps cannot land on a sharp comb
+        (period 3 over 300 units needs ~0.25% placement — measured:
+        divisibility periods never lit up, so the stream's label logic was
+        unsayable). Score of fundamental j = ENRICHMENT: the comb's
+        share of spectral power (j and all harmonics) over the share
+        of bins it occupies (flat noise = 1 at every j — the small-j
+        degeneracy cancels). Local maxima past a selection-corrected
+        SPECTRUM-ENVELOPE surrogate null (max over ALL j, replayed;
+        gate = observed max — the interpolated-percentile lesson)
+        are proposed. Returns [(period, score), ...] or None when the
+        axis is not regular (the fold road handles irregular
+        sampling)."""
+        order = np.argsort(t, kind="stable")
+        ts, vs = t[order], ys[order]
+        d = np.diff(ts)
+        if len(d) < 8:
+            return None
+        dt = float(np.median(d))
+        if dt <= 0 or float(np.max(np.abs(d - dt))) > 0.01 * dt:
+            return None
+        n = len(vs)
+        nyq = n // 2
+
+        def comb(P):
+            tot = float(P[1:].sum()) + 1e-12
+            s = np.zeros(nyq + 1)
+            for j in range(2, nyq + 1):
+                share = float(P[j::j].sum()) / tot
+                s[j] = share * nyq / len(P[j::j])
+            return s
+
+        F = np.abs(np.fft.rfft(vs - vs.mean())) ** 2
+        real = comb(F)
+        # THE NULL IS A SPECTRUM-ENVELOPE SURROGATE, not block
+        # permutation: blocks preserve a short period INSIDE each
+        # block, so for a true short comb the null keeps the very
+        # structure under test and the gate inflates (measured:
+        # period 4 at n=720 went NO RULE — wrong-kept). Surrogate
+        # power = median-smoothed envelope (robust to the comb's own
+        # spikes) x Exp(1) per bin — redness preserved, combs
+        # destroyed, no FFTs needed in the null at all.
+        win = max(5, len(F) // 20)
+        pad = np.concatenate([F[1:win + 1][::-1], F, F[-win - 1:-1][::-1]])
+        env = np.array([float(np.median(pad[j:j + 2 * win + 1]))
+                        for j in range(len(F))])
+        env = np.maximum(env, 1e-9 * float(F.mean()))
+        null = np.empty(n_perm)
+        for k in range(n_perm):
+            null[k] = comb(env * _wave_rng.exponential(1.0, len(F))).max()
+        gate = float(null.max())
+        # among gate-passers, the FUNDAMENTAL of a comb family is the
+        # LARGEST j carrying the family's full energy share: every
+        # divisor shows the same share with a looser comb (measured:
+        # a flat comb TIES the enrichment statistic across divisors
+        # and sub-combs, and the true period lost the tie to float
+        # noise — the 36-comb proposed as 4/2/6, wrong-kept).
+        # Multiples with genuinely lower share are distinct
+        # sub-structure and stay candidates.
+        tot = float(F[1:].sum()) + 1e-12
+        shares = {j: float(F[j::j].sum()) / tot
+                  for j in range(2, nyq + 1) if real[j] > gate}
+        picks = []
+        for j in sorted(shares, key=lambda j: (-round(shares[j], 3), -j)):
+            if len(picks) >= 3:
+                break
+            if any(k % j == 0 and shares[j] <= shares[k] + 1e-3
+                   for k, _ in picks):
+                continue              # divisor-shadow of a kept comb
+            P = n * dt / float(j)
+            if any(abs(np.log(P / p0)) < 0.1 for _, p0 in picks):
+                continue
+            picks.append((j, P))
+        return [(P, float(real[j])) for j, P in picks]
+
     def _propose_periods(self, X, y, n_perm=100, pct=99, bins=8):
         n = len(y)
         if n < 40:
@@ -547,7 +637,18 @@ class _Enumerator:
             span = float(t.max() - t.min())
             if span <= 0:
                 continue
-            p_min = 8.0 * span / n        # >= ~8 samples per cycle
+            # The floor is ALIASING, not samples-per-cycle (2026-07-12,
+            # divisibility-stream probe): folding needs coverage of the CYCLE, not
+            # of time — on a dense grid a short period bins up fine
+            # because many cycles stack. WRONG-KEPT: the old floor
+            # p_min = 8*span/n (>=8 samples/cycle) blocked divisibility
+            # periods 3 and 5 on an integer grid while 15 passed — the
+            # stream's label logic was unsayable. A period must simply
+            # exceed ~2x the typical sample spacing.
+            diffs = np.diff(np.sort(t))
+            pos = diffs[diffs > 0]
+            dt = float(np.median(pos)) if len(pos) else span
+            p_min = 2.05 * dt
             p_max = span / 2.0            # >= 2 folds, else nothing maps
             if p_min >= p_max:
                 continue
@@ -562,29 +663,125 @@ class _Enumerator:
                 ssw = float((s2 - s1 * s1 / np.maximum(cnt, 1)).sum())
                 return 1.0 - ssw / (float(vals @ vals) + 1e-12)
 
-            def best_fold(vals):
-                # coarse map, then a fine scan around the winner — the null
-                # replays BOTH stages, so selection stays corrected
-                best, bestP = 0.0, None
-                for P in Ps:
-                    r = fold_score(vals, P)
-                    if r > best:
-                        best, bestP = r, P
-                if bestP is not None:
-                    for P in np.linspace(bestP * 0.93, bestP * 1.07, 33):
+            def refine_P(vals, best, bestP):
+                # two fine stages pin the period (a 0.3% frequency
+                # error de-coheres over hundreds of cycles); the null
+                # replays every stage, so selection stays corrected
+                for width, pts in ((0.07, 33), (0.007, 33)):
+                    if bestP is None:
+                        break
+                    for P in np.linspace(bestP * (1 - width),
+                                         bestP * (1 + width), pts):
                         r = fold_score(vals, P)
                         if r > best:
                             best, bestP = r, P
                 return best, bestP
 
-            real, realP = best_fold(ys)
-            if realP is None:
-                continue
+            def coarse(vals):
+                return [fold_score(vals, P) for P in Ps]
+
+            def best_fold(vals):
+                c = coarse(vals)
+                j = int(np.argmax(c))
+                return refine_P(vals, c[j], Ps[j])
+
+            def snap_whole(P):
+                # THE WHOLE-NUMBER SNAP (owner, 2026-07-12): "if it
+                # looks or is close to a whole number, it should go to
+                # that whole number and check it just outright." One
+                # exact evaluation; the whole wins ties (exactness IS
+                # the simpler form). Cures the measured refine-walk
+                # failure (3.0 drifted to 3.0105 and decohered).
+                Pw = float(round(P))
+                if Pw >= 2 and abs(P - Pw) / max(P, 1e-12) < 0.02 \
+                        and fold_score(ys, Pw) >= fold_score(ys, P):
+                    return Pw
+                return P
+
+            # THREE ROADS PROPOSE, NONE REFEREES ANOTHER (untangled
+            # 2026-07-12 after measured whack-a-mole: comb picks
+            # deduped the fold's precise pick, then fold-refined comb
+            # picks walked off exact truths — both wrong-kept).
+            # Expansion is free and admission compresses: each road
+            # dedups only within itself; every atom still faces the
+            # admission null term by term.
+
+            # road 0, integer axes (owner, 2026-07-12): integer
+            # periods CHECKED OUTRIGHT by residue classes — exact,
+            # cheap, no spectral machinery, no refine walk.
+            res_P = []
+            if np.allclose(t, np.round(t), atol=1e-9):
+                ti = np.round(t).astype(np.int64)
+                Pmax = min(max(2, n // 4), 128)   # classes need >=4
+                # samples each (n//4); 128 = cost backstop only — the
+                # comb road covers longer window-commensurate combs
+
+                def residue_score(vals, P):
+                    ph = ti % P
+                    cnt = np.bincount(ph, minlength=P)
+                    s1 = np.bincount(ph, weights=vals, minlength=P)
+                    s2 = np.bincount(ph, weights=vals * vals,
+                                     minlength=P)
+                    ssw = float((s2 - s1 * s1
+                                 / np.maximum(cnt, 1)).sum())
+                    return 1.0 - ssw / (float(vals @ vals) + 1e-12)
+
+                Ps_int = range(2, Pmax + 1)
+                scores = {P: residue_score(ys, P) for P in Ps_int}
+                null0 = np.empty(n_perm)
+                for kk in range(n_perm):
+                    pv = self._null_perm(ys)
+                    null0[kk] = max(residue_score(pv, P)
+                                    for P in Ps_int)
+                gate0 = float(null0.max())
+                passers = {P: s for P, s in scores.items() if s > gate0}
+                # the fundamental is the SMALLEST P with its family's
+                # score: any multiple of a true period scores >= it
+                # (finer classes stay pure) — multiples are shadows
+                for P in sorted(passers,
+                                key=lambda P: (-round(passers[P], 3), P)):
+                    if len(res_P) >= 3:
+                        break
+                    if any(P % P0 == 0
+                           and passers[P] <= passers[P0] + 1e-3
+                           for P0 in res_P):
+                        continue
+                    res_P.append(float(P))
+
+            # road 1, regular axes: the DFT comb. Bin-quantized picks
+            # get the whole-number snap-check only — refining them
+            # with the fold walked exact truths off (wrong-kept).
+            comb_P = []
+            for P, _ in (self._comb_periods(t, ys, n_perm) or []):
+                P = snap_whole(P)
+                if all(abs(np.log(P / p0)) > 0.1 for p0 in comb_P):
+                    comb_P.append(P)
+
+            # road 2, any axis: the fold scan; local maxima past the
+            # gate (a composed target listens to several periods at
+            # once), refined, then snap-checked.
+            fold_P = []
+            curve = coarse(ys)
             null = np.empty(n_perm)
             for k in range(n_perm):
                 null[k] = best_fold(self._null_perm(ys))[0]
-            if real > np.percentile(null, pct):
-                proposals.append((i, 2.0 * np.pi / realP))
+            gate = float(np.percentile(null, pct))
+            order = np.argsort(-np.asarray(curve))
+            for j in order:
+                if curve[j] <= gate or len(fold_P) >= 3:
+                    break
+                left = curve[j - 1] if j else -np.inf
+                right = curve[j + 1] if j + 1 < len(Ps) else -np.inf
+                if curve[j] < left or curve[j] < right:
+                    continue
+                r, P = refine_P(ys, curve[j], Ps[j])
+                P = snap_whole(P)
+                if r > gate and all(abs(np.log(P / p0)) > 0.1
+                                    for p0 in fold_P):
+                    fold_P.append(P)
+
+            proposals += [(i, 2.0 * np.pi / float(P))
+                          for P in res_P + comb_P + fold_P]
         self.proposed_periods = proposals
         return proposals
 
@@ -1642,6 +1839,14 @@ class Isaac:
                     self.composites.append(dict(
                         op=e["op"], features=[int(f) for f in e["features"]],
                         name=e["name"], provenance=e.get("provenance", "")))
+            if e.get("kind") == "rule" and isinstance(e.get("clauses"),
+                                                      list):
+                node = f"rule:{e['name']}"
+                self.net.add_door("rule", node, tag="rule")
+                self.net.set_meta(node, "rule", dict(
+                    clauses=e["clauses"],
+                    status=e.get("status", "told-unverified"),
+                    validation=e.get("validation")))
             if e.get("kind") == "law" and e.get("model"):
                 m = e["model"]
                 node = f"law:{e['name']}"
@@ -2349,6 +2554,220 @@ class Isaac:
             self.record_finding("validation", name, r2=round(r2, 4),
                                 status=status, n=len(y))
         return dict(status=status, r2=r2)
+
+    # ── task responses: told the GOAL, he finds the method ───────
+    # (owner, 2026-07-12: "you tell him the goals and he needs to
+    # figure out what to do... all he needs to do is respond with
+    # <token A> or <token B>. next token prediction style.") Hand-built is
+    # ONLY translation (tokens <-> his substrate) and epistemics.
+    # LEARNED: the default relation (responses ECHO the prompt —
+    # found by his compare primitive, never assumed), the response
+    # classes (the observed distinct tokens, nothing pre-named), and
+    # WHEN each class fires (his own discover, nulls and all). No
+    # task word exists in this file; the same organ must solve ANY
+    # echo-with-exceptions stream or refuse it — the battery proves
+    # both on foreign worlds. WRONG-KEPT (owner correction, same
+    # day): the assistant first probed this by hand-building
+    # one-vs-rest targets and composing them — programming the
+    # lesson. The decomposition below is Isaac's own differentiation
+    # (classes = the distinct tokens he observed), inside a
+    # task-blind organ.
+
+    def learn_responses(self, prompts, responses, name="task"):
+        """Learn prompt->response from examples alone; the goal is
+        told, the method is his. Prompts must translate to the number
+        line (numerals); responses are opaque tokens. Returns the
+        task record: the echo rate he measured, the classes he
+        differentiated, and each class's discover verdict."""
+        prompts = [str(p) for p in prompts]
+        resp = [str(r) for r in responses]
+        try:
+            xs = np.array([float(p) for p in prompts]).reshape(-1, 1)
+        except ValueError:
+            rec = dict(task=name, refused="prompts do not translate "
+                                          "to the number line")
+            self.record_finding("task", name, **rec)
+            return rec
+        echo = np.array([r == p for r, p in zip(resp, prompts)])
+        classes = sorted({r for r, e in zip(resp, echo) if not e})
+        record = dict(task=name, echo_rate=round(float(echo.mean()), 3),
+                      classes=[], laws={})
+        if len(classes) > max(8, int(np.sqrt(len(resp)))):
+            record["refused"] = (f"{len(classes)} distinct non-echo "
+                                 f"tokens in {len(resp)} examples: no "
+                                 "small class structure to learn")
+            self.record_finding("task", name, **record)
+            return record
+        targets = [("__echo__", echo.astype(float))]
+        targets += [(c, np.array([1.0 if r == c else 0.0 for r in resp]))
+                    for c in classes]
+        ns = np.round(xs[:, 0]).astype(np.int64)
+        int_axis = bool(np.allclose(xs[:, 0], ns, atol=1e-9))
+        for c, y in targets:
+            law = f"{name}:{c}"
+            res = self.discover(xs, y, name=law)
+            kept = self.net.get_meta(f"law:{law}", "model") is not None
+            cls = dict(token=c, verdict=res["verdict"],
+                       r2=round(res["r2"], 3))
+            # the recognition bridge (all methods, one concept): a
+            # class firing EXACTLY on the multiples of a whole P is
+            # SAID that way — the discovered comb and a told
+            # "multiple of P" are the same concept
+            if int_axis and c != "__echo__":
+                fires = y > 0.5
+                for P in range(2, min(len(ns) // 4, 128) + 1):
+                    if bool(((ns % P == 0) == fires).all()):
+                        cls["reads_as"] = f"every {P}th"
+                        break
+            record["classes"].append(cls)
+            if kept:
+                record["laws"][c] = law
+        node = f"task:{name}"
+        self.net.add_door("task", node, tag="task")
+        self.net.set_meta(node, "record", record)
+        self.record_finding("task", name, **record)
+        return record
+
+    def respond(self, prompt, name="task"):
+        """Answer a prompt with the learned task's token — the echo
+        class answers with the prompt itself. Rank decides (argmax
+        over his class laws, no hand thresholds); no admitted law
+        firing = ABSTAIN with the why: a shrug with a diagnosis beats
+        a guess."""
+        rec = self.net.get_meta(f"task:{name}", "record")
+        if rec is None or rec.get("refused"):
+            return dict(token=None,
+                        why=rec.get("refused", "no learned task")
+                        if rec else "no learned task")
+        x = np.array([[float(prompt)]])
+        scores = {}
+        for c, law in rec["laws"].items():
+            p = self.apply_law(law, x)
+            if p is not None and np.isfinite(p[0]):
+                scores[c] = float(p[0])
+        if not scores:
+            return dict(token=None,
+                        why="no class law says anything here")
+        best = max(scores, key=scores.get)
+        token = str(prompt) if best == "__echo__" else best
+        return dict(token=token, class_=best,
+                    scores={k: round(v, 3) for k, v in scores.items()})
+
+    # ── told RULES: generation, not duplication ──────────────────
+    # (owner, 2026-07-12, the correction: "he didnt learn it. you fed
+    # him a pattern and he had to mimic it. thats not generation,
+    # thats duplication... what i want is to say if its a 3 say
+    # <token>, if its a 5 say <other>, if its both say <both-token>,
+    # and if its neither increment the number. i want him to be able
+    # to understand that kind of thing.") A rule is TOLD — conditions
+    # over the number line -> utterances — and the behavior is
+    # GENERATED from the understanding, zero examples seen.
+    # Precedence is his own general logic: the MOST SPECIFIC
+    # satisfied clause wins (a bare clause with no conditions is the
+    # base case); an unresolvable tie is a REFUSAL, never a guess.
+    # Told rules follow the told-knowledge law: usable at once,
+    # belief only from data (validate_rule against an observed
+    # stream), and the example road (learn_responses) is the duel
+    # partner, not the goal.
+
+    _RULE_CONDS = {"multiple_of"}          # the condition vocabulary
+
+    def tell_rule(self, name, clauses):
+        """Accept a told rule: [{'when': {'multiple_of': [3]},
+        'say': 'tok'}, ..., {'when': {}, 'say': '__number__'}].
+        '__number__' says the prompt itself. Unknown condition words
+        are refused loudly, never guessed at."""
+        for c in clauses:
+            when = c.get("when", None)
+            if not isinstance(when, dict) or "say" not in c:
+                raise ValueError(f"clause needs 'when' dict + 'say': {c}")
+            bad = set(when) - self._RULE_CONDS
+            if bad:
+                raise ValueError(
+                    f"unknown condition word(s) {sorted(bad)} — "
+                    f"vocabulary is {sorted(self._RULE_CONDS)}")
+            for k in when.get("multiple_of", []):
+                if int(k) != k or k < 2:
+                    raise ValueError(f"multiple_of wants whole "
+                                     f"numbers >= 2, got {k}")
+        node = f"rule:{name}"
+        self.net.add_door("rule", node, tag="rule")
+        self.net.set_meta(node, "rule", dict(
+            clauses=[dict(when=dict(c["when"]), say=str(c["say"]))
+                     for c in clauses],
+            status="told-unverified", validation=None))
+        self.record_finding(
+            "rule", name, status="told-unverified",
+            clauses=[dict(when=dict(c["when"]), say=str(c["say"]))
+                     for c in clauses])
+        return self.net.get_meta(node, "rule")
+
+    def respond_by_rule(self, name, prompt):
+        """One prompt through the told rule. The most specific
+        satisfied clause speaks; a specificity tie with different
+        utterances is a refusal with the why."""
+        rule = self.net.get_meta(f"rule:{name}", "rule")
+        if rule is None:
+            return dict(token=None, why="no such rule")
+        n = float(prompt)
+        if int(n) != n:
+            return dict(token=None,
+                        why=f"rule conditions live on whole numbers; "
+                            f"got {prompt}")
+        n = int(n)
+        best_spec, best = -1, []
+        for c in rule["clauses"]:
+            ks = c["when"].get("multiple_of", [])
+            if all(n % int(k) == 0 for k in ks):
+                spec = sum(len(v) for v in c["when"].values())
+                if spec > best_spec:
+                    best_spec, best = spec, [c]
+                elif spec == best_spec:
+                    best.append(c)
+        if not best:
+            return dict(token=None, why="no clause covers this case")
+        says = {c["say"] for c in best}
+        if len(says) > 1:
+            return dict(token=None,
+                        why=f"ambiguous: {len(best)} equally specific "
+                            f"clauses disagree ({sorted(says)}) — "
+                            f"the rule needs a more specific clause")
+        say = best[0]["say"]
+        return dict(token=str(n) if say == "__number__" else say,
+                    clause=best[0])
+
+    def generate_by_rule(self, name, upto, start=1):
+        """The counting loop the owner described: increment the
+        number, speak each one through the rule."""
+        return [self.respond_by_rule(name, i)["token"]
+                for i in range(start, start + upto)]
+
+    def validate_rule(self, name, prompts, responses):
+        """Belief comes only from data (the told-knowledge law): run
+        the rule against an observed stream, record the COMPLETE
+        match number, promote to validated or mark contradicted with
+        the first disagreements kept."""
+        rule = self.net.get_meta(f"rule:{name}", "rule")
+        if rule is None:
+            return None
+        diffs = []
+        right = 0
+        for p, r in zip(prompts, responses):
+            out = self.respond_by_rule(name, p)
+            if out["token"] == str(r):
+                right += 1
+            elif len(diffs) < 5:
+                diffs.append(dict(prompt=str(p), rule_said=out["token"],
+                                  observed=str(r)))
+        total = len(list(prompts))
+        result = dict(match=right, of=total,
+                      status=("validated" if right == total else
+                              "contradicted"), disagreements=diffs)
+        rule["status"] = result["status"]
+        rule["validation"] = dict(match=right, of=total)
+        self.net.set_meta(f"rule:{name}", "rule", rule)
+        self.record_finding("rule_validation", name, **result)
+        return result
 
     # ── told knowledge: the supersession test candidate ─────────
     # (owner, 2026-07-12: "if you just give it the equations directly,

@@ -434,6 +434,36 @@ Where every candidate is cheap to measure exactly (FFT
 cross-correlation scores ALL lags at once), exact full measurement
 replaces bracketing — measuring everything is not a preset menu.
 
+## GENERATION, NOT DUPLICATION (owner, 2026-07-12, the FizzBuzz
+## correction): "he didnt learn it. you fed him a pattern and he had
+## to mimic it. thats not generation, thats duplication."
+**TOLD RULES:** "what i want is to say if its a 3 say fizz, if its a
+5, say buzz, if its both say fizzbuzz, and if its neither increment
+the number. i want him to be able to understand that kind of thing."
+The capability is UNDERSTANDING AN INSTRUCTION: the rule is TOLD
+(conditions -> utterances over the number line), Isaac builds the
+executable understanding and GENERATES the behavior having seen ZERO
+examples of the output. Precedence is his own general logic (the most
+specific satisfied condition wins; unresolvable overlap = refusal),
+never task-ordered by hand. Told rules follow the told-knowledge law:
+usable at once, belief only from data (validate against an observed
+stream), supersession duel against example-discovered laws. The
+example-mimicry road (learn_responses) is DEMOTED to duel partner /
+fallback-when-untold — wrong-kept with this why. Both roads must door
+onto the SAME concept nodes (a discovered period-3 comb and a told
+"multiple of 3" are one concept).
+
+## NUMBER STRUCTURES — THE WHOLE-NUMBER SNAP (owner, 2026-07-12):
+**"if it looks or is close to a whole number, it should go to that
+whole number and check it just outright, it would save us so much
+time."** Every measured period/constant near a whole number gets the
+whole number TESTED OUTRIGHT (one exact evaluation; adopt on win or
+F-tie — exactness is the simpler form). On integer-like axes, integer
+periods are tested DIRECTLY by residue classes (group by n mod P,
+score the classes) — exact, cheap, no spectral machinery, no refine
+walk. Divisibility ("every Pth") is a NAMED vocabulary concept, and
+snapped discoveries become legible as it.
+
 ## TOLD KNOWLEDGE = A SUPERSESSION TEST CANDIDATE (owner, 2026-07-12)
 "If you just give it the equations directly, can it use them...
 maybe it could go through and check if the submitted thing applies
@@ -522,11 +552,17 @@ battery: gravity_family_battery.py 13/13).
 ## Current capabilities (one line each; full detail in ISAAC_MANUAL.md)
 - **Substrate**: Net (nodes/tagged doors/meta/counts, reverse-indexed);
   compare atom; Scratch; World; findings ledger; save/load/fork.
-- **Discovery**: discover() (null-gated enumerator, block-perm valid on
-  autocorrelated targets, phase-fold period proposal, LAG ATOMS —
+- **Discovery**: discover() (null-gated enumerator, block-perm null
+  with per-block rolls — phase-blindness cured 2026-07-12; THREE
+  period roads: integer-residue outright check / DFT comb / fold,
+  whole-number snap, none refereeing another; LAG ATOMS —
   2026-07-12 causality cure: every integer lag FFT-measured, shift-null
   gated, x0[t-k] named, history-less rows refuse — one power dial,
   open op family, accounting=100%, residual dossiers, adequacy);
+  TOLD RULES: tell_rule/generate_by_rule (generation from told
+  understanding, zero examples; most-specific-wins precedence;
+  validate_rule = belief from data); learn_responses/respond =
+  the example road, demoted to duel partner (owner correction).
   rivals/confirm/refine/apply_law/validate_law; graded confidence
   (measured decay); capture→interrogate→graduate; composites minted+reused.
 - **Consolidation**: crystallizer (admission TESTS, wrong-kept, hierarchy

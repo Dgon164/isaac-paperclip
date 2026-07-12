@@ -1,0 +1,15 @@
+FIZZBUZZ PROBE — logic actions, measured (2026-07-12)
+
+P1  structural read of the label sequence: pattern=BRANCH, period 15 (truth: repeat, period 15)
+
+P2  one-vs-rest indicators from n=1..300 (y in {0,1}; half held out inside discover):
+    is_num      : UNDERSTOOD r2=1.000  [interpretable]
+      eq: -0.67*cos(2.0944*x0) -0.27*cos(1.2566*x0) -0.53*cos(1.2566*x0)*cos
+    is_fizz     : UNDERSTOOD r2=1.000  [interpretable]
+      eq: +0.53*cos(2.0944*x0) -0.27*cos(0.4189*x0)*cos(2.93216*x0) -0.53*co
+    is_buzz     : UNDERSTOOD r2=1.000  [interpretable]
+      eq: +0.27*cos(1.2566*x0) +0.53*cos(1.2566*x0)*cos(1.2566*x0) -0.53*cos
+    is_fizzbuzz : UNDERSTOOD r2=1.000  [interpretable]
+      eq: -0.13*cos(1.2566*x0) +0.27*cos(0.8378*x0)*cos(1.2566*x0) +0.53*cos
+
+P3  END-TO-END FizzBuzz, n=301..400 (beyond all training): 100/100 exactly right (100/100 answered; refusals count as wrong)

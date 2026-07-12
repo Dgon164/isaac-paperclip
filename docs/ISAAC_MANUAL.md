@@ -508,6 +508,39 @@ trajectories and stores only what refuses to vary.
     articulated at k=1.506; **150 scattered timestamps suffice**
     (UNDERSTOOD; folding needs coverage of the cycle, not of time);
     0/5 false laws on AR noise; iid path untouched.
+    **Period proposal is now THREE ROADS, none refereeing another
+    (2026-07-12, the divisibility arc):** road 0 — integer axes get
+    integer periods 2..min(n/4,128) CHECKED OUTRIGHT by residue
+    classes (owner: "if it looks or is close to a whole number, it
+    should go to that whole number and check it just outright") —
+    exact, no spectral machinery; fundamental = smallest P of its
+    family (multiples are shadows). Road 1 — regular axes: the DFT
+    comb (enrichment of power at j + harmonics vs bins occupied;
+    null = median-smoothed spectrum-envelope surrogates × Exp(1) —
+    block-perm was wrong-kept here: blocks preserve short periods
+    internally and the gate inflates exactly when a true comb is
+    present; fundamental = LARGEST j with its family's full share —
+    flat combs TIE plain enrichment across divisors, wrong-kept).
+    Road 2 — any axis: the fold (Nyquist floor 2.05×median-spacing —
+    the old 8-samples/cycle floor blocked periods 3/5 on integer
+    grids, wrong-kept; two fine stages ±7% then ±0.7%). Roads 1+2
+    picks get the WHOLE-NUMBER SNAP (near-whole → test the whole
+    outright, adopt on ≥; cures the measured refine walk 3.0→3.0105).
+    Each road dedups only within itself (cross-road dedup and
+    cross-road refinement both wrong-kept: comb quantization shadowed
+    the fold's precise 4.189; fold-refining comb picks walked exact
+    truths off) — expansion is free, admission compresses. THE
+    ADMISSION NULL ITSELF gained a per-block circular roll (block
+    order + one global roll is PHASE-BLIND to sub-block periodicity:
+    ~1/P of null draws replicate a period-P alignment — measured:
+    period-2 residual unfindable at L=18; per-block rolls scramble
+    periodic phase while keeping within-block texture; sunspot
+    protection intact, blockperm battery 10/10). Vocabulary result:
+    divisibility indicators are exactly sayable — all four
+    stream-class laws UNDERSTOOD r²=1.000 (fizzbuzz_probe re-run;
+    calibration re-measured same day: form-true 31/52=60% beyond
+    range vs standing 68%, within binomial noise — DECAY_MEASURED
+    stands).
     **Lag-atom proposal (2026-07-12 — the causality cure)**: the
     causality probe measured temporal blindness exactly (on
     y(t)=f(x(t−k)) raw discover r²=0.000 at EVERY k≥1). Now, before
@@ -949,6 +982,37 @@ road (proven: save_pack/load_pack preserves law + status). Battery
 `experiments/told_knowledge_battery.py` = 13/13 (incl. round-trip:
 Isaac parses his own printed equations). Suite 11/11. Promotion
 gates: engine + 10 batteries.
+
+**Told RULES — generation, not duplication (owner design + owner
+correction, 2026-07-12):** "he didnt learn it. you fed him a pattern
+and he had to mimic it. thats not generation, thats duplication...
+what i want is to say if its a 3 say fizz... i want him to be able to
+understand that kind of thing." `tell_rule(name, clauses)` — clauses
+= `{'when': {'multiple_of': [ints]}, 'say': token}` with `'say':
+'__number__'` speaking the prompt itself and a bare `when: {}` as the
+base case; unknown condition words refused loudly at tell time.
+`respond_by_rule(name, n)` / `generate_by_rule(name, upto)`:
+GENERATION from the told understanding, zero examples seen —
+precedence is Isaac's own general logic (the MOST SPECIFIC satisfied
+clause wins; clause ORDER is proven irrelevant; an equal-specificity
+disagreement REFUSES with the why). `validate_rule(name, prompts,
+responses)`: belief only from data — told-unverified → validated
+(complete match count) or CONTRADICTED with the first disagreements
+kept. Rules persist through the ledger. The EXAMPLE road —
+`learn_responses(prompts, responses)` + `respond(prompt)` — is
+DEMOTED to duel partner / fallback-when-untold (wrong-kept): it
+learns echo (his compare primitive), differentiates classes from
+observed tokens, discovers when each fires (own nulls), abstains
+when nothing is admitted, and REFUSES random-exception worlds; a
+discovered class firing exactly on multiples of P READS AS "every
+Pth" (the bridge: both roads, one divisibility concept). Proof
+standard held: the engine contains no task words (grep-proven);
+foreign worlds (period-7 echo world 70/70, a 4/9/36 composed world
+85/90) solved by the same untouched organ. THE HEADLINE, complete
+numbers: told rule generates the stream 100/100 on 1..100 and
+100/100 on n=301..400; example road 100/100 on n=301..400 (all
+learned laws UNDERSTOOD). Batteries: `rule_battery.py` 11/11 +
+`task_battery.py` 8/8. Promotion gates: engine + 28 batteries.
 
 **Law families + which_law (2026-07-12):** overlapping-confusion
 machinery. tell_law now compares CONSTANTS on a form match (5%
