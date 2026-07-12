@@ -938,3 +938,21 @@ scrubber -> Prime identity_gate. Battery
 `isaac_store/test_provenance.py` = 13/13 (incl. literal
 reconstruction: a prime-only leaf rebuilds the identical law).
 Promotion gates: engine + 12 batteries.
+
+**Seeker — the one-question search worker (owner design, 2026-07-12):**
+`isaac_store.seeker.Seeker(search_provider)` — "acts like a search
+agent... quick web crawl for a few sources, chews, gives its best
+answer." Lifetime = ONE task (no-curiosity law intact; it has no
+task queue and no way to add to one). DEPTH ZERO: fetches exactly
+the search results; links inside pages are never followed (battery
+plants 20 bait links per page — zero requested). Budgets physical:
+max sources/bytes/time in the task; exhaustion = clean stop. Chew
+v1 = cross-source corroboration for numeric questions: values
+clustered at 2%, an ANSWER needs >=2 sources AND a majority;
+otherwise AMBIGUOUS/NONE refusals with the dossier (dissent is
+reported, never hidden). Receipts on everything (url + content
+hash); answers are PUBLIC-tier provenance, Provenance-Gate ready.
+Search backend pluggable — real-web provider is an owner dependency
+call; batteries run a local mock web. Battery
+`isaac_store/test_seeker.py` = 11/11. Promotion gates: engine + 13
+batteries.

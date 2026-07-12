@@ -205,6 +205,23 @@ keeps its loadout until the job boundary. The scrubber's pattern
 vocabulary is the first skill record; hand-coded module defaults are
 only the SEED Prime is educated with.
 
+**THE SEEKER (owner, 2026-07-12, public-intake design settled):**
+"it acts like a search agent... does a quick web crawl for a few
+sources, chews on the information, then gives its best answer." A
+worker whose ENTIRE LIFETIME IS ONE QUESTION — no curiosity law
+intact (the task arrives from outside; it never invents its own next
+task). Per task: search (budgeted provider) → fetch K sources
+DEPTH-ZERO (links are never followed — no recursion exists) → chew =
+cross-source corroboration with nulls (a claim wants ≥2 independent
+sources; agreement/disagreement measured) → best answer WITH
+receipts (sources, hashes, support counts) or a REFUSAL with the
+dossier (conflict/insufficiency stated). Budgets are physical: max
+sources/bytes/time in the task record; exhaustion = clean stop.
+Everything it learns is PUBLIC-tier provenance → exportable through
+the Provenance Gate; scrubber still runs on intake (public ≠
+identity-free). Real-web search backend = an owner dependency call
+(API key vs none); the mechanism is provider-pluggable.
+
 **THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
 thread soon, NOT now):** "we will have to train the scrubber... teach
 it what counts as personal or not and generalize the information."
