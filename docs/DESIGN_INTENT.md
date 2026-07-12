@@ -205,6 +205,35 @@ keeps its loadout until the job boundary. The scrubber's pattern
 vocabulary is the first skill record; hand-coded module defaults are
 only the SEED Prime is educated with.
 
+**THE ACCOUNT MODEL (owner, 2026-07-12):** API access = account id +
+SESSION ACTIVATION KEY, auto-renewed hourly (rotating short-lived
+keys); one auth path serves both the website GUI (the main door,
+likely routed on/through AWS) and direct API users. Users get
+CONCURRENT processing (their container's worker fleet) and LOCAL
+processing (the leaf/user-held road). Account storage with upload
+size limits. **PLAN TIERS ARE STORAGE-BASED, NOT COMPUTE-BASED**
+(base 1 GB, next 5 GB, ...) **and each level up grants +1 worker.**
+Rationale fit: Isaac's compute is cheap by design (the mission), so
+storage is the honest marginal cost — sell what costs; metering
+stays content-free (bytes and counts, the ops discipline). Security
+backend owned by build: pbkdf2 password hashing (stdlib), rotating
+session keys (grace-period on rotation), constant-time compares,
+login rate-limits, upload caps enforced at the API door
+(Content-Length before body read), TLS at the proxy layer, account
+PII in ONE separate ops-side store no net can reach.
+
+**THE RESTORE-POINT CACHE (owner, 2026-07-12):** per-customer
+retention setting — DEFAULT = "latest version" keeping **3
+supersession layers at any time** (the newest 3 pack snapshots +
+the journal tail spanning them: 3 restore points, bounded storage);
+OPTION = "full log" (nothing ever pruned). Restore is an APPEND, not
+a rewrite: rewinding to a restore point is itself a journaled event
+(history is never falsified; in full-log mode even the rewind's
+before-state survives). Nuance vs wrong-kept: knowledge and its
+defeats live IN the current pack (wisdom is cheap bytes); what the
+default prunes is redundant SNAPSHOT COPIES — customer storage
+economics, owner-settled.
+
 **THE SEEKER (owner, 2026-07-12, public-intake design settled):**
 "it acts like a search agent... does a quick web crawl for a few
 sources, chews on the information, then gives its best answer." A

@@ -956,3 +956,16 @@ Search backend pluggable — real-web provider is an owner dependency
 call; batteries run a local mock web. Battery
 `isaac_store/test_seeker.py` = 11/11. Promotion gates: engine + 13
 batteries.
+
+**Restore-point cache (owner design, 2026-07-12):** per-customer
+retention. DEFAULT: keep the newest **3 supersession layers** (pack
+snapshots) + the journal tail spanning them — 3 restore points,
+bounded storage; journal events older than the oldest kept snapshot
+are trimmed (recovery invariant proven intact on the trimmed
+journal). OPTION: full log (retention_keep=None) — nothing ever
+pruned. `orchestrator.restore(v)` rewinds to a kept snapshot as an
+APPENDED journal event (history is never rewritten; cold-start
+replays THROUGH the restore correctly). Measured: keep-3 224 KB vs
+full-log 378 KB on the same 6-generation run. Prunes are content-
+free ops events. Battery `isaac_store/test_retention.py` = 10/10.
+Promotion gates: engine + 14 batteries.

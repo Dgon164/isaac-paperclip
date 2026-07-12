@@ -51,3 +51,31 @@ class Journal:
         if not os.path.exists(self.path):
             return []
         return [(seq, dec(e)) for seq, e in self._scan() if seq > watermark]
+
+    def trim(self, keep_after_seq):
+        """Retention (owner's restore-point cache): drop events with
+        seq <= keep_after_seq — they are baked into a kept snapshot.
+        Numbering is preserved; the rewrite is atomic. Returns the
+        number of events dropped."""
+        if not os.path.exists(self.path):
+            return 0
+        kept, dropped = [], 0
+        with open(self.path, "r", encoding="utf-8") as f:
+            for line in f:
+                if not line.endswith("\n"):
+                    break
+                try:
+                    seq = json.loads(line)["seq"]
+                except (json.JSONDecodeError, KeyError):
+                    break
+                if seq > keep_after_seq:
+                    kept.append(line)
+                else:
+                    dropped += 1
+        tmp = self.path + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            f.writelines(kept)
+            f.flush()
+            os.fsync(f.fileno())
+        os.replace(tmp, self.path)
+        return dropped
