@@ -286,6 +286,24 @@ enumeration; this is its extension, pairs with the learned-scrubber
 research thread). Either road, the report remains the ground truth
 attached beneath every response.
 
+**LOCAL AI CONVERSATIONS — FOR LEARNING AND TRAINING (owner,
+2026-07-12, corrected same day: "not quite my tempo. i meant for
+learning and training"):** a small LOCAL model (1.5B–7B,
+llama.cpp/ollama class — dependency call open) as Isaac's SPARRING
+PARTNER, not a product mouth. This is World GM for language: a
+cheap, local, endless conversation environment Isaac practices in
+and learns FROM. The model's output is DATA — untrusted intake to
+be null-gated, never truth, never verdict (drink the firehose;
+the nulls compress). Uses: (1) harvest paired examples so the
+speech corpus GROWS from conversation instead of hand-written
+lessons (fragments still face permutation-null admission); (2)
+generate adversarial identity-laced text = training data for the
+LEARNED SCRUBBER thread; (3) conversational practice — Isaac asks,
+observes, extracts usage regularities with his own machinery.
+Local = nothing leaves the machine. Budgeted like every
+environment (the GM pattern: interaction costs budget; sessions
+end).
+
 **THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
 thread soon, NOT now):** "we will have to train the scrubber... teach
 it what counts as personal or not and generalize the information."

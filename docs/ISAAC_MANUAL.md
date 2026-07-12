@@ -1019,3 +1019,15 @@ caught), corpus swap changes the words, withheld lessons produce
 silence, retention across save/load, faithfulness null on numbers.
 `askisaac --speak` uses learned speech only. Promotion gates: engine
 + 18 batteries.
+
+**The Face (2026-07-12):** `python face.py` -> http://127.0.0.1:8676
+— the alpha's web door: drop or paste a CSV in a browser, Isaac
+answers with LEARNED SPEECH (when taught) and the honest report
+always attached. Separate from PrimeServer by design (heavy
+per-request discover work never blocks the orchestrator's doorway).
+Door laws enforced: 20 MB upload cap checked BEFORE the body is
+read (413), garbage gets a clean why (400, no stack traces),
+refusals arrive as 200 answers with the refusal spoken, access log
+is method+path only (no query strings, no content). Stdlib only,
+localhost only. Battery `isaac_store/test_face.py` = 7/7. Promotion
+gates: engine + 19 batteries.
