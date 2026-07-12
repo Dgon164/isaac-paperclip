@@ -37,13 +37,30 @@ def call(base, path, body=None, encoded=False):
 
 
 def run_job(mod, job):
+    """Two kinds: "discover" (synthetic, the battery) and
+    "discover_file" (real data: mmap a .npy, take the job's columns).
+    Returns the result record to publish."""
+    import time as _t
+
     import numpy as np
+    t0 = _t.perf_counter()
+    if job.get("kind") == "discover_file":
+        arr = np.load(job["path"], mmap_mode="r")  # cheap: pages on demand
+        rows = job["rows"]
+        X = np.asarray(arr[:rows, job["input_cols"]], dtype=np.float64)
+        y = np.asarray(arr[:rows, job["target_col"]], dtype=np.float64)
+        mind = mod.Isaac()
+        mind.discover(X, y, name=job["name"])
+        finding = dict(mind.findings[-1])  # verdict/equation/r2/accounting
+        return {"finding": finding,
+                "seconds": round(_t.perf_counter() - t0, 2)}
     rng = np.random.default_rng(job["seed"])
     X = rng.uniform(-2, 2, (job["rows"], 2))
     y = job["a"] * X[:, 0] * X[:, 1] + job["b"] * X[:, 0] ** 2
     mind = mod.Isaac()
     mind.discover(X, y, name="job")
-    return mind.net.get_meta("law:job", "model")
+    return {"model": mind.net.get_meta("law:job", "model"),
+            "seconds": round(_t.perf_counter() - t0, 2)}
 
 
 def main():
@@ -79,9 +96,9 @@ def main():
         k, claim = claimed
         if mod is None:
             mod = bridge.load_isaac_module()  # engine loads once per worker
-        model = run_job(mod, claim)
+        result = run_job(mod, claim)
         call(a.prime, "/api/submit",
-             {"op": "put", "key": f"node:law:{k}", "value": {"model": model},
+             {"op": "put", "key": f"node:law:{k}", "value": result,
               "who": a.who}, encoded=True)
         call(a.prime, "/api/submit",
              {"op": "put", "key": f"job:{k}",

@@ -1,0 +1,14 @@
+FLEET HIGGS — 2026-07-12, 4 workers, 10 jobs, 5000 rows/job (of 11,000,000)
+
+  m_jj    <- jet1,jet2 raw           [ w0]    3.3s  NO RULE      r2=0.048   +0.10*x0*x3 +0.91
+  m_jjj   <- jets1-3 raw             [ w1]    5.7s  NO RULE      r2=0.161   +0.10*x0*x6 -0.74*cos(0.2975*(x1-x7)) -0.32*exp(-1*x3) +1.73
+  m_lv    <- lepton+MET raw          [ w2]   14.7s  PARTIAL      r2=0.891   +0.17*x0*x0 -0.03*x0*x0*cos(1.7*(x2-x4)) +1.15*exp(-0.769183*x3)
+  m_jlv   <- jet1+lepton+MET raw     [ w3]    6.0s  NO RULE      r2=0.073   -17.94*x3*x5 +18.15*x3*x5*cos(0.028824*(x1-x3)) +0.00*cosh(3.017
+  m_bb    <- jets+btags raw          [ w0]   33.0s  PARTIAL      r2=0.608   +0.36*x0*x3 +0.18*x4*x7 +0.12*x8*x11 +0.06*x8*x12 -0.35*x4*x7*si
+  m_wbb   <- all 21 raw              [ w1]   49.0s  PARTIAL      r2=0.493   +0.31*x5 +0.08*x3*x9 +0.10*x5*x8 +0.13*x9*x12 +0.01*x13*x13 +0.0
+  m_wwbb  <- all 21 raw              [ w3]   42.6s  PARTIAL      r2=0.421   +0.15*x5 +0.06*x3*x9 -0.07*x0*x13 -0.99*cos(0.2401*(x1-x14)) +0.
+  CONTROL jet1_pt <- lepton+MET      [ w2]    3.7s  NO RULE      r2=0.074   +0.23*x0*x3 -0.20*sin(0.85*x3) +0.12*sin(1*x3)*cos(2.1051*x0) +0
+  CONTROL lep_pt  <- jets            [ w2]   15.3s  NO RULE      r2=0.119   +0.15*x0*x0 +0.06*x0*x0*cos(1.955*(x2-x5)) +0.10*x0*x0*cos(2*(x2
+  CONTROL jet1_btag <- jet1 kin      [ w2]    2.2s  NO RULE      r2=0.142   -0.13*x1*x1 -0.28*cos(2.645*x0) +0.16*x1*x1*cos(1.7*x1) +0.11*co
+
+  wall 55.1s | worker-busy 175.5s | utilization 3.18x of 1 core (4 workers)
