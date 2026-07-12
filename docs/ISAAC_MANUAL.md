@@ -864,3 +864,17 @@ SEED (`seed_skill()`); `scrub(payload, vocabulary=<pulled record>)`
 runs on Prime's living vocabulary, so educating Prime re-equips every
 worker at its next recheck. Battery `isaac_store/test_skills.py` =
 7/7. Promotion gates: engine + 7 batteries = 107/107.
+
+**Ops + the alpha launcher (2026-07-12):** `isaac_store.OpsLedger` —
+the ledger organ applied to operations: process/compact/http events
+with counts, sizes, timings appended to ops.jsonl. CONTENT-FREE BY
+CONSTRUCTION (Identity Law): the ledger refuses long strings and
+structured values at write time; http events carry method+path (no
+query)+status+ms. `alpha.py` (repo root) = the alpha live launcher:
+`python alpha.py` boots Prime as a service (orchestrator + identity
+gate + doorway + ops) from a persistent data dir; first boot educates
+Prime with the seed scrubber skill; restart resumes via the recovery
+invariant; non-localhost bind REFUSED without a token; Ctrl+C
+compacts a final pack. Battery `isaac_store/test_ops.py` = 13/13
+(incl. leak-channel proof: PII driven through HTTP appears in zero
+ops/journal bytes). Promotion gates: engine + 8 batteries = 120/120.

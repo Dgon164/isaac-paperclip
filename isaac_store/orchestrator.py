@@ -13,6 +13,7 @@ import threading
 import time
 
 from .journal import Journal
+from .ops import OpsLedger
 from .pack import PackReader, latest_pack, write_pack
 
 
@@ -26,6 +27,7 @@ class Orchestrator:
         os.makedirs(directory, exist_ok=True)
         self.packs_dir = os.path.join(directory, "packs")
         self.journal = Journal(os.path.join(directory, "journal.jsonl"))
+        self.ops = OpsLedger(os.path.join(directory, "ops.jsonl"))
         self.admission = admission or _admit_all
         self.state = {}
         self._queue = []
@@ -60,6 +62,7 @@ class Orchestrator:
         Returns (admitted, rejected) counts."""
         with self._lock:
             batch, self._queue = self._queue, []
+        t0 = time.perf_counter()
         admitted = rejected = 0
         for edit in batch:
             ok, why = self.admission(edit, self.state)
@@ -79,6 +82,9 @@ class Orchestrator:
                     kept["value_redacted"] = "Identity Law: content not retained"
                 self.journal.append({"verdict": "rejected", "edit": kept, "why": why})
                 rejected += 1
+        if batch:
+            self.ops.event("process", admitted=admitted, rejected=rejected,
+                           ms=round((time.perf_counter() - t0) * 1000, 3))
         return admitted, rejected
 
     def _apply(self, edit):
@@ -95,6 +101,7 @@ class Orchestrator:
 
     def compact(self, engine_version="unknown"):
         """Publish the current state as the next immutable pack."""
+        t0 = time.perf_counter()
         version = self.pack_version + 1
         path = write_pack(self.packs_dir, version, self.state, meta={
             "version": version,
@@ -104,4 +111,7 @@ class Orchestrator:
             "records": len(self.state),
         })
         self.pack_version = version
+        self.ops.event("compact", version=version, records=len(self.state),
+                       bytes=os.path.getsize(path),
+                       ms=round((time.perf_counter() - t0) * 1000, 3))
         return path

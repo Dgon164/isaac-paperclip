@@ -22,6 +22,7 @@ tuples/sets/arrays survive the trip exactly.
 """
 import json
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from urllib.parse import parse_qs, urlparse
 
@@ -50,6 +51,12 @@ class PrimeServer:
                 self.send_header("Content-Length", str(len(body)))
                 self.end_headers()
                 self.wfile.write(body)
+                # ops: method + path (no query) + status + ms — never content
+                outer.orch.ops.event(
+                    "http", method=self.command,
+                    path=urlparse(self.path).path, status=code,
+                    ms=round((time.perf_counter()
+                              - getattr(self, "_t0", time.perf_counter())) * 1000, 3))
 
             def _authed(self):
                 if outer.token is None:
@@ -61,6 +68,7 @@ class PrimeServer:
                 return False
 
             def do_GET(self):
+                self._t0 = time.perf_counter()
                 if not self._authed():
                     return
                 url = urlparse(self.path)
@@ -93,6 +101,7 @@ class PrimeServer:
                         self._json(400, {"ok": False, "why": f"unknown path {url.path}"})
 
             def do_POST(self):
+                self._t0 = time.perf_counter()
                 if not self._authed():
                     return
                 url = urlparse(self.path)
@@ -136,5 +145,6 @@ class PrimeServer:
         return f"http://{self.host}:{self.port}"
 
     def stop(self):
-        self.httpd.shutdown()
+        if self._thread is not None:  # shutdown() hangs if never served
+            self.httpd.shutdown()
         self.httpd.server_close()
