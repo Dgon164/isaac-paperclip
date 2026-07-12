@@ -1531,13 +1531,16 @@ class Isaac:
     @staticmethod
     def _store():
         """Persistence v2 (infrastructure arc 2026-07-11): the plain-file
-        store next to the engine. No pickle, no database — immutable
-        indexed packs, per-node records, partial loading by seek."""
+        store — immutable indexed packs, per-node records, partial
+        loading by seek. Lives in the BUSINESS repo (dc); found via
+        ISAAC_DC env var or the sibling checkout next to this repo."""
         import os
         import sys
         here = os.path.dirname(os.path.abspath(__file__))
-        if here not in sys.path:
-            sys.path.insert(0, here)
+        dc = os.environ.get("ISAAC_DC") or os.path.join(
+            os.path.dirname(here), "dc")
+        if dc not in sys.path:
+            sys.path.insert(0, dc)
         from isaac_store import bridge, codec, pack
         codec.register_module(sys.modules[Isaac.__module__], as_name="isaac")
         return bridge, pack
