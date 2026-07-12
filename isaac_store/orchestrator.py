@@ -65,6 +65,16 @@ class Orchestrator:
         t0 = time.perf_counter()
         admitted = rejected = 0
         for edit in batch:
+            # optimistic concurrency for parallel workers: an edit may
+            # carry "expect" — what the worker believed current when it
+            # decided. Queue order arbitrates races (job claims): the
+            # first claim changes the record, later claims mismatch.
+            if "expect" in edit and self.state.get(edit["key"]) != edit["expect"]:
+                self.journal.append({"verdict": "rejected", "edit": edit,
+                                     "why": "based on superseded evidence "
+                                            "(expect != current)"})
+                rejected += 1
+                continue
             ok, why = self.admission(edit, self.state)
             if ok:
                 self._apply(edit)

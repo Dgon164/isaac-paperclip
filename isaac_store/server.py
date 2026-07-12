@@ -112,11 +112,17 @@ class PrimeServer:
                     return self._json(400, {"ok": False, "why": "body must be JSON"})
                 with outer._lock:
                     if url.path == "/api/submit":
-                        if not isinstance(payload, dict) or "op" not in payload \
-                                or "key" not in payload:
+                        try:
+                            edit = dec(payload["_encoded"]) if (
+                                isinstance(payload, dict) and "_encoded" in payload
+                            ) else payload
+                        except Exception:
+                            return self._json(400, {"ok": False,
+                                                    "why": "bad _encoded envelope"})
+                        if not isinstance(edit, dict) or "op" not in edit \
+                                or "key" not in edit:
                             return self._json(400, {"ok": False,
                                                     "why": "edit needs op and key"})
-                        edit = dec(payload.get("_encoded")) if "_encoded" in payload else payload
                         outer.orch.submit(edit)
                         admitted, rejected = outer.orch.process()
                         verdict = "admitted" if admitted else "rejected"

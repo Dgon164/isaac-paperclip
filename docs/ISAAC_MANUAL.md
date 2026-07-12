@@ -878,3 +878,17 @@ invariant; non-localhost bind REFUSED without a token; Ctrl+C
 compacts a final pack. Battery `isaac_store/test_ops.py` = 13/13
 (incl. leak-channel proof: PII driven through HTTP appears in zero
 ops/journal bytes). Promotion gates: engine + 8 batteries = 120/120.
+
+**Multicore (2026-07-12): the orchestrator/worker design at full
+purpose.** `worker.py` (repo root) = a Worker as a separate OS
+process: pulls jobs from Prime over the doorway, claims them
+optimistically (`"expect": <the open record>` — queue order
+arbitrates races, no locks anywhere; the orchestrator now enforces
+expect natively), computes with the engine on its own core, submits
+results back through the queue (numpy rides the `_encoded` codec
+envelope — server-side decode-then-validate fixed). Measured
+(test_multicore.py, 7/7): 8 discover-jobs, 1 worker 10.1 s vs 4
+workers 3.5 s = **2.90x**, all 4 processes participated, 8/8 laws
+exact, zero double-claims. Prime's write path stays single-writer by
+design — edits are milliseconds; COMPUTE is what fans out. Promotion
+gates: engine + 9 batteries.
