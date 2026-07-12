@@ -68,8 +68,16 @@ class Orchestrator:
                 self.journal.append({"verdict": "admitted", "edit": edit, "why": why})
                 admitted += 1
             else:
-                # wrong-kept: the rejection and its why are ledger material
-                self.journal.append({"verdict": "rejected", "edit": edit, "why": why})
+                # wrong-kept: the rejection and its why are ledger material —
+                # but wrong-kept applies to the JUDGMENT, never to PII: an
+                # Identity Law refusal keeps op/key/who, not the content.
+                # (Found by the learning battery 2026-07-12: a verbatim
+                # rejected edit put private bytes in Prime's journal.)
+                kept = edit
+                if "Identity Law" in why:
+                    kept = {k: v for k, v in edit.items() if k != "value"}
+                    kept["value_redacted"] = "Identity Law: content not retained"
+                self.journal.append({"verdict": "rejected", "edit": kept, "why": why})
                 rejected += 1
         return admitted, rejected
 

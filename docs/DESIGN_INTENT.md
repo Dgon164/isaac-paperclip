@@ -160,7 +160,21 @@ nodes a question touches, door private evidence onto them locally);
 two persistence modes — EPHEMERAL (RAM-only, evaporates at session
 end) or USER-HELD (persisted only on the user's side, encrypted, key
 user-side); **logging is a leak channel**: ops events from a
-security-net worker carry counts/timing ONLY, never content. the full net will be BIG
+security-net worker carry counts/timing ONLY, never content.
+
+**THE LEARNED SCRUBBER (owner, 2026-07-12 — TODO, its own research
+thread soon, NOT now):** "we will have to train the scrubber... teach
+it what counts as personal or not and generalize the information."
+The regex scrubber (isaac_store/scrubber.py, 19/19) is the v1
+VOCABULARY; the real scrubber LEARNS the personal/not-personal
+boundary and GENERALIZES content (identity → the abstraction it
+carries) with Isaac's own machinery — the usage law applied to
+privacy: hand-built = pattern vocabulary + epistemics, LEARNED =
+which content carries identity. Battery when built: measured strip
+rate, refusal calibration, generalization utility. Until then the
+three layers stand (structural quarantine + regex scrubber + gate).
+
+**WORKING NETS (owner, 2026-07-11):** the full net will be BIG
 (size unknown); working nets must be kept SMALL ENOUGH BUT CAPABLE
 ENOUGH. Deployment is the compress stroke: working-set extraction =
 task closure × measured usage/evidence, with the information_ledger
