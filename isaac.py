@@ -1286,16 +1286,45 @@ class Isaac:
         # same order, same verdicts — measured 66x faster.
         circles = []
         seen = set()
-        universe = set()          # all door targets/sources in this context
         pos = {n: i for i, n in enumerate(nodes)}
-        P = {n: self.net.get_predecessors(n, tag=tag) for n in nodes}
-        S = {n: self.net.get_doors(n, tag=tag) for n in nodes}
-        pred_index, succ_index = {}, {}
-        for n in nodes:
+        # THE PERSISTENT MATRIX (owner, 2026-07-12: "anything adjacent
+        # or correlated was supposed to be imported... it is purging
+        # the matrix each time when it should just be reusing the
+        # matrix unless it needs a flush"): door profiles and the
+        # reverse index live on the instance and are refreshed
+        # ADDITIVELY for dirty nodes only — doors are append-only, so
+        # nothing ever needs invalidation. A scoped consolidate
+        # touches its neighborhood; full=True is the flush.
+        ctx = getattr(self, "_ctx_matrix", None)
+        if ctx is None or ctx["tag"] != tag or scope is None:
+            ctx = dict(tag=tag, P={}, S={}, pred_index={},
+                       succ_index={}, universe=set())
+            refresh = nodes
+            self._ctx_matrix = ctx
+        else:
+            refresh = [n for n in (scope or nodes) if n in pos]
+        P, S = ctx["P"], ctx["S"]
+        pred_index, succ_index = ctx["pred_index"], ctx["succ_index"]
+        universe = ctx["universe"]
+        for n in refresh:
+            P[n] = self.net.get_predecessors(n, tag=tag)
+            S[n] = self.net.get_doors(n, tag=tag)
             for c in P[n]:
                 pred_index.setdefault(c, set()).add(n)
             for c in S[n]:
                 succ_index.setdefault(c, set()).add(n)
+            universe |= P[n]
+            universe |= S[n]
+        for n in nodes:
+            if n not in P:
+                P[n] = self.net.get_predecessors(n, tag=tag)
+                S[n] = self.net.get_doors(n, tag=tag)
+                for c in P[n]:
+                    pred_index.setdefault(c, set()).add(n)
+                for c in S[n]:
+                    succ_index.setdefault(c, set()).add(n)
+                universe |= P[n]
+                universe |= S[n]
         # the selection charge, arithmetically identical to the old loop
         n_total = len(nodes)
         pairs_scanned = 0
@@ -1326,28 +1355,36 @@ class Isaac:
                     break
             return out | set(seed_pair)
 
-        for a in nodes:
+        # relevance IS the doors: a node's candidate partners are its
+        # context-sharers from the reverse index — scoped passes walk
+        # only the dirty neighborhood, in both directions
+        seen_pairs = set()
+        iter_nodes = nodes if scope_set is None else \
+            sorted((x for x in scope_set if x in pos), key=pos.get)
+        for a in iter_nodes:
             preds_a, succs_a = P[a], S[a]
             if not preds_a and not succs_a:
                 continue
-            universe |= preds_a
-            universe |= succs_a
             cand = set()
             for c in preds_a:
                 cand |= pred_index.get(c, set())
             for c in succs_a:
                 cand |= succ_index.get(c, set())
             ia = pos[a]
-            for b in sorted((x for x in cand if pos[x] > ia),
-                            key=pos.get):
-                if scope_set and a not in scope_set \
-                        and b not in scope_set:
+            for b in sorted(cand, key=pos.get):
+                if b == a:
                     continue
+                if scope_set is None and pos[b] <= ia:
+                    continue          # unscoped: each pair once
+                pk = (a, b) if pos[b] > ia else (b, a)
+                if pk in seen_pairs:
+                    continue
+                seen_pairs.add(pk)
                 shared_p = preds_a & P[b]
                 shared_s = succs_a & S[b]
                 if len(shared_p) + len(shared_s) < min_shared:
                     continue
-                members = _closure(shared_p, shared_s, (a, b))
+                members = _closure(shared_p, shared_s, pk)
                 key = frozenset(members)
                 if key not in seen and len(members) >= 2:
                     seen.add(key)
@@ -1419,12 +1456,31 @@ class Isaac:
         merged = []
         used = set()
         circles.sort(key=lambda c: len(c["members"]), reverse=True)
+        # relevance again: a merge partner must share >=80% of the
+        # larger member set, so it must share MEMBERS — candidates
+        # come from a member->circles index, never a full scan
+        import heapq
+        cidx = {}
+        for j, c in enumerate(circles):
+            for m in c["members"]:
+                cidx.setdefault(m, []).append(j)
         for i, c in enumerate(circles):
             if i in used:
                 continue
             current = {"members": set(c["members"]),
                        "preds": set(c["preds"]), "succs": set(c["succs"])}
-            for j in range(i + 1, len(circles)):
+            heap, pushed = [], set()
+
+            def _push(ms):
+                for m in ms:
+                    for j in cidx.get(m, ()):
+                        if j > i and j not in used and j not in pushed:
+                            pushed.add(j)
+                            heapq.heappush(heap, j)
+
+            _push(current["members"])
+            while heap:
+                j = heapq.heappop(heap)
                 if j in used:
                     continue
                 other = circles[j]
@@ -1435,22 +1491,79 @@ class Isaac:
                 if (_pos_of(current) & _negs_of(other["members"])
                         or _pos_of(other) & _negs_of(current["members"])):
                     continue          # positively negative: never collapse
+                new_m = other["members"] - current["members"]
                 current["members"] |= other["members"]
                 current["preds"] &= other["preds"]
                 current["succs"] &= other["succs"]
                 used.add(j)
+                _push(new_m)
             merged.append(current)
 
-        # Phase 3: name and write to net
-        self.types = {}
+        # Phase 3: name and write to net. THE MATRIX IS NOT PURGED
+        # (owner, 2026-07-12): existing types persist across scoped
+        # consolidates; this pass's circles RECONCILE into them —
+        # identical member-sets are already known, near-identical
+        # ones ABSORB (the same 0.8-overlap + negative-veto laws the
+        # merge uses; supersession, never overwrite), genuinely new
+        # ones mint new nodes. full=True is the flush and starts
+        # clean, exactly as before.
+        if scope is None:
+            self.types = {}
+        touched = []
+        existing_keys = {frozenset(t["members"]) for t in
+                         self.types.values()}
+        # the member->types reverse index makes reconcile RELEVANT:
+        # a circle meets only types it shares members with (measured:
+        # scanning all standing types made persistence SLOWER than
+        # the purge it replaced — 652 s vs 234 s at 2,000 sentences)
+        tindex = getattr(self, "_type_member_index", None)
+        if scope is None or tindex is None:
+            tindex = {}
+            for tn, t in self.types.items():
+                for m in t["members"]:
+                    tindex.setdefault(m, set()).add(tn)
+            self._type_member_index = tindex
         for c in merged:
+            key = frozenset(c["members"])
+            if key in existing_keys:
+                continue                        # already known
+            absorbed = False
+            cand_types = set()
+            for m in c["members"]:
+                cand_types |= tindex.get(m, set())
+            for tn in sorted(cand_types):
+                t = self.types[tn]
+                larger = max(len(t["members"]), len(c["members"]))
+                overlap = len(t["members"] & c["members"])
+                if larger and overlap / larger >= 0.8:
+                    if (_pos_of(c) & _negs_of(t["members"])
+                            or _pos_of(t) & _negs_of(c["members"])):
+                        continue      # positively negative: no merge
+                    new_m = c["members"] - t["members"]
+                    t["members"] |= c["members"]
+                    t["preds"] &= c["preds"]
+                    t["succs"] &= c["succs"]
+                    for m in new_m:
+                        self.net.add_door(m, t["name"], tag="type")
+                        tindex.setdefault(m, set()).add(t["name"])
+                    existing_keys.add(frozenset(t["members"]))
+                    touched.append(t)
+                    absorbed = True
+                    break
+            if absorbed:
+                continue
             name = f"type:{'_'.join(sorted(c['members'])[:2])}[{len(c['members'])}]"
+            while name in self.types:           # stable ids, no clobber
+                name += "'"
             c["name"] = name
             c["parent"] = None
             c["children"] = []
             self.types[name] = c
+            existing_keys.add(key)
+            touched.append(c)
             for m in c["members"]:
                 self.net.add_door(m, name, tag="type")
+                tindex.setdefault(m, set()).add(name)
 
         # Phase 3.5 (owner's law, 2026-07-03): WRONG IS KEPT AND CLASSIFIED.
         # "knowing what is right is intelligence. knowing what is wrong is
@@ -1487,8 +1600,9 @@ class Isaac:
                 return 0.0
             return exp(la - lb)
 
-        self.wrong_types = {}
-        for c in merged:
+        if scope is None or not hasattr(self, "wrong_types"):
+            self.wrong_types = {}
+        for c in touched:
             k_int = len(c["preds"]) + len(c["succs"])
             score = (len(c["members"]) - 1) * k_int
             c["score"] = score
@@ -1534,9 +1648,20 @@ class Isaac:
         # A2b caught 7 chance links.)
         n_ctx = max(len(nodes), 2)
         type_list = list(self.types.values())
-        for child in type_list:
-            for parent in type_list:
-                if child is parent:
+        torder = {tn: i for i, tn in enumerate(self.types)}
+        # scoped passes parent only the types this pass touched;
+        # standing parent links persist (the flush re-derives all).
+        # Parent candidates come from the member index (a parent must
+        # hold >=80% of the child's members — it must share members).
+        child_iter = type_list if scope is None else \
+            [t for t in touched if not t.get("parent")]
+        for child in child_iter:
+            cand_p = set()
+            for m in child["members"]:
+                cand_p |= tindex.get(m, set())
+            for pname in sorted(cand_p, key=lambda x: torder.get(x, 1 << 30)):
+                parent = self.types.get(pname)
+                if parent is None or child is parent:
                     continue
                 if len(child["members"]) >= len(parent["members"]):
                     continue
@@ -1551,25 +1676,38 @@ class Isaac:
                                      tag="subtype_of")
                     break
 
-        # Phase 5: discover rules (co-occurring predecessors)
-        self.rules = []
-        pred_sets = defaultdict(set)
-        for n in nodes:
-            for p in self.net.get_predecessors(n, tag=tag):
-                pred_sets[p].add(n)
-        preds = [p for p, ns in pred_sets.items() if len(ns) >= 3]
-        for i, a in enumerate(preds):
-            for b in preds[i + 1:]:
-                overlap = len(pred_sets[a] & pred_sets[b])
-                ratio_a = overlap / len(pred_sets[a]) if pred_sets[a] else 0
-                ratio_b = overlap / len(pred_sets[b]) if pred_sets[b] else 0
+        # Phase 5: discover rules (co-occurring predecessors) — a
+        # predecessor's set IS its successor doors, read through the
+        # persistent matrix (no refetching); scoped passes pair only
+        # predecessors whose sets changed; standing rules persist
+        if scope is None or not hasattr(self, "rules"):
+            self.rules = []
+        rule_keys = {(r[0], r[1]) for r in self.rules}
+        preds = [p for p in nodes if len(S.get(p) or ()) >= 3]
+        ppos = {p: i for i, p in enumerate(preds)}
+        done_pairs = set()
+        p_iter = preds if scope_set is None else \
+            [p for p in preds if p in scope_set]
+        for a in p_iter:
+            for b in preds:
+                if b == a:
+                    continue
+                pk = (a, b) if ppos[a] < ppos[b] else (b, a)
+                if pk in done_pairs or pk in rule_keys:
+                    continue
+                done_pairs.add(pk)
+                sa, sb = S[pk[0]], S[pk[1]]
+                overlap = len(sa & sb)
+                ratio_a = overlap / len(sa) if sa else 0
+                ratio_b = overlap / len(sb) if sb else 0
                 # A2: the ratio stays as strength; the chance gate decides
                 # admission (overlap must beat independence at 1%)
                 if ((ratio_a >= 0.8 or ratio_b >= 0.8)
-                        and _hyper_tail(n_ctx, len(pred_sets[a]),
-                                        len(pred_sets[b]), overlap) < 0.01):
-                    self.rules.append((a, b, round(max(ratio_a, ratio_b), 2)))
-                    self.net.add_door(a, b, tag="cooccurs")
+                        and _hyper_tail(n_ctx, len(sa), len(sb),
+                                        overlap) < 0.01):
+                    self.rules.append((pk[0], pk[1],
+                                       round(max(ratio_a, ratio_b), 2)))
+                    self.net.add_door(pk[0], pk[1], tag="cooccurs")
 
         # Phase 6: violations (seq vs neg contrast)
         self._discover_violations()
