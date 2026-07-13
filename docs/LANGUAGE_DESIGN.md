@@ -75,6 +75,12 @@ P-C **Deixis as registration**: implement I/you as a viewpoint
     transform on one speaker-node, not two word-nodes; the learned
     mirror becomes one concept with a pose report. Test: swap
     speakers mid-dialogue and see if reference survives.
-P-D **Speech from grounding**: when he answers a grounded question
-    wrongly, the residual is measurable — language acquires the
-    same correction loop as every law.
+P-D **The correction loop** — OWNER'S MECHANISM, BUILT SAME DAY
+    (battery 18/18; live 16 corrections banked): language's residual
+    is the CORRECTION — fail brings the should-have-said, pass
+    brings the better version; corrections are told knowledge and
+    get USED on sight of the same context; wrongs kept with their
+    corrections; re-correction supersedes. The tutor is any judge —
+    local model (7B holds the format; 1.5B cannot), or the owner
+    directly. Content-ness of words is MEASURED (ubiquity carries
+    no identity), never listed.

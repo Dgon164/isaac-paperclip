@@ -153,6 +153,59 @@ def main():
           f"{utter!r}")
     shutil.rmtree(home, ignore_errors=True)
 
+    # ── 8. THE CORRECTION LOOP (owner: correction IS language's
+    #      residual — fail gets the should-have-said, pass gets the
+    #      better version; wrong kept; corrected contexts REUSED) ──
+    from isaac_store.sparring import (apply_correction, isaac_says as
+                                      says, parse_tutor,
+                                      run_tutored_session)
+
+    class StubTutor:
+        """Scripted tutor: greets, corrects, then repeats the same
+        context so reuse is testable."""
+
+        def __init__(self):
+            self.calls = 0
+            self.max_calls = 50
+
+        def say(self, messages):
+            self.calls += 1
+            if self.calls == 1:
+                return "hello isaac ."
+            said = messages[-1]["content"]
+            if "hello teacher" in said:
+                return ("VERDICT: pass\nSAY: hello teacher , good "
+                        "morning .\nNEXT: hello isaac .")
+            return ("VERDICT: fail\nSAY: hello teacher .\n"
+                    "NEXT: hello isaac .")
+
+    m8 = mod.Isaac()
+    tr8 = run_tutored_session(m8, StubTutor(), turns=3)
+    verdicts = [t["text"] for t in tr8 if t["who"] == "verdict"]
+    check("correction loop: silence FAILS and brings the "
+          "should-have-said", verdicts
+          and verdicts[0].startswith("fail -> hello teacher"),
+          verdicts[0] if verdicts else "none")
+    said2 = [t for t in tr8 if t["who"] == "isaac"][1]
+    check("the correction is USED at the next same context",
+          said2["text"] == "hello teacher ."
+          and said2["source"] == "corrected",
+          f"{said2['text']!r} ({said2['source']})")
+    check("pass still refines: the better version supersedes",
+          len(verdicts) >= 2 and verdicts[1].startswith("pass"),
+          verdicts[1] if len(verdicts) > 1 else "none")
+    wrongs = m8.net.get_meta("speech:wrong", "record") or []
+    check("wrong is kept WITH its correction",
+          wrongs and wrongs[0]["said"] == "..."
+          and wrongs[0]["correction"] == "hello teacher .",
+          f"{len(wrongs)} kept")
+    sup = m8.net.get_meta("speech:corrected:hello isaac", "superseded")
+    check("re-correction supersedes, loser filed",
+          sup == ["hello teacher ."], f"superseded={sup}")
+    check("broken tutor format teaches nothing (parse refuses)",
+          parse_tutor("blah blah") is None
+          and parse_tutor("VERDICT: maybe\nSAY: x\nNEXT: y") is None)
+
     print()
     print(f"SPARRING BATTERY: {PASS}/{PASS + FAIL} checks passed")
     sys.exit(0 if FAIL == 0 else 1)

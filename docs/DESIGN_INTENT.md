@@ -434,6 +434,28 @@ Where every candidate is cheap to measure exactly (FFT
 cross-correlation scores ALL lags at once), exact full measurement
 replaces bracketing — measuring everything is not a preset menu.
 
+## THE LANGUAGE CORRECTION LOOP (owner, 2026-07-12): "the thing with
+## language is you cannot mathematically review it, and you cannot
+## get proper testing feedback. i think what we need to look for is
+## content words and ideas. talk or say something, check for a
+## response, and correct him on what he should have said if he
+## failed, or correct him on what he should have said better if he
+## passed."
+Language has no held-out residual — CORRECTION is the error signal.
+The loop: Isaac speaks in context → a tutor judges → FAIL brings the
+should-have-said, PASS brings the better version. The correction is
+TOLD KNOWLEDGE (usable at once; belief from recurrence); the wrong
+utterance is KEPT WITH its correction (wisdom applied to speech;
+re-failing a corrected context supersedes the correction). Focus on
+CONTENT WORDS AND IDEAS, not surface: content-ness is MEASURED, not
+listed — function words are precisely the words whose contexts carry
+no identity (the excess/ubiquity law, fourth appearance). Standing
+constraint from the owner: the destination is Isaac "working
+entirely within structures and connections" — the correction loop
+teaches USE of structures, not more strings; NLTK-style external
+linguistics failed before and is not the road ("something about the
+design itself that we need to resolve").
+
 ## GENERATION, NOT DUPLICATION (owner, 2026-07-12, the FizzBuzz
 ## correction): "he didnt learn it. you fed him a pattern and he had
 ## to mimic it. thats not generation, thats duplication."

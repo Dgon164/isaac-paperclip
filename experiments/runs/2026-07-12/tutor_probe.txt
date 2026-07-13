@@ -1,0 +1,72 @@
+TUTOR PROBE — corrections are language's residual
+account: C:\Users\jtwee\Documents\isaac_home (211 fragments held)
+
+── tutored session 1 ──
+  tutor  : VERDICT: pass
+  isaac  : ... [silence]
+  verdict: fail -> What's your name?
+  tutor  : My name is Isaac.
+  isaac  : fine, good luck! hello, how are you feeling today? i am fine, [learned-fragment]
+  tutor  : VERDICT: pass
+   NEXT: How was your day?
+  tutor  : NEXT: How was your day?
+  isaac  : fine, good luck! hello, how are you feeling today? i am fine, [learned-fragment]
+  tutor  : VERDICT: pass
+   NEXT: How was your day?
+  tutor  : NEXT: How was your day?
+  isaac  : fine, good luck! hello, how are you feeling today? i am fine, [learned-fragment]
+  tutor  : VERDICT: pass
+   NEXT: What did you do today?
+  tutor  : NEXT: What did you do today?
+  isaac  : i [learned-fragment]
+  verdict: fail -> What's your name?
+  tutor  : My name is Isaac.
+  isaac  : fine, good luck! hello, how are you feeling today? i am fine, [learned-fragment]
+  tutor  : VERDICT: pass
+   NEXT: How was your day?
+  tutor  : NEXT: How was your day?
+  isaac  : what's your name? [corrected]
+  verdict: fail -> What is your name?
+  tutor  : Isaac
+  isaac  : ... [silence]
+  verdict: fail -> How are you feeling today?
+  tutor  : I am good
+  isaac  : are you feeling [learned-fragment]
+  verdict: fail -> How are you?
+  tutor  : I am good
+  isaac  : how are you? [corrected]
+  verdict: fail -> How are you feeling today?
+
+── tutored session 2 ──
+  tutor  : VERDICT: pass
+  isaac  : what's your name? [corrected]
+  verdict: pass -> Your name is Isaac
+  tutor  : And you are learning English
+  isaac  : what's your name? [corrected]
+  verdict: pass -> Your name is Isaac
+  tutor  : And you are learning English
+  isaac  : your name is isaac [corrected]
+  verdict: fail -> What's your name?
+  tutor  : Please tell me your name.
+  isaac  : what is your name? [corrected]
+  verdict: pass -> What's your name?
+  tutor  : And you are learning English
+  isaac  : what's your name? [corrected]
+  verdict: pass -> What's your name?
+  tutor  : And you are learning English
+  isaac  : what's your name? [corrected]
+  verdict: pass -> What's your name?
+  tutor  : And you are learning English
+  isaac  : what's your name? [corrected]
+  verdict: fail -> What is your name?
+  tutor  : Please tell me your name.
+  isaac  : what's your name? [corrected]
+  verdict: fail -> What is your name?
+  tutor  : Please tell me your name.
+  isaac  : what is your name? [corrected]
+  verdict: fail -> What's your name?
+  tutor  : Please tell me your name.
+  isaac  : what's your name? [corrected]
+  verdict: fail -> What is your name?
+
+corrections banked this probe: 16 (total wrongs kept: 16); corrected contexts held: 67

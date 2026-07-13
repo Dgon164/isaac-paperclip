@@ -33,10 +33,12 @@ class OllamaPartner:
     timeout. Exhaustion = clean stop, never a hang."""
 
     def __init__(self, model, url="http://127.0.0.1:11434",
-                 max_calls=40, max_reply_chars=400, timeout_s=120):
+                 max_calls=40, max_reply_chars=400, timeout_s=120,
+                 temperature=0.7):
         self.model, self.url = model, url.rstrip("/")
         self.max_calls, self.max_reply_chars = max_calls, max_reply_chars
         self.timeout_s = timeout_s
+        self.temperature = temperature
         self.calls = 0
 
     def reachable(self):
@@ -56,7 +58,7 @@ class OllamaPartner:
         self.calls += 1
         body = json.dumps(dict(model=self.model, messages=messages,
                                stream=False,
-                               options=dict(temperature=0.7,
+                               options=dict(temperature=self.temperature,
                                             num_predict=120))).encode()
         req = urllib.request.Request(
             self.url + "/api/chat", data=body,
@@ -74,9 +76,18 @@ def _grams(sent, nmax=3):
 
 
 def isaac_says(mind, heard):
-    """Speak ONLY what the learned-speech organ has admitted for what
-    was just heard; otherwise silence. Returns (utterance|None,
-    source_tag)."""
+    """Speak what he has been CORRECTED to say for this context first
+    (a correction is told knowledge — the owner's loop), then what
+    the learned-speech organ admitted, else silence. Returns
+    (utterance|None, source_tag)."""
+    # corrections first: the most specific (longest) corrected context
+    best_c, best_len = None, 0
+    for g in set(_grams(heard, nmax=4)):
+        say = mind.net.get_meta(f"speech:corrected:{g}", "say")
+        if say is not None and len(g.split()) > best_len:
+            best_c, best_len = say, len(g.split())
+    if best_c is not None:
+        return best_c, "corrected"
     best, best_ev = None, -1
     for g in set(_grams(heard)):
         node = f"speech:heard:{g}"
@@ -176,6 +187,106 @@ SCENARIOS = dict(
                 "Never use lists or markdown — plain spoken lines "
                 "only.")),
 )
+
+
+# ── THE CORRECTION LOOP (owner, 2026-07-12): "you cannot
+# mathematically review [language], and you cannot get proper
+# testing feedback... talk or say something, check for a response,
+# and correct him on what he should have said if he failed, or
+# correct him on what he should have said better if he passed."
+# The correction IS language's residual. A correction is TOLD
+# knowledge (usable at once); the wrong utterance is KEPT with its
+# correction (wisdom applied to speech); a corrected context that
+# fails again is SUPERSEDED with the new correction.
+
+TUTOR = dict(
+    opener="i am trying to learn english .",
+    system=("You are an English tutor for a total beginner named "
+            "Isaac. Speak ONE short simple line to Isaac (under 10 "
+            "words), then wait. Every time Isaac replies, you MUST "
+            "answer in EXACTLY this three-line format:\n"
+            "VERDICT: pass or fail\n"
+            "SAY: <the exact short line Isaac should have said>\n"
+            "NEXT: <your next short line to Isaac>\n"
+            "fail means his reply did not fit; pass means it fit and "
+            "SAY is a better version of it. '...' always means fail. "
+            "Keep SAY under 10 simple words. No lists, no markdown."))
+
+
+def parse_tutor(reply):
+    """The tutor's judgment, or None if the format broke (a broken
+    judgment teaches nothing — skipped honestly, never guessed)."""
+    out = {}
+    for ln in (reply or "").splitlines():
+        low = ln.strip()
+        for key in ("verdict", "say", "next"):
+            if low.lower().startswith(key + ":"):
+                out[key] = low[len(key) + 1:].strip()
+    if out.get("verdict", "").lower() not in ("pass", "fail"):
+        return None
+    if not out.get("say") or not out.get("next"):
+        return None
+    out["verdict"] = out["verdict"].lower()
+    return out
+
+
+def apply_correction(mind, context, said, verdict, say):
+    """Store the correction as told speech on every context gram
+    (most-specific wins at recall); keep the wrong utterance WITH its
+    correction. Supersession: a re-corrected context replaces its
+    old correction and the loser is filed."""
+    for g in set(_grams(context, nmax=4)):
+        node = f"speech:corrected:{g}"
+        old = mind.net.get_meta(node, "say")
+        if old is not None and old != say:
+            hist = mind.net.get_meta(node, "superseded") or []
+            hist.append(old)
+            mind.net.set_meta(node, "superseded", hist)
+        mind.net.set_meta(node, "say", say)
+    wrongs = mind.net.get_meta("speech:wrong", "record") or []
+    wrongs.append(dict(context=context, said=said, verdict=verdict,
+                       correction=say))
+    mind.net.set_meta("speech:wrong", "record", wrongs)
+
+
+def run_tutored_session(mind, partner, turns=10, scenario=None):
+    """The owner's loop, live: tutor line -> Isaac speaks -> verdict
+    + correction -> stored -> next line. Returns the transcript;
+    every Isaac turn carries its verdict and correction."""
+    scen = scenario or TUTOR
+    transcript = []
+    messages = [dict(role="system", content=scen["system"]),
+                dict(role="user", content=scen["opener"])]
+    line = partner.say(messages)
+    if line is None:
+        return transcript
+    line = line.splitlines()[0].strip()
+    messages.append(dict(role="assistant", content=line))
+    for _ in range(turns):
+        transcript.append(dict(who="tutor", text=line, source="model"))
+        utter, src = isaac_says(mind, line.lower())
+        said = utter if utter is not None else "..."
+        transcript.append(dict(who="isaac", text=said, source=src))
+        messages.append(dict(role="user", content=said))
+        reply = partner.say(messages)
+        if reply is None:
+            transcript.append(dict(who="budget", text="(spent)",
+                                   source="budget"))
+            break
+        messages.append(dict(role="assistant", content=reply))
+        j = parse_tutor(reply)
+        if j is None:
+            transcript.append(dict(who="tutor", text=reply[:60],
+                                   source="unparseable-skipped"))
+            line = reply.splitlines()[-1].strip()[:80]
+            continue
+        apply_correction(mind, line.lower(), said, j["verdict"],
+                         j["say"].lower())
+        transcript.append(dict(
+            who="verdict", text=f"{j['verdict']} -> {j['say']}",
+            source="correction"))
+        line = j["next"]
+    return transcript
 
 
 # ── the Isaac account (owner, 2026-07-12: "this is not a user
