@@ -1141,6 +1141,22 @@ caught), corpus swap changes the words, withheld lessons produce
 silence, retention across save/load, faithfulness null on numbers.
 `askisaac --speak` uses learned speech only. Promotion gates: engine
 + 18 batteries.
+**The admission null hardened at corpus scale (2026-07-12, dialogue
+probe):** feeding 4,000 real conversation pairs (DailyDialog)
+through learn_speech, the probe's scrambled-pairing CONTROL caught
+the per-gram null false-admitting 119/120 features (selection
+correction missing — hundreds of candidates each at a 5% pass rate;
+tiny teaching corpora never tripped it). A raw-count max-null then
+over-corrected (universal grams saturate the gate; the
+fit/confidence lesson went silent). Settled: **EXCESS over base
+rate, selection-corrected by the max-over-candidates null** —
+battery 20/20 restored, dialogue control calibrated (8 admissions on
+scrambled ≈ the nominal rate). First real-conversation learnings
+(dialogue_probe.py, 45 admitted): pronoun MIRRORING (did/why/did
+you → 'i'; am/i think/i have → 'you'), topic persistence
+(he → he), questions/thanks draw statements back; held-out replies
+198/400 answered, 202/400 honest silence. Corpora at data/dialogue/
+(git-ignored, refetch README) — public-tier provenance.
 
 **The Face (2026-07-12):** `python face.py` -> http://127.0.0.1:8676
 — the alpha's web door: drop or paste a CSV in a browser, Isaac

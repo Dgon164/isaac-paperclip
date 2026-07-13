@@ -24,3 +24,4 @@ emb_cache.npz
 research/isaac_state.pkl
 
 research/data/
+data/

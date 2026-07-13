@@ -106,22 +106,45 @@ def learn_speech(mind, corpus_text, n_perm=60, pct=95, min_evidence=3,
         if len(has) < min_evidence:
             continue
         cands = set().union(*(grams_per_ex[i] for i in has))
-        admitted = []
         SLOTS = {"NAME", "NAME2", "TARGET", "VALUE", "R2", "CONF",
                  "ROWS", "BODY", "NEXT"}
+        acts = {}
         for g in cands:
             if all(tok in SLOTS for tok in g.split()):
                 continue  # a slot is not a word: fragments need words
-            actual = sum(1 for i in has if g in grams_per_ex[i])
-            if actual < min_evidence:
-                continue
-            null = []
-            for _ in range(n_perm):
-                pick = rng.choice(len(examples), size=len(has),
-                                  replace=False)
-                null.append(sum(1 for i in pick if g in grams_per_ex[i]))
-            if actual > np.percentile(null, pct):
-                admitted.append(g)
+            a = sum(1 for i in has if g in grams_per_ex[i])
+            if a >= min_evidence:
+                acts[g] = a
+        if not acts:
+            continue
+        # SELECTION-CORRECTED EXCESS null (2026-07-12, dialogue
+        # probe): the old per-gram count null admitted 119/120
+        # features on SCRAMBLED pairings at corpus scale — hundreds
+        # of candidates, each with a ~5% pass rate, guarantee a false
+        # winner (wrong-kept; the original tiny corpus never tripped
+        # it). And a raw-count max-null over-corrects: universal
+        # grams saturate the gate and legitimate taught fragments tie
+        # instead of beating (measured: the fit/confidence lesson
+        # went silent). The statistic is EXCESS OVER BASE RATE —
+        # discriminative fragments carry it, universal grams carry
+        # none — and one null per feature scores the MAX excess over
+        # ALL candidates on each shuffled draw (the same correction
+        # every proposal organ in the engine carries).
+        cand_list = list(acts)
+        nh = float(len(has))
+        base = {g: sum(1 for s in grams_per_ex if g in s)
+                / float(len(examples)) for g in cand_list}
+        null_max = np.empty(n_perm)
+        for tno in range(n_perm):
+            pick = rng.choice(len(examples), size=len(has),
+                              replace=False)
+            picked = [grams_per_ex[i] for i in pick]
+            null_max[tno] = max(
+                sum(1 for s in picked if g in s) / nh - base[g]
+                for g in cand_list)
+        gate = np.percentile(null_max, pct)
+        admitted = [g for g in cand_list
+                    if acts[g] / nh - base[g] > gate]
         if not admitted:
             continue
         # maximal fragment: longest admitted, evidence breaks ties

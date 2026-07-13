@@ -1,0 +1,58 @@
+DIALOGUE PROBE — what he learns from real conversation (2026-07-12)
+
+corpus: 11118 dialogues, 87170 turns (DailyDialog train)
+
+P1  dialogue-act stream (3000 dialogues): pattern=BRANCH
+      forks: {'<end>': ['directive', 'inform', 'question']}
+      never_follows: [('<end>', 'commissive')]
+    punctuation stream: pattern=BRANCH
+
+P2  heard->reply correspondences: 4000 adjacent pairs, 120 heard-features offered
+    ADMITTED: 45 heard->reply fragments past the permutation null
+      'are you' -> '.'  (76/102)
+      'thank' -> '.'  (54/72)
+      'did' -> 'i'  (53/114)
+      'thank you' -> '.'  (53/71)
+      'he' -> 'he'  (47/127)
+      'why' -> 'i'  (44/84)
+      'an' -> 'you'  (43/106)
+      'i think' -> 'you'  (43/103)
+      "that's" -> ','  (43/94)
+      'i have' -> 'you'  (42/95)
+      'did you' -> 'i'  (40/62)
+      'am' -> 'you'  (39/88)
+    CONTROL (scrambled pairings): 8 admitted (want ~0)
+
+P3  held-out prompts: 198/400 answered with a learned fragment, 202/400 SILENCE (nothing admitted applies — honest)
+      heard : of course . the changing rooms are over there .
+      isaac : (silence)
+      human : thanks .
+
+      heard : i will .
+      isaac : (silence)
+      human : goodbye and have a good flight .
+
+      heard : i got the job you recommended me for last week .
+      isaac : (silence)
+      human : that's great ! congratulations .
+
+      heard : could you talk to me for a few minutes about my grades ?
+      isaac : ,
+      human : step into my office for a moment . what is your concern ?
+
+      heard : which stop do i get off on ?
+      isaac : (silence)
+      human : you need to get off on the corner of del mar and hill .
+
+      heard : yes . i would like make a reservation to huston for tomorrow .
+      isaac : (silence)
+      human : the flight to huston takes off daily every two hours from 6:00 t
+
+      heard : let me take a look . this is for a 486 computer with modem . who
+      isaac : ,
+      human : i believe it ’ s going to ms . wilson ’ s office .
+
+      heard : good morning , madam . what can i do for you ?
+      isaac : i
+      human : i want some coffee .
+
