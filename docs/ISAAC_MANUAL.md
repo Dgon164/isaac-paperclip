@@ -1179,6 +1179,24 @@ for admission — repetition + accumulation is the road. Battery
 `test_sparring.py` 8/8 (stub partner: deterministic). Promotion
 gates: engine + 30 batteries.
 
+**The Isaac account (owner design, 2026-07-12: "perhaps we should
+have an isaac user account"):** practice is HIS LIFE, not the
+promote cycle. `IsaacAccount(home, mod)` — a persistent home
+(default `Documents/isaac_home/`): `mind.isaac` (engine save/load),
+`sparring_corpus.txt` (HIS accumulating speech evidence, seeded once
+from DailyDialog so relearns see everything together),
+`transcripts/session_NNNNN.json` (every conversation kept), and
+`practice_journal.jsonl` (append-only progress: pairs banked,
+fragments before/after, spoke/silence counts). `practice(partner,
+scenario, sessions, turns, relearn_every)` = converse → bank →
+relearn (excess null) → journal → save; re-login loads the same
+mind — the same Isaac tomorrow. `experiments/practice_run.py` runs a
+block (`python practice_run.py 25 drill`). The DRILL scenario
+teaches by repetition (measured adjustment #1: free-form sessions
+bank too few pairs to cross any admission floor). Battery 12/12
+(incl. persistence-across-logins and accumulation-across-sessions).
+Promotion gates: engine + 30 batteries.
+
 **The Face (2026-07-12):** `python face.py` -> http://127.0.0.1:8676
 — the alpha's web door: drop or paste a CSV in a browser, Isaac
 answers with LEARNED SPEECH (when taught) and the honest report

@@ -159,4 +159,98 @@ SCENARIOS = dict(
                 "understand: say something simpler, or teach one "
                 "common word with an example. Never use lists or "
                 "markdown — just plain spoken lines.")),
+    # measured adjustment #1 (first live probe): one free-form session
+    # banks too few pairs for any admission — a LESSON drills the same
+    # patterns over and over, so repetition crosses the null
+    drill=dict(
+        opener="i am trying to learn english .",
+        system=("You are teaching a total beginner English by "
+                "REPETITION. Pick very common exchanges (hello -> hi; "
+                "how are you -> i am fine; what is this -> this is a "
+                "book; thank you -> you are welcome; goodbye -> see "
+                "you) and REPEAT them constantly, in slightly varied "
+                "words, again and again, one short line per turn. If "
+                "the learner replies with '...', repeat the last "
+                "pattern in simpler words. If they say a word back, "
+                "praise briefly and repeat the pattern once more. "
+                "Never use lists or markdown — plain spoken lines "
+                "only.")),
 )
+
+
+# ── the Isaac account (owner, 2026-07-12: "this is not a user
+# account. or rather, perhaps we should have an isaac user account")
+# — his practice is HIS LIFE, not the promote cycle. The account is
+# a persistent home: his mind state, his accumulating corpus, his
+# transcripts, an append-only progress journal. He is the same Isaac
+# tomorrow that he was today.
+class IsaacAccount:
+    def __init__(self, home, isaac_module):
+        self.home = home
+        self.mod = isaac_module
+        os.makedirs(home, exist_ok=True)
+        os.makedirs(os.path.join(home, "transcripts"), exist_ok=True)
+        self.mind_path = os.path.join(home, "mind.isaac")
+        self.corpus_path = os.path.join(home, "sparring_corpus.txt")
+        self.journal_path = os.path.join(home, "practice_journal.jsonl")
+        if os.path.exists(self.mind_path):
+            self.mind = self.mod.Isaac.load(self.mind_path)
+        else:
+            self.mind = self.mod.Isaac()
+
+    def _journal(self, entry):
+        with open(self.journal_path, "a", encoding="utf-8") as f:
+            f.write(json.dumps(entry) + "\n")
+
+    def sessions_so_far(self):
+        if not os.path.exists(self.journal_path):
+            return 0
+        return sum(1 for _ in open(self.journal_path,
+                                   encoding="utf-8"))
+
+    def fragments(self):
+        return sum(1 for n in list(self.mind.net.meta)
+                   if str(n).startswith("speech:heard:"))
+
+    def practice(self, partner, scenario, sessions=10, turns=10,
+                 feats=None, relearn_every=1):
+        """The ongoing loop: converse -> bank -> relearn -> journal ->
+        save. Returns the per-session progress list (the monitor)."""
+        progress = []
+        for s in range(sessions):
+            tr = run_session(self.mind, partner, scenario, turns=turns)
+            n0 = self.sessions_so_far()
+            with open(os.path.join(
+                    self.home, "transcripts",
+                    f"session_{n0:05d}.json"), "w",
+                    encoding="utf-8") as f:
+                json.dump(tr, f, indent=1)
+            texts = [t["text"].lower() for t in tr
+                     if t["who"] == "partner"]
+            fs = feats or set()
+            from collections import Counter
+            cnt = Counter()
+            for x in texts:
+                cnt.update(set(_grams(x)))
+            fs = fs | {g for g, c in cnt.items() if c >= 3}
+            before = self.fragments()
+            if (s + 1) % relearn_every == 0:
+                n_pairs, _, after, _ = harvest(
+                    self.mind, [tr], fs, corpus_path=self.corpus_path)
+            else:
+                n_pairs, after = 0, before
+            silence = sum(1 for t in tr if t["who"] == "isaac"
+                          and t["source"] == "silence")
+            spoke = sum(1 for t in tr if t["who"] == "isaac"
+                        and t["source"] == "learned-fragment")
+            entry = dict(session=n0, pairs=n_pairs,
+                         fragments_before=before,
+                         fragments_after=after,
+                         silence=silence, spoke=spoke,
+                         partner_calls=partner.calls, ts=time.time())
+            self._journal(entry)
+            progress.append(entry)
+            self.mind.save(self.mind_path)
+            if partner.calls >= partner.max_calls:
+                break
+        return progress

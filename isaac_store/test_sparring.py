@@ -113,6 +113,46 @@ def main():
     check("unreachable partner: clean False, no hang, no crash",
           ghost.reachable() is False)
 
+    # ── 7. THE ISAAC ACCOUNT: his practice is his life ────────────
+    # (owner: "perhaps we should have an isaac user account") — the
+    # same Isaac tomorrow that he was today: mind, corpus, journal
+    # persist across logins; practice accumulates across sessions.
+    import shutil
+    from isaac_store.sparring import IsaacAccount
+    home = tempfile.mkdtemp()
+    acct = IsaacAccount(home, mod)
+    # the drill must be a real CONTINGENCY: 'drink' follows 'water'
+    # lines, not every line (a word in every response has zero excess
+    # and the null rightly refuses it — first stub caught by its own
+    # battery)
+    dscript = []
+    for i in range(40):
+        dscript.append(f"water is a word i like number {i} .")
+        dscript.append(f"you drink it every day friend {i} .")
+        dscript.append(f"unrelated filler about topic {i} .")
+    drill = StubPartner(dscript, max_calls=300)
+    prog = acct.practice(drill, SCEN, sessions=3, turns=10)
+    check("practice loop: sessions journaled, transcripts kept",
+          acct.sessions_so_far() == 3 and len(os.listdir(
+              os.path.join(home, "transcripts"))) == 3,
+          f"journal entries={acct.sessions_so_far()}")
+    grew = prog[-1]["fragments_after"] > 0
+    check("accumulation: repetition crossed the null within 3 sessions",
+          grew, f"fragments over sessions: "
+          f"{[p['fragments_after'] for p in prog]}")
+
+    # log out, log back in: the SAME Isaac
+    acct2 = IsaacAccount(home, mod)
+    check("re-login: same mind (fragments persisted)",
+          acct2.fragments() == prog[-1]["fragments_after"]
+          and acct2.sessions_so_far() == 3,
+          f"fragments={acct2.fragments()}")
+    utter, src = isaac_says(acct2.mind, "here is water .")
+    check("what yesterday's practice earned is speakable today",
+          utter is not None and src == "learned-fragment",
+          f"{utter!r}")
+    shutil.rmtree(home, ignore_errors=True)
+
     print()
     print(f"SPARRING BATTERY: {PASS}/{PASS + FAIL} checks passed")
     sys.exit(0 if FAIL == 0 else 1)
