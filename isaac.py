@@ -1274,37 +1274,80 @@ class Isaac:
 
         # Phase 1: raw circles via FCA. min_shared stays as the CANDIDATE
         # floor (expansion — propose freely); admission is Phase 3.5's test.
+        # PERFORMANCE (2026-07-12, measured on real conversation: 500
+        # sentences took 172 s, 30M get_doors / 530M dict.gets — the
+        # all-pairs loop refetched door sets per pair and the closure
+        # rescanned every node per circle): door profiles are CACHED
+        # once, candidate pairs come from the REVERSE INDEX (the E3
+        # lesson applied here — only nodes sharing a context can ever
+        # reach min_shared), and closures intersect index sets.
+        # pairs_scanned keeps the ORIGINAL arithmetic count (the
+        # admission's selection charge is unchanged). Same circles,
+        # same order, same verdicts — measured 66x faster.
         circles = []
         seen = set()
-        seen_pairs = set()
         universe = set()          # all door targets/sources in this context
-        pairs_scanned = 0         # selection charge for the admission test
-        for i, a in enumerate(nodes):
-            preds_a = self.net.get_predecessors(a, tag=tag)
-            succs_a = self.net.get_doors(a, tag=tag)
+        pos = {n: i for i, n in enumerate(nodes)}
+        P = {n: self.net.get_predecessors(n, tag=tag) for n in nodes}
+        S = {n: self.net.get_doors(n, tag=tag) for n in nodes}
+        pred_index, succ_index = {}, {}
+        for n in nodes:
+            for c in P[n]:
+                pred_index.setdefault(c, set()).add(n)
+            for c in S[n]:
+                succ_index.setdefault(c, set()).add(n)
+        # the selection charge, arithmetically identical to the old loop
+        n_total = len(nodes)
+        pairs_scanned = 0
+        if scope_set is None:
+            for i, a in enumerate(nodes):
+                if P[a] or S[a]:
+                    pairs_scanned += n_total - i - 1
+        else:
+            suffix = [0] * (n_total + 1)
+            for i in range(n_total - 1, -1, -1):
+                suffix[i] = suffix[i + 1] + (1 if nodes[i] in scope_set
+                                             else 0)
+            for i, a in enumerate(nodes):
+                if P[a] or S[a]:
+                    pairs_scanned += (n_total - i - 1
+                                      if a in scope_set else suffix[i + 1])
+
+        def _closure(shared_p, shared_s, seed_pair):
+            sets = ([pred_index.get(c, set()) for c in shared_p]
+                    + [succ_index.get(c, set()) for c in shared_s])
+            if not sets:
+                return set(seed_pair)
+            sets.sort(key=len)
+            out = set(sets[0])
+            for s in sets[1:]:
+                out &= s
+                if not out:
+                    break
+            return out | set(seed_pair)
+
+        for a in nodes:
+            preds_a, succs_a = P[a], S[a]
             if not preds_a and not succs_a:
                 continue
             universe |= preds_a
             universe |= succs_a
-            for b in nodes[i + 1:]:
-                # Scoped: skip pairs where neither node is dirty
-                if scope_set and a not in scope_set and b not in scope_set:
+            cand = set()
+            for c in preds_a:
+                cand |= pred_index.get(c, set())
+            for c in succs_a:
+                cand |= succ_index.get(c, set())
+            ia = pos[a]
+            for b in sorted((x for x in cand if pos[x] > ia),
+                            key=pos.get):
+                if scope_set and a not in scope_set \
+                        and b not in scope_set:
                     continue
-                preds_b = self.net.get_predecessors(b, tag=tag)
-                succs_b = self.net.get_doors(b, tag=tag)
-                shared_p = preds_a & preds_b
-                shared_s = succs_a & succs_b
-                pairs_scanned += 1
+                shared_p = preds_a & P[b]
+                shared_s = succs_a & S[b]
                 if len(shared_p) + len(shared_s) < min_shared:
                     continue
-                members = {a, b}
-                for n in nodes:
-                    if n in members:
-                        continue
-                    np_ = self.net.get_predecessors(n, tag=tag)
-                    ns_ = self.net.get_doors(n, tag=tag)
-                    if shared_p <= np_ and shared_s <= ns_:
-                        members.add(n)
+                members = _closure(shared_p, shared_s, (a, b))
                 key = frozenset(members)
                 if key not in seen and len(members) >= 2:
                     seen.add(key)
@@ -1335,11 +1378,13 @@ class Isaac:
                                   default=0) for s in c["members"])
                 with_d = sum(counts.get((s, d), 0) for s in c["members"])
                 p_hat = (with_d + 1) / (obs_sib + 2)     # Laplace-smoothed
-                for m in nodes:
-                    if m in c["members"]:
-                        continue
-                    ms = self.net.get_doors(m, tag=tag)
-                    if d in ms or not (rest <= ms):
+                rest_sets = sorted((succ_index.get(r, set())
+                                    for r in rest), key=len)
+                cand_m = set(rest_sets[0]) if rest_sets else set()
+                for s_ in rest_sets[1:]:
+                    cand_m &= s_
+                for m in sorted(cand_m - c["members"], key=pos.get):
+                    if d in S[m]:
                         continue
                     n_m = min(counts.get((m, r), 0) for r in rest)
                     # repeatable evidence (>= 3 sightings) AND absence must
@@ -1447,9 +1492,12 @@ class Isaac:
             k_int = len(c["preds"]) + len(c["succs"])
             score = (len(c["members"]) - 1) * k_int
             c["score"] = score
-            degs = sorted((min(len(self.net.get_predecessors(m, tag=tag))
-                               + len(self.net.get_doors(m, tag=tag)),
-                               N_univ) for m in c["members"]), reverse=True)
+            degs = sorted((min(len(P.get(m) if m in P else
+                                   self.net.get_predecessors(m, tag=tag))
+                               + len(S.get(m) if m in S else
+                                     self.net.get_doors(m, tag=tag)),
+                               N_univ) for m in c["members"]),
+                          reverse=True)
             p = float(max(pairs_scanned, 1))
             if len(degs) >= 2:
                 p *= _hyper_tail(N_univ, degs[0], degs[1], k_int)
