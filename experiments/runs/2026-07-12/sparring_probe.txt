@@ -1,0 +1,61 @@
+SPARRING PROBE — first live conversations (2026-07-12)
+partner: qwen2.5:1.5b-instruct via local ollama
+
+seeded from DailyDialog: 53 admitted heard->reply fragments
+
+── session 1: i am trying to learn english ──
+  isaac  : i am trying to learn english . [opener]
+  partner: That's great! Keep practicing every day.
+  isaac  : ... [silence]
+  partner: What?
+  isaac  : ... [silence]
+  partner: I see you're learning English.
+  isaac  : , [learned-fragment]
+  partner: Good job on starting!
+  isaac  : ... [silence]
+  partner: See you soon with more practice!
+  isaac  : , [learned-fragment]
+  partner: Understanding now. Keep it up!
+  isaac  : ... [silence]
+  partner: You're doing well in learning English. Keep it simple and consistent.
+  isaac  : ... [silence]
+  partner: I see you enjoy practicing. Keep going!
+  isaac  : , [learned-fragment]
+  partner: Keep at it!
+  isaac  : ... [silence]
+  partner: Good to hear that. Continue to practice regularly.
+  isaac  : ... [silence]
+  partner: You're doing great! Keep up the good work.
+  isaac  : know [learned-fragment]
+  partner: Know. Like, "I know English."
+
+harvest: 10 heard->reply pairs banked; admitted fragments 53 -> 53
+
+── session 2 (after the harvest) ──
+  isaac  : i am trying to learn english . [opener]
+  partner: Good! Start by reading simple stories.
+  isaac  : ... [silence]
+  partner: Read "Harry Potter" books.
+  isaac  : ... [silence]
+  partner: Start with a book, like "Little Engine That Could".
+  isaac  : ... [silence]
+  partner: Use an app for learning words and sentences.
+  isaac  : ... [silence]
+  partner: Join a conversation group online or in real life.
+  isaac  : i [learned-fragment]
+  partner: You understand! Good job!
+  isaac  : ... [silence]
+  partner: Read everyday, like news or stories about people.
+  isaac  : i [learned-fragment]
+  partner: I understand you're trying to learn English. That's great! Start by reading 
+  isaac  : i [learned-fragment]
+  partner: You're doing great! Keep reading and talking to others who speak English. It
+  isaac  : you [learned-fragment]
+  partner: You are doing well! Keep up the good work and remember to have fun with your
+  isaac  : i [learned-fragment]
+  partner: You understand! Keep practicing what you've learned. Remember to read every 
+  isaac  : i [learned-fragment]
+  partner: You're doing great! Just keep practicing and don't be too hard on yourself i
+
+isaac's utterance sources across both sessions: {'opener': 2, 'silence': 12, 'learned-fragment': 10}
+partner calls spent: 24/40

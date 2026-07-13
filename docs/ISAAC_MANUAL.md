@@ -1158,6 +1158,27 @@ you → 'i'; am/i think/i have → 'you'), topic persistence
 198/400 answered, 202/400 honest silence. Corpora at data/dialogue/
 (git-ignored, refetch README) — public-tier provenance.
 
+**The sparring partner (owner design, built 2026-07-12):**
+`isaac_store/sparring.py` — the local-AI conversation environment
+(World GM for language). `OllamaPartner(model)` = any local model
+behind ollama's /api/chat (stdlib urllib; budgets physical:
+max_calls/max_reply_chars/timeout; exhaustion = clean stop);
+`run_session(mind, partner, scenario, turns)` returns the FULL
+transcript with per-turn source tags — monitoring is a first-class
+output. Isaac's side is HONEST speech only: the scenario opener, a
+fragment his learned-speech organ admitted, or SILENCE ('...') —
+never faked fluency; the partner's system prompt treats '...' as
+not-understood and simplifies. `harvest()` banks adjacent
+heard→reply pairs into an accumulating corpus file and re-runs
+learn_speech (the excess null) — the model's words are DATA, never
+truth. First live run (sparring_probe.py, qwen2.5:1.5b-instruct,
+RTX 3090): sources {opener 2, silence 12, learned-fragment 10} over
+24 turns; Isaac's 'i'/'you' replies = the DailyDialog pronoun
+mirror; measured adjustment #1: single sessions bank too few pairs
+for admission — repetition + accumulation is the road. Battery
+`test_sparring.py` 8/8 (stub partner: deterministic). Promotion
+gates: engine + 30 batteries.
+
 **The Face (2026-07-12):** `python face.py` -> http://127.0.0.1:8676
 — the alpha's web door: drop or paste a CSV in a browser, Isaac
 answers with LEARNED SPEECH (when taught) and the honest report
