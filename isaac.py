@@ -1285,7 +1285,18 @@ class Isaac:
         # admission's selection charge is unchanged). Same circles,
         # same order, same verdicts — measured 66x faster.
         circles = []
-        seen = set()
+        # LEARNED ONCE, NEVER REPROCESSED (owner, 2026-07-12: "maybe
+        # just dont refuse them. learn them, then they will just be
+        # in the net and not need to be reprocessed"): the circle
+        # memory persists — a member-set already learned (as a sound
+        # type OR a wrong one) is skipped before it can cost another
+        # merge, reconcile, or verdict. Wrong is kept so it never
+        # costs again. The flush resets the memory with everything
+        # else.
+        seen = getattr(self, "_seen_circles", None)
+        if seen is None or scope is None:
+            seen = set()
+            self._seen_circles = seen
         pos = {n: i for i, n in enumerate(nodes)}
         # THE PERSISTENT MATRIX (owner, 2026-07-12: "anything adjacent
         # or correlated was supposed to be imported... it is purging
