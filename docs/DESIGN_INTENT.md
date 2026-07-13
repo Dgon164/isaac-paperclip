@@ -453,16 +453,33 @@ fallback-when-untold — wrong-kept with this why. Both roads must door
 onto the SAME concept nodes (a discovered period-3 comb and a told
 "multiple of 3" are one concept).
 
-## NUMBER STRUCTURES — THE WHOLE-NUMBER SNAP (owner, 2026-07-12):
-**"if it looks or is close to a whole number, it should go to that
-whole number and check it just outright, it would save us so much
-time."** Every measured period/constant near a whole number gets the
-whole number TESTED OUTRIGHT (one exact evaluation; adopt on win or
-F-tie — exactness is the simpler form). On integer-like axes, integer
-periods are tested DIRECTLY by residue classes (group by n mod P,
-score the classes) — exact, cheap, no spectral machinery, no refine
-walk. Divisibility ("every Pth") is a NAMED vocabulary concept, and
-snapped discoveries become legible as it.
+## NUMBER STRUCTURES — TAUGHT ROUNDING (owner, 2026-07-12, settled
+## in three steps): first "if it looks or is close to a whole number,
+## it should go to that whole number and check it just outright";
+## then the general form: **"i think we just need to teach it
+## rounding actually. if its 3.0018463 then its probably tested to
+## 3. if its 1.764964 then it may be 1.75 etc."**
+A measured constant's ROUNDINGS are hypotheses tested OUTRIGHT: from
+its magnitude, candidates at the natural ruler marks ({1, 1/2, 1/4}
+x powers of ten — note 1.75 is a mark), COARSEST FIRST; the simplest
+that does not lose (>= the measured value's score) is adopted; if
+every rounding loses, the measured digits stand — no invented
+simplicity, no lost precision. The whole number is the coarsest mark.
+STRICTLY POST-HOC, per the owner's phrasing ("its probably TESTED to
+3"): measure precisely first, round after, with the sharpest referee
+— the trial refit at fit end (_round_terms), on every admitted
+term's inside-parameter. Wrong-kept x2 en route: (a) assistant's
+digit-by-digit search-walk (rounding is not searching); (b) rounding
+at PROPOSAL time — the fold referee cannot resolve 3.6 vs 3.5904
+(inside its bin width), and a lucky adoption injected slightly-wrong
+atoms that admission smeared into two-atom surrogates (measured:
+planted 1.75 said [1.7525, 1.7]; post-hoc-only says [1.75]). On
+integer-like axes, integer periods are still tested DIRECTLY by
+residue classes (group by n mod P) — exact, cheap, no spectral
+machinery. Divisibility ("every Pth") is a NAMED vocabulary concept,
+and snapped discoveries become legible as it. Battery:
+rounding_battery.py 7/7 (1.5 said, 1.75 said, exp(-0.4) said, pi
+KEEPS its digits, noise still refuses).
 
 ## TOLD KNOWLEDGE = A SUPERSESSION TEST CANDIDATE (owner, 2026-07-12)
 "If you just give it the equations directly, can it use them...

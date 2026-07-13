@@ -534,6 +534,35 @@ class _Enumerator:
         blocks = np.take_along_axis(blocks, idx, axis=1)
         return blocks[_wave_rng.permutation(nb)].ravel()[:n]
 
+    # ── taught rounding (owner, 2026-07-12) ────────────────────────────
+    # "i think we just need to teach it rounding actually. if its
+    # 3.0018463 then its probably tested to 3. if its 1.764964 then it
+    # may be 1.75 etc." A measured constant's roundings are HYPOTHESES
+    # tested outright: candidates at the natural ruler marks ({1, 1/2,
+    # 1/4} x powers of ten — 1.75 is a mark), coarsest first; the
+    # simplest that does not lose is adopted; if every rounding loses,
+    # the measured digits stand. No invented simplicity, no lost
+    # precision. Applied wherever constants are measured: proposed
+    # periods (fold score as the check) and admitted terms'
+    # inside-parameters at fit end (trial refit as the check).
+
+    @staticmethod
+    def _round_candidates(x):
+        """The rounding ladder near a measured constant, coarsest ruler
+        mark first. Sign-preserving; empty for zero/non-finite."""
+        ax = abs(float(x))
+        if not np.isfinite(ax) or ax <= 0:
+            return []
+        e = int(np.floor(np.log10(ax)))
+        out = []
+        for k in range(e, e - 4, -1):
+            for s in (1.0, 0.5, 0.25):
+                step = s * 10.0 ** k
+                c = round(round(x / step) * step, 12)
+                if c != 0 and abs(c - x) > 1e-12 and c not in out:
+                    out.append(c)
+        return out
+
     # ── E7 (2026-07-04): phase-fold period proposal ────────────────────
     # Owner: "if you suspect a period do the projection thing. you don't
     # need the whole thing, you just need a few samples and to map it."
@@ -685,18 +714,15 @@ class _Enumerator:
                 j = int(np.argmax(c))
                 return refine_P(vals, c[j], Ps[j])
 
-            def snap_whole(P):
-                # THE WHOLE-NUMBER SNAP (owner, 2026-07-12): "if it
-                # looks or is close to a whole number, it should go to
-                # that whole number and check it just outright." One
-                # exact evaluation; the whole wins ties (exactness IS
-                # the simpler form). Cures the measured refine-walk
-                # failure (3.0 drifted to 3.0105 and decohered).
-                Pw = float(round(P))
-                if Pw >= 2 and abs(P - Pw) / max(P, 1e-12) < 0.02 \
-                        and fold_score(ys, Pw) >= fold_score(ys, P):
-                    return Pw
-                return P
+            # NO ROUNDING AT PROPOSAL TIME (wrong-kept, 2026-07-12):
+            # snapping picks with the fold as referee adopted marks
+            # the fold cannot resolve (3.6 vs a true 3.5904 — within
+            # its bin width), injecting slightly-wrong atoms that
+            # admission then smeared into two-atom surrogates. The
+            # owner's rounding is POST-HOC by design ("if its
+            # 3.0018463 then its probably TESTED to 3"): proposals
+            # stay precise; roundings are tested at fit end where the
+            # referee is the actual refit (_round_terms).
 
             # THREE ROADS PROPOSE, NONE REFEREES ANOTHER (untangled
             # 2026-07-12 after measured whack-a-mole: comb picks
@@ -753,7 +779,6 @@ class _Enumerator:
             # with the fold walked exact truths off (wrong-kept).
             comb_P = []
             for P, _ in (self._comb_periods(t, ys, n_perm) or []):
-                P = snap_whole(P)
                 if all(abs(np.log(P / p0)) > 0.1 for p0 in comb_P):
                     comb_P.append(P)
 
@@ -775,7 +800,6 @@ class _Enumerator:
                 if curve[j] < left or curve[j] < right:
                     continue
                 r, P = refine_P(ys, curve[j], Ps[j])
-                P = snap_whole(P)
                 if r > gate and all(abs(np.log(P / p0)) > 0.1
                                     for p0 in fold_P):
                     fold_P.append(P)
@@ -889,6 +913,9 @@ class _Enumerator:
                     if len(nt) <= self.max_degree and nt not in seen:
                         seen.add(nt); frontier.append(nt)
         self._refine(y)                             # sharpen inside-parameters
+        self._round_terms(y)                        # taught rounding: a
+        # measured inside-parameter's roundings are tested outright;
+        # the simplest that does not lose is what the law SAYS
         if self.terms:                              # a term must carry weight
             keep = [t for t, c in zip(self.terms, self.coefs)
                     if abs(c) * _disc_col(self.A, t).std() > 0.02 * y.std()]
@@ -937,6 +964,39 @@ class _Enumerator:
             if not improved:
                 break
         return improved_any
+
+    def _round_terms(self, y, tol=1e-9):
+        """Taught rounding at fit end (owner, 2026-07-12): every
+        admitted term's inside-parameter k has its roundings tested
+        outright by trial refit, coarsest ruler mark first; the
+        simplest that does not lose is what the law SAYS. 1.50008
+        says 1.5; a true 3.14159 keeps its digits (every rounding
+        loses)."""
+        if not self.terms:
+            return
+        self._refit(y)
+        for ti in range(len(self.terms)):
+            t = self.terms[ti]
+            for pos, ai in enumerate(t):
+                kind, i, j, k = self.specs[ai]
+                if k is None:
+                    continue
+                base = self._train_r2(y)
+                for c in self._round_candidates(k):
+                    s2 = (kind, i, j, float(c))
+                    self.specs.append(s2)
+                    self.A = np.column_stack(
+                        [self.A, _atom_col(self.X, s2)])
+                    trial = list(t)
+                    trial[pos] = len(self.specs) - 1
+                    old = self.terms[ti]
+                    self.terms[ti] = tuple(trial)
+                    self._refit(y)
+                    if self._train_r2(y) >= base - tol:
+                        t = self.terms[ti]     # the simplest mark
+                        break                  # that holds, adopted
+                    self.terms[ti] = old
+                    self._refit(y)
 
     def _train_r2(self, y):
         p = self._fit_predict(y)

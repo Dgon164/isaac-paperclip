@@ -1014,6 +1014,24 @@ numbers: told rule generates the stream 100/100 on 1..100 and
 learned laws UNDERSTOOD). Batteries: `rule_battery.py` 11/11 +
 `task_battery.py` 8/8. Promotion gates: engine + 28 batteries.
 
+**Taught rounding (owner design, 2026-07-12):** "i think we just
+need to teach it rounding actually. if its 3.0018463 then its
+probably tested to 3. if its 1.764964 then it may be 1.75 etc." A
+measured constant's roundings are hypotheses tested OUTRIGHT:
+`_round_candidates` builds the ladder of natural ruler marks ({1,
+1/2, 1/4} × powers of ten, coarsest first — 1.75 IS a mark);
+`_round_terms` runs at fit end on every admitted term's
+inside-parameter with the TRIAL REFIT as referee — the simplest mark
+that does not lose is what the law says; all marks losing = the
+measured digits stand (no invented simplicity, no lost precision).
+Strictly POST-HOC: rounding at proposal time was measured wrong ×2
+(the fold referee cannot resolve marks inside its bin width; a lucky
+adoption smeared planted 1.75 into [1.7525, 1.7]) — wrong-kept in
+the engine comments. Battery `experiments/rounding_battery.py`
+**7/7**: sin(1.5x) SAYS 1.5; sin(1.75x) SAYS 1.75; exp(-0.4x) SAYS
+0.4; sin(πx) keeps its digits (3.14 — refuses the coarse marks);
+pure noise still NO RULE. Promotion gates: engine + 29 batteries.
+
 **Law families + which_law (2026-07-12):** overlapping-confusion
 machinery. tell_law now compares CONSTANTS on a form match (5%
 relative): same form + same constants = witness; different constants
