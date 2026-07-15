@@ -109,6 +109,29 @@ experiment files "just yet").
 4. Account: pack v6, session 95, tools node live, everything
    append-only; his next practice blocks run normally (ollama up).
 
+## 7. Late arcs: STRUCTURE AND ORDER + WHEN ORDER MATTERS
+compare_order(a, b) in ENGINE (order_battery 10/10, promotion #4,
+engine + 34 batteries): registration applied to sequences — parts =
+identity, arrangement = pose, reported separately; content
+multiset-honest (an extra copy is CONTENT); transforms NAMED
+(swap/reversed/rotated by k/reordered); every positional claim
+carries a mapping VERIFIED to turn a into b (50 random shuffles all
+verified); content-and-order cases factored apart. v1 = flat
+sequences; TREES (the commutativity/canonicalization thread) = named
+next rung. THEN the owner's theory ("additive does not matter, but
+subtractive methods are... restricting the space counts as
+subtractive") became order_matters(op) (7/7, promotion #5, engine +
+35 batteries): MEASURED never told — swap operands, compare;
+sensitive verdicts carry a verified WITNESS pair; free verdicts say
+"no counterexample in N probes". Measured: + * max min free; − / ^
+matter. Sharpening ON THE SHEET: order matters exactly where slots
+carry DIFFERENT ROLES (a−b ≠ b−a for the reason "dog bites man" ≠
+"man bites dog" — subtraction is the smallest role-asymmetric
+relation; ABC=D is the general one). The two organs COMPOSE: when
+does position differ × does it matter under this operation. Account:
+badges measured by his own mind for all 7 ops; tools node 116; pack
+v8. Both repos pushed through promotion #5.
+
 ## ═══ FRESH EYES — REVIEW TARGETS (owner workflow, 2026-07-15:
 ## "fresh eyes can catch errors or presumptions that tend to sneak
 ## in") — the authoring session's own judgment calls, ranked.
@@ -155,6 +178,20 @@ experiment files "just yet").
 9. **Session-95 sample is small** (15/21 judged) — do not quote it as
    proof the healing improved pass rates; it proves only no
    re-poisoning and clean mechanics.
+10. **compare_order's transform-naming priority is MY vocabulary
+   choice** (swap before reversed before rotated — 'ab'/'ba' is all
+   three; I chose swap). The fixed-points-first mapping minimizes
+   moved_positions but is not proven minimal for duplicates.
+11. **order_matters probes POSITIVE operands only** (uniform 0.5-6) —
+   an operation that commutes on positives but not on
+   negatives/zeros would be mis-badged order-free. The op vocabulary
+   (_ORDER_OPS) is a PRESET dict — new operations must be added by
+   hand, and the badge is per-symbol, not per-implementation.
+12. **The additive/subtractive theory's sharpening is MINE**
+   (restriction-as-intersection commutes; role-asymmetry is the
+   deeper law) — the owner's original conjecture is on the sheet in
+   his words; do not present my sharpening as settled without his
+   confirmation in use.
 
 ## Hygiene
 Copies of this record: dc/docs, isaac-paperclip/docs, isaac_project.
