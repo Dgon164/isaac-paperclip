@@ -109,6 +109,53 @@ experiment files "just yet").
 4. Account: pack v6, session 95, tools node live, everything
    append-only; his next practice blocks run normally (ollama up).
 
+## ═══ FRESH EYES — REVIEW TARGETS (owner workflow, 2026-07-15:
+## "fresh eyes can catch errors or presumptions that tend to sneak
+## in") — the authoring session's own judgment calls, ranked.
+## Review these BEFORE building on them.
+
+1. **Credit assignment in bank_word_outcomes is CRUDE.** The whole
+   event's pass/fail lands on every mapped word used in it — but a
+   fail may be caused by decoration/orientation, not the word. A
+   GOOD substitution could accumulate failing receipts from
+   unrelated causes and be wrongly dethroned (mitigations: the
+   insistence rule + <50% rate; but mixed-cause worlds were NOT in
+   the battery — W3 tested clean passes only). Highest-value review.
+2. **Election constants are hand-set** (REVERT_VOTES=3,
+   REVERT_USES=4, INSIST=3, windows=8; frontier last_n=10) — the
+   exact tests-over-thresholds debt the ladder already carries.
+   The tie behaviors (vw>vs strict, vs>vw strict) are MY choices,
+   not owner-specified.
+3. **Trial-and-error mode is UNSANDBOXED.** run_tool executes on the
+   LIVE mind; many engine tools mutate it (observe, teach, ...).
+   "Run them all" on his account would scribble on his life. The fix
+   shape exists (fork() first, keep what wins) but is NOT built —
+   do not let anyone run-them-all before it is.
+4. **Audit thresholds are mine**: 4×floor flag line, MAD≤3×floor
+   coverage gate, 3.5×MAD recalibration trim, near-dup = pairs
+   within 3×floor. Heavy-tailed noise or non-affine law drag would
+   defeat the affine-only recalibration (said in the module, but the
+   battery only tests Gaussian worlds).
+5. **_order_kind exists in TWO copies** (frontier_snapshot_probe +
+   idea_corrections) and its prefix-matching conflates true word
+   drops with map substitutions — the snapshot's "word-missing
+   +0.47" partly measured the detector, not only him.
+6. **The remine vote-replay uses simplified matching** (whole-word
+   in say) vs the live factoring's alignment — semantics can diverge
+   on edge cases; the account result was verified by inspection, the
+   equivalence was not proven.
+7. **query_tools is bag-of-words overlap** — fine for v1, but ranking
+   can mislead (T3's top-3 included complete_symmetry for an
+   instrument query). catalog descriptions = first docstring
+   sentence, which can mislead out of context.
+8. **Doc copies are synced by hand (cp)** across dc/paperclip/
+   isaac_project — divergence risk every session that forgets;
+   likewise the dc-only experiment files invert the research-first
+   rule (owner deferred mirroring — do not "fix" without his call).
+9. **Session-95 sample is small** (15/21 judged) — do not quote it as
+   proof the healing improved pass rates; it proves only no
+   re-poisoning and clean mechanics.
+
 ## Hygiene
 Copies of this record: dc/docs, isaac-paperclip/docs, isaac_project.
 All doc-family members current and synced (anatomy incl. addendum
