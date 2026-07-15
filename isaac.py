@@ -2462,6 +2462,67 @@ class Isaac:
                                       "position differs")
         return out
 
+    # ── when order matters (owner theory, 2026-07-15) ────────────
+    # "with plus it doesnt matter, but with minus or divide it does...
+    # additive does not matter, but subtractive methods are."
+    # MEASURED, never told (checklist #3): swap the operands and see.
+    # A violation keeps its WITNESS pair as the receipt; order-
+    # freeness is only ever "no counterexample in N probes" — honest
+    # absence, not proof. The learnable law underneath (kept on the
+    # sheet): order matters exactly where the slots carry DIFFERENT
+    # ROLES — minuend/subtrahend are roles the way agent/patient are.
+    # Composes with compare_order: that organ says WHEN two things
+    # differ only in position; this one says WHETHER that difference
+    # changes the outcome under the operation at hand.
+
+    _ORDER_OPS = {
+        "+": lambda a, b: a + b, "-": lambda a, b: a - b,
+        "*": lambda a, b: a * b, "/": lambda a, b: a / b,
+        "^": lambda a, b: a ** b,
+        "max": lambda a, b: max(a, b), "min": lambda a, b: min(a, b),
+    }
+
+    def order_matters(self, op, n_probe=50, seed=0):
+        """Does swapping the operands change this operation's answer?
+        Measured by probing, never told: order-sensitive verdicts
+        carry a verified WITNESS pair; order-free verdicts say only
+        'no counterexample in N probes'. The badge lands on the
+        op:<symbol> node and in the findings ledger."""
+        fn = Isaac._ORDER_OPS.get(op)
+        if fn is None:
+            return dict(refused=True,
+                        why=f"unknown operation '{op}' — known: "
+                            f"{sorted(Isaac._ORDER_OPS)}")
+        rng = np.random.default_rng(seed)
+        witness = None
+        for _ in range(int(n_probe)):
+            a = float(rng.uniform(0.5, 6.0))
+            b = float(rng.uniform(0.5, 6.0))
+            try:
+                ab, ba = fn(a, b), fn(b, a)
+            except ZeroDivisionError:
+                continue
+            if abs(ab - ba) > 1e-9 * max(1.0, abs(ab), abs(ba)):
+                witness = dict(a=a, b=b, ab=float(ab), ba=float(ba))
+                break
+        if witness:
+            result = dict(matters=True, probes=int(n_probe),
+                          witness=witness,
+                          why=f"'{op}' changes with order: "
+                              f"{witness['a']:g} {op} {witness['b']:g} "
+                              f"= {witness['ab']:g} but swapped = "
+                              f"{witness['ba']:g} (the witness is the "
+                              f"receipt)")
+        else:
+            result = dict(matters=False, probes=int(n_probe),
+                          why=f"no counterexample in {int(n_probe)} "
+                              f"probes — order-free as far as measured"
+                              f" (absence, not proof)")
+        self.net.set_meta(f"op:{op}", "order", result)
+        self.record_finding("order", op, matters=result["matters"],
+                            probes=result["probes"], why=result["why"])
+        return result
+
     # ── the findings ledger ─────────────────────────────────────
 
     @staticmethod

@@ -62,6 +62,17 @@ reader → grain by CONSENSUS of gaps (floor battery F14). Promotion
 stamped. Data-ops steps 1-3 done; remaining: bench harness (B1/B2),
 verdict rewrite (§2b, to run through the Trace C machinery).
 
+SAME DAY, fifth arc — WHEN ORDER MATTERS (owner theory: "additive
+does not matter, but subtractive methods are... restricting the
+space counts as subtractive"): `order_matters(op)` in engine —
+MEASURED never told: swap operands, compare; sensitive verdicts
+carry a verified WITNESS pair, free verdicts say "no counterexample
+in N probes". Measured: + * max min free; - / ^ matter (witnessed).
+Theory + sharpening on the sheet (order matters where slots carry
+DIFFERENT ROLES; a-b != b-a for the reason "dog bites man" != "man
+bites dog"). order_matters_battery 7/7; promotion 11:13 engine +
+35 batteries; account measured all 7 ops itself (pack v8, tools 116).
+
 SAME DAY, fourth arc — STRUCTURE AND ORDER (owner: "ab vs ba. if the
 difference is just position he should be able to identify that"):
 `compare_order(a, b)` in engine — registration applied to sequences

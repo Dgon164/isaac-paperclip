@@ -1460,6 +1460,29 @@ Known v1 scope: flat sequences; nested/tree arrangement (subtree
 order — the commutativity/canonicalization thread) is the named next
 rung. Promotion gates: engine + 34 batteries.
 
+**When order matters (owner theory 2026-07-15 — "additive does not
+matter, but subtractive methods are... restricting the space counts
+as subtractive"; built same day, battery-first):**
+`order_matters(op, n_probe=50)` — MEASURED, never told: probe the
+operation with random operand pairs, swap, compare. Order-sensitive
+verdicts carry a verified WITNESS pair (4−1.98=2.019 vs swapped
+−2.019 — the counterexample is the receipt); order-free verdicts say
+only "no counterexample in N probes" (honest absence, not proof).
+Badges land on `op:<symbol>` nodes + the ledger (kind `order`).
+Measured on the current vocabulary: + * max min order-free; − / ^
+ORDER MATTERS, each witnessed. The theory, kept on the sheet with
+its sharpening: order matters exactly where the slots carry
+DIFFERENT ROLES (minuend/subtrahend are roles the way agent/patient
+are — a−b ≠ b−a for the same reason "dog bites man" ≠ "man bites
+dog"); pure restriction-as-intersection commutes, so language is
+order-sensitive because each element's restriction depends on the
+slot it fills. Composes with compare_order: WHEN two things differ
+only in position (that organ) × WHETHER it changes the outcome here
+(this one) — the same pair is "same thing" under + and "different
+things" under −. Battery `experiments/order_matters_battery.py`
+**7/7**. Promotion gates: engine + 35 batteries. Account: badges
+measured by his own mind for all 7 ops (pack v8; tools node 116).
+
 ## 13. EXPERIMENT-ERA — the language ladder + Gate 6 (2026-07-13)
 **[EXPERIMENT-ERA — dc/experiments/, uncommitted, NOTHING PROMOTED]**
 

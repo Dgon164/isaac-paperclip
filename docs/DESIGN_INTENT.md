@@ -570,6 +570,35 @@ law's mechanism. First build: ONE real pipeline (the drill session or
 the audit face) as flow nodes + a walker with bypass receipts + one
 evidence-driven branch demonstrated end to end.
 
+## WHEN ORDER MATTERS — additive vs subtractive (owner theory,
+## 2026-07-15): "with plus it doesnt matter, but with minus or divide
+## it does. so what i think i just figured out is additive does not
+## matter, but subtractive methods are. so with language and these
+## other examples they are restricting the space and as such count as
+## subtractive."
+The owner's conjecture, kept with its sharpening: ADDITIVE
+(accumulating) operations are order-free — plus, times, max, union:
+the slots are INTERCHANGEABLE. SUBTRACTIVE operations are
+order-sensitive — minus, divide, power: the slots carry DIFFERENT
+ROLES (the taker vs the taken-from), and swapping roles changes the
+outcome. Sharpening (assistant, kept honestly): pure restriction as
+INTERSECTION actually commutes (filters land in the same place in any
+order) — what breaks order in language/code/images is that each
+element's restriction DEPENDS ON THE SLOT/STATE it lands in ("dog
+bites man" ≠ "man bites dog" for exactly the reason a−b ≠ b−a: agent
+and patient are roles; minuend and subtrahend are roles). So the
+learnable law: **ORDER MATTERS EXACTLY WHERE THE SLOTS HAVE DIFFERENT
+ROLES** — subtraction is the simplest role-asymmetric relation, and
+the ABC=D four-slot frame is the general one. NOT told to Isaac:
+MEASURED — order_matters(op) probes an operation by swapping operands
+(the value-gate move); a violation keeps its WITNESS pair (5-3 vs
+3-5) as the receipt; order-freeness is claimed only as "no
+counterexample in N probes." Composes with compare_order: one organ
+says WHEN two things differ only in position; the other says WHETHER
+that difference changes the outcome under the operation at hand —
+the same pair can be "same thing" under + and "different things"
+under −, the should/can context-indexing applied to order.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
