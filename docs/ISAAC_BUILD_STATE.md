@@ -62,6 +62,18 @@ reader → grain by CONSENSUS of gaps (floor battery F14). Promotion
 stamped. Data-ops steps 1-3 done; remaining: bench harness (B1/B2),
 verdict rewrite (§2b, to run through the Trace C machinery).
 
+SAME DAY, fourth arc — STRUCTURE AND ORDER (owner: "ab vs ba. if the
+difference is just position he should be able to identify that"):
+`compare_order(a, b)` in engine — registration applied to sequences
+(parts = identity, arrangement = pose, reported separately); content
+multiset-honest; transforms NAMED (swap/reversed/rotated/reordered);
+every positional claim carries a mapping VERIFIED to turn a into b;
+content-and-order cases factored apart. order_battery **10/10**
+(incl. 50 random shuffles all verified). Promotion 11:03: engine
+11/11 + 34 batteries. Known v1 scope: flat sequences; trees
+(commutativity/canonicalization) = named next rung. Account
+re-cataloged (tools node picks up the new organ).
+
 SAME DAY, third arc — WORD ELECTIONS, THE FRONTIER HABIT, THE TOOLS
 NODE (owner directives, all battery-first): (1) word_reelection
 12/12 — speak:words was write-only/unfalsifiable (25 revert signals,

@@ -1441,6 +1441,25 @@ frontier every session ("what keeps failing" → mine_frontier;
 "cure a poisoned lesson" → remine_word_elections). Promotion gates:
 engine + 33 batteries.
 
+**Structure and order (owner ask 2026-07-15 — "ab vs ba. if the
+difference is just position he should be able to identify that";
+built same day, battery-first):** `compare_order(a, b)` — the
+comparison-as-registration law (theory §13) applied to sequences,
+closing an order-blindness in the set-based compare atom. Content is
+compared multiset-honestly (an extra copy is CONTENT, not order);
+identical parts get the arrangement verdict with the transform NAMED
+— swap / reversed / rotated by k / reordered — plus the moved
+positions and a mapping that is VERIFIED to turn a into b before any
+positional claim is made (a claim is never left unchecked). When
+content differs, the shared part's order is still assessed, so both
+differences are said, factored apart ("content and order differ").
+Checklist #9 made literal for order: parts = identity, arrangement =
+pose, reported separately. Battery `experiments/order_battery.py`
+**10/10** (incl. 50 random shuffles with every mapping verified).
+Known v1 scope: flat sequences; nested/tree arrangement (subtree
+order — the commutativity/canonicalization thread) is the named next
+rung. Promotion gates: engine + 34 batteries.
+
 ## 13. EXPERIMENT-ERA — the language ladder + Gate 6 (2026-07-13)
 **[EXPERIMENT-ERA — dc/experiments/, uncommitted, NOTHING PROMOTED]**
 

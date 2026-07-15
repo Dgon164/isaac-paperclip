@@ -2380,6 +2380,88 @@ class Isaac:
         self.net.set_meta(node, "record", rec)
         return True
 
+    # ── structure and order (owner ask, 2026-07-15) ─────────────
+    # "he needs to be able to assess structure and order. ab vs ba.
+    # if the difference is just position he should be able to
+    # identify that." compare() is set-based and order-blind — 'ab'
+    # vs 'ba' look identical to it. This organ is comparison-as-
+    # registration (theory §13) applied to sequences: align, then
+    # read the TRANSFORM (the permutation = pose) and the RESIDUAL
+    # (content = identity) — checklist #9 made literal for order.
+    # A positional claim is only made when the mapping VERIFIABLY
+    # turns a into b (checked before it is said, never asserted).
+
+    def compare_order(self, a, b):
+        """Assess structure and order: are these the same parts in a
+        different arrangement? Content is compared multiset-honestly
+        (an extra copy is CONTENT, not order); when the parts match
+        exactly, the arrangement verdict names the transform — swap /
+        reversed / rotated / reordered — with the verified mapping
+        and the moved positions. When content differs, the shared
+        part's order is still assessed, so both differences are said,
+        factored apart."""
+        from collections import Counter
+        a, b = list(a), list(b)
+        ca, cb = Counter(a), Counter(b)
+        shared = ca & cb
+        out = dict(content=dict(
+            shared=sorted(shared.elements()),
+            only_a=sorted((ca - cb).elements()),
+            only_b=sorted((cb - ca).elements())))
+
+        def kept(seq):
+            rem, o = dict(shared), []
+            for x in seq:
+                if rem.get(x, 0) > 0:
+                    o.append(x)
+                    rem[x] -= 1
+            return o
+
+        if out["content"]["only_a"] or out["content"]["only_b"]:
+            fa, fb = kept(a), kept(b)
+            out["shared_order"] = "kept" if fa == fb else "reordered"
+            out["verdict"] = ("content differs" if fa == fb
+                              else "content and order differ")
+            return out
+        if a == b:
+            out["verdict"] = "same"
+            return out
+        # the parts are identical — find and VERIFY the permutation
+        # (fixed points claimed first, so moved_positions is minimal)
+        n = len(a)
+        mapping, used = [-1] * n, [False] * n
+        for i in range(n):
+            if not used[i] and a[i] == b[i]:
+                mapping[i], used[i] = i, True
+        for i in range(n):
+            if mapping[i] < 0:
+                j = next(j for j in range(n)
+                         if not used[j] and b[j] == a[i])
+                mapping[i], used[j] = j, True
+        placed = [None] * n
+        for i, j in enumerate(mapping):
+            placed[j] = a[i]
+        if placed != b:                      # cannot happen with equal
+            out["verdict"] = "reordered"     # multisets, but a claim
+            out["arrangement"] = dict(       # is never left unchecked
+                kind="unverified", mapping=mapping)
+            return out
+        moved = [i for i in range(n) if a[i] != b[i]]
+        if (len(moved) == 2 and a[moved[0]] == b[moved[1]]
+                and a[moved[1]] == b[moved[0]]):
+            kind = "swap"
+        elif n > 1 and b == a[::-1]:
+            kind = "reversed"
+        else:
+            kind = next((f"rotated by {k}" for k in range(1, n)
+                         if b == a[k:] + a[:k]), "reordered")
+        out["verdict"] = "reordered"
+        out["arrangement"] = dict(kind=kind, moved_positions=moved,
+                                  mapping=mapping,
+                                  why="the parts are identical; only "
+                                      "position differs")
+        return out
+
     # ── the findings ledger ─────────────────────────────────────
 
     @staticmethod
