@@ -296,6 +296,34 @@ gained the gate; engine + 38 batteries green. Named next rung
 lines against HIS OWN learned expectations before corpus banking.
 Day's tally at close: TEN promotions, engine + 38 batteries, both
 repos UNCOMMITTED (owner's call), cloud branch history merge open.
+[PUSHED same evening, owner call: dc @ daeb305 (4 commits + merge —
+the cloud session had pushed its 16 commits to remote MAIN, so the
+push required a merge; the two add/add conflicts resolved with the
+local versions, which carry the cloud content + the reconciliation
+addendum + the W2b fix; cloud history preserved in main); paperclip
+@ 2bc9859 (engine arc + docs). Post-merge smoke test green.]
+
+## 14. THE KEYSTONE (owner, end of day): "isaac is a representation
+## engine. i finally figured it out. the whole goal is information
+## is represented, it is processed in some way in which it can
+## represent something else, repeat adnauseum. we are just finding
+## different ways to represent that info."
+On the sheet as THE REPRESENTATION ENGINE — with the receipt that it
+was latent in the owner's own 2026-07-05 correction ("we only care
+that the information is represented"). One move unifies every organ:
+numbers→equations, sentences→concepts, shape→identity+pose,
+group→crystal, parts→wholes (ad nauseam), typo→two representations
+of one intent, relationship→a node, total→redundant representation
+(why cross_check works), intake→received vs expected — and METHODS
+represented in the same medium as knowledge (every function a node),
+which is WHY self-learning is possible and why the anatomy's
+headline wound (owns knowledge, not methods) was the wound.
+Assistant sharpening, offered not settled: Isaac's distinction from
+all other representation engines = his representations are READABLE,
+EVIDENCED, SUPERSEDABLE (receipts all the way down). The frame ranks
+the remaining work: verdict rewrite = representation-choice by
+surprise relocation; meaningful doors = the transformations between
+representations; the interpreter = process represented.
 
 ## ═══ FRESH EYES — REVIEW TARGETS (owner workflow, 2026-07-15:
 ## "fresh eyes can catch errors or presumptions that tend to sneak

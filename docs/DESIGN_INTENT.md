@@ -708,6 +708,40 @@ before banking — bad english interpreted for meaning, never banked
 into the corpus; composes with the value gate (convention vs
 truth-claim) and tutor-format refusals already standing.
 
+## THE REPRESENTATION ENGINE — what Isaac IS (owner keystone,
+## 2026-07-15): "isaac is a representation engine. i finally figured
+## it out. the whole goal is information is represented, it is
+## processed in some way in which it can represent something else,
+## repeat adnauseum. we are just finding different ways to represent
+## that info."
+THE KEYSTONE — and it was latent in the owner's own 2026-07-05
+correction ("we don't care what or where or how the information is
+sorted, we only care that the information is represented"). It
+unifies every organ on this sheet as ONE MOVE repeated: numbers →
+equations; sentences → concepts-with-doors; a seen shape → identity
++ pose; a group → its crystal (compare crystals, not members); parts
+→ wholes → parts of bigger wholes (repeat ad nauseam is already in
+the engine); a typo → two representations of one intent, doored; a
+relationship → itself a node (MEANINGFUL DOORS); a total → a
+redundant representation of its parts (why cross_check catches
+lies); intake → received-representation vs expected-representation.
+And the deepest instance: HIS OWN METHODS are represented in the
+same medium as his knowledge (every function a node) — a method that
+is represented can be examined, duelled, and superseded like any
+other information, which is what makes self-learning possible; a
+method that lives only in code cannot (the anatomy's headline wound,
+explained). Sharpening (assistant's, offered not settled): all
+computing re-represents — what distinguishes Isaac is that his
+representations are READABLE, EVIDENCED, and SUPERSEDABLE — every
+one carries its receipts (evidence, nulls, floors, provenance,
+supersession); a net's representations are mute, Isaac's can be
+interrogated (the no-black-boxes law restated as the theory). What
+the frame directs next: the verdict rewrite = choosing between rival
+representations by surprise relocation (a good law-representation
+soaks up the surprise and leaves the residual boring); MEANINGFUL
+DOORS = representing the transformations BETWEEN representations;
+the interpreter = representing PROCESS itself.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
