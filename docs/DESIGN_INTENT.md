@@ -742,6 +742,38 @@ soaks up the surprise and leaves the residual boring); MEANINGFUL
 DOORS = representing the transformations BETWEEN representations;
 the interpreter = representing PROCESS itself.
 
+## THE REPRESENTATION DUEL — the keystone as a mechanism (owner,
+## 2026-07-15, immediately after the keystone): "is this something we
+## can design and integrate as a result? testing different methods
+## for isaac to represent information and picking the best one for
+## the format?"
+STATUS: DESIGN CAPTURED, build on owner go. Isaac tests rival
+representations of the same information and elects winners — BEST IS
+PURPOSE-RELATIVE, never absolute: the same table's equation wins for
+prediction, exemplars for exact recall, the matrix form for speed,
+doors for explanation-with-receipts; so the organ keeps a PORTFOLIO
+with measured badges per format (the should/can context-indexing +
+order_matters badge shape), losers KEPT (variants-not-smushing),
+champions re-electable out when they start losing (word-elections
+machinery generalized). A candidate proves itself by: FIDELITY —
+regenerate the represented thing within the floor (the
+generation-not-duplication law IS the test); COST — size and time,
+measured, complete numbers; REACH — what it newly represents
+(unseen-row prediction, transfer); RECEIPTS — readable and
+evidenced, or it fails the house law regardless of score. When a
+task arrives, candidate representations are consulted or bypassed
+WITH RECEIPTS (consideration law applied to representations; they
+register like tools). PRECEDENTS, all hand-run — the design makes
+Isaac run the contest himself (= the mission: self-learning includes
+learning improved methods): box→matrix 17,000x (matrix_context_demo);
+recognition channels with measured weights (five representations of
+one digit); word elections (rival forms re-elected by outcomes).
+First build slice when called: one dataset, 3-4 candidate
+representations (raw exemplars / discovered equation / matrix form /
+crystal summary), measured on regenerate-vs-floor, bytes, query
+time, unseen-row transfer; badges minted per purpose with witnesses;
+battery pins that no single "global best" is ever claimed.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
