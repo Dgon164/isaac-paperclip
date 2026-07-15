@@ -599,6 +599,115 @@ that difference changes the outcome under the operation at hand —
 the same pair can be "same thing" under + and "different things"
 under −, the should/can context-indexing applied to order.
 
+## THE TYPO CONCEPT — same thing, different bit string (owner design,
+## 2026-07-15): "if they are typos, they should be introduced under a
+## different bit string. so word and wrod should generally be
+## considered as a typo and just have a door between them connected
+## through the typo concept"
+A typo is the SAME THING arriving under a DIFFERENT bit string. The
+law, at every level: the variant becomes its OWN node (different
+bits = different node — never smushed, never overwritten), with a
+DOOR to what it is a variant of, and the door goes THROUGH the typo
+concept — the connection itself says "mis-entry", with the evidence
+on it (closeness in the thing's own currency + the consensus that
+makes one form canonical and the other the slip). Two teeth,
+everywhere it applies: (1) the variant must NEVER be allowed to
+rewrite the RULER — the consensus reads the measure, the dissenter
+gets filed; (2) the filed dissenter is a FLAG CANDIDATE with its
+correction attached (the door points at what it probably meant).
+Instances: text — word↔wrod through typo (closeness = edit
+distance + shared contexts, earned not told; language lane, not yet
+built); numbers — an off-grid value ↔ its nearest grid value through
+mis-entry (built into the grain road 2026-07-15: one half-step slip
+used to RESCALE the ruler 2x down and four slips used to blind it;
+now the consensus keeps the ruler and the slips are filed with their
+nearest-grid door). Same family as group-level outlier ejection
+(the nursery) — eject from the measurement, file in the record,
+point the door at the likely intent.
+
+## MEANINGFUL DOORS — the relationship as a third pointer (owner
+## idea, 2026-07-15): "you have a pointer door. a to b. but what if
+## you had something else. a,b:relationship where relationship is
+## effectively a third pointer for the type of connection between
+## them. give the connection actual meaning that can be interpreted
+## and used as structure or math or something. 3,8:add5"
+STATUS: DESIGN CAPTURED, not built — assess against existing organs
+first (reuse checklist). What exists already: doors carry TAGS
+(net.door_tags), some tags name relations (names→, typo would be
+one); laws/rules are nodes. What the owner adds that is NEW: the
+relationship label should itself be a NODE — a third pointer — whose
+meaning is INTERPRETABLE AND EXECUTABLE: 3,8:add5 means the door
+from 3 to 8 IS "+5", and +5 is a thing you can (a) verify (3+5=8 —
+the door can be CHECKED, a door that fails its own meaning is a
+flag), (b) apply elsewhere (10 →add5→ 15 — the door generalizes),
+(c) compose (add5 then add3 = add8 — door algebra), (d) MINE (many
+(a,b) pairs → discover() names the relation — relations are laws
+living on edges, minted through the ordinary nulls). The typo door
+is the first citizen of this family (a,b:typo); add5 is the numeric
+one; the interaction_map's signed affects± edges and the uptake
+edges are earlier instances that never got the general form. This
+turns the net's wiring from "connected" into "connected HOW" — and
+because the how is a node, it gets doors, receipts, supersession,
+and duels like everything else. First probe shape when its turn
+comes: mint add5 from pairs past a scrambled-pairing null, verify /
+apply / compose, and let a wrong claimed relation be CAUGHT by its
+own execution.
+
+## THE BOOKS MUST BALANCE — ECC for data (owner design, 2026-07-15):
+## "you have the inputs and the outputs. 5+5=9. you dont know if 9
+## was wrong, or if one of the 5s was supposed to be a 4, but you
+## know something here is incorrect. and even if he cant resolve it,
+## he can mark it as false and return to it maybe. if you have a data
+## table with 40,000 inputs and they dont add up at the end, then
+## someone somewhere did something wrong."
+BUILT same day (cross_check in engine, crosscheck_battery 9/9,
+promotion #9). The laws: a failing check marks the TUPLE false —
+never the output alone (the audit used to blame the answer cell;
+this design corrected that); candidate repairs are the typo
+concept's doors (cell → the value that balances the books), PROPOSED
+with receipts, NEVER silently applied; overlapping checks localize
+like parity bits — row totals × column totals intersect at the bad
+cell (the Hamming/ECC move; correction capacity = one error per
+tangle, more errors are DETECTED and refused); an unresolvable
+violation is FALSE-SOMEWHERE, kept OPEN and RETURNABLE — a later
+check can resolve it by supersession (5+5=9 alone has three suspects;
+add a+2=6 and a=4 is the unique repair of both); a grand total that
+fails certifies an error EXISTS even when nothing can say where —
+batch parity catches what per-item checks cannot (the measured 2x
+detectability wall has a hole punched in it at the batch level);
+floors gate tolerance — noise-level imbalance is not a finding.
+NEXT RUNG, named: wire into the audit face (askisaac --audit gains
+totals checks); relation-shaped checks beyond sums ride the
+MEANINGFUL DOORS design (a check IS a relation door executed).
+
+## INTERPRETED, NOT IMPLEMENTED — the front door's immune system
+## (owner design, 2026-07-15): "if its something where we have a
+## known answer, vs the received answer, then he can check. so he can
+## check incoming grammar and math and stuff based off of what he
+## expects and assess whether its right or not. if he determines its
+## wrong, he can still acknowledge the assumed intent and continue
+## but doesnt learn the assumed flaw for integration. bad english is
+## interpreted, but not implemented."
+BUILT same day (vet_intake in engine, vet_intake_battery 6/6,
+promotion #10). The law: UNDERSTANDING AND ADOPTION ARE SPLIT.
+Incoming claims are checked against what he already expects (known
+answers; sums via cross_check; his own learned rules when the wiring
+lands). A claim that fails his check is INTERPRETED — assumed intent
+recorded as typo-concept doors to the likely-meant value, so the
+conversation continues — but integrate=False: the flawed form NEVER
+reaches learning. Quarantine is wrong-kept, not deletion: original
+verbatim + why + intent persist at quarantine:<name>, supersedable.
+No expectation = UNCHECKABLE = the ordinary nulls road (never a free
+pass, never a quarantine). WHY THIS MATTERS HERE: the account
+poisoning entered exactly through this door (bad tutor output was
+LEARNED); the word elections made bad adoptions reversible — this is
+the PREVENTIVE twin. NEXT RUNG, named (owner's call — it touches the
+live practice loop): wire the gate into sparring/practice so partner
+and tutor lines are vetted against HIS OWN learned expectations
+before banking — bad english interpreted for meaning, never banked
+into the corpus; composes with the value gate (convention vs
+truth-claim) and tutor-format refusals already standing.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")

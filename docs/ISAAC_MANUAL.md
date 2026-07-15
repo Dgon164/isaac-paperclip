@@ -1358,6 +1358,111 @@ the data-ops audit face (floors gate its exactness flags) and the
 verdict rewrite (§2b of the plan — "exact within the instrument").
 Promotion gates: engine + 30 batteries.
 
+**Consensus ejection in the repeats road (owner call 2026-07-15 "add
+outlier ejection", after the data-ops bench found FLOOR CONTAMINATION:
+corruption ≥ ~6% of rows inflated the pooled spread until the audit's
+4×floor flag line outgrew the corruption itself — detection collapsed
+1.00→0.00 between 5% and 7.5% while the audit still said `flags:
+active`; probe_floor_contamination.py, collapse threshold matched the
+filed 1/16 algebra).** The cure is F14's law one road over: deviations
+measured around each group's MEDIAN (a corrupted member drags a mean,
+not a median); a robust consensus scale read off ALL deviations;
+values no honest instrument at that scale produces (>5× consensus,
+chance ~4e-6 per value) are ejected FROM THE MEASUREMENT and FILED in
+provenance (`ejected` count + `ejected_groups` on the road record) —
+never from the record: the dissenters are exactly what the audit
+hunts. Final sigma = the ordinary pooled read over the agreeing
+majority (arithmetically identical to the old road when nothing
+dissents). MAJORITY DISSENT (>20% of values ejected) DISQUALIFIES the
+road — "repeat answers disagree beyond a typo story" — a refusal that
+says so instead of a confident wrong floor. Battery now **18/18**:
+F15 sigma 0.054 under 10% corruption (all 32 dissenters filed), F16
+clean-world control ZERO ejections, F17 40% corruption → refusal,
+F18 heavy-tail t(3) ≤3% tail-trim (the accepted, MEASURED trade:
+a heavy-tailed instrument's floor reads nearer its core scale).
+Post-cure sweep: recall 1.00 at every rate through 15%, floor 0.050
+throughout. EXPOSED BY THE CURE (wrong-kept, bench W3): one gross-
+corruption trial had passed only because the inflated ruler swallowed
+a fit whose FORM the outliers had dragged — with an honest ruler the
+audit now honestly REFUSES there (and its refusal message names the
+fork: under-evidenced floor OR a law that does not hold at that
+precision); the robust law refit is §2b's lane. Promotion gates:
+engine + 35 batteries.
+
+**The typo concept in the GRAIN road (owner design 2026-07-15: "word
+and wrod should generally be considered as a typo and just have a
+door between them connected through the typo concept"; promotion #8,
+floor_battery 22/22).** A mis-entered value is the same thing under a
+different bit string — a VARIANT filed with a door to the grid, never
+a new ruler. The cloud campaign's two grain breaks, cured: (W2b) 4
+off-grid slips of 150 rows blinded the grain road outright — and a
+blinded floor made the slips themselves unflaggable; (W2c) ONE slip
+at exactly half a step made the half-step candidate look perfectly
+consistent and quietly RESCALED the ruler 2x down. Cure in
+`_floor_grain`: the COARSEST consistent grain wins, not the highest-
+consensus one (every divisor of a true grain also scores perfectly —
+that was the capture road), with preference coarsest-among->=0.95
+consensus, else coarsest-among->0.80 (the typo-story band); the
+dissenting gaps are EJECTED from the reading and FILED on the road
+record (`off_grid_gaps`, `worst_offset`, mis-entry note) — they are
+what the audit hunts; beyond 20% dissent the road refuses ("not a
+typo story"). Battery F19-F22 written first, F19/F20 shown failing
+on the old engine (blinded; captured), F21 guards honest fine grains
+against over-coarsening, F22 pins the majority-dissent refusal.
+Promotion gates: engine + 36 batteries.
+
+**Cross-check — ECC for data (owner design 2026-07-15 "5+5=9 ... you
+know something here is incorrect ... mark it as false and return to
+it ... 40,000 inputs and they dont add up"; built same day,
+battery-first, crosscheck_battery 9/9, promotion #9):**
+`cross_check(values, checks, floor=0.0, name=None)` — checks are
+sum-shaped (sum(cells)+const == total, total a cell or a number). A
+failing check marks the TUPLE false, never the output alone; per
+connected component of failing checks, single-cell repairs that
+balance every failing check they touch and break no passing one are
+searched — a UNIQUE survivor = CORRECTED-CANDIDATE (proposed with
+receipt, never applied); several/none = FALSE-SOMEWHERE with its
+candidate mis-entry doors, kept OPEN at `inconsistency:<name>`
+(active + superseded chain) so it is RETURNABLE — E7: 5+5=9 alone is
+unresolvable (three suspects filed), a later a+2=6 localizes a=4 and
+supersedes the open mark. Row totals x column totals localize a
+single bad cell at their intersection (the Hamming move, E3); two
+errors in one row are DETECTED and refused, never guessed (E4); a
+40,000-value grand total that fails certifies an error EXISTS with
+candidates counted not enumerated (E5 — "someone somewhere did
+something wrong"); floors gate tolerance (E6); passing checks VETO
+repairs that would break them (E8). Limits said in the docstring:
+sum-shaped v1; single-error correction per component; a balanced
+error pair can make the totals look guilty — which is why candidates
+are never auto-applied. Consumers: the audit face (totals checks =
+next rung); the MEANINGFUL DOORS design generalizes checks to
+relation doors. Promotion gates: engine + 37 batteries.
+
+**Vet intake — interpreted, not implemented (owner design 2026-07-15
+"bad english is interpreted, but not implemented"; built same day,
+battery-first, vet_intake_battery 6/6, promotion #10):**
+`vet_intake(claims, expectations=None, floor=0.0, name=None)` — the
+front door's immune system: incoming claims checked against known
+answers (kind="value" vs expectations[key]) or their own arithmetic
+(kind="sum", through cross_check) BEFORE anything is learned. Fails
+→ verdict FAILS-CHECK with integrate=False AND the assumed intent as
+typo-concept doors (observed → likely-meant value) so processing
+continues on the MEANING; the flawed form is quarantined at
+`quarantine:<name>` (wrong-kept: original verbatim + why + intent;
+active + superseded chain). No expectation → UNCHECKABLE =
+integrate="unchecked" — the ordinary nulls road, never a free pass.
+Battery: Q1 5+5=9 arrives as a lesson → interpreted (3 intent
+doors), not learned; Q3 known-answer mismatch (expected 12, got 13)
+→ intent 12, not learned; Q6 END TO END — teach() fed only what the
+gate passes: the good fact lands in fact_index, the bad fact is
+ABSENT from the net yet readable in quarantine with its intent.
+Scope said plainly: expectations arrive from the caller's road in
+v1; wiring his OWN net (learned grammar/rules/laws) as the
+expectation source and gating the live practice loop = the named
+next rung (owner's call — the account poisoning entered through
+exactly this door; this organ is the word-elections cure's
+preventive twin). Promotion gates: engine + 38 batteries.
+
 **The failure-commonality miner (owner ask 2026-07-14 "assess failures
 and find commonalities... specifically denied"; built 2026-07-15,
 battery-first):** `mine_commonality(records, failed, name=None)` —

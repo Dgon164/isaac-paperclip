@@ -654,6 +654,68 @@ green) changed this document in four places:
    half is the loop that consults them everywhere (the interpreter
    segment's kernel).
 
+7. **THE BENCH RAN (2026-07-15, evening arc) — and its first attack
+   result lands here per the same-step rule.** Data-ops work-order
+   step 4 (bench harness B1/B2, `experiments/dataops_bench/`,
+   predictions filed before running): B1 error detection — in-range
+   corruption 24/24 with 0 false flags where z-score/IQR recall 0.00
+   (the lane's native game confirmed); B2 completion — 12/12 verdicts
+   honest incl. the refusal CONTROL world, masked-value error under
+   the noise floor. Fresh-eyes #4 measured: clean heavy-tail t(3)
+   false-flag rate 0.84–2.5%/table vs 0.00 Gaussian (the 4×floor line
+   is Gaussian-shaped). **ATTACK RESULT — FLOOR CONTAMINATION
+   (unpredicted, then predicted-and-confirmed): corruption above ~6%
+   of rows hides ITSELF** — planted errors inflate the pooled repeats
+   floor until the 4×floor flag line outgrows the corruption at any
+   magnitude; recall collapses 1.00→0.00 between 5% and 7.5%
+   (probe_floor_contamination.py, matched the filed 1/16 algebra),
+   and the audit stays `flags: active` — it reports a clean table
+   while blind. Stage-3/4 implication: the floor organ's repeats road
+   lacks the consensus discipline its own grain road already has
+   (F14); the ruler is corruptible by the measured. **CURED same day
+   (owner call: "add outlier ejection"; promotions #6-7, floor_battery
+   18/18):** consensus ejection in the repeats road — dissenting
+   values ejected FROM THE MEASUREMENT by a >5×-consensus rule, FILED
+   in provenance (never from the record); majority dissent (>20%)
+   REFUSES the road outright. Post-cure sweep: recall 1.00 through
+   15% corruption, floor honest at 0.050 throughout. The cure exposed
+   a second wrong (bench W3): gross outliers can drag the DISCOVERED
+   FORM itself, which the affine-only recalibration cannot unbend —
+   the coverage gate now honestly refuses there, and its refusal
+   message was fixed the same hour to name the honest fork
+   (under-evidenced floor OR a law that does not hold at that
+   precision) instead of blaming the user's ruler. The robust law
+   refit belongs to the verdict rewrite (§2b) — Stage 3/4's standing
+   repair, one more receipt in its case file.
+
+8. **THE EVENING WAVE (2026-07-15): the cloud campaign reconciled +
+   three owner designs landed in one conversation.** The abandoned
+   claude.ai session's branch surfaced ~6.9k lines: 12 attack probes,
+   a strict verdict sheet (TESTING_SEGMENT doc, dc-only), the
+   LOCAL_PROCESSING doc with the efficiency ledger (5 owner designs
+   for crystallizer speed + ingestion precleaning), and the RESERVOIR
+   instrument (13/13; frozen random-features net = a ruler that
+   cannot be captured by what it judges — proposed as §2b's
+   grammar-free second leg). Its verdict-tier exhibits (near-miss
+   silent poisoning, blended-conditional UNDERSTOOD, plant-absorbed
+   forms, additive impostors regime-mapped) make the VERDICT REWRITE
+   the highest-leverage build by measured evidence. Both
+   ruler-capture roads it broke are now CURED (repeats: consensus
+   ejection, promotions #6-7; grain: the owner's TYPO CONCEPT —
+   coarsest-consistent + filed mis-entry doors, promotion #8) — all
+   floor BROKEN rows flip on re-run. Then two sibling organs from
+   the same owner conversation: **cross_check** (ECC for data — a
+   broken sum marks the TUPLE false, never the output; totals
+   localize like parity bits; unresolved = FALSE-SOMEWHERE, kept,
+   returnable; promotion #9) and **vet_intake** ("bad english is
+   interpreted, but not implemented" — understanding SPLIT from
+   adoption at the front door; the word-elections cure's preventive
+   twin; promotion #10). Stage 1/2 (arrival/translation) now has an
+   immune system; Stage 8's wrong-kept discipline extends to intake.
+   Day total: ten promotions, engine + 38 batteries. Open door
+   wiring, owner's call: the practice loop vets tutor lines against
+   HIS OWN expectations; the audit face gains totals checks.
+
 Caveat RESOLVED 2026-07-15: the four probe scripts landed in
 dc/experiments/ and were re-run under PYTHONHASHSEED=0 — all green,
 reproducing the record: surprise verdict W1 old-blessed 0.32*x0*x1 @

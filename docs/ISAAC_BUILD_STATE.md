@@ -62,6 +62,77 @@ reader → grain by CONSENSUS of gaps (floor battery F14). Promotion
 stamped. Data-ops steps 1-3 done; remaining: bench harness (B1/B2),
 verdict rewrite (§2b, to run through the Trace C machinery).
 
+SAME DAY, sixth arc — THE BENCH RAN + THE FLOOR-CONTAMINATION CURE
+(data-ops step 4; promotions #6-7). `dc/experiments/dataops_bench/`
+(dc-only harness; PREDICTIONS.md filed BEFORE the first run; sklearn
+= labeled BASELINE only): B1 error detection — in-range corruption
+ISAAC 24/24 P/R/F1 1.00 with 0 false flags vs z-score/IQR recall
+0.00; gross corruption 18/18 while baselines missed 22-33%; clean
+control 0 false flags; fresh-eyes #4 measured (heavy-tail t(3) false
+flags 0.84-2.5%/table vs 0 Gaussian). B2 completion — 12/12 verdicts
+honest incl. the refusal-control world; real-join masked values MAE
+0.041 UNDER the 0.05 floor. THE FIND (unpredicted, then filed as
+algebra, then confirmed): FLOOR CONTAMINATION — corruption ≥ ~6% of
+rows inflated the pooled repeats floor until the 4×floor line
+outgrew the corruption at ANY magnitude; recall 1.00→0.00 between 5%
+and 7.5% with the audit still saying `flags: active`. THE CURE
+(owner call "add outlier ejection"; floor_battery F15-F18 written
+first and shown failing — old engine read 0.977 at 10% corruption,
+confident 1.91 at 40%): consensus ejection in `_floor_repeats` —
+deviations around group MEDIANS, >5×-consensus values ejected FROM
+THE MEASUREMENT and FILED in provenance (never from the record),
+majority dissent (>20%) REFUSES the road. floor_battery **18/18**;
+post-cure sweep recall 1.00 through 15% corruption, floor 0.050
+throughout. The cure EXPOSED a second wrong (bench W3 2/3): gross
+outliers can drag the discovered FORM, which affine recalibration
+cannot unbend — the audit now honestly refuses there and (promotion
+#7) its refusal names the fork (under-evidenced floor OR law not
+holding at that precision) instead of blaming the user's ruler;
+robust law refit = §2b's lane. Full write-up
+dataops_bench/RESULTS.md; ledger has the rows.
+
+SAME EVENING, seventh arc — THE CLOUD RECONCILIATION + THE TYPO
+CONCEPT (promotion #8). The abandoned claude.ai session's branch
+(claude/isaac-dc-local-setup-2e51bt) was found holding ~6.9k lines:
+12 attack probes + TESTING_SEGMENT record + LOCAL_PROCESSING.md (the
+efficiency ledger: 5 owner designs incl. pregrouping and group-level
+outlier ejection with the mine_commonality nursery) + the reservoir
+instrument probe 13/13 (proposed §2b second leg); all 17 files
+brought into dc's working tree. Its repeats-floor BROKEN rows all
+flipped against the cured engine. Its two GRAIN breaks were then
+cured by OWNER DESIGN ("word and wrod ... a door between them
+connected through the typo concept"): _floor_grain picks the
+COARSEST consistent grain (>=0.95 band, else >0.80 typo-story band),
+files dissenting gaps as mis-entry candidates, refuses beyond 20%
+dissent. floor_battery F19-F22 written first, F19/F20 failing on the
+old engine (4 slips of 150 blinded the road; one half-step slip
+rescaled the ruler 2x down); now 22/22, engine + 36 batteries green.
+Cloud probe re-run: W2b holds through k=8, W2c step held, floor
+1.00x true. SECOND OWNER DESIGN captured on the sheet, not built:
+MEANINGFUL DOORS — a,b:relationship where the relationship is a
+third pointer with executable meaning (3,8:add5); doors today carry
+tag strings; the design makes the label a NODE that can be verified,
+applied, composed, and mined.
+
+SAME EVENING, eighth arc — THE BOOKS MUST BALANCE (owner design:
+"5+5=9 ... you know something here is incorrect ... mark it as
+false and return to it ... 40,000 inputs and they dont add up ...
+someone somewhere did something wrong"; promotion #9, battery
+FIRST). `cross_check(values, checks, floor, name)` in ENGINE
+(crosscheck_battery **9/9**; engine + 37 batteries green;
+promote.py gained the gate): a failing sum-check marks the TUPLE
+false, never the output alone; candidate repairs = mis-entry doors
+(the typo concept), proposed never applied; row totals × column
+totals localize one bad cell at their intersection (the Hamming/ECC
+move; two errors detected and REFUSED, capacity said); a failing
+grand total over 40,000 values certifies an error EXISTS with
+candidates counted not enumerated; floors gate tolerance; passing
+checks veto repairs; FALSE-SOMEWHERE marks persist at
+inconsistency:<name> and are RETURNABLE — a later witness check
+resolves by supersession (E7: 5+5=9 + a+2=6 → a=4 unique). Next
+rung: audit-face totals wiring; relation-shaped checks ride the
+MEANINGFUL DOORS design.
+
 SAME DAY, fifth arc — WHEN ORDER MATTERS (owner theory: "additive
 does not matter, but subtractive methods are... restricting the
 space counts as subtractive"): `order_matters(op)` in engine —
