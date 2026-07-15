@@ -10,6 +10,16 @@
 > introduction lives in `PAPERCLIP_MANUAL.md`; the day-by-day state ledger in
 > `docs/ISAAC_BUILD_STATE.md`; THIS doc is what he can DO.
 
+> **THE THREE DOCUMENTS, THREE JOBS (routing box, 2026-07-13):**
+> `ISAAC_MANUAL.md` (this doc) = what he can DO (the inventory of
+> record — if it isn't here, it doesn't exist). `ISAAC_ANATOMY.md` =
+> how information FLOWS through him, what is script-held, what is
+> missing (working copy in `dc/docs/`, copy here). 
+> `ISAAC_THEORY_OF_OPERATION.md` = WHY the core works (accurate to its
+> date). `ISAAC_BUILD_STATE.md` = WHEN things happened. If they
+> disagree: the manual wins on existence, the anatomy on flow,
+> batteries on truth.
+
 **Verification status legend** (every capability section below is tagged):
 - **[VERIFIED 2026-07-03 — re-run from this repo]** — re-executed from this
   repo on 2026-07-03; output logs in `experiments/runs/2026-07-03/`.
@@ -20,6 +30,12 @@
 - **[RECORDED — script not in this repo or data required; not independently
   re-verified]** — a number from the research record; reproducing it needs
   datasets, long runs, or a script variant not yet committed here.
+- **[EXPERIMENT-ERA — dc/experiments/, uncommitted, NOTHING PROMOTED]** —
+  the capability ran green in an experiment script during the language
+  ladder / interpreter arc (2026-07-13), but by owner instruction nothing
+  from that arc integrates until the interpreter R&D segment has run.
+  Listed so the manual is not blind to it; graduates to a full section at
+  promotion time. (§13.)
 
 ---
 
@@ -1313,3 +1329,249 @@ territories — proven). Battery `isaac_store/test_crawlers.py` =
 12/12 (1,400 records through repeated divisions, ZERO lost, every
 value exact after cold start). Promotion gates: engine + 25
 batteries.
+
+**The instrument floor (owner's law 2026-07-14 "no ruler, no perfect";
+built 2026-07-15, battery-first):** `read_floor(y, X=None, name=None)`
+/ `tell_resolution(name, sigma)` — how precise is the tool that
+produced these values? Three roads, every road's measurement KEPT,
+floor = the LARGEST evidenced noise scale: **repeats** (duplicate-input
+rows; their answer-spread IS the noise; needs >=5 groups and >=10 dof),
+**told** (usable at once per the told-knowledge law; belief measured —
+a measured road that contradicts it FLAGS the record, kept never
+erased, and the larger wins), **grain** (the quantization step read off
+the values; a LOWER BOUND only — storage resolution, not process
+noise). NO road evidenced → the floor is REFUSED: exactness is
+unclaimable; the honest posture is best-residual-in-units + ASK for the
+instrument's resolution. Named readings persist at `floor:<name>`
+(active + superseded chain; re-measuring supersedes, old kept with
+why), land in the findings ledger (kinds `floor` / `floor_told`), and
+round-trip through packs. Battery `experiments/floor_battery.py`
+**13/13** (grain 0.001 and 1/16 exact; truncated-CSV honestly coarser;
+float-continuous REFUSED; repeats 0.12 planted → 0.1282 measured;
+under-evidenced repeats refused; told-vs-measured contradiction
+flagged with max winning; pack round-trip; supersession chain).
+WRONG-KEPT (battery F4, same hour): the reference probe's grain
+tolerance scaled with the multiple — float-continuous data false-fired
+a microscopic grain (visible in the probe's own W8 output, masked by
+max-of-roads); cure = tolerance as a fraction of ONE STEP. Consumers:
+the data-ops audit face (floors gate its exactness flags) and the
+verdict rewrite (§2b of the plan — "exact within the instrument").
+Promotion gates: engine + 30 batteries.
+
+**The failure-commonality miner (owner ask 2026-07-14 "assess failures
+and find commonalities... specifically denied"; built 2026-07-15,
+battery-first):** `mine_commonality(records, failed, name=None)` —
+from kept receipts (feature→value dicts + fail flags), name what the
+failures share that the successes lack. The commonality of the denied
+is a DIFFERENTIAL against the allowed — compare()'s only-in-failures,
+gated by a selection-corrected label-shuffle null, NEVER a frequency
+(a feature on 100% of failures also on 100% of successes says
+nothing). Named readings persist at `commonality:<name>` (active +
+superseded chain), land in the ledger, round-trip through packs.
+DOUBLE-DUTY BY DESIGN: names the shared factor behind audit flags
+(news-vs-error) AND mints the CASE CLASS for piecewise supersession
+(organ failure receipts → named failure class → duel scope — Trace
+C's missing organ, now real). Requires FAT failure receipts: context
+recorded at failure time. v1 mines single feature=value signatures;
+conjunctions ride the confusion-pair/compound move (limit on record).
+Battery `experiments/commonality_battery.py` **7/7** (planted frontier
+named exactly; lockout word named alone; random failures → nothing;
+100%-background control NOT named; degenerate refusals; supersession;
+packs). Promotion gates: engine + 31 batteries.
+
+**The audit face — data-ops deliverable 1 (owner positioning
+2026-07-14; built 2026-07-15, battery-first):** `askisaac.py <source>
+--audit [--target col] [--resolution col=sigma ...]` +
+`isaac_store.audit` (audit_source/render_audit). Drop data on Isaac,
+get flags WITH RECEIPTS: intake accounts every item and skip; FLOORS
+per column gate all exactness (unevidenced → the report ASKS, never
+estimates); a law pass per table (refusal cards have equal standing);
+row flags CLASSIFIED — ERROR-CANDIDATE (violates the law beyond the
+floor, does not recur), NEWS-CANDIDATE (deviation RECURS; the miner
+names the shared factor — the differential decides, never a
+threshold), DUPLICATE (exact + near-within-3×floor isolated pairs,
+both rows cited); joins across tables via triangulate (NO ALIGNMENT
+said, scan capped and accounted); complete numbers + `audit.jsonl`
+(ledger-shaped records). Fresh mind per call — never writes into a
+living account. Battery `isaac_store/test_audit.py` **14/14** (A1
+planted errors 6/6 flagged 0 extra; A2 clean control 0 false flags of
+320; A3 news-vs-error with factor named; A4 duplicates cited; A5
+floor refusals + ASK + told-unlock; A6 join found / NO ALIGNMENT; A7
+noise accounts every row; A8 door laws incl. zip-bomb cap).
+WRONG-KEPT ×3, all caught by the battery the same day: (a)
+triangulate crashed on a table whose only non-target column is the
+join key — now the honest mean-model (fix in triangulate._fit); (b)
+planted deviations DRAGGED the fitted law (slope 2.0→1.89) until the
+audit disqualified itself — cured by CONSENSUS RECALIBRATION (the
+row-judging baseline refit on the rows most of the data agrees on,
+dissenters trimmed — the Gate 6 trim applied to laws; affine-only is
+the said v1 scope, the verdict rewrite is the deeper cure); (c) one
+off-grid typo blinded the grain reader — grain is a CONSENSUS of
+gaps, never a unanimity (floor battery F14 pins it). V1 scopes said
+plainly in the module: numeric columns only; OUT-OF-DOMAIN activates
+with inherited laws; near-duplicates only for isolated pairs.
+Promotion gates: engine + 32 batteries.
+
+**The tools node (owner design 2026-07-15 — "a tools node that he can
+query... the preset files of every thing he has designed or we have
+built... if nothing in tools is applicable, then he just skips to
+next"; built same day, battery-first):** `register_tool(name, does,
+how, tags)` / `catalog_tools()` / `query_tools(want)` /
+`run_tool(name, ...)` / `tool_receipt(name, passed)` — every
+capability becomes a `tool:<name>` node doored under `tools`,
+carrying its readable description, call shape, when-tags, and
+use/outcome receipts (the election shape — the word-election law can
+climb here unchanged). `catalog_tools` auto-harvests every public
+engine method with a docstring (107 on the current engine — the
+built world made visible in one call; idempotent; re-registration
+with a new description supersedes, old kept). Three usage modes per
+the design: QUERY (informed choice — word-overlap rank against what
+each tool says it does), RUN (trial and error through the node, use
+counted), RECEIPT (outcomes keep score). An empty query returns the
+honest skip-to-next, never a stall; unknown tools refuse with a why.
+This is the PRESENCE pillar of the flow-structures design (sheet,
+2026-07-15): a capability with no node is invisible to any scan —
+now nothing built is invisible. Battery
+`experiments/tools_battery.py` **8/8** ("instrument resolution"
+surfaces read_floor; gibberish skips; packs round-trip). Promotion:
+engine + 33 batteries. THE ACCOUNT SEEDED (pack v6): 114 tools
+(107 engine + 7 drill-layer incl. mine_frontier and the cures);
+the session loop now queries the node against his own named
+frontier every session ("what keeps failing" → mine_frontier;
+"cure a poisoned lesson" → remine_word_elections). Promotion gates:
+engine + 33 batteries.
+
+## 13. EXPERIMENT-ERA — the language ladder + Gate 6 (2026-07-13)
+**[EXPERIMENT-ERA — dc/experiments/, uncommitted, NOTHING PROMOTED]**
+
+> Owner instruction (2026-07-13): nothing from this arc integrates into
+> the engine, the gates, or the account mechanics until the interpreter
+> R&D segment has run. This section exists so the manual is not blind
+> to three weeks of work; each entry graduates to a full section at
+> promotion time. Detail lives in `ISAAC_ANATOMY.md` (the flow map) and
+> `SESSION_HANDOFF_2026-07-13.md` (the record). All numbers below are
+> the handoff record's. Batteries are hash-seed sensitive at the
+> crystallizer stage — run with `PYTHONHASHSEED=0`; at least one number
+> discrepancy across runs is logged in the anatomy (carry 31/31 vs
+> 48/49) and must reconcile before promotion.
+
+**The seven-rung language ladder** — each rung taught ONLY by examples
++ corrections, proven by generation on unseen material; scrambled
+controls bind nothing. Knowledge lands in `mind.net`; the METHODS
+(gates, thresholds, loops) are script-held — the anatomy's reach audit
+is the honest map of that split.
+1. `vocab_grounding.py` — words bind to executable concepts by
+   count-excess past scrambled-pairing nulls (bindings 10/10; use
+   360/360 + 30/30 images; told-rule generation 120/120, 21/21).
+2. `complete_ideas.py` — sentences assemble into idea-wholes; template
+   admission past scrambled null; the FRAGMENT law gives carry
+   (unseen 150/150; carry 31/31; retrieval 12/12).
+3. `idea_corrections.py` — orientation/word/decoration lessons factored
+   from corrections; recurrence-window votes; supersession kept
+   (1 correction → 60/60; flip by recurrence; a noise echo cannot
+   dethrone).
+4. `parts_of_speech.py` — HE reads; types + SUBGROUP hierarchy
+   self-assemble; labels name his units ("choose all the nouns" 30/30
+   incl. never-labeled words); roles bind to pattern slots (149/149;
+   no-object refusals 31/31).
+5. `open_questions.py` — question words bind to his roles by grounding
+   corrections against his own reading (60/60 unseen; untaught shapes
+   stay silent).
+6. `sentence_compression.py` — share-relation judged by HIS role
+   reading; merged form learned from 6 corrections; 'and' discovered
+   as the unaccounted join word; faithfulness null before speaking
+   (60/60; 3-sentence fold 20/20).
+7. `passage_recall.py` + `logical_gaps.py` — retention = READINGS,
+   never text (recall 80/80, 0 invented); gap markers + ask-templates
+   mined from corrections; ask → integrate → state the fact whole
+   (30/30; 0 false gaps on complete passages).
+
+**Supporting experiment files:** `concept_groups.py` (his own groups
+from kept wrongs + THE POISONING CURES: decoration by rate, form
+votes in a recent-8 window, 2n+2 commentary hygiene, REMINE from kept
+wrongs — unseen 60/60, pronoun-bare 40/40, type transfer 2/2);
+`live_idea_probe.py` / `idea_practice_run.py` (the live-tutor drill
+runners behind the account).
+
+**Word elections (2026-07-15, experiment-era — owner law: "if he
+knows the old vs new, and the new keeps failing he is supposed to
+revert to the old"):** speak:words was WRITE-ONLY — corrections were
+aligned backward through the map, so a revert signal never had a
+missing slot and the map's only door never opened (measured on the
+account: the 'ate' revert signal arrived 25 times, filed as
+decoration/orientation 25 times, word lessons 0 — the Kung Pow
+failure: trained wrong with no way to keep score). Repair in
+idea_corrections.py: RIVALS WITH RECEIPTS — corrections VOTE (using
+the original word where the map says otherwise is now an identity
+vote); every judged use banks its outcome on the candidate he
+actually used (`bank_word_outcomes` — THINKING RECEIPTS v1, wired
+into the runner on pass and fail); recent-window re-election (told
+road: identity out-votes the seat; outcome road: the seat keeps
+failing and the tutor is not insisting — recent telling outranks a
+stale record); reversion = supersession running backward, the
+dethroned word kept wearing its numbers; re-adoption must WIN the
+window (one echo cannot flip, either direction);
+`remine_word_elections` replays kept transcripts through the law.
+Battery `word_reelection_battery.py` **12/12**. THE ACCOUNT REMINED
+(account_word_remine.py, pack v3, priors kept): 1,940 events
+replayed, BOTH poisoned seats fell by DIFFERENT roads — nap→napkin
+by told (3-0 identity votes), ate→eats by outcome (0/4 recent
+passes) — map clean; session 95 ran live on the law (15/21 judged
+passed, no re-poisoning).
+
+**The frontier habit (2026-07-15, same arc — owner: "he just needs
+to see that hey, this keeps losing in these conditions, group them
+and find why"):** `mine_frontier(mind, transcripts_dir)` in
+idea_corrections.py — after EVERY session the runner points his own
+commonality miner at his own recent life (last 10 sessions; the
+frontier is the PRESENT — an all-time mine would let a cured era
+dominate forever); the named conditions are stored in HIS mind at
+`commonality:frontier:speech` (active + superseded chain: the
+frontier's own history is kept as he clears it). Battery
+`frontier_battery.py` **4/4** (planted condition named + stored;
+random → honest nothing; cured era washes out with the old frontier
+kept superseded; survives packs). FIRST LIVE SELF-ASSESSMENT
+(2026-07-15, post-healing): recent window 63 fails/191 passes; ONE
+condition named — "keeps losing when action=slept" (+0.223 past
+null 0.190) — the tense/form frontier, now self-identified.
+
+**`gate6_operator_mining.py` — operators minted from watched
+transitions** (the interpreter handoff's hardest open problem, passed
+in PROBE form): effect templates by recurrence, preconditions by
+co-occurrence (constants literal, varying values → slots, jittering
+distractors die), the binding function by equation discovery. Minted
+add and mul rules nobody authored; the handoff's own interpreter ran
+them: unseen 6/6 (incl. 9+9→18, 7*6→42); corrupted episodes
+wrong-kept 5/5; scrambled transitions mint NOTHING. CAVEATS: action
+labels were GIVEN; single-cell effects; toy world; the loop ran in
+the experiment script.
+
+**The live account** (`Documents/isaac_home/` — HIS LIFE, append-only,
+never clean/move/reset): idea-drill practice sessions 25→94 including
+a poisoning and its cure; block 4 at 64% and climbing, peaks 26-27/30;
+tutor self-inconsistency is the measured ceiling. MIGRATED to the pack
+road 2026-07-15 (dc/experiments/account_pack_migration.py — 346
+records, 0 differing vs the pickle, round-trip stable, life content
+verified by name; runner loads/saves packs; mind.isaac frozen at
+session 94, kept superseded; event logged in
+isaac_home/migration_log.jsonl, never the practice journal).
+
+**ENGINE BLIND SPOT, measured 2026-07-13:** `discover()` cannot say
+y = x0 + x1 — greedy first-admission grabs the product atom (it
+outscores each bare variable on positive data) and never reconsiders,
+claiming UNDERSTOOD at r² ~0.96 on exact additive data. Every historic
+exact win was product/power form; a plain two-variable sum was in NO
+battery. Fix direction (demonstrated probe-side, NOT in engine): a
+linear-pool candidate duels the admitted model at fit end, wins only
+if exact. Engine change = its own battery + the promote cycle.
+
+**The interpreter handoff** (external research package): staged
+verbatim at `Downloads/New folder (3)/interpreter_handoff/` — six
+reference files, all run and reproduce their claims. Its diagnosis
+(representation without an interpreter: no loop, no binding) is
+CONFIRMED by this repo's own `ISAAC_THEORY_OF_OPERATION.md` §14
+(which named control flow "the genuine gap" ten days earlier) and by
+the anatomy's engine map. Its own R&D segment runs before any
+integration — owner's standing verdict: "early results look
+promising, but there are likely several failure points that are as
+of yet undiscovered."

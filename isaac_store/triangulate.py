@@ -54,6 +54,14 @@ def _fit(mod, X, y, name):
     """Discover on a 75/25 split; return (model_mind, holdout_r2,
     residual_fn) — residuals from the ARTICULATED part only."""
     n = len(y)
+    if X.shape[1] == 0:
+        # WRONG-KEPT (audit battery A6, 2026-07-15): a table whose only
+        # non-target column IS the join key leaves zero features here,
+        # and this crashed instead of refusing. The honest model of
+        # nothing is the mean.
+        mean = float(y.mean())
+        mind = mod.Isaac()
+        return mind, 0.0, lambda XX, yy: yy - mean
     order = np.random.default_rng(0).permutation(n)
     tr, ho = order[:int(n * 0.75)], order[int(n * 0.75):]
     mind = mod.Isaac()

@@ -7,6 +7,23 @@ is what it is. This is the "how it operates" doc — distinct from `ISAAC_Manual
 of 2026-07-03 — the mechanisms described here are unchanged, but discovery,
 rivalry, waves and tracking are documented in `ISAAC_MANUAL.md`, not here).*
 
+> **THE THREE DOCUMENTS, THREE JOBS (routing box, 2026-07-13):**
+> `ISAAC_MANUAL.md` = what he can DO (the inventory of record — if it
+> isn't there, it doesn't exist). `ISAAC_ANATOMY.md` = how information
+> FLOWS through him, what is script-held, what is missing.
+> `ISAAC_THEORY_OF_OPERATION.md` (this doc) = WHY the core works
+> (accurate to its date). `ISAAC_BUILD_STATE.md` = WHEN things
+> happened. If they disagree: the manual wins on existence, the
+> anatomy on flow, batteries on truth.
+>
+> **SUPERSESSION NOTE (2026-07-13):** the flow story ("how a thing
+> moves through him, end to end") is now told by `ISAAC_ANATOMY.md`,
+> which covers the whole organism as of 2026-07-13 — engine, language
+> ladder, live account, and the interpreter R&D segment. The core
+> mechanisms and the theory below STAND, accurate to 2026-06-24. This
+> document is kept wearing its date, never deleted. See §14 for the
+> annotation this doc earned ten days after it was written.
+
 ---
 
 ## 0. The one-sentence model
@@ -203,6 +220,14 @@ him. Feeding raw input is fine; *deciding* in Python is the violation.
   frontier.
 - **Still harness (unbuilt):** control flow — `if`/`while` over his own state, the
   loop/fallback structure. This is the genuine gap.
+  **[CONFIRMED 2026-07-13 — this sentence graduated from suspicion to
+  measured diagnosis.]** Ten days after it was written, an external
+  research package (the interpreter handoff) independently diagnosed
+  the same missing organ — no match→select→act→write-back loop, no
+  variable binding — and the anatomy pass confirmed it line-by-line in
+  the engine (all sequencing is caller-driven; the engine answers one
+  query and stops). The interpreter R&D segment is this gap's answer.
+  See `ISAAC_ANATOMY.md` §1/§6 and `SESSION_HANDOFF_2026-07-13.md`.
 
 **INTEGRITY (load-bearing):** *testing Isaac means testing Isaac.* Never substitute
 an external learner (sklearn RandomForest/MI/etc.) for the cognition and report it

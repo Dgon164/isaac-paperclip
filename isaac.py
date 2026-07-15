@@ -2035,6 +2035,351 @@ class Isaac:
         finally:
             r.close()
 
+    # ── the instrument floor (data-ops segment, 2026-07-15) ─────
+    # "No ruler, no perfect" (owner, 2026-07-14): exactness is
+    # INSTRUMENT-RELATIVE. Three roads to a floor, every measurement
+    # kept, floor = the LARGEST evidenced noise scale. WRONG-KEPT
+    # (07-14 probes): grain-only floors UNDER-EVIDENCE real process
+    # noise — the honest PARTIAL that results downstream is correct
+    # behavior; the cure is the told/repeats road, never a looser
+    # gate. Nearest-neighbor noise estimators were considered and
+    # REJECTED for v1: gradient contamination inflates them (a floor
+    # estimated too high launders wrong forms back in).
+
+    def _floor_grain(self, y):
+        """Road 3 — GRAIN: the quantization step read off the values.
+        A LOWER BOUND only: storage resolution, not process noise."""
+        y = np.asarray(y, dtype=float)
+        y = y[np.isfinite(y)]
+        u = np.sort(np.unique(y))
+        if len(u) < 3:
+            return None, "too few distinct values"
+        d = np.diff(u)
+        d = d[d > 1e-12 * max(1.0, float(np.abs(u).max()))]
+        if len(d) == 0:
+            return None, "no positive gaps"
+        # WRONG-KEPT x2, both caught by batteries the same day
+        # (2026-07-15): (a) floor battery F4 — the reference probe's
+        # tolerance scaled with the multiple (0.02 * mult), so pure
+        # float-continuous data false-fired a microscopic grain
+        # (visible in the probe's own W8 output, masked there by
+        # max-of-roads); the tolerance is a fraction OF ONE STEP.
+        # (b) audit battery A4 — reading the grain from the single
+        # SMALLEST gap let one off-grid value (a typo — exactly what
+        # the audit hunts) destroy the whole floor; grain is a
+        # CONSENSUS of gaps, never a unanimity, so several candidate
+        # grains compete and the violators are simply the
+        # inconsistent minority (themselves flag candidates).
+        def _grain_frac(g):
+            m = np.round(d / g)
+            ok = (m > 0) & (np.abs(d / g - m) < 0.02 + 1e-9 * m)
+            return float(np.mean(ok)), ok
+        cands = sorted({float(c) for c in np.sort(d)[:8]}
+                       | {float(np.median(d))})
+        best_g, best_frac, best_ok = None, 0.0, None
+        for c in cands:
+            fr, ok = _grain_frac(c)
+            if fr > best_frac:
+                best_g, best_frac, best_ok = c, fr, ok
+        if best_g is None or best_frac <= 0.95 or best_ok.sum() < 3:
+            return None, "no consistent grain (float-continuous)"
+        m = np.round(d[best_ok] / best_g)
+        g = float(np.median(d[best_ok] / m))
+        frac, _ = _grain_frac(g)             # re-scored at the refined
+        frac = max(frac, best_frac)          # grain, never worse
+        return dict(road="grain", sigma=float(g / np.sqrt(12.0)),
+                    step=g, consistency=frac,
+                    note="lower bound only (storage resolution, "
+                         "not process noise)"), None
+
+    def _floor_repeats(self, y, X):
+        """Road 1 — REPEATS: duplicate-input rows; their answer-spread
+        IS the noise. Needs >=5 groups and >=10 degrees of freedom."""
+        if X is None:
+            return None, "no X given — repeats road not run"
+        y = np.asarray(y, dtype=float)
+        X = np.asarray(X, dtype=float)
+        if X.ndim == 1:
+            X = X.reshape(-1, 1)
+        seen = {}
+        for i in range(len(y)):
+            if not np.isfinite(y[i]):
+                continue
+            seen.setdefault(tuple(np.round(X[i], 10)), []).append(y[i])
+        groups = [v for v in seen.values() if len(v) >= 2]
+        dof = sum(len(g) - 1 for g in groups)
+        if len(groups) < 5 or dof < 10:
+            return None, (f"under-evidenced: {len(groups)} repeat "
+                          f"groups, dof {dof} (need >=5 groups, >=10 dof)")
+        pooled = np.concatenate(
+            [np.asarray(g) - np.mean(g) for g in groups])
+        return dict(road="repeats",
+                    sigma=float(np.sqrt(np.sum(pooled ** 2) / dof)),
+                    groups=len(groups), dof=int(dof)), None
+
+    def tell_resolution(self, name, sigma, who="told"):
+        """Road 2 — TOLD: the instrument's resolution, stated. Usable
+        at once (the told-knowledge law); belief stays measured — a
+        measured road that contradicts it flags the record (kept,
+        never erased)."""
+        node = f"floor:{name}"
+        rec = dict(sigma=float(sigma), who=str(who), contradicted=False)
+        self.net.set_meta(node, "told", rec)
+        self.record_finding("floor_told", name, sigma=float(sigma),
+                            who=str(who))
+        return rec
+
+    def read_floor(self, y, X=None, name=None):
+        """The instrument floor: how precise is the tool that produced
+        these values? Runs every road, KEEPS every road's measurement,
+        answers with the LARGEST evidenced noise scale. No road
+        evidenced -> the floor is REFUSED: exactness is unclaimable,
+        the report should say best-residual-in-units and ASK for the
+        resolution (the logical-gaps posture). With a name, the
+        reading lives at floor:<name> — active + superseded chain —
+        and lands in the findings ledger: a tool in the chain,
+        supersedable like everything else."""
+        roads, notes = [], []
+        rep, rep_why = self._floor_repeats(y, X)
+        if rep:
+            roads.append(rep)
+        elif X is not None:
+            notes.append(f"repeats: {rep_why}")
+        told = self.net.get_meta(f"floor:{name}", "told") if name else None
+        if told:
+            told_road = dict(road="told", sigma=float(told["sigma"]),
+                             who=told.get("who", "told"),
+                             contradicted=bool(told.get("contradicted")))
+            if rep and rep["sigma"] > 1.5 * told["sigma"]:
+                told_road["contradicted"] = True
+                told["contradicted"] = True          # flag the record,
+                self.net.set_meta(f"floor:{name}", "told", told)  # keep it
+                notes.append(
+                    f"told {told['sigma']:g} CONTRADICTED by measured "
+                    f"{rep['sigma']:g} (flagged, kept; the larger wins)")
+            roads.append(told_road)
+        grain, grain_why = self._floor_grain(y)
+        if grain:
+            roads.append(grain)
+        else:
+            notes.append(f"grain: {grain_why}")
+        if roads:
+            best = max(roads, key=lambda r: r["sigma"])
+            why = (f"floor {best['sigma']:g} via {best['road']} "
+                   f"(largest of {len(roads)} evidenced road(s))")
+            if notes:
+                why += "; " + "; ".join(notes)
+            result = dict(floor=best["sigma"], road=best["road"],
+                          roads=roads, exact_claimable=True, why=why)
+        else:
+            why = ("no ruler — " + "; ".join(notes) +
+                   "; exactness unclaimable: BEST-RESIDUAL posture; "
+                   "ASK for the instrument's resolution")
+            result = dict(floor=None, road=None, roads=[],
+                          exact_claimable=False, why=why)
+        if name:
+            node = f"floor:{name}"
+            old = self.net.get_meta(node, "active")
+            if old is not None:
+                chain = self.net.get_meta(node, "superseded") or []
+                chain.append(dict(record=old, why="re-measured; a newer "
+                                  "reading supersedes (kept, never erased)"))
+                self.net.set_meta(node, "superseded", chain)
+            self.net.set_meta(node, "active", result)
+            self.record_finding("floor", name, floor=result["floor"],
+                                road=result["road"], roads=result["roads"],
+                                why=result["why"])
+        return result
+
+    # ── the failure-commonality miner (data-ops §4, 2026-07-15) ──
+    # Owner ask (2026-07-14): "assess failures and find
+    # commonalities... specifically denied." The commonality of the
+    # denied is a DIFFERENTIAL against the allowed — compare()'s
+    # only-in-failures, gated by a selection-corrected label-shuffle
+    # null. NEVER a frequency: a feature on 100% of failures that is
+    # also on 100% of successes says nothing (control B, probe
+    # 2026-07-14). Double-duty by design: names the shared factor
+    # behind audit flags (news-vs-error) AND mints the CASE CLASS for
+    # piecewise supersession (organ failure receipts -> named failure
+    # class -> duel scope). v1 mines single feature=value signatures;
+    # conjunctions ride the existing confusion-pair/compound move
+    # when a case demands them — said here so the limit is on record.
+
+    def mine_commonality(self, records, failed, name=None,
+                         n_perm=300, seed=0):
+        """From kept receipts (records: list of feature->value dicts;
+        failed: parallel bools), name what the failures share that the
+        successes lack. Returns named signatures past the null, the
+        threshold, and honest refusals; with a name, the reading lives
+        at commonality:<name> (active + superseded chain) and lands in
+        the findings ledger — a supersedable tool in the chain."""
+        n_fail = sum(1 for f in failed if f)
+        n_succ = len(failed) - n_fail
+        base = dict(named=[], threshold=None, top=None,
+                    n_fail=int(n_fail), n_succ=int(n_succ))
+        if not records or n_fail == 0 or n_succ == 0:
+            base["why"] = ("nothing to mine: need both failures and "
+                           f"successes (have {n_fail} fail / "
+                           f"{n_succ} pass)")
+            return base
+        cands = sorted({(k, str(v)) for r in records
+                        for k, v in r.items()})
+        flags = np.asarray(list(failed), dtype=bool)
+        hits = {c: np.fromiter((str(r.get(c[0])) == c[1]
+                                for r in records),
+                               dtype=bool, count=len(records))
+                for c in cands}
+
+        def excess(fl):
+            nf = int(fl.sum()); ns = len(fl) - nf
+            return {c: float(h[fl].sum()) / nf - float(h[~fl].sum()) / ns
+                    for c, h in hits.items()}
+        obs = excess(flags)
+        rng = np.random.default_rng(seed)
+        null = np.zeros(n_perm)
+        for p in range(n_perm):
+            null[p] = max(excess(rng.permutation(flags)).values())
+        thr = float(np.sort(null)[::-1][1])   # ~99th pct, selection-
+        named = [(k, v, float(e)) for (k, v), e in    # corrected max
+                 sorted(obs.items(), key=lambda kv: -kv[1]) if e > thr]
+        result = dict(named=named, threshold=thr,
+                      top=float(max(obs.values())),
+                      n_fail=int(n_fail), n_succ=int(n_succ),
+                      why=("differential signature(s) past the "
+                           "label-shuffle null" if named else
+                           "nothing named: no feature=value is in the "
+                           "failures beyond what shuffled labels give"))
+        if name:
+            node = f"commonality:{name}"
+            old = self.net.get_meta(node, "active")
+            if old is not None:
+                chain = self.net.get_meta(node, "superseded") or []
+                chain.append(dict(record=old, why="re-mined; a newer "
+                                  "reading supersedes (kept, never "
+                                  "erased)"))
+                self.net.set_meta(node, "superseded", chain)
+            self.net.set_meta(node, "active", result)
+            self.record_finding("commonality", name,
+                                named=result["named"],
+                                threshold=result["threshold"],
+                                n_fail=result["n_fail"],
+                                n_succ=result["n_succ"],
+                                why=result["why"])
+        return result
+
+    # ── the tools node (owner design, 2026-07-15) ────────────────
+    # "a tools node that he can query. it has the preset files of
+    # every thing he has designed or we have built as a function for
+    # him to directly access. he can either test them, just go
+    # through trial and error and run them all, or he can know what
+    # they do and choose the one he is looking for... if nothing in
+    # tools is applicable, then he just skips to next."
+    # The PRESENCE pillar of the flow-structures design: a capability
+    # with no node is invisible to any scan — so every tool is a
+    # tool:<name> node doored under 'tools', carrying what it does,
+    # how to call it, tags, and use/outcome receipts (the election
+    # shape — the same recent-window law as words can climb here).
+    # An empty query is an HONEST SKIP, never a stall.
+
+    def register_tool(self, name, does, how="", tags=(), method=None):
+        """A capability enters the net: readable description, call
+        shape, when-tags, and an empty receipt record. Re-registering
+        with a new description supersedes (old kept)."""
+        node = f"tool:{name}"
+        old = self.net.get_meta(node, "record")
+        if old is not None and old.get("does") == str(does):
+            return node                      # idempotent re-catalog
+        self.net.add_door("tools", node, tag="tool")
+        rec = dict(does=str(does), how=str(how),
+                   tags=sorted(str(t) for t in tags),
+                   method=method, used=0, passed=0, recent=[])
+        if old is not None:
+            chain = self.net.get_meta(node, "superseded") or []
+            chain.append(dict(record=old, why="re-registered with a "
+                              "new description (kept, never erased)"))
+            self.net.set_meta(node, "superseded", chain)
+            rec["used"], rec["passed"] = old["used"], old["passed"]
+            rec["recent"] = old.get("recent", [])
+        self.net.set_meta(node, "record", rec)
+        return node
+
+    def catalog_tools(self):
+        """The preset files of everything built: every public engine
+        method with a docstring registers itself (first sentence =
+        what it does). Idempotent — run any time; new organs join."""
+        n = 0
+        for attr in sorted(dir(self)):
+            if attr.startswith("_"):
+                continue
+            fn = getattr(self, attr, None)
+            doc = (getattr(fn, "__doc__", None) or "").strip()
+            if not callable(fn) or not doc:
+                continue
+            does = " ".join(doc.split())
+            does = does.split(". ")[0].rstrip(".") + "."
+            self.register_tool(attr, does, how=f"mind.{attr}(...)",
+                               tags=("engine",), method=attr)
+            n += 1
+        return n
+
+    def query_tools(self, want, top=5):
+        """Informed choice: rank every tool by word overlap between
+        the want and what the tool says it does. Nothing applicable
+        -> matches=[] with the skip-to-next why (a bypass answer,
+        never a stall)."""
+        import re
+        toks = set(re.findall(r"[a-z]+", str(want).lower()))
+        scored = []
+        for tgt in self.net.get_doors("tools", tag="tool"):
+            rec = self.net.get_meta(tgt, "record") or {}
+            name = tgt.split("tool:", 1)[1]
+            text = " ".join([name.replace("_", " "),
+                             rec.get("does", ""),
+                             " ".join(rec.get("tags", []))]).lower()
+            ov = len(toks & set(re.findall(r"[a-z]+", text)))
+            if ov:
+                scored.append((ov, name, rec.get("does", "")))
+        scored.sort(key=lambda s: (-s[0], s[1]))
+        if not scored:
+            return dict(matches=[], why="nothing in tools is "
+                        "applicable — skip to next")
+        return dict(matches=[dict(name=nm, does=d, score=int(sc))
+                             for sc, nm, d in scored[:top]],
+                    why=f"{len(scored)} applicable tool(s)")
+
+    def run_tool(self, name, *args, **kwargs):
+        """Trial and error: run a registered tool through its node.
+        The use is counted (outcomes land via tool_receipt once
+        judged). Unknown or unrunnable tools refuse with a why."""
+        node = f"tool:{name}"
+        rec = self.net.get_meta(node, "record")
+        if rec is None:
+            return dict(refused=True,
+                        why=f"no tool named '{name}' in the tools "
+                            f"node — query_tools() to see what exists")
+        method = rec.get("method")
+        if not method or not callable(getattr(self, method, None)):
+            return dict(refused=True,
+                        why=f"'{name}' has no runnable binding on "
+                            f"this mind (how: {rec.get('how', '?')})")
+        rec["used"] += 1
+        self.net.set_meta(node, "record", rec)
+        return getattr(self, method)(*args, **kwargs)
+
+    def tool_receipt(self, name, passed):
+        """The judged outcome lands on the tool that was used — the
+        same receipt shape as word elections; the recent window is
+        ready for the same re-election law."""
+        node = f"tool:{name}"
+        rec = self.net.get_meta(node, "record")
+        if rec is None:
+            return False
+        rec["passed"] += 1 if passed else 0
+        rec["recent"] = (rec.get("recent", [])
+                         + [1 if passed else 0])[-8:]
+        self.net.set_meta(node, "record", rec)
+        return True
+
     # ── the findings ledger ─────────────────────────────────────
 
     @staticmethod

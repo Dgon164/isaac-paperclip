@@ -531,6 +531,45 @@ AMBIGUOUS with the shortlist, nothing-fits is NONE = a new-variant
 candidate (mixed-planet data REFUSES a single-planet answer;
 battery: gravity_family_battery.py 13/13).
 
+## FLOW STRUCTURES — metainformation about the information (owner,
+## 2026-07-15): "we build something, and then it just doesnt get
+## used. it should at least be present, and or checked if it is
+## necessary or bypassed. but it just doesnt even consider it...
+## how do we create flow processes, and how can isaac modify or
+## branch them to be applicable? this is structural and will still
+## be nodes and doors, but it will be different than the content."
+The recurring wound, named at Isaac's level (this sheet itself exists
+because settled designs kept getting silently dropped — same disease,
+human scale). THE THREE MISSING THINGS behind every unused tool:
+(1) PRESENCE — tools live as Python functions with no node in the
+net, invisible to any scan; (2) CONSIDERATION — nothing enumerates
+"which of my tools apply here?", and unuse leaves no trace; (3)
+ADAPTATION — even a considered flow cannot branch on evidence.
+THE DESIGN: flows are NET CONTENT in their own namespace (flow:/
+step: nodes; doors carry next-step and branch conditions; steps
+point at organ/tool nodes) — same substrate as content, different
+altitude: these nodes are read by the KERNEL LOOP to decide what
+happens next. THE CONSIDERATION LAW: at every juncture, every
+registered step whose domain overlaps the situation is SCANNED and
+either FIRES or is BYPASSED WITH A RECEIPT (why-class + count;
+silent unconsideration is outlawed — bypass receipts are cheap,
+absence of consideration is the expensive thing). ADAPTATION BY THE
+EXISTING LAWS: steps carry use/outcome receipts and face the same
+recent-window ELECTIONS as words (2026-07-15 precedent); a flow that
+keeps losing gets mined (the commonality organ) and the named
+condition IS the branch point — BRANCHING A FLOW = PIECEWISE
+SUPERSESSION AT THE FLOW LEVEL (clone the step for the named case,
+duel decides, loser kept). New tools door themselves in by declaring
+when-tags (the affordance-index move: a thing entering the net
+announces its operators) — an unregistered tool is a visible defect,
+a registered one is either used or wearing bypass receipts.
+REGISTRATION RULE, standing: every new tool ships WITH its flow node.
+This is the interpreter segment's true shape: the kernel loop is the
+flow executor; the package's affordance scan is the consideration
+law's mechanism. First build: ONE real pipeline (the drill session or
+the audit face) as flow nodes + a walker with bypass receipts + one
+evidence-driven branch demonstrated end to end.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")

@@ -16,6 +16,69 @@ Last savepoint: **2026-07-02** (path/count corrections 2026-07-03)
 
 ---
 
+## 2026-07-15 — THE INSTRUMENT FLOOR (data-ops segment §2; owner's law
+## 2026-07-14: "no ruler, no perfect" — exactness is instrument-relative)
+
+Battery written FIRST (`experiments/floor_battery.py`, 13/13), then the
+organ: `read_floor(y, X=None, name=None)` + `tell_resolution(name,
+sigma)` in the engine. Three roads, every measurement kept, floor = the
+LARGEST evidenced noise scale: REPEATS (duplicate-input rows' answer
+spread; >=5 groups, >=10 dof), TOLD (usable at once, belief measured —
+FLAGGED kept-not-erased when a measured road contradicts it, the larger
+wins), GRAIN (quantization step; a LOWER BOUND only). No road evidenced
+→ the floor is REFUSED: exactness unclaimable, BEST-RESIDUAL posture,
+the report ASKS for the resolution (logical_gaps posture). Named
+readings live at `floor:<name>` (active + superseded chain, findings
+ledger, pack-proven) — a supersedable tool in the chain (owner law
+2026-07-15). WRONG-KEPT the same hour, caught by battery F4: the
+reference probe's grain tolerance scaled with the multiple (0.02×mult),
+so float-continuous data false-fired a microscopic grain (visible in
+the probe's own W8 output, masked there by max-of-roads); cure = the
+tolerance is a fraction of ONE STEP. Promotion run 2026-07-15: engine
+11/11 + 30 batteries all green, PROVENANCE stamped (research @ aeb3d7d).
+Also this date: the ACCOUNT migrated to the pack road
+(dc/experiments/account_pack_migration.py — 346 records 0-diff vs the
+pickle, round-trip stable, life content verified by name; runner on
+packs; mind.isaac frozen at session 94, kept superseded). Discipline
+correction, kept: the organ was first built in dc directly — promote.py
+says edit in RESEARCH and promote; fixed (research holds the organ, the
+promotion above is the honest road in).
+
+SAME DAY, second promotion — THE COMMONALITY MINER + THE AUDIT FACE
+(data-ops §4 + §1, batteries first): `mine_commonality()` in the
+engine (differential-vs-allowed past a label-shuffle null, never a
+frequency; commonality_battery 7/7; the CASE-CLASS MINTER Trace C
+needs — organ failure receipts → named class → duel scope) and
+`askisaac --audit` + isaac_store/audit.py (flags with receipts:
+error/news/duplicate; floors gate exactness, unevidenced → ASK; joins
+via triangulate; audit.jsonl; test_audit 14/14). WRONG-KEPT ×3 caught
+by batteries within hours: triangulate zero-feature crash (one-column
+join tables) → honest mean-model; planted deviations DRAGGING the law
+(slope 2.0→1.89, the audit disqualified itself) → CONSENSUS
+RECALIBRATION (the Gate 6 trim applied to laws; affine v1, verdict
+rewrite is the deeper cure); one off-grid typo blinding the grain
+reader → grain by CONSENSUS of gaps (floor battery F14). Promotion
+2026-07-15 07:43: engine 11/11 + 32 batteries green, PROVENANCE
+stamped. Data-ops steps 1-3 done; remaining: bench harness (B1/B2),
+verdict rewrite (§2b, to run through the Trace C machinery).
+
+SAME DAY, third arc — WORD ELECTIONS, THE FRONTIER HABIT, THE TOOLS
+NODE (owner directives, all battery-first): (1) word_reelection
+12/12 — speak:words was write-only/unfalsifiable (25 revert signals,
+0 reached the map — the Kung Pow bug); now rivals-with-receipts +
+recent-window re-election; ACCOUNT REMINED (pack v3): both poisoned
+seats fell by different roads (nap→napkin told 3-0; ate→eats outcome
+0/4); session 95 live clean. (2) frontier habit 4/4 — mine_frontier
+after every session; first live self-assessment named ONE condition:
+action=slept (+0.223). (3) FLOW STRUCTURES design on the sheet
+(consideration law: fires or BYPASSED WITH A RECEIPT; branching =
+piecewise supersession at flow level; registration rule) + THE TOOLS
+NODE built + promoted (tools_battery 8/8; engine + 33 batteries,
+PROVENANCE 09:05): register/catalog/query/run/receipt — 107 engine
+tools auto-harvested from docstrings; account seeded to 114 incl.
+drill tools (pack v6); the session loop queries the node against his
+named frontier and skips honestly when nothing applies.
+
 ## 2026-07-05 — ALL METHODS, ONE CONCEPT (owner's architecture correction)
 
 Owner: "is it not using all methods? it should be using all methods...
