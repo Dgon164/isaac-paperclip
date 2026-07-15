@@ -164,10 +164,20 @@ def _audit_table(mind, item, target, resolutions, asks, records):
                             "for the instrument's resolution; no ruler,"
                             " no flags)")
         elif mad > 3 * floor_t:
+            # The honest fork, both named (bench W3 lesson, 2026-07-15:
+            # after the floor's consensus cure, a trial refused HERE
+            # because gross outliers had dragged the discovered FORM —
+            # the old message blamed the user's ruler for what was the
+            # law's failure; a refusal must not misdiagnose its cause):
             flags_status = (f"refused (evidenced floor {floor_t:g} does"
-                            f" not cover the residual spread {mad:g} — "
-                            f"the floor under-evidences; ASK for the "
-                            f"true resolution, never loosen the gate)")
+                            f" not cover the residual spread {mad:g}: "
+                            f"EITHER the floor under-evidences — ASK "
+                            f"for the true resolution, never loosen "
+                            f"the gate — OR the discovered law does "
+                            f"not hold at that precision and the "
+                            f"residual carries structure the law "
+                            f"missed; the verdict rewrite is the "
+                            f"deeper cure)")
         else:
             flags_status = "active"
             cand = np.zeros(n, bool)

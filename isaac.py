@@ -2074,27 +2074,87 @@ class Isaac:
             m = np.round(d / g)
             ok = (m > 0) & (np.abs(d / g - m) < 0.02 + 1e-9 * m)
             return float(np.mean(ok)), ok
+        # THE TYPO CONCEPT (owner design 2026-07-15: "word and wrod
+        # should ... just have a door between them connected through
+        # the typo concept"): a mis-entered value is the same thing
+        # under a different bit string — a VARIANT to be FILED with a
+        # door to the grid, never a new ruler. Two teeth, both from
+        # measured breaks (cloud campaign W2b/W2c):
+        # (a) COARSEST-consistent wins, not max-consensus — every
+        #     divisor of a true grain also scores perfectly, which is
+        #     how ONE half-step slip used to rescale the ruler 2x
+        #     down while looking maximally consistent; preference
+        #     order: coarsest among >=0.95 consensus, else coarsest
+        #     among >0.80 (the typo-story band; 4 slips of 150 used
+        #     to blind the road outright, and a blinded floor made
+        #     the slips themselves unflaggable);
+        # (b) the dissenting gaps are EJECTED from the reading and
+        #     FILED as mis-entry candidates (they are what the audit
+        #     hunts). Beyond 20% dissent this is not a typo story:
+        #     refuse and say so.
         cands = sorted({float(c) for c in np.sort(d)[:8]}
                        | {float(np.median(d))})
-        best_g, best_frac, best_ok = None, 0.0, None
+        passing = []
         for c in cands:
             fr, ok = _grain_frac(c)
-            if fr > best_frac:
-                best_g, best_frac, best_ok = c, fr, ok
-        if best_g is None or best_frac <= 0.95 or best_ok.sum() < 3:
+            if fr > 0.80 and ok.sum() >= 3:
+                passing.append((c, fr, ok))
+        if not passing:
             return None, "no consistent grain (float-continuous)"
+        strong = [p for p in passing if p[1] >= 0.95]
+        best_g, best_frac, best_ok = max(strong or passing,
+                                         key=lambda p: p[0])
         m = np.round(d[best_ok] / best_g)
         g = float(np.median(d[best_ok] / m))
-        frac, _ = _grain_frac(g)             # re-scored at the refined
-        frac = max(frac, best_frac)          # grain, never worse
-        return dict(road="grain", sigma=float(g / np.sqrt(12.0)),
-                    step=g, consistency=frac,
-                    note="lower bound only (storage resolution, "
-                         "not process noise)"), None
+        frac, ok2 = _grain_frac(g)           # re-scored at the refined
+        if frac >= best_frac:                # grain, never worse
+            best_frac, best_ok = frac, ok2
+        n_off = int((~best_ok).sum())
+        if n_off > 0.2 * len(d):
+            return None, (f"off-grid gaps beyond a typo story "
+                          f"({n_off}/{len(d)} dissent from every "
+                          f"candidate grain) — not a readable grain")
+        rec = dict(road="grain", sigma=float(g / np.sqrt(12.0)),
+                   step=g, consistency=best_frac,
+                   note="lower bound only (storage resolution, "
+                        "not process noise)")
+        if n_off:
+            off = d[~best_ok]
+            rec["off_grid_gaps"] = n_off
+            rec["worst_offset"] = float(np.max(np.abs(
+                off / g - np.round(off / g))) * g)
+            rec["note"] += (f"; {n_off} off-grid gap(s) FILED as "
+                            f"mis-entry candidates — variants with a "
+                            f"door to the grid, never a new ruler")
+        return rec, None
 
     def _floor_repeats(self, y, X):
         """Road 1 — REPEATS: duplicate-input rows; their answer-spread
-        IS the noise. Needs >=5 groups and >=10 degrees of freedom."""
+        IS the noise. Needs >=5 groups and >=10 degrees of freedom.
+        CONSENSUS + EJECTION (owner call 2026-07-15, after the bench's
+        floor-contamination find: corruption >= ~6% of rows inflated
+        the pooled spread until the 4x-floor flag line outgrew the
+        corruption itself — the errors being hunted fed the ruler that
+        judges them, and the audit reported clean tables while blind).
+        The cure is F14's law one road over: deviations are measured
+        around each group's MEDIAN (a corrupted member drags a mean,
+        not a median); a robust consensus scale is read off ALL
+        deviations; values no honest instrument at that scale produces
+        (>5x consensus, ~4.6 Gaussian sigmas, chance ~4e-6 per value —
+        a clean world ejects NOTHING, battery F16) are ejected FROM
+        THE MEASUREMENT and FILED in provenance — never from the
+        record: the dissenters are exactly what the audit hunts. The
+        final sigma is the ordinary pooled read over the agreeing
+        majority (unbiased; arithmetically identical to the old road
+        when nothing dissents). MAJORITY DISSENT (>20% of values
+        ejected) DISQUALIFIES the road — that is not a typo story,
+        and a refusal that says so beats a confident wrong floor.
+        Known honest trades, on the record: heavy-tailed instruments
+        lose their deepest tail values (~1% on t(3); battery F18
+        pins <=3%) so their floor reads nearer the core scale; and a
+        consensus of zero spread (heavily quantized repeats) ejects
+        nothing by construction — contamination there falls to the
+        grain road's own consensus."""
         if X is None:
             return None, "no X given — repeats road not run"
         y = np.asarray(y, dtype=float)
@@ -2106,16 +2166,44 @@ class Isaac:
             if not np.isfinite(y[i]):
                 continue
             seen.setdefault(tuple(np.round(X[i], 10)), []).append(y[i])
-        groups = [v for v in seen.values() if len(v) >= 2]
+        groups = [np.asarray(v, dtype=float)
+                  for v in seen.values() if len(v) >= 2]
         dof = sum(len(g) - 1 for g in groups)
         if len(groups) < 5 or dof < 10:
             return None, (f"under-evidenced: {len(groups)} repeat "
                           f"groups, dof {dof} (need >=5 groups, >=10 dof)")
-        pooled = np.concatenate(
-            [np.asarray(g) - np.mean(g) for g in groups])
+        devs = np.concatenate([g - np.median(g) for g in groups])
+        s0 = 1.4826 * float(np.median(np.abs(devs)))
+        n_all = sum(len(g) for g in groups)
+        kept_groups, ejected, n_ej = [], [], 0
+        for g in groups:
+            bad = (np.abs(g - np.median(g)) > 5.0 * s0) if s0 > 0 \
+                else np.zeros(len(g), dtype=bool)
+            if bad.any():
+                n_ej += int(bad.sum())
+                if len(ejected) < 8:        # capped, counted in full
+                    ejected.append(dict(
+                        size=int(len(g)), n_ejected=int(bad.sum()),
+                        worst=float(np.max(np.abs(g - np.median(g))))))
+            k = g[~bad]
+            if len(k) >= 2:
+                kept_groups.append(k)
+        if n_ej > 0.2 * n_all:
+            return None, (f"repeat answers disagree beyond a typo story "
+                          f"({n_ej}/{n_all} values ejected by consensus)"
+                          f" — not an instrument floor; the data itself "
+                          f"needs investigating")
+        kept_dof = sum(len(g) - 1 for g in kept_groups)
+        if len(kept_groups) < 5 or kept_dof < 10:
+            return None, (f"under-evidenced after consensus ejection: "
+                          f"{len(kept_groups)} groups, dof {kept_dof} "
+                          f"(need >=5 groups, >=10 dof)")
+        pooled = np.concatenate([g - np.mean(g) for g in kept_groups])
         return dict(road="repeats",
-                    sigma=float(np.sqrt(np.sum(pooled ** 2) / dof)),
-                    groups=len(groups), dof=int(dof)), None
+                    sigma=float(np.sqrt(np.sum(pooled ** 2) / kept_dof)),
+                    groups=len(kept_groups), dof=int(kept_dof),
+                    ejected=int(n_ej),
+                    ejected_groups=ejected), None
 
     def tell_resolution(self, name, sigma, who="told"):
         """Road 2 — TOLD: the instrument's resolution, stated. Usable
@@ -2266,6 +2354,282 @@ class Isaac:
                                 n_succ=result["n_succ"],
                                 why=result["why"])
         return result
+
+    # ── cross-check: ECC for data (owner design, 2026-07-15) ─────
+    # "you have the inputs and the outputs. 5+5=9. you dont know if
+    # 9 was wrong, or if one of the 5s was supposed to be a 4, but
+    # you know something here is incorrect. and even if he cant
+    # resolve it, he can mark it as false and return to it maybe. if
+    # you have a data table with 40,000 inputs and they dont add up
+    # at the end, then someone somewhere did something wrong."
+
+    def cross_check(self, values, checks, floor=0.0, name=None):
+        """ECC-style error checking over values that must add up.
+        values: {cell: number}; checks: dicts with name, cells=[...],
+        total=<cell name or plain number>, optional const — meaning
+        sum(cells) + const == total. A failing check proves AT LEAST
+        ONE member is false WITHOUT saying which: the finding marks
+        the TUPLE, never the output alone. Candidate repairs are the
+        typo concept's doors — for each cell, the one value that
+        would balance the check — and they are PROPOSALS with
+        receipts, never silently applied. Localization is the parity
+        move (Hamming's): within a connected component of failing
+        checks (checks sharing cells), a single-cell repair that
+        balances EVERY failing check it touches while breaking NO
+        passing one is a survivor; exactly one survivor =
+        CORRECTED-CANDIDATE; several or none = FALSE-SOMEWHERE, kept
+        OPEN with its candidates so it can be returned to — with a
+        name, open marks persist at inconsistency:<name> (active +
+        superseded chain), and a later re-run with more checks
+        supersedes them (E7: 5+5=9 alone is unresolvable; add a+2=6
+        and a=4 is the unique repair of both). Known limits, said:
+        v1 checks are sum-shaped; correction capacity is single-error
+        per component (multi-error is DETECTED and refused, E4 — and
+        a balanced error pair can make the totals look guilty, which
+        is why candidates are never auto-applied); tolerance per
+        check = max(4*floor*sqrt(n_terms), 1e-9*scale) — the 4x
+        rhymes with the audit's flag line, hand-set and said. The
+        40,000-input case: one grand total that fails with no
+        crossing checks certifies an error EXISTS (someone somewhere
+        did something wrong) with candidates counted, not enumerated
+        — add a crossing check to localize."""
+        vals = dict(values)
+
+        def _cells(ch):
+            cs = set(ch["cells"])
+            if isinstance(ch["total"], str):
+                cs.add(ch["total"])
+            return cs
+
+        def _tol(ch):
+            scale = max([abs(vals.get(c, 0.0)) for c in _cells(ch)]
+                        + [1.0])
+            return max(4.0 * floor * np.sqrt(len(ch["cells"]) + 1),
+                       1e-9 * scale)
+
+        def _resid(ch, v):
+            s = sum(v[c] for c in ch["cells"]) + ch.get("const", 0.0)
+            t = ch["total"]
+            return s - (v[t] if isinstance(t, str) else float(t))
+
+        failing, passing, unevaluable = [], [], []
+        for ch in checks:
+            missing = [c for c in _cells(ch) if c not in vals]
+            if missing:
+                unevaluable.append(dict(check=ch["name"],
+                                        missing=missing))
+                continue
+            (failing if abs(_resid(ch, vals)) > _tol(ch)
+             else passing).append(ch)
+
+        comps = []
+        for ch in failing:
+            cs, merged, rest = _cells(ch), [ch], []
+            for comp in comps:
+                if cs & comp["cells"]:
+                    merged += comp["checks"]
+                    cs |= comp["cells"]
+                else:
+                    rest.append(comp)
+            comps = rest + [dict(checks=merged, cells=cs)]
+
+        MAX_ENUM = 96
+        results = []
+        for comp in comps:
+            cand = {}
+            for ch in comp["checks"]:
+                r = _resid(ch, vals)
+                for c in _cells(ch):
+                    if isinstance(ch["total"], str) and c == ch["total"]:
+                        fix = vals[c] + r
+                    else:
+                        fix = vals[c] - r
+                    cand.setdefault(c, set()).add(round(float(fix), 12))
+            n_cand = sum(len(v) for v in cand.values())
+            survivors = []
+            if n_cand <= MAX_ENUM:
+                for c, fixes in sorted(cand.items()):
+                    for fx in sorted(fixes):
+                        v2 = dict(vals)
+                        v2[c] = fx
+                        if all(abs(_resid(ch, v2)) <= _tol(ch)
+                               for ch in comp["checks"]) and \
+                           all(abs(_resid(ch, v2)) <= _tol(ch)
+                               for ch in passing if c in _cells(ch)):
+                            survivors.append(dict(
+                                cell=c, observed=float(vals[c]),
+                                repaired=float(fx),
+                                why="mis-entry candidate — the one "
+                                    "value whose repair balances every"
+                                    " failing check it touches (a "
+                                    "door to the intended value, the "
+                                    "typo concept)"))
+            if len(survivors) == 1:
+                verdict, why = "CORRECTED-CANDIDATE", (
+                    "the failing checks intersect at one cell (the "
+                    "parity move): a unique repair balances the books"
+                    " — proposed with its receipt, never applied")
+            elif n_cand > MAX_ENUM:
+                verdict, why = "FALSE-SOMEWHERE", (
+                    f"the books do not balance across "
+                    f"{len(comp['cells'])} values: someone somewhere "
+                    f"did something wrong — an error EXISTS, but "
+                    f"{n_cand} candidate repairs cannot be told apart"
+                    f" by these checks; add a crossing check to "
+                    f"localize")
+            else:
+                verdict, why = "FALSE-SOMEWHERE", (
+                    "at least one of these values is false; no single"
+                    " repair explains every failing check (either the"
+                    " culprit is unidentifiable with these checks or "
+                    "there is more than one error) — marked, kept, "
+                    "returnable")
+            res = dict(verdict=verdict,
+                       checks=[c["name"] for c in comp["checks"]],
+                       n_cells=len(comp["cells"]),
+                       cells=sorted(comp["cells"])[:24],
+                       candidates=survivors[:24], why=why)
+            if n_cand > MAX_ENUM:
+                res["candidates_not_enumerated"] = n_cand
+            results.append(res)
+
+        out = dict(consistent=not results and not unevaluable,
+                   n_checks=len(checks), failed=len(failing),
+                   passed=len(passing), components=results,
+                   unevaluable=unevaluable,
+                   why=("all checks balance" if not results else
+                        f"{len(results)} inconsistent component(s) — "
+                        f"every one marked with its candidates"))
+        if name:
+            node = f"inconsistency:{name}"
+            old = self.net.get_meta(node, "active")
+            if old is not None:
+                chain = self.net.get_meta(node, "superseded") or []
+                chain.append(dict(record=old,
+                                  why="re-checked; a newer cross-check"
+                                      " supersedes (kept, never "
+                                      "erased)"))
+                self.net.set_meta(node, "superseded", chain)
+            self.net.set_meta(node, "active", results)
+            self.record_finding("cross_check", name,
+                                failed=len(failing),
+                                components=len(results),
+                                why=out["why"])
+        return out
+
+    # ── vet intake: interpreted, not implemented (owner design,
+    # 2026-07-15) — "if its something where we have a known answer,
+    # vs the received answer, then he can check... if he determines
+    # its wrong, he can still acknowledge the assumed intent and
+    # continue but doesnt learn the assumed flaw for integration.
+    # bad english is interpreted, but not implemented."
+
+    def vet_intake(self, claims, expectations=None, floor=0.0,
+                   name=None):
+        """The front door's immune system: check incoming claims
+        against what he already expects BEFORE anything is learned.
+        Understanding and adoption are SPLIT: a claim that fails his
+        own check is INTERPRETED — the assumed intent recorded as
+        doors to the likely-meant value (the typo concept) so the
+        conversation continues — but integrate=False: the flawed
+        form never reaches learning. It is still WRONG-KEPT, not
+        deleted: the original verbatim + why + intent persist at
+        quarantine:<name> (active + superseded chain). No
+        expectation = UNCHECKABLE = the ORDINARY nulls road — never
+        a free pass, never a quarantine (checking requires a ruler;
+        most of the world arrives unruled). claims: dicts with name
+        and kind — kind="sum" (values/cells/total, vetted through
+        cross_check) or kind="value" (key/received, vetted against
+        expectations[key] when present). v1 scope, said plainly:
+        expectations arrive from the caller's road; wiring his OWN
+        net (learned grammar, taught rules, known laws) as the
+        expectation source is the named next rung — the account
+        poisoning entered exactly through this door, and this organ
+        is the word-elections cure's PREVENTIVE twin. Tolerance
+        rhymes with the audit line: max(4*floor, 1e-9*scale)."""
+        expectations = expectations or {}
+        results = []
+        for cl in claims:
+            res = dict(claim=cl.get("name", "?"),
+                       original=dict(cl), intent=[])
+            if cl.get("kind") == "sum":
+                cc = self.cross_check(
+                    cl["values"],
+                    [dict(name=cl.get("name", "claim"),
+                          cells=cl["cells"], total=cl["total"],
+                          const=cl.get("const", 0.0))],
+                    floor=floor)
+                if cc["consistent"]:
+                    res.update(verdict="PASSES", integrate=True,
+                               why="adds up under his own check")
+                else:
+                    comp = cc["components"][0]
+                    res.update(
+                        verdict="FAILS-CHECK", integrate=False,
+                        intent=[dict(cell=d["cell"],
+                                     observed=d["observed"],
+                                     repaired=d["repaired"],
+                                     why="assumed intent — the value "
+                                         "that would balance the "
+                                         "claim (a door, the typo "
+                                         "concept)")
+                                for d in comp["candidates"]],
+                        why="does not add up: acknowledged, intent "
+                            "assumed, NOT learned — interpreted, not "
+                            "implemented")
+            elif cl.get("kind") == "value" and cl.get("key") in \
+                    expectations:
+                exp = float(expectations[cl["key"]])
+                got = float(cl["received"])
+                tol = max(4.0 * floor, 1e-9 * max(abs(exp), 1.0))
+                if abs(got - exp) <= tol:
+                    res.update(verdict="PASSES", integrate=True,
+                               why="matches the known answer")
+                else:
+                    res.update(
+                        verdict="FAILS-CHECK", integrate=False,
+                        intent=[dict(cell=cl["key"], observed=got,
+                                     repaired=exp,
+                                     why="assumed intent — his known "
+                                         "answer stands in for what "
+                                         "was probably meant")],
+                        why=f"received {got:g} vs known {exp:g}: "
+                            f"wrong by his own check; interpreted, "
+                            f"not implemented")
+            else:
+                res.update(verdict="UNCHECKABLE",
+                           integrate="unchecked",
+                           why="no expectation to check against — "
+                               "the ordinary nulls road (not a pass, "
+                               "not a quarantine)")
+            results.append(res)
+        quarantined = [r for r in results if r["integrate"] is False]
+        out = dict(results=results,
+                   passed=[r["claim"] for r in results
+                           if r["integrate"] is True],
+                   quarantined=[r["claim"] for r in quarantined],
+                   unchecked=[r["claim"] for r in results
+                              if r["integrate"] == "unchecked"],
+                   why=(f"{len(quarantined)} claim(s) interpreted, "
+                        f"not implemented" if quarantined else
+                        "nothing quarantined"))
+        if name:
+            node = f"quarantine:{name}"
+            old = self.net.get_meta(node, "active")
+            if old is not None:
+                chain = self.net.get_meta(node, "superseded") or []
+                chain.append(dict(record=old,
+                                  why="re-vetted; a newer intake "
+                                      "supersedes (kept, never "
+                                      "erased)"))
+                self.net.set_meta(node, "superseded", chain)
+            self.net.set_meta(node, "active", quarantined)
+            self.record_finding("vet_intake", name,
+                                passed=len(out["passed"]),
+                                quarantined=len(quarantined),
+                                unchecked=len(out["unchecked"]),
+                                why=out["why"])
+        return out
 
     # ── the tools node (owner design, 2026-07-15) ────────────────
     # "a tools node that he can query. it has the preset files of
