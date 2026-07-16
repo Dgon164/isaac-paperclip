@@ -819,6 +819,37 @@ result with none of our hands; controls: scrambled grids mint
 NOTHING, and every mint beats its null. What he did before with our
 help, done again with none — the mission sentence as machinery.
 
+### THE RESERVOIR ENSEMBLE — where to dig (owner, same arc,
+### 2026-07-15): "the reservoirs could tell him what to look for.
+### each one finds different meaning and structure that is a good
+### signal, and he can spool up a bunch of resnets [reservoirs] and
+### compare what they are finding in the structures and say this
+### angle here is important for telling a 7 from a 1, so i will
+### integrate and look closer at that specifically"
+The genesis loop's step-1 trigger, multiplied. Receipt: the
+single-lens version is PROBE-PROVEN (reservoir_surprise_probe
+13/13 — channel ablation named exactly {x2} / exactly {x1,x3} where
+marginal correlation named NOTHING). The ensemble adds:
+(a) AGREEMENT ACROSS INDEPENDENT FROZEN LENSES = a built-in null —
+each lens frozen before data (uncapturable ruler), so independent
+lenses agreeing on WHERE structure lives is chance-doesn't-repeat
+discipline for free; guard kept: many lenses = many chances to
+hallucinate, the scrambled control stays mandatory (the 119/120
+selection lesson). (b) DISAGREEMENT IS SIGNAL — which lens family
+sees it says what KIND of structure it is (scale/locality — a crude
+spectroscope). (c) CONTRAST-AIMED ablation = THE DIFFERENTIA ROAD,
+domain-general: aim the ensemble at the DIFFERENCE between two
+concepts (7 vs 1) and the agreeing lenses name the differentia
+candidates (the stroke angle) — feeding the differentia machinery
+that until now had no general finder. THE HARD LAW, restated: the
+reservoirs POINT, they never answer — what ships is the minted
+READABLE node, and the mint must prove itself WITH THE RESERVOIRS
+REMOVED (ordinary nulls, regeneration, discrimination on fresh
+data); a reservoir that became the deliverable would be a small
+mute net — the thing this project exists to not be. Lenses are
+scaffolding: they say look here, the loop builds the readable
+representation, the scaffolding comes down.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
