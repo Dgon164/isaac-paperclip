@@ -1028,3 +1028,29 @@ rotation strong → replace lens contents with a learned rotation). Honest produ
 frozen encoder + cheap closed-form rotation + box crystal = legible + abstaining +
 accuracy-matching head, no gradient training; but rides on the encoder (no encoder
 compression) and LDA is LINEAR (deep nonlinear hostility needs nonlinear registration).
+
+## 2026-07-15 (night): THE VERDICT REWRITE PORTED (S2b, promotion #11 [EXPERIMENTAL])
+UNDERSTOOD is now EARNED before examiners and a ruler; r2 demoted to a
+reported number. discover() gains: the EXACT ROAD (machine precision
+on unseen rows, may override the admitted form; Kepler n=8 stamps
+where the old judge said NO RULE), the REPLAY (partial-corr of every
+unadmitted candidate + replay-only crease columns vs the held-out
+residual, selection-corrected max-null), the POOL meter (frozen
+random net, gates-and-names only, scope n>=48 with bypass receipts),
+and a CERTIFICATE (machine-exact / within floor / above floor [caps
+verdict at PARTIAL] / uncertified) read by the CURED read_floor organ
+(told via told_sigma= kwarg or floor:<name> meta). GATES: 100-world
+duel wrong-confident 74/100 -> 9/100 with true-law availability 20/20
+and 0 false examiner fires; Kepler machine-exact; engine self-test
+11/11. The 9 residual leaks = two NAMED classes: F3 poison absorbed
+into constants, all examiners honestly quiet (cure = rival-form duel,
+queued port requirement) and F5 crease worlds, unsayable until the
+mechanisms atoms promote (next promotion: |a-b| makes max a word; the
+exact road then stamps it exactly). Surgery notes kept: two port
+bugs found by the gate itself and cured by REUSE — a naive private
+grain road hallucinated floors on continuous data at n=400 (vacuous
+large-multiple tolerance; the engine's cured _floor_grain refuses
+correctly) and a naive repeats road was poison-inflatable (the cured
+consensus-ejection _floor_repeats already existed) — never ship a
+rival reader for an organ that exists. Gate harness:
+experiments/verdict_port_gate.py (runs/verdict_gate_*.json).

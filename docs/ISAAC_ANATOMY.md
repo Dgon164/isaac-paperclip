@@ -699,7 +699,13 @@ green) changed this document in four places:
    grammar-free second leg). Its verdict-tier exhibits (near-miss
    silent poisoning, blended-conditional UNDERSTOOD, plant-absorbed
    forms, additive impostors regime-mapped) make the VERDICT REWRITE
-   the highest-leverage build by measured evidence. Both
+   the highest-leverage build by measured evidence. **PORTED
+   2026-07-15 night (promotion #11 [EXPERIMENTAL]): UNDERSTOOD is now
+   earned before an exact road, a residual replay, the pool meter,
+   and a floor certificate (cured read_floor); 100-world duel
+   wrong-confident 74→9, availability 20/20, Kepler n=8
+   machine-exact, self-test 11/11; the two residual leak classes are
+   named with queued cures (rival-form duel; mechanisms atoms).** Both
    ruler-capture roads it broke are now CURED (repeats: consensus
    ejection, promotions #6-7; grain: the owner's TYPO CONCEPT —
    coarsest-consistent + filed mis-entry doors, promotion #8) — all

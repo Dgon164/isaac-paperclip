@@ -618,15 +618,47 @@ trajectories and stores only what refuses to vary.
     `experiments/blockperm_battery.py` 10/10). `max_terms=16` stays as a
     backstop only.
   - **half held out**: the rule must WORK, not merely fit.
-  - **verdicts**: `UNDERSTOOD` (R² ≥ .9 held-out) / `PARTIAL` / `CAPTURED`
-    (nearest-exemplar beats permuted null — incl. per-feature 1-D
-    fallback; caught, not said; no nets) / `NO RULE` (0/20 false
-    discoveries on the battery's pure-noise trials, re-verified
-    2026-07-03). Since 2026-07-03 a real partial equation is stored even
-    when the headline verdict is CAPTURED (previously it was discarded —
-    the CAPTURED-erases-law bug), and the capture null replays the same
-    max-over-candidate-neighbor-sets contest the real score won (it
-    previously permuted only under the winner — anti-conservative).
+  - **verdicts (THE VERDICT REWRITE, S2b, 2026-07-15)**: `UNDERSTOOD`
+    is EARNED, no longer stamped by R² alone (R² is demoted to a
+    reported number). It now requires R² ≥ .9 held-out AND all
+    examiners quiet AND the residual not above an evidenced floor:
+    · **the exact road** — a small term subset (single atoms + raw-var
+      pair/triple products, clone-deduped, structural-diversity-
+      guaranteed shortlist) that reproduces every row to machine
+      precision on train AND held-out may OVERRIDE the admitted form
+      (exactness on unseen rows is the rival-killer). This is how
+      Kepler at n=8 stamps where the old judge said NO RULE.
+    · **the replay** — max partial correlation of every unadmitted
+      candidate (all atoms, var pairs, replay-only CREASE columns
+      |xi−xj|) against the held-out residual, judged by a selection-
+      corrected max-null (2nd largest of 150 permutations).
+    · **the pool** — a frozen random net (`_PoolMeter`, shallow and
+      fixed, seeds before data) asks the grammar-free question: can
+      ANYTHING cheap predict the leftover past its own permuted null?
+      Gates and names only; never writes into a mind; measured scope
+      n ≥ 48 (bypasses with a receipt below).
+    · **the certificate** — `machine-exact` / `within floor (…)` /
+      `above floor (…)` (caps the verdict at PARTIAL) / `uncertified
+      (no floor evidenced)`; floors read by the CURED `read_floor`
+      organ (consensus-ejected repeats, coarsest-consistent grain,
+      told road via `told_sigma=` kwarg or `floor:<name>` meta, with
+      contradiction flagging). Every examiner fires or leaves a
+      bypass receipt (the consideration law); `certificate`, `floor`,
+      and `legs` ride the result, the finding record, and the law
+      node meta. Gate numbers (experiments/verdict_port_gate.py):
+      wrong-confident 74/100 → 9/100 on the 100-world duel, true-law
+      availability 20/20 with 0 false examiner fires, Kepler n=8
+      machine-exact; the 9 remaining = two named classes (poison
+      absorbed into constants — rival-form duel queued; crease worlds
+      — sayable after the mechanisms atoms promote).
+    `PARTIAL` / `CAPTURED` (nearest-exemplar beats permuted null —
+    incl. per-feature 1-D fallback; caught, not said; no nets) /
+    `NO RULE` unchanged. Since 2026-07-03 a real partial equation is
+    stored even when the headline verdict is CAPTURED (previously it
+    was discarded — the CAPTURED-erases-law bug), and the capture null
+    replays the same max-over-candidate-neighbor-sets contest the real
+    score won (it previously permuted only under the winner —
+    anti-conservative).
   - **THE ACCOUNTING (audit 2.8, added 2026-07-03)** — every discover()
     returns `accounting`: **articulated% + captured% + noise% = 100**.
     Articulated = held-out R² of the kept equation; captured = what
