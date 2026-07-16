@@ -569,6 +569,24 @@ flow executor; the package's affordance scan is the consideration
 law's mechanism. First build: ONE real pipeline (the drill session or
 the audit face) as flow nodes + a walker with bypass receipts + one
 evidence-driven branch demonstrated end to end.
+THE EXECUTION CYCLE (owner refinement, 2026-07-15 night, after the
+basic-mechanisms probe): "essentially the flow structures would be
+internal processing, code, as well as routing pointers. do op, take
+result door, or return to main program. each node can act like a
+function generator." Pinned as the interpreter's execution model:
+each step = DO OP (the node fires its operation) -> TAKE RESULT DOOR
+(the result's properties choose the outgoing door — the comparison
+booleans ARE the routing predicates, so a conditional is just which
+door the result takes; a door walked is an if executed) -> or RETURN
+TO MAIN (the kernel loop regains control — one simple loop, check
+the net). NODES AS FUNCTION GENERATORS: a node can emit new callable
+behavior — smallest form: a node with bound context (partial
+application); grown form: a repeatedly-winning CHAIN reified as one
+new node (chunking = a minted function; flows become ordinary
+vocabulary and face elections like everything else — the genesis
+loop applied to PROCESS). The mechanism receipts already built
+(larger routes through compare, replayable) are the seed of the
+execution trace; the consideration law governs every hop.
 
 ## WHEN ORDER MATTERS — additive vs subtractive (owner theory,
 ## 2026-07-15): "with plus it doesnt matter, but with minus or divide
