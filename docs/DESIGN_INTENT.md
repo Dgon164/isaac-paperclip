@@ -819,7 +819,7 @@ result with none of our hands; controls: scrambled grids mint
 NOTHING, and every mint beats its null. What he did before with our
 help, done again with none — the mission sentence as machinery.
 
-### THE RESERVOIR ENSEMBLE — where to dig (owner, same arc,
+### THE POOLS (the reservoir ensemble) — where to dig (owner, same arc,
 ### 2026-07-15): "the reservoirs could tell him what to look for.
 ### each one finds different meaning and structure that is a good
 ### signal, and he can spool up a bunch of resnets [reservoirs] and
@@ -849,6 +849,18 @@ data); a reservoir that became the deliverable would be a small
 mute net — the thing this project exists to not be. Lenses are
 scaffolding: they say look here, the loop builds the readable
 representation, the scaffolding comes down.
+NAMING (owner, 2026-07-15, after the handoff): "i would like to call
+them res or rez, but people would not know what that means, but we
+just call them pools, or training pools, or kiddie pools for some
+levity. a shallow fixed pool to help him learn to swim." POOLS
+henceforth in everything new (docs, code, probe names: pool_*); the
+already-committed reservoir_surprise_probe.py keeps its name
+(promoted history is never hand-edited); "reservoir computing" kept
+in parentheses for outside readers. Never "resnet" — that names a
+trained deep residual network, the opposite thing. The name carries
+the design: SHALLOW (not deep), FIXED (frozen before data — the
+13-inch foot), and LEARN TO SWIM (scaffolding: he swims, the pool
+never ships).
 
 ## THE 13-INCH FOOT — trust flows up from measurements, never down
 ## from the instrument (owner law, 2026-07-15, closing the keystone
