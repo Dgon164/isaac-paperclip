@@ -774,6 +774,51 @@ crystal summary), measured on regenerate-vs-floor, bytes, query
 time, unseen-row transfer; badges minted per purpose with witnesses;
 battery pins that no single "global best" is ever claimed.
 
+## THE GENESIS LOOP — how he BUILDS representations that didn't
+## exist (owner, 2026-07-15, third step of the keystone arc): "but
+## how does he build and design a new kind of representation? build
+## a new structure that didnt exist before? instead of us finding
+## all the edge detection and patterns, he builds the systems to
+## find each individual pattern and is able to represent it
+## internally. he kind of did this with shapes and corners before,
+## but we want it to work with any concepts."
+STATUS: DESIGN CAPTURED, the segment beyond the interpreter; first
+demonstration specced below. The recipe, extracted from every
+minting he has ALREADY done (composites via capture→interrogate→
+graduate; the collective common-mode axis; self-proposed lag
+columns; crystallizer types; the outlier nursery minting C):
+  1. A STRUCTURED LEFTOVER — current vocabulary fails and the
+     failure rhymes (not noise). The RESERVOIR is the trigger organ:
+     it detects that a residual HAS structure before any grammar for
+     it exists ("the difference that makes a difference").
+  2. INTERROGATE in his own currency — where it lives, which
+     channels, joint or marginal, through what combination, what
+     survives scrambling (nulls throughout).
+  3. MINT the failure's invariant as a NEW NODE of one of his
+     structural kinds (composite / axis / group / transform / lag /
+     relation-door / percept).
+  4. DUEL — the mint must explain what old vocabulary could not and
+     lose nothing elsewhere (piecewise supersession, loser kept).
+  5. REUSE — the minted node becomes ordinary vocabulary and the
+     NEXT level's raw material (the keystone's "repeat ad nauseam":
+     each level's leftover is the next level's alphabet).
+The frontier habit chooses WHERE genesis aims (what keeps failing);
+the consideration law guarantees minted representations get
+consulted; every mint ships with its node (registration rule).
+THE HONEST LADDER (say it, never overclaim): new instances (done) →
+new combinations (done: graduate) → new axes/groups (done in spots)
+→ NEW STRUCTURAL KINDS (open research — the signal for a needed new
+kind is a miner-named failure class that no composition of existing
+kinds clears; not a promised feature).
+FIRST DEMONSTRATION, specced: raw pixel-style grids, ZERO pre-built
+detectors — predict-each-cell-from-neighbors fails structurally at
+contrast lines → miner names the contrast invariant → EDGE minted;
+loop climbs: edge-prediction fails at bends → CORNER; corners fail
+to close → SHAPE. Success = re-deriving the shapes-and-corners
+result with none of our hands; controls: scrambled grids mint
+NOTHING, and every mint beats its null. What he did before with our
+help, done again with none — the mission sentence as machinery.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
