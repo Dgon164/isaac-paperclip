@@ -1040,3 +1040,112 @@ interrogation at scale → effect entities (D9, the engineer's core) →
 SRBench (the differentiated lane).
 
 
+
+### RECURSIVE POOLS — group and sibling nets (owner, 2026-07-15, the
+### arc's next rung): "that's what the matrix was supposed to be but
+### it can only represent 2d relations. what if we recursively
+### applied these pools to find relational information about the
+### structures themselves."
+WHY THE MATRIX CAPPED: a matrix IS pairwise relation materialized —
+higher-order structure (relations among relations, group-of-groups,
+sibling patterns) needs reification + recursion, not bigger tables:
+represent the structure as a thing with descriptors (its constants,
+its crystal, its doors — the keystone move), and relations among
+structures become ordinary channels one level up; pairwise at level
+k+1 covers arbitrary order at level k. Pools are LEVEL-AGNOSTIC by
+construction (a frozen projection does not know what its channels
+mean), so the proven instrument climbs unchanged — only the
+world-builder changes. Per-level laws: nulls must be LEVEL-MATCHED
+(scramble the episode alignment of descriptors, not raw rows), and
+the hard law holds per level (pools point; mints prove themselves
+with pools removed).
+RECEIPT — probe-proven same day (experiments/pool_relations_probe.py,
+10/10, 6.2s): 10 groups x 240 episodes, each group a clean level-0
+law y=a_g*x; planted relation a_C = a_A * a_B (product: marginally
+invisible). Level 0: 20/20 quiet — the relation does not live in raw
+data (exact road first; run-1 wrong-kept: pooling a machine-zero
+residual is ill-posed). Level 1: pool screams (+0.536 vs null99
+-0.431); ablation names EXACTLY {A,B} of 9 candidates (0.93/1.00 vs
+<=0.015, thr 0.103); marginal correlation blind (0.110 vs 0.189);
+scrambled alignment quiet AND discover refuses. GENESIS closes with
+pools removed: discover() on descriptors mints '+1.00*x0*x1' at
+2.2e-15; 12 held-out episodes predicted to 1.8e-15, COMPOSED through
+the level-0 law down to raw values. What the matrix could not hold,
+found by recursion, named by ablation, minted readable, proven
+without the scaffolding. Level 2+ follows by induction: a minted
+relation node has descriptors too.
+
+### THE DROP ALGEBRA — junction types from ablation patterns (owner
+### framing 2026-07-15: "from an algebra structure this makes
+### sense... compare how parts get transformed compared to base to
+### see how they abate"; assistant sharpening, now PROBE-SETTLED:
+### ablation drops measure NECESSITY, not ownership — and the
+### deviation from additivity is itself the diagnostic).
+For a contributing pair (i,j): S = d_i + d_j - d_ij (solo drops vs
+both-permuted pair drop), judged against decoy band + a CALIBRATED
+instrument bias (a planted known-additive pair measures the tanh
+channel-mixing bias — 0.0052 of pair scale, measured not hand-set).
+S ~ 0 -> ADDITIVE; S >> 0 -> SYNERGY (jointly necessary: each solo
+carries the whole signal's death warrant); S << 0 -> REDUNDANCY
+(either suffices: solos subadditive, pair drop ~ capture). The
+classifier runs BEFORE enumeration and may only inform search ORDER,
+never admission (the Fisher law: informers do not judge).
+RECEIPT (experiments/pool_drop_algebra_probe.py, 8/8, 9.2s):
+additive world S=-0.073 in band ±0.075 -> ADDITIVE, parts named
+exactly; synergy world S=+1.452 vs ±0.206 -> SYNERGY, solos 1.49/1.44
+on capture 0.914; redundancy world S=-0.435 vs ±0.081 -> REDUNDANCY,
+pair 1.566 ~ capture 0.997 over subadditive solos 1.13; 0 false
+names; twin visibility measured (solo ablation SAW both twins at
+0.05 twin-noise, asymmetrically 0.92/0.21 — the predicted blindness
+did not occur at this correlation; tighter twins go on the attack
+list). Wrong-kepts in the docstring: run 1's shared-twin world
+contamination; the saturation/mixing bias invisible to no-signal
+nulls, cured by in-probe calibration.
+
+### E1 — THE BRIDGE TO LANGUAGE, probe-proven (owner question
+### 2026-07-15: "how do we test this on non mathematical structures?
+### like english?"): pools never worked on math — they worked on
+### CHANNELS, and a sentence-event's reading (voice, tense,
+### decoration, word seats) is a channel vector the moment features
+### become INDICATORS (never ordinals — re-encoding-invariance law).
+RECEIPT (experiments/pool_conjunctive_frontier_probe.py, 8/8 x 3
+seeds, 11s; seed-sweep arg for big boxes): planted HIDDEN AGREEMENT
+rule — fail iff XOR(voice=passive, tense=perfect), 5% verdict noise.
+XOR at 50/50 has PERFECTLY FLAT marginals, so mine_commonality
+(the frontier habit's own miner, a MARGINAL statistic) is blind BY
+THEOREM — measured 3/3 seeds naming nothing. The pool funnel on the
+same receipts: screams (+0.64..0.70 vs null ~-0.2), grouped ablation
+names exactly {voice, tense} (decoy-feature null), drop algebra
+stamps SYNERGY (S ~ +1.2 vs band ~0.08), and articulation collapses
+to a 2x2 table read: XOR cells recovered exactly, held-out verdict
+accuracy 0.91-0.96 = the noise ceiling — enumeration shrunk from 2^k
+to one pair. Agreement control (marginal cause deco=exclaim): BOTH
+instruments find it; scrambled verdicts: BOTH quiet; innocents named
+0/3 worlds. CONSEQUENCE FOR THE LIVE MIND: conjunctive frontiers in
+his practice history are invisible to the current frontier habit;
+E3 (desktop, needs the account) = run the pool over his real fat
+failure receipts and see what marginal mining never saw. E2 next:
+hidden long-range grammar rule via role-indexed lag channels; mint
+through the told-rule road; prove by generation, pools removed.
+
+## THE WRITEUP LAW (owner, 2026-07-15: "we need to make sure that we
+## are doing thorough writeups and post evals. i want to know what is
+## happening in the code, what is being found, what the structures
+## look like, this is where we get into the research. what is being
+## built and structured that i missed, how is it being represented,
+## and how well does it perform or break.")
+Every build campaign and every evaluation ends with a RESEARCH
+WRITEUP — plain language, internal labels translated, part of the
+deliverable, never optional, never just a verdict count:
+  1. WHAT WAS BUILT — the mechanism in plain words.
+  2. WHAT THE STRUCTURES LOOK LIKE — show the shape itself (a
+     sketched table, an example row, the actual equation), not only
+     its name.
+  3. HOW IT IS REPRESENTED — what form the information takes and
+     what receipts it carries.
+  4. WHAT WAS FOUND — the findings, complete numbers.
+  5. HOW IT PERFORMS AND WHERE IT BREAKS — boundaries and failure
+     MECHANISMS explained, not just counted.
+Verdict sheets (the strict WORKS/PARTIAL/BROKEN tables) remain; the
+writeup is the research narrative on top of them. First instance:
+RESEARCH_WRITEUP_2026-07-15_POOLS_AND_VERDICT.md (dc docs).
