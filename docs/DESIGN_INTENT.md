@@ -1237,3 +1237,36 @@ Keystone reading: a container is itself a representation — a node
 whose doors scope which facts are IN FORCE; ABSOLUTE IS A MYTH made
 structural (truth was already relative; containers give the
 relativity a home address).
+
+### THE OUTLIER'S OWN LAW — source modeling (owner, 2026-07-15
+### night): "is it able to isolate and quantify the outlier
+### componants? like if the outlier is a plus something else, can it
+### quantify that something else to create a correlation pattern and
+### identify the model of the source?"
+STATUS: DESIGN CAPTURED; build queued (composes with the rival-form
+duel as the F3 leak-class cure; the strongest form of the standing
+EFFECT ENTITIES item, open since 07-04). THE ROAD, all existing
+organs pointed one new way: (1) ISOLATE — audit flags past k*floor
+under the admitted law, receipts kept; (2) QUANTIFY — deviation
+d_i = y_i - law(x_i) in UNITS, first-class, kept; (3) INTERROGATE —
+the funnel on the deviations: commonality miner (what outlier rows
+share), pool (does d have structure vs X?), floors ON d (is the
+deviation itself quantized?); (4) MODEL THE SOURCE — discover() on
+the deviations. THE THREE-WAY VERDICT this buys: deviations WITH A
+LAW = a SECOND SOURCE, minted as its own node (y = law1 +
+law2*[condition]) — NEWS, not error (the audit's NEWS class earns a
+mechanism); deviations with GRAIN but no law (exactly +-1, +-10 —
+digit-shaped) = MIS-ENTRY (the typo concept generalized: interpreted,
+quarantined, never banked); NEITHER = honest unknown, dossier kept,
+frontier fed. Accounting extends: articulated + source-articulated +
+captured + noise = 100. IMMEDIATE PAYOFF, measured need: the port
+gate's F3 leak class (poison absorbed into constants, examiners
+honestly quiet) falls to exactly this road — isolate the 6 poisoned
+cells, deviations exactly +-1 on grain 1 -> mis-entry source ->
+constants refit on clean rows -> exact law recovered. Attack list on
+build: the source model must beat scrambled-deviation nulls (mint
+nothing on shuffled outliers); selection over isolation thresholds
+(k*floor sweep, family-wise); a source law must survive with the
+flagging law REFIT (no circular flag->model->flag loops); NEWS vs
+mis-entry boundary probed at mixed worlds (a lawful source ON a
+grain).
