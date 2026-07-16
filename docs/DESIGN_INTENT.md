@@ -1210,3 +1210,30 @@ promotion. HONEST LADDER: hinge, sign, remainder/parity NAMED but
 deferred. TODO (owner, same message): MULTI-STEP PROCESSING /
 CHAINING — the interpreter segment's kernel-loop half, now explicitly
 ordered; routing receipts here are its seed.
+
+### CONTAINERS — world-scoped truth (owner, 2026-07-15 night): "we
+### still need to make sure the containers are working. worlds as you
+### put it. that certain details or facts change depending on the
+### world or situation you put it in. fiction world harry potter has
+### different rules than fiction world hail mary."
+STATUS: REQUIREMENT CAPTURED; verification + attack-first probe
+QUEUED. The ask: facts carry their CONTAINER; the same question
+answers differently per ACTIVE world; cross-container disagreement is
+NOT contradiction (different worlds legitimately differ) while
+in-container contradiction still flags; and fiction NEVER leaks into
+the base world (anti-poisoning — the practice corpus contains
+fiction; container hygiene protects the live account). PIECES THAT
+EXIST: word senses (one word, many senses, each with verdicts);
+should/can context-indexed badges; the value gate's convention-vs-
+truth routing; vet_intake's received-vs-expected. MISSING (verify,
+then build): a first-class world/container node facts door onto;
+retrieval routed by the active container (the execution cycle's
+routing pointers — which world is OPEN is routing state); container
+provenance stamped at intake. PROBE SHAPE: plant two fiction
+containers with CONFLICTING rules + a base world; same questions
+under each; leakage 0 both directions; in-container contradictions
+still caught; container-less facts land in base WITH a receipt.
+Keystone reading: a container is itself a representation — a node
+whose doors scope which facts are IN FORCE; ABSOLUTE IS A MYTH made
+structural (truth was already relative; containers give the
+relativity a home address).
