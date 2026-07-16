@@ -850,6 +850,39 @@ mute net — the thing this project exists to not be. Lenses are
 scaffolding: they say look here, the loop builds the readable
 representation, the scaffolding comes down.
 
+## THE 13-INCH FOOT — trust flows up from measurements, never down
+## from the instrument (owner law, 2026-07-15, closing the keystone
+## arc): "bottom line, dont trust the instrument, trust the
+## measurements. if they are all wrong, you cant get a correct
+## answer, but you can get a correct relationship. a foot that is 13
+## inches is useless for building a house, but perfect for measuring
+## things."
+The epistemics of the whole machine, one sentence: RELATIONSHIPS
+SURVIVE BAD RULERS; ABSOLUTES NEED ANCHORS. Instances already
+obeying it: Kepler's T = a^1.5 found in arbitrary units (the FORM is
+ruler-free, the constant is instrument-relative); cross_check needs
+no calibration at all (a ledger measured with any foot must still
+sum — balance is pure relationship); registration/comparison-as-
+nulling (relations, not absolutes); the affine consensus
+recalibration (fixing the foot by internal agreement while the
+law's form stands); triangulate's halves road (two instruments'
+leftovers agreeing across a join, no shared calibration needed).
+AND THE THEORY OF THE RESERVOIR: a frozen random lens is the
+ultimate 13-inch foot — uncalibrated, absolutely meaningless,
+relationally perfect ("this residual has structure"; "these two
+channels contribute differently") — the owner's law is WHY the
+instrument is legitimate. The two boundaries the law draws, both
+already machinery: (1) THE HOUSE — interfacing with the outside
+world (real units, exactness stamps) requires an ANCHOR no internal
+cleverness can conjure = the ASK posture ("no ruler, no perfect");
+(2) THE FOOT MUST BE CONSISTENTLY 13 — an instrument wrong
+DIFFERENTLY each time poisons even relationships, so consistency is
+itself MEASURED never assumed (the repeats road + consensus
+ejection: the instrument earns its consistency from its own
+measurements' agreement, and is refused when it doesn't). Trust the
+measurements; make even the instrument earn its keep from them —
+the no-importance-telling law in metrology clothes.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")
