@@ -1149,3 +1149,46 @@ deliverable, never optional, never just a verdict count:
 Verdict sheets (the strict WORKS/PARTIAL/BROKEN tables) remain; the
 writeup is the research narrative on top of them. First instance:
 RESEARCH_WRITEUP_2026-07-15_POOLS_AND_VERDICT.md (dc docs).
+
+### THE BASIC MECHANISMS — comparison words + routable tools (owner,
+### 2026-07-15 night): "does it have a way to show simple logic
+### structures? if a-b is <0 (negative), then b>a? ... im sure there
+### is some computer something or other that is simpler than that
+### too." And the build order: "hes got tool structures, and we have
+### a way to route through other concept nodes and tools, so what if
+### we did that? ... adding these basic tools and any other basic
+### computer mechanism to his toolkit will be extremely helpful. ill
+### leave the implementation and design to your discretion as long
+### as it matches the rules."
+STATUS: PROBE-PROVEN (basic_mechanisms_probe.py, 12/12, 29s, dc);
+ENGINE PROMOTION QUEUED (with the S2b port). One mechanism family,
+TWO DIALECTS of the keystone: WORDS for the equation grammar (atoms:
+the CREASE |a-b| — max/min become plain algebra, max=(a+b+|a-b|)/2,
+the owner's a-b insight with direction dropped; the SWITCH [x>t],
+thresholds PROPOSED on ruler marks + deciles, never hand-set — the
+ruler discipline applies to thresholds because they are constants;
+GATED PRODUCTS [f]*xi*xj for binary channels) and TOOLS that route
+(compare/larger/smaller/switch with receipt chains — larger() calls
+compare(): the a-b<0 wiring made visible). THE BRIDGE: identity
+recognition doors a mint onto its tool node (the minted
+0.5*x0+0.5*x1+0.5*|x0-x1| IS larger(x0,x1), verified to 0 on fresh
+rows) — two representations of one law, joined. RECEIPTS: the max
+world (the eval's one BROKEN) now mints machine-exact in one line;
+the step world mints 2*x0 - 1.5*[x1>2] + 1.5*[x1>1] with thresholds
+found AT the marks 1 and 2, UNDERSTOOD at the told floor; the
+blended conditional's exact 5-term form recovered by the DEEP EXACT
+ROAD (held-out rms 3e-15; 0/30 false stamps) after run-2 falsified
+greedy assembly (KEPT: the wall is the search, not the vocabulary —
+the old judge with the same new words still shipped a confident
+impostor). Vocabulary cost MEASURED, not assumed: safety 0/20 false,
+availability 20/20 — no toll at these scales. PORT LESSONS filed:
+(a) dedupe affine-clone candidates globally (on integer data
+[x>6]==[x>6.5]; a binary flag's powers/lags are copies — clones vote
+as a bloc and starve real terms out of prefilters); (b) the deep
+exact road (k<=5, clone-deduped top-20) joins the port; (c) the
+rival-form duel remains the availability cure under noise/poison;
+(d) mechanisms register as TOOL NODES under the consideration law at
+promotion. HONEST LADDER: hinge, sign, remainder/parity NAMED but
+deferred. TODO (owner, same message): MULTI-STEP PROCESSING /
+CHAINING — the interpreter segment's kernel-loop half, now explicitly
+ordered; routing receipts here are its seed.
