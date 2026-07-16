@@ -651,6 +651,22 @@ trajectories and stores only what refuses to vary.
       machine-exact; the 9 remaining = two named classes (poison
       absorbed into constants — rival-form duel queued; crease worlds
       — sayable after the mechanisms atoms promote).
+  - **THE COMPARISON WORDS (promotion #12, 2026-07-15)**: the
+    vocabulary gains the CREASE atom `|xi-xj|` (max/min become
+    sayable: max(a,b) = (a+b+|a-b|)/2 — minted as exactly that, 3/3
+    machine-exact) and the SWITCH atom `[xi>t]` with thresholds
+    proposed FROM the data (deciles + 0.5-mark ladder, ≤16/var,
+    admission-nulled like every atom; thresholds are MARKS — never
+    refined by multiplicative glide). The exact road escalates to
+    k≤5 terms on small data (n_train ≤ 100 — where exact conditional
+    rules live) with crease seats in its diversity-guaranteed
+    shortlist. Sibling TOOLS as organs: `compare(a,b,tol)` (sign of
+    a-b with receipt), `larger`/`smaller` (routed THROUGH compare —
+    receipt chains, the execution cycle's smallest trace), `switch`
+    (the routing primitive). Duel re-run: wrong-confident 74→2/100;
+    the blended conditional and max worlds mint their exact forms.
+    Cost said plainly: discover at n=400,d=5 averages ~8.8s/call with
+    the bigger vocabulary (efficiency-ledger pass queued).
     `PARTIAL` / `CAPTURED` (nearest-exemplar beats permuted null —
     incl. per-feature 1-D fallback; caught, not said; no nets) /
     `NO RULE` unchanged. Since 2026-07-03 a real partial equation is

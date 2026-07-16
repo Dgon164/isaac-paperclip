@@ -1179,7 +1179,12 @@ RESEARCH_WRITEUP_2026-07-15_POOLS_AND_VERDICT.md (dc docs).
 ### leave the implementation and design to your discretion as long
 ### as it matches the rules."
 STATUS: PROBE-PROVEN (basic_mechanisms_probe.py, 12/12, 29s, dc);
-ENGINE PROMOTION QUEUED (with the S2b port). One mechanism family,
+PROMOTED 2026-07-15 night (#12 [EXPERIMENTAL]: crease + switch atoms
+in the enumerator, thresholds data-proposed on marks and never
+refine-glided, deep exact road k<=5 on small data with crease seats,
+compare/larger/smaller/switch as receipted organs; battery 8/8, duel
+74->2/100 wrong-confident with F5 max ZEROED by vocabulary, self-test
+11/11; cost 8.8s/call at n=400 d=5 — efficiency pass queued). One mechanism family,
 TWO DIALECTS of the keystone: WORDS for the equation grammar (atoms:
 the CREASE |a-b| — max/min become plain algebra, max=(a+b+|a-b|)/2,
 the owner's a-b insight with direction dropped; the SWITCH [x>t],

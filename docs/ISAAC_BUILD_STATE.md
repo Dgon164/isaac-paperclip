@@ -1054,3 +1054,29 @@ correctly) and a naive repeats road was poison-inflatable (the cured
 consensus-ejection _floor_repeats already existed) — never ship a
 rival reader for an organ that exists. Gate harness:
 experiments/verdict_port_gate.py (runs/verdict_gate_*.json).
+
+## 2026-07-15 (night): THE COMPARISON WORDS PROMOTED (promotion #12 [EXPERIMENTAL])
+The mechanisms enter the engine both ways. VOCABULARY: the CREASE atom
+|xi-xj| (max/min become sayable: max = (a+b+|a-b|)/2) and the SWITCH
+atom [xi>t] with thresholds proposed FROM THE DATA (deciles + the
+0.5-mark ladder per var, capped 16/var by stride, every proposal
+facing the admission null; thresholds are MARKS — excluded from the
+multiplicative refine glide after it slid one out of range into a
+constant column, wrong-kept). The exact road gains DEEP ESCALATION
+(k<=5 when n_train<=100 — exact conditional rules live in small data)
+and CREASE SEATS in its shortlist (the diversity rule's fourth
+sighting: the step flood crowds |xi-xj| out of a correlation top-N).
+TOOLS: compare/larger/smaller/switch are engine organs with receipt
+chains — larger routes THROUGH compare (the owner's a-b<0 wiring; the
+execution cycle's smallest trace). BATTERY 8/8
+(mechanisms_promotion_battery.py): max mints the textbook identity
+(+0.50*x0 +0.50*x1 +0.50*|x0-x1|, machine-exact, 3/3); the step world
+mints thresholds AT 1 and 2; the blended conditional mints its exact
+5-term form at n=48 AND n=96; noise 0/10 false; availability 5/5.
+DUEL RE-RUN: wrong-confident 74 -> 2/100 (F5 max ZEROED by vocabulary,
+not guards; F3 4->2), availability 20/20, Kepler intact. COST, said
+plainly: discover at n=400 d=5 now averages 8.8s/call (max 24s) — the
+step atoms make admission scans heavier; the efficiency ledger's
+measure-first pass is the named home for reclaiming it. Remaining 2
+leaks = poison-into-constants; cures queued: rival-form duel + THE
+OUTLIER'S OWN LAW (owner design, same night).
