@@ -883,6 +883,25 @@ measurements' agreement, and is refused when it doesn't). Trust the
 measurements; make even the instrument earn its keep from them —
 the no-importance-telling law in metrology clothes.
 
+COMPLETION (owner, same night): **"absolute is a myth. everything is
+relative, including meaning."** This dissolves the boundary's
+seeming exception: the HOUSE's anchor is not an absolute either —
+a standard foot is a foot everyone AGREED on; building never needed
+an absolute ruler, only rulers that agree with each other. So the
+ASK asks for the CONVENTION, not for reality — and the value gate
+already routes exactly this (convention lesson vs truth claim). And
+meaning: the machine embodies it structurally — IDENTITY = RELATIONS
+(already law on this sheet; a concept IS its doors); the typo door
+works because meaning lives in relations, not letters; the 7 is
+partly not-a-1 (contrast constitutive); and the null discipline is
+the deepest instance — REAL is defined as beats-its-own-scrambled-
+self, realness itself measured relatively. Sharpening (assistant's,
+offered): relative ≠ arbitrary — what earns "true" in Isaac is WHAT
+SURVIVES across re-representations, scramblings, and disagreeing
+instruments; invariance under change of ruler is the only
+absolute-like thing there is, and it is built of relations all the
+way down.
+
 ## The reuse checklist — ask these before writing ANY new mechanism
 1. **Which existing organ already does this?** (Check §capabilities below.
    The answer is usually "one of them, turned toward a new input.")

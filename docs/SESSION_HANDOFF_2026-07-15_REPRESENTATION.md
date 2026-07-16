@@ -16,7 +16,7 @@ directive's discipline, applied to itself).**
 3. `DATA_OPS_SEGMENT_PLAN.md` §2b — the verdict rewrite spec with
    its five hard port requirements.
 
-## THE FIVE STATEMENTS (owner, 2026-07-15, one evening)
+## THE SIX STATEMENTS (owner, 2026-07-15, one evening)
 1. KEYSTONE: "isaac is a representation engine... information is
    represented, it is processed in some way in which it can
    represent something else, repeat adnauseum."
@@ -35,6 +35,11 @@ directive's discipline, applied to itself).**
    measurements... you can get a correct relationship" —
    relationships survive bad rulers; absolutes need anchors (ASK);
    consistency is measured, never assumed.
+6. ABSOLUTE IS A MYTH: "everything is relative, including meaning"
+   — the anchor itself is a CONVENTION (agreed rulers, not cosmic
+   truth; the value gate already routes convention vs truth-claim);
+   identity = relations; real = beats-its-own-scrambled-self;
+   invariance under change of ruler is the only absolute-like thing.
 
 ## WHAT ALREADY EXISTS TO BUILD FROM (no speculation — all green)
 | piece | where | state |
