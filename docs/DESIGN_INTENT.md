@@ -1221,8 +1221,21 @@ ordered; routing receipts here are its seed.
 ### put it. that certain details or facts change depending on the
 ### world or situation you put it in. fiction world harry potter has
 ### different rules than fiction world hail mary."
-STATUS: REQUIREMENT CAPTURED; verification + attack-first probe
-QUEUED. The ask: facts carry their CONTAINER; the same question
+STATUS: PROBE-PROVEN 8/8 (containers_probe.py, 2026-07-15 night,
+<0.1s) — and the mechanism was ALREADY IN THE HOUSE: a container is
+a DOOR TAG saying which facts are IN FORCE (add_door(tag='in:world'),
+get_door_tags — zero new primitives). One concept node carries every
+world's doors (identity=relations; brooms sweep in base and fly in
+harry-potter on the SAME node); the active container is routing
+state; inheritance is ONE-WAY (fiction overlays base — HP water
+still boils at 100C, WITH an inherited-from-base receipt; base never
+inherits from fiction = the anti-poisoning wall, measured: base
+byte-identical after full fiction ingestion, 0/7 drift, 0/5 leaks
+both directions); cross-world difference raises no contradiction
+while in-world contradiction still flags (both kept); container-less
+facts land in base with a receipt. ENGINE PROMOTION QUEUED: active-
+container state on the mind, container= on teach, routing in the
+reasoning layer, provenance stamping at intake (vet_intake's door). The ask: facts carry their CONTAINER; the same question
 answers differently per ACTIVE world; cross-container disagreement is
 NOT contradiction (different worlds legitimately differ) while
 in-container contradiction still flags; and fiction NEVER leaks into

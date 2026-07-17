@@ -572,3 +572,47 @@ worlds with known truths.
 v1 thresholds (5*MAD, 0.35 cap, 0.8 grid fraction, 0.15 trim) are
 hand-set — the standing tests-over-thresholds debt, filed. One
 unreproduced self-test crash filed as an open anomaly (rerun clean).
+
+---
+
+## PART 10 — CONTAINERS: world-scoped truth (probe-proven, 8/8)
+
+### The owner's requirement
+"Certain details or facts change depending on the world you put it
+in. Fiction world Harry Potter has different rules than fiction world
+Hail Mary." The live account's practice corpus contains fiction, so
+this is a wall, not a feature request.
+
+### The finding: the mechanism was already in the house
+A container is a DOOR TAG — `in:harry-potter` — saying which facts
+are IN FORCE. Zero new primitives: the engine's door tags and tag-
+filtered lookups, pointed at worlds for the first time. The design:
+```
+teach in base:          brooms —are-for→ sweeping   [in:base]
+teach in harry-potter:  brooms —are-for→ flying     [in:harry-potter]
+                        ONE 'brooms' node, both doors, tags decide
+ask(brooms, are-for | base)         -> sweeping
+ask(brooms, are-for | harry-potter) -> flying
+ask(water, boils-at | harry-potter) -> 100C  "inherited from base"
+ask(portraits, do    | base)        -> NOTHING (fiction never leaks)
+```
+Identity = relations, exactly as the keystone says: brooms in the
+kitchen and brooms at Hogwarts are one concept wearing different
+doors, and "which world is open" is routing state — the execution
+cycle's address space.
+
+### Measured, all 8/8
+Per-world answers correct including a three-way conflicting fact
+(stars shine/dim/sing under base/hail-mary/harry-potter);
+cross-world difference raised ZERO contradiction flags while an
+in-world contradiction still flagged (both readings kept); leakage
+0/5 in both directions; inheritance one-way with receipts (fiction
+inherits base; base NEVER inherits fiction); the poisoning guard
+held byte-identical base answers after full fiction ingestion (0/7
+drift); container-less facts landed in base with a receipt saying so.
+
+### What promotion needs (queued, gated)
+Active-container state on the mind, `container=` on teach, container
+routing inside the reasoning layer (today's probe routes at the shim),
+and provenance stamping at intake through vet_intake's existing door
+— so the practice loop can read fiction safely before E3 ever runs.
