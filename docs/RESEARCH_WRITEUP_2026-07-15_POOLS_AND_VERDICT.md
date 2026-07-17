@@ -747,3 +747,48 @@ flipped a champion whose recent fortunes reversed while full history
 still favored it — recency is a recorded choice, not an assumption.
 With this, the FLOW STRUCTURES design (presence / consideration /
 adaptation) is complete in the engine. Self-test 11/11.
+
+---
+
+## PART 13 — THE POOL CURE LIST (E3's preflight, 8/8)
+
+### Five filed cures, re-measured against the exhibits that earned them
+1. FAMILY-WISE SCAN NULL: scanning ten targets under the old
+   per-target bar bought a confident false scream (p=0.003, upheld by
+   the verifier). Under the family bar (max capture across all
+   targets per permutation): 0/10 false screams on the no-relation
+   world, and the planted target STILL screams past the family bar —
+   power kept, selection paid for.
+2. CONDITIONAL-PERMUTATION NAMING: the correlated innocent (subj
+   riding voice at rho~0.55, named 3/3 under uncorrelated decoys) is
+   now judged against ITS OWN null — permuted within the strata of
+   its most-associated partner (association measured, not assumed):
+   correlation preserved, target-link broken. Result: subj named 0/2
+   (its drop 0.159 vs its own bar 0.179), the true pair named 2/2,
+   and the independent world unchanged. Per-candidate thresholds —
+   the studentization cure shape, delivered.
+3. THE ORDER-3 STATISTIC — with a falsification worth the price of
+   the probe: raw S3 does NOT discriminate (ablated captures go
+   negative by convention, so both worlds inflate). The true
+   signature is the EXCESS OVER THE BEST PAIR: a triple's synergy is
+   exactly the part no pair explains. Measured: triple excess +1.38
+   (1.7x capture), 2-way excess +0.05 — a 25x separation where the
+   raw form had none.
+4. THE BEAT-ALL-PASS GATE: the empty rule that sailed through an
+   absolute 0.90 on the rare conjunction is REJECTED (0.889 vs bar
+   0.931); the honest 3-way table passes (0.942); the XOR world's
+   2x2 passes easily (0.953 vs bar 0.621). Accuracy gates now carry
+   their base rate with them.
+5. THE CHOOSER: two named -> the pair; three or more -> the k-way
+   table road (gated by cure 4); fewer than two -> articulation
+   refused with a receipt. No oracle hints anywhere in the funnel.
+
+### What this unblocks
+E3 — the pool funnel over Isaac's REAL practice receipts, looking for
+the conjunctive frontiers his marginal miner cannot see — now has
+every instrument-side precondition met: family-wise scans, correlated-
+feature-safe naming, order-aware junctions, base-rate-honest
+articulation, hint-free choosing, and (from promotion #14) container
+walls so fiction in the corpus cannot leak. What remains before E3
+runs is not an instrument question: it reads the live account, and
+that is the owner's call.
