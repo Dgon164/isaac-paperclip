@@ -516,3 +516,59 @@ rules live.
   ~8.8s/call (max 24s) at n=400, d=5 — roughly 4x the wordless port.
   Not hidden: the efficiency ledger's measure-first pass is the
   named home for reclaiming it.
+
+---
+
+## PART 9 — THE OUTLIER'S OWN LAW (promotion #13): the duel closes at 0/100
+
+### The owner's question, made machinery the same night
+"If the outlier is a plus something else, can it quantify that
+something else... and identify the model of the source?" Now yes.
+When a law stands but is not machine-exact, discover() isolates the
+rows the law cannot carry, quantifies their deviations IN UNITS, and
+asks what the deviations ARE:
+
+- **A simple form exact on the clean majority** (the rival-form duel
+  fused into the road): a 2-term law machine-exact on 54/60 rows,
+  with the 6 leftovers sitting EXACT grain multiples off it, beats
+  the 16-term fit that had swallowed the poison. Verdict: MIS-ENTRY —
+  the cells are quarantined with receipts (row, value, predicted,
+  deviation), the law superseded by its clean refit. Measured: the
+  poisoned worlds now return the TRUE constants at 7e-15.
+- **A law of their own**: enough flagged rows get their own
+  discover() — the deviations minted `+0.41*x1` in the planted
+  second-source world, while the scrambled-deviation control minted
+  nothing. Verdict: SECOND SOURCE — news, not error, recorded on the
+  law's node. The anomaly had a model; something was discovered.
+- **Neither**: deviations kept on the record, nothing invented.
+
+### The final duel
+```
+                    old judge     after #11    #12      #13
+  wrong-confident    74/100        9/100       2/100    0/100
+  true-law found     20/20         20/20       20/20    20/20
+  Kepler n=8         NO RULE       machine-exact ————————————
+```
+Availability never dipped, zero false examiner fires, engine
+self-test 11/11. The complete arc: the JUDGE (who may stamp), the
+WORDS (what can be said), the SOURCE ROAD (what the exceptions are)
+— and the disease measured at 74% on the old engine is at zero on
+worlds with known truths.
+
+### Three bugs found by the battery, each a law now
+1. The k<3 early-return killed the pass exactly when the flexible
+   fit had ABSORBED its poison — the guard belonged below the
+   clean-majority road, not above it. (A flexible fit hides its own
+   contamination; only a simple rival exposes it.)
+2. rival_check's state restore REFIT the constants on the
+   contaminated train and silently re-poisoned the cure on its way
+   out the door — on a mis-entry cure the rival contest is settled
+   by clean-majority exactness, so it is skipped with a receipt.
+3. Isolation must run against SIMPLE RIVAL FORMS, never against the
+   admitted fit alone: with step atoms in the vocabulary, a 16-term
+   fit can absorb point poison entirely (2/6 rows visible). The
+   rival-form duel and the outlier road turned out to be ONE
+   mechanism, not two — the cure list shrank by merging.
+v1 thresholds (5*MAD, 0.35 cap, 0.8 grid fraction, 0.15 trim) are
+hand-set — the standing tests-over-thresholds debt, filed. One
+unreproduced self-test crash filed as an open anomaly (rerun clean).

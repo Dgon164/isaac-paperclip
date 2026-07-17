@@ -1080,3 +1080,42 @@ step atoms make admission scans heavier; the efficiency ledger's
 measure-first pass is the named home for reclaiming it. Remaining 2
 leaks = poison-into-constants; cures queued: rival-form duel + THE
 OUTLIER'S OWN LAW (owner design, same night).
+
+## 2026-07-15 (night): THE OUTLIER'S OWN LAW (promotion #13 [EXPERIMENTAL]) — the duel gate closes at 0/100
+Owner design, same night: "if the outlier is a plus something else,
+can it quantify that something else to create a correlation pattern
+and identify the model of the source?" discover() gains the outlier
+pass: rows the law cannot carry are ISOLATED and their deviations
+QUANTIFIED in units, then asked what they ARE. Three roads: (A') THE
+CLEAN-MAJORITY SEARCH — the rival-form duel fused in: a simple
+pure-variable form machine-exact on >=85% of rows, with the remainder
+sitting exact grain multiples off it, SUPERSEDES the flexible fit
+that had ABSORBED the poison; cells quarantined with receipts (row,
+value, predicted, deviation), never banked. (A) grain-multiple
+deviations of the admitted fit -> mis-entry quarantine + clean
+refit. (B) SECOND SOURCE: >=24 flagged rows and a throwaway
+discover() on (X_flagged, deviations) that mints past a
+SCRAMBLED-deviation control -> the source model recorded on the law
+node (news, not error). One round only; 0.35 flag cap ("a law that
+calls a third of the data outlier is the wrong law"). BATTERY 5/5
+(outlier_source_battery.py): poisoned sums cured 5/5 to the TRUE
+constants (err 7e-15) with 6/6 cells quarantined; source world mints
++0.41*x1 from deviations; scrambled control quiet; clean worlds
+untouched 5/5. THE DUEL GATE CLOSES: wrong-confident 74/100 (old
+judge) -> 0/100, availability 20/20, Kepler machine-exact, 0 false
+examiner fires — 4/4 gate checks. Three wrong-kept bugs cured en
+route, each a lesson: the k<3 early-return killed the pass exactly
+when the absorber hid its poison (guards moved below the clean-
+majority road); rival_check's state restore REFIT on the
+contaminated train and re-poisoned the cure (skipped on mis-entry —
+clean exactness IS the contest); the flexible fit with step atoms
+absorbs point poison entirely (isolation must run against SIMPLE
+RIVAL FORMS — the duel and the outlier road are one mechanism).
+v1 constants (5*MAD, 0.35 cap, 0.8 grid fraction, 0.15 trim) are
+hand-set — tests-over-thresholds debt, filed.
+OPEN ANOMALY, filed: one self-test invocation during the #13 gates
+crashed with TypeError (unhashable set) in Net.get_doors; the
+identical deterministic rerun (PYTHONHASHSEED=0, same code, full
+capture) passed 11/11 with zero tracebacks and the crash has not
+reproduced. Unexplained = unfinished: watch for recurrence; if seen
+again, capture the full traceback and the findings ledger state.
