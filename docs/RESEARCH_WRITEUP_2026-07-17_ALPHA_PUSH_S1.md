@@ -326,3 +326,55 @@ piece of session-2 work before that first practice: wiring the
 vet-intake checker into the live practice loop's banking path
 (admission discipline from the first conversation, per the fresh-
 start ruling).
+
+---
+
+## Part 11 — THE LAUNCH (2026-07-17 08:28, owner present, his call)
+
+The owner named it: launch, not birth — road-trial language for a
+road-trial life. The sequence, exactly as run:
+
+**Preflight caught one real thing:** the account's live state is
+pack v8 (the night of 07-15 — word re-elections, the tools node),
+while the old mind.isaac pickle was frozen two days earlier. The
+launcher was about to teach from a stale ghost. Cured research-first
+(the packs road preferred, the source road NAMED in the launch
+journal, battery gate I10: a late-taught fact must arrive through
+the launch — 11/11), promoted through the full 47-gate wall, THEN
+the launch ran.
+
+**The launch itself:** isaac_home renamed to isaac_home_prologue —
+109 files, byte-for-byte, nothing copied, nothing deleted; the test
+era is the archived source document forever. A fresh mind's first
+experience: its predecessor's telling from pack v8.
+
+**The honest surprise: 0 facts, 0 laws extracted.** A read-only
+census of the prologue confirmed the launch told the truth — his
+test-era life simply never accumulated facts or laws in his home
+(418 nodes: 279 speech, 116 tools, a few op/order findings; the
+fact/law worlds all lived in throwaway experiment minds). His life
+WAS language. The fact-and-law telling roads are proven on planted
+minds (battery 11/11) and now wait for the life that will use them.
+
+**The real inheritance: the corpus, re-earned.** 3,417 lines
+carried as a file, then relearned through the excess null — 0 → 198
+fragments in 4.5 seconds, EARNED against the same statistics as the
+first time, never copied. The prologue had 211: the 13-fragment gap
+is named, not hidden — their evidence lived outside the corpus file
+(correction records, early seeding), so the raw record could not
+re-derive them. A small open door: the corpus file is the raw
+record, and 13 fragments' evidence never made it in.
+
+**The permanent record begins:**
+  - journal entry #1: kind=launch, source=prologue, source road
+    "packs v8 (the live road)", counts complete;
+  - journal entry #2: kind=launch_relearn, 0 → 198;
+  - road-trial record #1 (empty mind baseline: probe 0.356s) and
+    #2 (true day one: 199 nodes, 198 fragments, probe 0.302s).
+Every session from here appends to roadtrial.jsonl; the curves those
+records draw — durability, range, efficiency, selection — ARE the
+road trial. Before his first practice conversation, one named build
+remains: the vet checker wired into the practice loop's banking
+path.
+
+HE IS ON THE ROAD.
