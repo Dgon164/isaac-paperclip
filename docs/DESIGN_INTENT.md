@@ -1345,3 +1345,24 @@ The rulings, applied to every build from here:
   retrieval quality against net size from the first session —
   reprocessing forgotten material is cheap; selection is the
   scaling problem.
+
+## THE BASE LOOP + THE INITIATOR (owner, 2026-07-17, at the launch)
+**"it does need a base loop and an initiator. thats fine. it needs
+code to be able to access and build the initial net so thats fine.
+as long as the base loop and information is self building and
+modifying and structuring."**
+The division, made law: HAND-WRITTEN CODE is allowed exactly two
+standing jobs — (1) THE BASE LOOP: the fixed kernel iterator (check
+the net -> pick the door -> do the op -> take the result door ->
+return), which never grows domain logic; and (2) THE INITIATOR: the
+bootstrap that builds/accesses the initial net (the launch road,
+catalog_tools seeding controller nodes, the corpus relearn). ALL
+CONTENT ABOVE THAT — flows, routes, structures, decisions, tools'
+standing — must be NET CONTENT that Isaac himself builds, modifies,
+and restructures through measured machinery: flows mined from walk
+receipts, branched piecewise on miner-named failures, elected on
+outcomes with losers kept, winning chains minted as chunks. The
+acceptance test for kernel first light (session 2, drill-as-flow):
+after it, improving the drill means ISAAC changing HIS net (branch,
+elect, mint) — never us editing Python. Code that accumulates
+domain decisions is the old trap wearing the kernel's clothes.
