@@ -215,6 +215,29 @@ def main():
               "fact arrives; road named", ok,
               f"road={rep10['source_road']}, late={a['answers']}")
 
+    # ── I11: the registration rule at day one — a launched mind
+    # carries the CURRENT tools catalog (controller nodes for every
+    # organ), with empty receipts (usage measured on the road, not
+    # inherited). Caught live 2026-07-17: the first launch shipped
+    # 0 tool nodes; the owner's question found it. ──
+    with tempfile.TemporaryDirectory() as td:
+        old_home = os.path.join(td, "old_home")
+        new_home = os.path.join(td, "new_home")
+        os.makedirs(old_home)
+        old.save(os.path.join(old_home, "mind.isaac"))
+        inherit_account(old_home, new_home, mod=mod)
+        m11 = mod.Isaac.load(os.path.join(new_home, "mind.isaac"))
+        n_tools = sum(1 for n in m11.net.meta
+                      if str(n).startswith("tool:"))
+        q = m11.query_tools("teach a fact")
+        rec0 = m11.net.get_meta("tool:discover", "record") or {}
+        ok = (n_tools >= 100 and q["matches"]
+              and rec0.get("used") == 0)
+        check("I11 launched mind carries the CURRENT tools catalog; "
+              "receipts start empty", ok,
+              f"{n_tools} tools; query hit "
+              f"{[m['name'] for m in q['matches'][:2]]}")
+
     print("=" * 70)
     print(f"BATTERY: {PASSED} passed, {FAILED} failed of "
           f"{PASSED + FAILED}")

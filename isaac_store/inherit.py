@@ -168,6 +168,13 @@ def inherit_account(old_home, new_home, mod=None, source=None):
     rep = ingest_teachings(fresh, teachings,
                            source=source or old_home)
     rep["source_road"] = source_road
+    # the registration rule at day one (owner, 2026-07-17: "we need
+    # tools (controller nodes) and everything for information and
+    # logic and decisions to flow through it"): the CURRENT engine
+    # catalog seeds the tools node — fresher than inheriting the
+    # prologue's (new organs join between lives); use/outcome
+    # receipts start empty, measured on the road, never inherited
+    rep["tools_cataloged"] = fresh.catalog_tools()
     os.makedirs(os.path.join(new_home, "transcripts"), exist_ok=True)
     old_corpus = os.path.join(old_home, "sparring_corpus.txt")
     if os.path.exists(old_corpus):
