@@ -625,3 +625,53 @@ container intact). Self-test 11/11 — the tagged doors disturbed
 nothing. The one deliberate deferral, standing: stamping containers
 at the LIVE account's intake is the owner's call, since it touches
 his practice loop.
+
+---
+
+## PART 11 — THE EXECUTION CYCLE RUNS (chaining segment, first build, 10/10)
+
+### What was built
+The owner's three sentences — "do op, take result door, or return to
+main program; each node can act like a function generator" — as a
+working walker over a REAL pipeline, flows stored as net content:
+
+```
+flow:triage
+  step:floor     read_floor(y, X)          -> next
+  step:discover  discover(X, y)            -> [verdict==UNDERSTOOD]? validate
+                                              else refuse (default door)
+  step:validate  apply_law on held-back rows
+                 -> [rms SMALLER than 3*floor, via compare()]? report_pass
+                    else report_flag
+```
+A flow is nodes and doors like everything else — same substrate as
+content, different altitude — and its step specs are readable meta:
+an equation of PROCESS, inspectable like any law.
+
+### Measured, all 10/10
+- A true-law world walks the green road end to end; a noise world
+  takes the refusal road, and the not-taken door carries its
+  receipt verbatim: "bypassed validate: verdict=='UNDERSTOOD'? got
+  'NO RULE' -> False" — the consideration law at the routing layer.
+- The branch predicate routes THROUGH the compare organ: the door
+  receipt contains compare's own sign verdict
+  ("smaller(4.7e-15, 1) via sign(...) -> -1 -> True") — the
+  comparison words as routing predicates, exactly as captured.
+- Return-to-main is guaranteed: a deliberately cyclic flow halts at
+  the hop cap with a receipt; a step naming a missing organ refuses
+  honestly, no crash, no silent skip.
+- THE FUNCTION GENERATOR, v1: after three green runs the chain was
+  minted as chunk:triage — one node whose op is the recorded chain;
+  walking the chunk on a fresh world equals walking the chain, with
+  a nested trace. The owner's "each node can act like a function
+  generator", smallest true form.
+- Replay reproduces the door sequence; flows and chunks survive the
+  pickle round-trip; a full walk costs 0.04 s.
+
+### What the segment still owes (named, not claimed)
+Engine promotion of the walker AS the kernel loop; flow steps facing
+word-style ELECTIONS; branching-by-evidence as piecewise flow
+supersession (clone the step for the miner-named failing case, duel
+decides); the interpreter attack list (refraction/loops, rule
+interference, chunk correctness) — the blocked 07-13 items now have
+their execution substrate to attack.
