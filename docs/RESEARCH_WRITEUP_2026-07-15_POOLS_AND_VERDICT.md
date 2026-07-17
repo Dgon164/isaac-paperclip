@@ -683,3 +683,57 @@ findings ledger (outcome, hops, road) — Isaac's processes leave the
 same paper trail as his knowledge. Self-test 11/11. The segment's
 remaining work (flow elections, piecewise flow supersession, the
 interpreter attack list) attacks a substrate that now exists.
+
+---
+
+## PART 12 — FLOWS THAT ADAPT (elections + piecewise supersession, 11/11)
+
+### The story, measured end to end
+A flow that refuses PARTIAL verdicts loses on blended-conditional
+worlds — lawful worlds refused. The adaptation loop the sheet
+promised, now demonstrated with real organs at every step:
+1. WALKS BANK: ten walks land in the findings ledger with roads and
+   outcomes (wins 6/10 — five plain passes plus one blended world the
+   engine legitimately solved; see the falsification note below).
+2. THE MINER NAMES THE LOSING CLASS from the walk receipts
+   themselves: mine_commonality over {verdict, pool-state, size}
+   features named exactly {verdict=PARTIAL, pool=scream} — the
+   commonality organ reading PROCESS receipts the same way it reads
+   failure receipts anywhere else.
+3. THE CLONE: one new door for the named case — PARTIAL routes to
+   'deepen' (re-discover on a 96-row subsample, where the deep exact
+   road lives) — everything else untouched.
+4. PIECEWISE, verified: off the named class the branched flow's
+   roads are IDENTICAL and the deepen door carries a bypass receipt
+   on every plain walk. On the named class, all four failing walks
+   took the deepen door and reached machine-exact passes.
+5. THE DUEL: original 6/10 -> branched 10/10. LOSER KEPT: the
+   original flow still walks, still loses the same way, its record
+   intact — and the election (ledger tallies) picks the branched
+   flow as champion with the loser's score on the books,
+   re-electable.
+
+### The attack-list items, unblocked and passed
+Productive LOOPS halt by predicate (a retry loop reached UNDERSTOOD
+and exited well under the hop cap); interleaved walks of different
+flows stay separate; a minted CHUNK works as a STEP inside another
+flow (composition: minted functions are callable words).
+
+### The falsification worth savoring (kept, twice)
+The probe's planted weakness — "blended worlds the big-n road cannot
+say" — was OUTGROWN BY THE ENGINE TWICE while the probe was being
+written: first the n=200 world split to a train half of exactly 100
+rows, precisely the deep exact road's boundary, and stamped
+machine-exact; then, moved to n=240, one seed in five STILL passed —
+a genuinely-correct approximate law validating at rms<0.01 on fresh
+truth. Tonight's earlier promotions made worlds designed as
+too-hard... solvable, faster than the probe could exploit them. The
+adaptation story stands on the four that really fail; the fifth is
+the engine's, fairly won.
+
+### What remains for the segment (named)
+Engine promotion of the election/supersession mechanics as organs
+(the probe runs them shim-side over the ledger); credit assignment
+for step-level outcomes is CRUDE (whole-walk outcome banks on every
+step — the same fresh-eyes caveat as word elections, carried
+forward, not hidden).
