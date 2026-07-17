@@ -1313,3 +1313,35 @@ interpreter segment): HYPOTHETICALS AS CHEAP CONTAINERS — open a
 scratch world, overlay base, simulate, then either promote its facts
 into base THROUGH THE GATES or discard the world whole; planning,
 counterfactuals, and other-minds beliefs are all the same move.
+
+## THE ROAD TRIALS + THE FRESH START (owner, 2026-07-17)
+**"Isaac is an intelligence and scientific engine. his job is to
+learn and make sense of information in a way that is directly usable
+and readable... we are ready for road trials. durability, range,
+power, efficiency... the alpha version needs to start from the
+start... the net isnt so important, its the capability. the net
+should be produced roughly the same time every time... selecting and
+using the correct information as he scales will become more important
+over time."**
+The rulings, applied to every build from here:
+- **Alpha = ROAD TRIALS**: the questions are LONGITUDINAL (does
+  performance rise or fall with accumulated experience, and why);
+  every session of his life leaves a road-trial record from day one.
+- **Day one = a FRESH account** with admission discipline on from
+  the first entry (vet + world stamps). The test era is PROLOGUE —
+  archived forever as the source document, never reset-able into
+  life and never his life.
+- **The prologue net = the first developed source**: extraction →
+  direct telling through the standard doors (teach with world
+  stamps, tell_law told-unverified, refusals loud and counted).
+  Told knowledge is usable at once and carries NO inherited belief —
+  belief is earned by HIS data (the one-shot-learning experiment is
+  measured, not assumed).
+- **The net is a build artifact; the capability is the asset.**
+  Same experience script → roughly the same net, and that claim is
+  MEASURED (two fresh minds, one script, diff), never assumed.
+- **SELECTION-AT-SCALE is the named growing axis**: instrument
+  which-law precision, considered-vs-bypassed receipts, and
+  retrieval quality against net size from the first session —
+  reprocessing forgotten material is cheap; selection is the
+  scaling problem.

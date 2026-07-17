@@ -262,3 +262,67 @@ with him in the chair, on his call.
    sets for B1 remain the named follow-up.
 5. Hand-set v1 constants (5*MAD, flag caps, grid fractions, the
    referee's f=8) — the tests-over-thresholds debt, still carried.
+
+---
+
+## Part 10 — SAME DAY, SECOND BUILD: the birth machinery (the owner
+## redefines alpha, and the harness for day one gets built and gated)
+
+**The owner's amendment, in his words:** "isaac is an intelligence
+and scientific engine. his job is to learn and make sense of
+information in a way that is directly usable and readable... we are
+ready for road trials. durability, range, power, efficiency... the
+alpha version needs to start from the start... the net isnt so
+important, its the capability. the net should be produced roughly
+the same time every time... selecting and using the correct
+information as he scales will become more important over time."
+
+So: day one is a FRESH account; the test era is prologue, archived
+forever; and the prologue net becomes his FIRST TEACHER — extracted
+and fed to the fresh mind as direct telling, which is both the
+one-shot-learning experiment and his "chance to process everything
+one last time." Three pieces were built battery-first, same day:
+
+**THE FIRST TEACHER (inherit battery 10/10).** A predecessor's net
+extracts into tellable material — facts with their world stamps,
+laws in Isaac's own equation grammar — and feeds a fresh mind
+through the standard doors. What the battery proved: the inherited
+law applies IMMEDIATELY on the fresh mind (one-shot, error 0.0000)
+while carrying NO inherited belief (TOLD-UNVERIFIED, source named);
+a planted WRONG prologue law FAILS revalidation on the successor's
+own data (r² −60) while the true one earns HOLDS — the test era's
+junk cleans itself out by the ordinary machinery, nobody has to
+adjudicate it by hand. Fiction stays walled in its world; base never
+inherits it. An out-of-vocabulary law is refused loudly with the
+exact unparseable factor named; laws leaning on learned lag or
+composite columns are refused with the why (he can rediscover them
+from data — a said v1 scope). Organ-internal bookkeeping is not
+experience and is not re-told. And the birth wrapper REFUSES an
+occupied home — a life is never overwritten.
+
+**THE INSTRUMENT PANEL (road-trial battery 4/4).** One longitudinal
+record per session of his life: net sizes (the growth axis), an
+engine probe on the same seeded world every time (efficiency drift,
+comparable forever — day-one baseline 0.253 s), ask-latency on his
+own facts, and the SELECTION gauge — the owner's named scaling axis:
+sample his own laws, generate data from each, ask him to pick the
+author; precision out of asked, and fewer than two eligible laws
+means the gauge refuses with a note instead of reporting a fake
+1.0. The logger measures without changing him — the mind is
+byte-identical after logging, proven.
+
+**THE ARTIFACT CLAIM, MEASURED (reproducibility 3/3).** Two fresh
+minds ran one identical experience script. Result: byte-identical
+pickles — not roughly the same net, the SAME net, to the byte. The
+owner's ruling ("the net isn't so important, it's the capability")
+is now a measured property: experience in, net out, deterministically;
+the capability is the versioned asset and dumping a net truly costs
+nothing.
+
+All three joined promote.py's permanent wall (47 gates now). What
+still waits for the owner's chair: the archive of the prologue home,
+the birth itself, and the first practice session — plus one named
+piece of session-2 work before that first practice: wiring the
+vet-intake checker into the live practice loop's banking path
+(admission discipline from the first conversation, per the fresh-
+start ruling).

@@ -58,6 +58,33 @@ RULE; simple candidates are guaranteed by construction).
   order-3 excess, family-wise scans — pointing only; every mint
   proves itself with the pools removed.
 
+## OWNER AMENDMENT (2026-07-17, supersedes the proposed definition
+## below where they differ — the clause anticipated this)
+"Isaac is an intelligence and scientific engine. his job is to learn
+and make sense of information in a way that is directly usable and
+readable." Before = engine-on-the-test-bench. **ALPHA = ROAD TRIALS:
+durability, range, power, efficiency — does performance increase or
+decrease over time, and how?** Four rulings:
+1. **"The alpha version needs to start from the start"** — day one =
+   a FRESH account, empty net, admission discipline (vet + container
+   stamps) on from the first entry. The test era is PROLOGUE:
+   archived forever as the source document, never his life.
+2. **The prologue net = his FIRST TEACHER**: extracted and fed to
+   the fresh mind as DIRECT TELLING — the measured experiment: can
+   he learn from developed sources one-shot, or not? Told knowledge
+   lands usable-at-once with NO inherited belief; the test era's
+   wrong entries fail revalidation naturally. This is also his
+   "chance to process everything one last time before he gets to
+   work."
+3. **"The net isn't so important, it's the capability"** — the net
+   is a reproducible build artifact of experience (same experience
+   script → roughly the same net; MEASURED, not assumed); the
+   capability (engine + organs) is the versioned asset.
+4. **"Selecting and using the correct information as he scales will
+   become more important over time"** — SELECTION-AT-SCALE is the
+   instrumented axis from day one (which-law precision, considered-
+   vs-bypassed receipts, retrieval quality as the net grows).
+
 ## ALPHA v1 — PROPOSED DEFINITION (owner amends)
 Isaac alpha v1 = a usable, self-learning, receipted engine with ONE
 product face and HIS OWN live practice loop, honestly documented:
