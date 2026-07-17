@@ -1175,3 +1175,23 @@ elections; piecewise flow supersession (clone the failing step for
 the miner-named case, duel decides); the 07-13 interpreter attack
 list (refraction/loops, rule interference, chunk correctness) now
 has its execution substrate.
+
+## 2026-07-15 (night): FLOW ELECTIONS + SUPERSESSION PROMOTED (promotion #16 [EXPERIMENTAL]) — the flow-structures design is COMPLETE
+The sheet's three missing things are all engine organs now: PRESENCE
+(#15 flows as net content), CONSIDERATION (bypass receipts at every
+door), and ADAPTATION — flow_tally (wins by DECLARED success steps
+over the walk ledger, recent-window like word elections), elect_flow
+(champion by measured win rate; losers kept with tallies; the task
+node carries an active/superseded chain — the read_floor pattern;
+elections land in the ledger), branch_flow (piecewise supersession's
+mechanical half: clone + graft one door before the default + the
+steps it leads to; the miner names the condition, the election
+decides, the loser is kept). BATTERY 6/6 (flow_election_battery.py):
+one-call branch reproduced the adaptation duel (3/5 -> 5/5);
+windowed re-election FLIPPED the champion on reversed fortunes with
+the prior champion kept in the chain; window-vs-full-history
+measurably disagree (recency is a choice, recorded per election).
+Self-test 11/11, zero tracebacks. Carried caveat, not hidden:
+step-level credit assignment is CRUDE (whole-walk outcome banks on
+the flow, not per step — the word-elections fresh-eyes #1 caveat,
+now at the flow level; per-step attribution is named segment work).

@@ -737,3 +737,13 @@ Engine promotion of the election/supersession mechanics as organs
 for step-level outcomes is CRUDE (whole-walk outcome banks on every
 step — the same fresh-eyes caveat as word elections, carried
 forward, not hidden).
+
+### PART 12 ADDENDUM — promoted same night (#16, battery 6/6)
+The adaptation mechanics moved inside: flow_tally / elect_flow /
+branch_flow are organs. One call now clones a flow and grafts the
+named-case door; elections run on measured win rates with losers
+kept and supersession chains never erased; a windowed re-election
+flipped a champion whose recent fortunes reversed while full history
+still favored it — recency is a recorded choice, not an assumption.
+With this, the FLOW STRUCTURES design (presence / consideration /
+adaptation) is complete in the engine. Self-test 11/11.
