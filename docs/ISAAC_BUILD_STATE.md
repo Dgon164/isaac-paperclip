@@ -1155,3 +1155,23 @@ practice corpus contains fiction — E3 and practice-loop reading can
 now stamp provenance before anything reaches base. Deferred to the
 owner's call, as standing: wiring vet_intake/practice-loop to stamp
 containers on the LIVE account.
+
+## 2026-07-15 (night): THE WALKER PROMOTED (promotion #15 [EXPERIMENTAL]) — the kernel loop's first permanent slice
+The execution cycle is engine-native: define_flow(name, steps)
+authors process as NET CONTENT (flow:/step: nodes, readable specs —
+equations of process); walk_flow(name, state) is the walker — do op
+(a registered organ) -> take result door (declarative predicates
+routed THROUGH the compare organ) -> return to main (hop cap
+guaranteed; missing organs refused honestly); mint_chunk reifies a
+winning chain as ONE node walkable by name (the function generator
+v1). Every juncture receipts the door taken AND the doors bypassed
+(the consideration law at the routing layer), and EVERY WALK lands
+in the findings ledger (kind=flow-walk: outcome, hops, road) —
+process leaves the same paper trail as knowledge. BATTERY 12/12
+(flow_promotion_battery.py: the probe's 10 through engine organs +
+catalog registration + the walk ledger); self-test 11/11, zero
+tracebacks. SEGMENT REMAINDER, named: flow steps facing word-style
+elections; piecewise flow supersession (clone the failing step for
+the miner-named case, duel decides); the 07-13 interpreter attack
+list (refraction/loops, rule interference, chunk correctness) now
+has its execution substrate.

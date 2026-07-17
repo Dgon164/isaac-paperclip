@@ -675,3 +675,11 @@ supersession (clone the step for the miner-named failing case, duel
 decides); the interpreter attack list (refraction/loops, rule
 interference, chunk correctness) — the blocked 07-13 items now have
 their execution substrate to attack.
+
+### PART 11 ADDENDUM — promoted same night (#15, battery 12/12)
+The walker moved inside: define_flow / walk_flow / mint_chunk are
+engine organs, catalog-registered, and every walk now lands in the
+findings ledger (outcome, hops, road) — Isaac's processes leave the
+same paper trail as his knowledge. Self-test 11/11. The segment's
+remaining work (flow elections, piecewise flow supersession, the
+interpreter attack list) attacks a substrate that now exists.
