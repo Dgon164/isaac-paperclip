@@ -126,7 +126,7 @@ def ingest_teachings(mind, teachings, source="prologue"):
                 counts["laws_witness"] += 1
         except ValueError as e:
             laws_refused.append(dict(name=l["name"], why=str(e)))
-    mind.record_finding("inheritance", "birth", source=source,
+    mind.record_finding("inheritance", "launch", source=source,
                         **counts,
                         laws_refused=[r["name"] for r in laws_refused])
     return dict(counts=counts, facts_refused=facts_refused,
@@ -134,12 +134,12 @@ def ingest_teachings(mind, teachings, source="prologue"):
 
 
 def inherit_account(old_home, new_home, mod=None, source=None):
-    """THE BIRTH: a fresh account whose first experience is being
+    """THE LAUNCH (owner naming, 2026-07-17): a fresh account whose first experience is being
     taught by its predecessor. Reads the prologue home (never
     touches it), refuses an occupied destination (a home is never
     overwritten), carries the speech corpus as a file (the practice
     loop relearns from it on the standard road), and journals the
-    birth as the permanent record's first entry."""
+    launch as the permanent record's first entry."""
     mod = mod or bridge.load_isaac_module()
     old_mind_path = os.path.join(old_home, "mind.isaac")
     if not os.path.exists(old_mind_path):
@@ -161,7 +161,7 @@ def inherit_account(old_home, new_home, mod=None, source=None):
                      os.path.join(new_home, "sparring_corpus.txt"))
         rep["corpus_carried"] = True
     fresh.save(new_mind_path)
-    entry = dict(kind="birth",
+    entry = dict(kind="launch",
                  stamp=time.strftime("%Y-%m-%d %H:%M:%S"),
                  source=old_home, counts=rep["counts"],
                  laws_refused=[r["name"] for r in rep["laws_refused"]],

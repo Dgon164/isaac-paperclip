@@ -163,7 +163,7 @@ def main():
     check("I8 reproducibility: two fresh minds, one telling, same "
           "net behavior", ok)
 
-    # ── I9: the account wrapper — birth on plain files ──
+    # ── I9: the account wrapper — the launch on plain files ──
     with tempfile.TemporaryDirectory() as td:
         old_home = os.path.join(td, "old_home")
         new_home = os.path.join(td, "new_home")
@@ -181,20 +181,20 @@ def main():
         jpath = os.path.join(new_home, "practice_journal.jsonl")
         with open(jpath, encoding="utf-8") as f:
             first = json.loads(f.readline())
-        # SAFETY: a second birth into an occupied home must refuse
+        # SAFETY: a second launch into an occupied home must refuse
         try:
             inherit_account(old_home, new_home, mod=mod)
             refused_second = False
         except RuntimeError:
             refused_second = True
         ok = ("blue" in a["answers"] and corpus_ok
-              and first.get("kind") == "birth"
+              and first.get("kind") == "launch"
               and refused_second
               and rep9["counts"]["facts_told"] >= 3)
-        check("I9 birth wrapper: fresh home built, corpus carried, "
-              "birth journaled, occupied home REFUSED", ok,
+        check("I9 launch wrapper: fresh home built, corpus carried, "
+              "launch journaled, occupied home REFUSED", ok,
               f"journal[0]={first.get('kind')}, "
-              f"second-birth refused={refused_second}")
+              f"second-launch refused={refused_second}")
 
     print("=" * 70)
     print(f"BATTERY: {PASSED} passed, {FAILED} failed of "
