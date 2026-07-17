@@ -1119,3 +1119,16 @@ identical deterministic rerun (PYTHONHASHSEED=0, same code, full
 capture) passed 11/11 with zero tracebacks and the crash has not
 reproduced. Unexplained = unfinished: watch for recurrence; if seen
 again, capture the full traceback and the findings ledger state.
+
+## 2026-07-15 (night): EFFICIENCY PASS #1 (measure-first, ledger discipline)
+Profiled: _exact_road = 17.7s of a 19.0s discover (621,021 lstsq —
+the seat guarantees fed combinations() directly at d=5). Fix: bounded
+diverse combo pools (k=1 sweeps everything; k>=2 over ~<=40 seats;
+deep k>=4 pure-var-first, capped 26) with SINGLES GUARANTEED BY
+CONSTRUCTION after the first re-gate caught the cap cutting x0/x1
+from the blended sentence (the crowding disease's FIFTH sighting,
+inside the efficiency fix itself — wrong-kept in the ledger). AFTER,
+all gates re-run green: mechanisms 8/8 (discover 8.8 -> 1.23s/call,
+7.2x), outlier road 5/5, 100-world duel 0/100 wrong-confident with
+availability 20/20 (gate wall-clock 174 -> 40s), self-test 11/11.
+Full ledger entry: LOCAL_PROCESSING.md, Efficiency pass #1.
