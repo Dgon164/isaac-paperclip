@@ -1288,3 +1288,28 @@ nothing on shuffled outliers); selection over isolation thresholds
 flagging law REFIT (no circular flag->model->flag loops); NEWS vs
 mis-entry boundary probed at mixed worlds (a lawful source ON a
 grain).
+
+### THE REAL WORLD (containers refinement, owner, 2026-07-15 night):
+### "which means there should be a 'real' world? at least the
+### currently understood presently occupied context or something?
+### basically our reality as it is understood?"
+Pinned: BASE IS THE REAL WORLD — named precisely as the owner named
+it: REALITY AS CURRENTLY UNDERSTOOD, a living model, supersedable
+like everything else (ABSOLUTE IS A MYTH applied to containers: base
+is the agreed ruler, not cosmic truth; its facts get corrected, kept,
+never overwritten). Two things the question separates, both now
+explicit: (1) the REALITY CONTAINER (base — the inheritance root,
+where container-less facts land, what measurements feed) vs (2) the
+PRESENTLY-OCCUPIED CONTEXT (which world is OPEN — pure routing state;
+he can stand inside harry-potter for a story while base stays the
+anchor; being IN a world and BELIEVING a world are different).
+Sharpening (assistant's, offered): what makes base special is not
+metaphysics but ADMISSION DISCIPLINE — fiction containers admit by
+authorial fiat; base is the one container whose facts must pass the
+full court (evidence, verdicts, floors, receipts) and the only one
+measurements feed. The real world is not the privileged container,
+it is the EXPENSIVE one. FORWARD DOOR this opens (queued with the
+interpreter segment): HYPOTHETICALS AS CHEAP CONTAINERS — open a
+scratch world, overlay base, simulate, then either promote its facts
+into base THROUGH THE GATES or discard the world whole; planning,
+counterfactuals, and other-minds beliefs are all the same move.
