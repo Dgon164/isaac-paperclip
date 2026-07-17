@@ -616,3 +616,12 @@ Active-container state on the mind, `container=` on teach, container
 routing inside the reasoning layer (today's probe routes at the shim),
 and provenance stamping at intake through vet_intake's existing door
 — so the practice loop can read fiction safely before E3 ever runs.
+
+### PART 10 ADDENDUM — promoted same night (#14, battery 10/10)
+The shim moved inside: open_world / teach(container=) / ask are
+engine organs, registered in the catalog, surviving the pickle
+round-trip (a saved mind reopens with its worlds and its active
+container intact). Self-test 11/11 — the tagged doors disturbed
+nothing. The one deliberate deferral, standing: stamping containers
+at the LIVE account's intake is the owner's call, since it touches
+his practice loop.

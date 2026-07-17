@@ -1132,3 +1132,26 @@ all gates re-run green: mechanisms 8/8 (discover 8.8 -> 1.23s/call,
 7.2x), outlier road 5/5, 100-world duel 0/100 wrong-confident with
 availability 20/20 (gate wall-clock 174 -> 40s), self-test 11/11.
 Full ledger entry: LOCAL_PROCESSING.md, Efficiency pass #1.
+
+## 2026-07-15 (night): CONTAINERS PROMOTED (promotion #14 [EXPERIMENTAL])
+World-scoped truth is engine-native: open_world(container) sets
+routing state with a receipt; teach(subject, relation, obj,
+container=None) stamps every fact with the world it is true IN (a
+door tag, in:<world> — zero new primitives, the probe's finding);
+ask(subject, relation, container=None) routes by world — facts in
+force answer, fiction INHERITS base one-way with an
+inherited-from-base receipt, base NEVER inherits fiction, and
+container-less facts (organ-internal fact_index writes) land in base
+with a receipt. In-world contradictions flag into
+container_tensions (both readings kept); cross-world difference
+never flags. BATTERY 10/10 (containers_promotion_battery.py): the
+probe's 8 checks through the engine organs + pickle round-trip
+(worlds and the active container survive save/load) + catalog
+registration (open_world/ask harvested). Self-test 11/11 with zero
+tracebacks — the new tagged subject->object doors disturbed no
+capability area. Duel not re-run (containers do not touch
+discover()); noted, not skipped silently. THE WALL THIS BUYS: the
+practice corpus contains fiction — E3 and practice-loop reading can
+now stamp provenance before anything reaches base. Deferred to the
+owner's call, as standing: wiring vet_intake/practice-loop to stamp
+containers on the LIVE account.
