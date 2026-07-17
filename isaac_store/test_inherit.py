@@ -196,6 +196,25 @@ def main():
               f"journal[0]={first.get('kind')}, "
               f"second-launch refused={refused_second}")
 
+    # ── I10: the packs road is the LIVE road — a stale pickle must
+    # not win (the real launch's preflight caught exactly this:
+    # mind.isaac two days behind pack v8) ──
+    with tempfile.TemporaryDirectory() as td:
+        old_home = os.path.join(td, "old_home")
+        new_home = os.path.join(td, "new_home")
+        os.makedirs(old_home)
+        old.save(os.path.join(old_home, "mind.isaac"))  # frozen NOW
+        old.teach("late", "arrival", "yes")             # ...then life
+        old.save_pack(os.path.join(old_home, "packs"))  # goes on
+        rep10 = inherit_account(old_home, new_home, mod=mod)
+        m10 = mod.Isaac.load(os.path.join(new_home, "mind.isaac"))
+        a = m10.ask("late", "arrival")
+        ok = ("yes" in a["answers"]
+              and rep10["source_road"].startswith("packs"))
+        check("I10 packs preferred over the frozen pickle: the late "
+              "fact arrives; road named", ok,
+              f"road={rep10['source_road']}, late={a['answers']}")
+
     print("=" * 70)
     print(f"BATTERY: {PASSED} passed, {FAILED} failed of "
           f"{PASSED + FAILED}")

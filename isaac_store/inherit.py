@@ -141,19 +141,33 @@ def inherit_account(old_home, new_home, mod=None, source=None):
     loop relearns from it on the standard road), and journals the
     launch as the permanent record's first entry."""
     mod = mod or bridge.load_isaac_module()
-    old_mind_path = os.path.join(old_home, "mind.isaac")
-    if not os.path.exists(old_mind_path):
-        raise RuntimeError(f"no predecessor mind at {old_mind_path}")
     new_mind_path = os.path.join(new_home, "mind.isaac")
     if os.path.exists(new_mind_path):
         raise RuntimeError(
             f"{new_home} already holds a mind — a home is never "
             f"overwritten; choose a fresh path")
-    old = mod.Isaac.load(old_mind_path)
+    # the predecessor's LIVE state: packs are the account's storage
+    # road since 2026-07-15 (the pickle is kept frozen, superseded)
+    # — launching from the stale pickle would teach from a two-day-
+    # old ghost (caught at the real launch's preflight, 2026-07-17)
+    from .pack import latest_pack
+    packs_dir = os.path.join(old_home, "packs")
+    ver, ppath = latest_pack(packs_dir)
+    old_mind_path = os.path.join(old_home, "mind.isaac")
+    if ppath is not None:
+        old = mod.Isaac.load_pack(packs_dir)
+        source_road = f"packs v{ver} (the live road)"
+    elif os.path.exists(old_mind_path):
+        old = mod.Isaac.load(old_mind_path)
+        source_road = "pickle (mind.isaac — no packs present)"
+    else:
+        raise RuntimeError(f"no predecessor mind in {old_home} "
+                           f"(neither packs nor mind.isaac)")
     teachings = extract_teachings(old)
     fresh = mod.Isaac()
     rep = ingest_teachings(fresh, teachings,
                            source=source or old_home)
+    rep["source_road"] = source_road
     os.makedirs(os.path.join(new_home, "transcripts"), exist_ok=True)
     old_corpus = os.path.join(old_home, "sparring_corpus.txt")
     if os.path.exists(old_corpus):
@@ -163,7 +177,8 @@ def inherit_account(old_home, new_home, mod=None, source=None):
     fresh.save(new_mind_path)
     entry = dict(kind="launch",
                  stamp=time.strftime("%Y-%m-%d %H:%M:%S"),
-                 source=old_home, counts=rep["counts"],
+                 source=old_home, source_road=source_road,
+                 counts=rep["counts"],
                  laws_refused=[r["name"] for r in rep["laws_refused"]],
                  note="day one: first experience = the predecessor's "
                       "net as direct telling; belief not inherited")
