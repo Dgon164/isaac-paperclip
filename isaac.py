@@ -411,6 +411,11 @@ def _atom_specs(d):
                 specs += [("cosd", i, j, k), ("sind", i, j, k)]
             for k in (0.5, 1.0, 1.5):
                 specs.append(("coshd", i, j, k))
+            # THE CREASE (mechanisms promotion, 2026-07-15): |xi-xj| —
+            # comparison's algebraic face; max/min become sayable:
+            # max(a,b) = (a+b+|a-b|)/2. No scale dial (the linear
+            # coefficient absorbs it).
+            specs.append(("absd", i, j, None))
     return specs
 
 
@@ -429,6 +434,10 @@ def _atom_col(X, spec):
         if k == 0:                                # the lambda=0 limit: log
             return np.log(base)
         return np.power(base, k)
+    if kind == "step":            # the SWITCH: [xi > t], t data-proposed
+        return (X[:, i] > k).astype(float)
+    if kind == "absd":            # the CREASE: |xi - xj|
+        return np.abs(X[:, i] - X[:, j])
     diff = np.clip(X[:, i] - X[:, j], -20, 20)
     if kind == "cosd":
         return np.cos(k * diff)
@@ -449,6 +458,10 @@ def _atom_label(spec):
         return f"exp({-k:g}*x{i})"
     if kind == "pow":
         return f"log(x{i})" if k == 0 else f"x{i}^{k:g}"
+    if kind == "step":
+        return f"[x{i}>{k:g}]"
+    if kind == "absd":
+        return f"|x{i}-x{j}|"
     op = {"cosd": "cos", "sind": "sin", "coshd": "cosh"}[kind]
     return f"{op}({k:g}*(x{i}-x{j}))"
 
@@ -458,6 +471,233 @@ def _disc_col(A, term):
     for a in term[1:]:
         v = v * A[:, a]
     return v
+
+
+# ── THE VERDICT REWRITE (S2b, 2026-07-15) ───────────────────────────
+# Ported from experiments/verdict_rewrite_probe.py (23/23) and the
+# pool instrument in experiments/reservoir_surprise_probe.py (13/13).
+# UNDERSTOOD is earned before examiners and a ruler, no longer by r2
+# alone (r2 is demoted to a reported number): an EXACT ROAD stamps
+# machine-precision fits proven on unseen rows; a residual REPLAY asks
+# every candidate form whether it can predict the held-out leftover
+# (selection-corrected max-null — the 119/120 lesson); the POOL meter
+# (a frozen random net, shallow and fixed — it gates and names, never
+# writes into a mind, never feeds an equation) asks the grammar-free
+# version of the same question; and exactness claims ride a
+# CERTIFICATE read against an EVIDENCED floor (grain / repeats / told
+# — the 13-inch foot; no floor evidenced means uncertified, said so).
+
+_EXACT_REL = 1e-9       # machine-exact, relative to the numbers' size
+_POOL_MIN_N = 48        # the pool's measured competence floor (R0b)
+_POOL_M = 200           # capacity chosen by the probe's own R0 sweep
+_POOL_FOLDS = 5
+_POOL_RIDGE = 1e-2
+_POOL_NULLS = 200
+_REPLAY_NULLS = 150
+
+
+class _PoolMeter:
+    """A shallow FIXED pool (owner naming): frozen tanh random features
+    + ridge readout, weights seeded BEFORE data. 5-fold cross-fit
+    capture: every row judged by a readout that never saw it."""
+
+    GAINS = (0.7, 1.5, 2.5)     # multiscale, fixed — instrument identity
+
+    def __init__(self, X, m=_POOL_M, seed=777, split_seed=0):
+        n, d = X.shape
+        self.n = n
+        self.m_eff = min(m, max(16, 2 * n), 400)
+        rng = np.random.default_rng(seed + 1000 * self.m_eff + d)
+        gains = np.array([self.GAINS[i % len(self.GAINS)]
+                          for i in range(self.m_eff)])
+        self.W = rng.normal(0.0, 1.0 / np.sqrt(d), (d, self.m_eff)) * gains
+        self.b = rng.uniform(-1.0, 1.0, self.m_eff)
+        idx = np.random.default_rng(split_seed).permutation(n)
+        folds = [idx[f::_POOL_FOLDS] for f in range(_POOL_FOLDS)]
+        self.parts = []
+        for ho in folds:
+            tr = np.setdiff1d(np.arange(n), ho)
+            mu, sd = X[tr].mean(0), X[tr].std(0) + 1e-12
+            H_tr = np.tanh(((X[tr] - mu) / sd) @ self.W + self.b)
+            H_ho = np.tanh(((X[ho] - mu) / sd) @ self.W + self.b)
+            A = H_tr.T @ H_tr + _POOL_RIDGE * len(tr) * np.eye(self.m_eff)
+            M = np.linalg.solve(A, H_tr.T)
+            self.parts.append((tr, ho, H_ho, M))
+
+    def capture(self, r):
+        p = np.empty(self.n)
+        for tr, ho, H_ho, M in self.parts:
+            c = r[tr].mean()
+            p[ho] = H_ho @ (M @ (r[tr] - c)) + c
+        ss = np.sum((r - p) ** 2)
+        tot = np.sum((r - r.mean()) ** 2)
+        return 1.0 - ss / tot if tot > 0 else 0.0
+
+
+def _pool_scream(X, r, rng_seed=1):
+    """Capture vs the selection-corrected permuted-y null. The pool
+    POINTS, never answers: one boolean plus receipts."""
+    meter = _PoolMeter(np.asarray(X, float))
+    cap = meter.capture(r)
+    rng = np.random.default_rng(rng_seed)
+    null = np.array([meter.capture(rng.permutation(r))
+                     for _ in range(_POOL_NULLS)])
+    thr = float(np.percentile(null, 99.0))
+    return float(cap), thr, cap > thr
+
+
+def _exact_terms(specs, n_vars):
+    """Exact-road candidate TERMS: every single atom, plus raw-var
+    pair and triple products (degree<=3 polynomial terms — apply_law
+    evaluates any term tuple, so triples are legal even though the
+    enumerator's frontier stops at pairs; this is what lets Kepler's
+    a^3 be SAID at n=8)."""
+    terms = [(i,) for i in range(len(specs))]
+    terms += [(i, j) for i in range(n_vars) for j in range(i, n_vars)]
+    terms += [(i, j, k) for i in range(n_vars)
+              for j in range(i, n_vars) for k in range(j, n_vars)]
+    return terms
+
+
+def _exact_road(specs, A_tr, y_tr, X_ho, y_ho, n_vars, kmax=3, top=16):
+    """Requirement 4: exact-checkable data stamps on machine-zero
+    residual WITHOUT a floor. A hit must be machine-exact RELATIVE on
+    train AND held-out — noise cannot fake held-out exactness, which
+    is the selection guard at tiny n (measured 0/20 at n=8, 0/30 with
+    the deep road in the probes). Affine-clone candidates are DEDUPED
+    before the shortlist (the mechanisms-arc port lesson: clones vote
+    as a bloc and starve real terms). Takes explicit specs/atom-matrix
+    so callers can run it on a SUBSET (the outlier road's clean
+    majority). Returns term list or None."""
+    if len(y_ho) < 3 or len(y_tr) < 4:
+        return None
+    A_ho = np.column_stack([_atom_col(X_ho, s) for s in specs])
+    cand = _exact_terms(specs, n_vars)
+    cols_tr = np.column_stack([_disc_col(A_tr, t) for t in cand])
+    cols_ho = np.column_stack([_disc_col(A_ho, t) for t in cand])
+    good = (np.isfinite(cols_tr).all(0) & np.isfinite(cols_ho).all(0)
+            & (cols_tr.std(0) > 1e-12))
+    scale = max(float(np.max(np.abs(np.concatenate([y_tr, y_ho])))), 1e-12)
+    base = y_tr - y_tr.mean()
+    bs = base.std() + 1e-12
+    Zt = (cols_tr - cols_tr.mean(0)) / (cols_tr.std(0) + 1e-12)
+    corr = np.abs(Zt.T @ (base / bs)) / len(y_tr)
+    corr[~good] = -1.0
+    ranked = np.argsort(-corr)
+    order = []
+    for j in ranked:
+        if corr[j] < 0 or len(order) >= top:
+            break
+        zj = Zt[:, j]
+        if any(abs(float(zj @ Zt[:, k])) / len(y_tr) > 1 - 1e-9
+               for k in order):
+            continue
+        order.append(int(j))
+    # STRUCTURAL DIVERSITY GUARANTEE (the enumerator's own shortlist
+    # move, reused): monotone families of one variable flood a pure
+    # correlation top-N and crowd out the simple true terms — so every
+    # pure-variable polynomial term (singles, pairs, triples of raw
+    # vars) is guaranteed a seat in the combo pool.
+    pure_var = [ji for ji, t in enumerate(cand)
+                if all(a < n_vars for a in t) and good[ji]]
+    order += [j for j in pure_var if j not in order]
+    # crease seats (the diversity rule's fourth sighting): the step-
+    # atom flood crowds |xi-xj| out of the correlation top-N, and max
+    # is unsayable without it — d(d-1)/2 seats, cheap
+    crease = [ji for ji, t in enumerate(cand)
+              if len(t) == 1 and specs[t[0]][0] == "absd"
+              and good[ji]]
+    order += [j for j in crease if j not in order]
+    from itertools import combinations
+    # BOUNDED COMBO POOLS (efficiency pass, profiled 2026-07-15:
+    # 621,021 lstsq calls = 17.7s of a 19.0s discover at d=5 — the
+    # seat guarantees made k>=2 combinations explode). k=1 still
+    # sweeps EVERY seated candidate; k>=2 runs over a bounded diverse
+    # subpool (top-16 deduped + best-12 pure-var + creases, ~<=38 ->
+    # ~9k fits); the deep k>=4 pool is pure-var-FIRST (exact
+    # conditional rules are polynomial — the deep road's domain) and
+    # capped at 24. Held-out machine-exactness stays the guard.
+    pvset = set(pure_var)
+    # singles are guaranteed BY CONSTRUCTION (only d of them — the
+    # cheapest seats there are); products compete on correlation.
+    # Fifth sighting of the crowding disease: high-corr pure-var
+    # PRODUCTS cut the singles out of a top-12, and the blended
+    # world's five-word sentence lost x0 and x1 (battery B3 0/2,
+    # wrong-kept in the ledger entry).
+    pv_singles = [ji for ji in pure_var if len(cand[ji]) == 1]
+    pv_prods = [int(j) for j in ranked
+                if int(j) in pvset and len(cand[int(j)]) > 1]
+    pool2 = list(dict.fromkeys(order[:16] + pv_singles
+                               + pv_prods[:12] + crease))
+    pool45 = list(dict.fromkeys(pv_singles + pv_prods[:14] + crease
+                                + order[:8]))[:26]
+    pools = {1: order, 2: pool2, 3: pool2, 4: pool45, 5: pool45}
+    # DEEP ESCALATION (the mechanisms probe's port lesson): exact
+    # conditional rules need up to 5 terms (x0+x1-f*x0-f*x1+f*x0*x1);
+    # the combinatorics are affordable only on small data, where such
+    # rules live. Held-out machine-exactness remains the guard at
+    # every k (noise cannot fake it; measured 0/30).
+    kmax_eff = 5 if len(y_tr) <= 100 else kmax
+    for k in range(1, kmax_eff + 1):
+        if len(y_tr) < k + 3:
+            break
+        for sub in combinations(pools.get(k, pool2), k):
+            Ct = np.column_stack([cols_tr[:, list(sub)],
+                                  np.ones(len(y_tr))])
+            coef, *_ = np.linalg.lstsq(Ct, y_tr, rcond=None)
+            if np.max(np.abs(y_tr - Ct @ coef)) / scale > _EXACT_REL:
+                continue
+            Ch = np.column_stack([cols_ho[:, list(sub)],
+                                  np.ones(len(y_ho))])
+            if np.max(np.abs(y_ho - Ch @ coef)) / scale > _EXACT_REL:
+                continue
+            return [cand[j] for j in sub]
+    return None
+
+
+def _replay_scan(enum, A_ho, X_ho_raw, resid, rng):
+    """Leg 1: max partial correlation of unadmitted candidates with the
+    held-out residual, against the selection-corrected max-null (2nd
+    largest of 150 permutations). Candidates: every single atom, raw-
+    var pairs, and replay-only CREASE columns |xi-xj| — the mint
+    grammar's known blind spot gets a question-asker even before it
+    becomes a word (mechanisms arc)."""
+    n_vars = X_ho_raw.shape[1]
+    cand_cols, labels = [], []
+    for i in range(A_ho.shape[1]):
+        cand_cols.append(A_ho[:, i])
+        labels.append(_atom_label(enum.specs[i]))
+    for i in range(n_vars):
+        for j in range(i, n_vars):
+            cand_cols.append(A_ho[:, i] * A_ho[:, j])
+            labels.append(f"x{i}*x{j}")
+    for i in range(n_vars):
+        for j in range(i + 1, n_vars):
+            cand_cols.append(np.abs(X_ho_raw[:, i] - X_ho_raw[:, j]))
+            labels.append(f"|x{i}-x{j}|")
+    C = np.column_stack(cand_cols)
+    good = np.isfinite(C).all(0) & (C.std(0) > 1e-12)
+    M = enum._design(A_ho)                      # admitted columns + 1
+    beta, *_ = np.linalg.lstsq(M, C[:, good], rcond=None)
+    R = C[:, good] - M @ beta                   # residualized candidates
+    rstd = R.std(0) + 1e-12
+    Z = (R - R.mean(0)) / rstd
+    ok = rstd > 1e-10
+    if not ok.any() or resid.std() < 1e-15:
+        return "quiet", "-", 0.0, 0.0
+    Z = Z[:, ok]
+    labs = [l for l, g in zip(labels, good) if g]
+    labs = [l for l, o in zip(labs, ok) if o]
+    rs = (resid - resid.mean()) / (resid.std() + 1e-12)
+    obs_all = np.abs(Z.T @ rs) / len(rs)
+    b = int(np.argmax(obs_all))
+    null = np.empty(_REPLAY_NULLS)
+    for p in range(_REPLAY_NULLS):
+        rp = rng.permutation(rs)
+        null[p] = np.max(np.abs(Z.T @ rp)) / len(rs)
+    thr = float(np.sort(null)[::-1][1])         # 2nd largest ~ 99th pct
+    obs = float(obs_all[b])
+    return ("fired" if obs > thr else "quiet"), labs[b], obs, thr
 
 
 class _Enumerator:
@@ -819,6 +1059,26 @@ class _Enumerator:
                        and s[3] is not None and abs(s[3] - k) / k < 0.02
                        for s in self.specs):
                 self.specs += [("sin", i, None, k), ("cos", i, None, k)]
+        # SWITCH proposals (mechanisms promotion): thresholds live in
+        # the data — deciles + the 0.5-mark ladder inside each var's
+        # range (a threshold is a constant; the ruler discipline
+        # applies). Binary columns skip (already a var atom). Capped at
+        # 16 per var by stride (cost guard, disclosed); every proposed
+        # step still faces the admission null like any atom.
+        for i in range(X.shape[1]):
+            u = X[:, i]
+            if len(np.unique(u)) <= 2:
+                continue
+            lo, hi = float(u.min()), float(u.max())
+            qs = set(np.round(np.quantile(u, np.linspace(.1, .9, 9)), 6))
+            lo_m = np.ceil(lo / 0.5) * 0.5
+            qs |= {round(float(t), 6) for t in np.arange(lo_m, hi, 0.5)
+                   if lo < t < hi}
+            qs = sorted(qs)
+            if len(qs) > 16:
+                qs = qs[::int(np.ceil(len(qs) / 16))]
+            for t in qs:
+                self.specs.append(("step", i, None, float(t)))
         self.A = np.column_stack([_atom_col(X, s) for s in self.specs])
         n_atoms = self.A.shape[1]
         n_vars = X.shape[1]
@@ -944,7 +1204,10 @@ class _Enumerator:
             t = self.terms[ti]
             for pos, ai in enumerate(t):
                 kind, i, j, k = self.specs[ai]
-                if k is None:
+                if k is None or kind == "step":
+                    # a threshold is a MARK — re-proposed, never glided
+                    # (multiplicative glide slid steps out of range into
+                    # constant columns; mechanisms battery, wrong-kept)
                     continue
                 base = self._train_r2(y)
                 for mult in (0.7, 0.85, 1.15, 1.4):
@@ -979,7 +1242,10 @@ class _Enumerator:
             t = self.terms[ti]
             for pos, ai in enumerate(t):
                 kind, i, j, k = self.specs[ai]
-                if k is None:
+                if k is None or kind == "step":
+                    # a threshold is a MARK — re-proposed, never glided
+                    # (multiplicative glide slid steps out of range into
+                    # constant columns; mechanisms battery, wrong-kept)
                     continue
                 base = self._train_r2(y)
                 for c in self._round_candidates(k):
@@ -1127,6 +1393,9 @@ class Isaac:
         self.wrong_lockouts = {}          # retracted lockouts, with the why
         self.observed_sequences = []      # raw record (Rule 5: store raw)
         self.fact_index = defaultdict(list)  # (subject, relation) → [objects]
+        self.active_container = "base"    # CONTAINERS (owner, 2026-07-15):
+        self.container_tensions = []      # which world facts are IN FORCE in;
+                                          # in-world contradictions, kept
         self.scratch = Scratch()          # working memory: his registers / RAM
         self.composites = []              # learned combinations — first-class,
                                           # reused by every future discover()
@@ -1245,10 +1514,74 @@ class Isaac:
         for i in range(len(tokens) - 1):
             self.net.add_door(tokens[i], tokens[i + 1], tag=tag)
 
-    def teach(self, subject, relation, obj):
-        """Teach a fact. Observes as a sequence AND indexes for relation lookup."""
+    def open_world(self, container):
+        """Open a WORLD (CONTAINERS, owner 2026-07-15: "fiction world
+        harry potter has different rules than fiction world hail
+        mary"). Routing state: facts taught while a world is open are
+        IN FORCE there; asking routes by world. Returns a receipt."""
+        prev = getattr(self, "active_container", "base")
+        self.active_container = str(container)
+        return dict(tool="open_world", value=str(container),
+                    receipt=f"world '{prev}' -> '{container}' (facts "
+                            f"teach and ask in '{container}' unless "
+                            f"told otherwise)")
+
+    def ask(self, subject, relation, container=None, inherit=True):
+        """Ask a fact IN A WORLD. Facts in force in the asked container
+        answer; a fiction world INHERITS base one-way with a receipt
+        (HP water still boils at 100C); base NEVER inherits fiction
+        (the anti-poisoning wall, measured: 0 leaks, 0 drift);
+        container-less facts belong to base, receipt says so."""
+        c = container or getattr(self, "active_container", "base")
+        objs = [str(o) for o in self.fact_index.get((subject, relation),
+                                                    [])]
+        seen = list(dict.fromkeys(objs))
+
+        def tags(o):
+            return self.net.get_door_tags(str(subject), o)
+
+        in_c = [o for o in seen if f"in:{c}" in tags(o)]
+        if in_c:
+            return dict(answers=in_c, container=c,
+                        why=f"{len(in_c)} fact(s) in force in '{c}'")
+        if c == "base":
+            untagged = [o for o in seen
+                        if not any(t.startswith("in:")
+                                   for t in tags(o))]
+            if untagged:
+                return dict(answers=untagged, container="base",
+                            why="container-less fact(s): landed in "
+                                "base (receipt)")
+            return dict(answers=[], container="base",
+                        why="nothing in force in base")
+        if inherit:
+            base = self.ask(subject, relation, container="base")
+            if base["answers"]:
+                return dict(answers=base["answers"], container=c,
+                            why=f"inherited from base (no '{c}' fact "
+                                f"overrides) — {base['why']}")
+        return dict(answers=[], container=c,
+                    why=f"nothing in force in '{c}'")
+
+    def teach(self, subject, relation, obj, container=None):
+        """Teach a fact. Observes as a sequence AND indexes for
+        relation lookup. CONTAINERS: the fact is stamped with the
+        world it is true IN (the active container unless told); an
+        in-world contradiction is FLAGGED and kept (both readings
+        stay — wrongs kept), while cross-world difference never
+        flags (different worlds legitimately differ)."""
+        c = container or getattr(self, "active_container", "base")
+        prior = self.ask(subject, relation, container=c, inherit=False)
         self.observe(tokenize(f"{subject} {relation} {obj}"))
         self.fact_index[(subject, relation)].append(obj)
+        self.net.add_door(str(subject), str(obj), tag=f"in:{c}")
+        if prior["answers"] and str(obj) not in prior["answers"]:
+            if not hasattr(self, "container_tensions"):
+                self.container_tensions = []
+            self.container_tensions.append(dict(
+                container=c, subject=str(subject),
+                relation=str(relation), held=list(prior["answers"]),
+                new=str(obj)))
 
     def teach_not(self, subject, prop):
         """A POSITIVE NEGATIVE (owner's law, 2026-07-03): 'penguin does not
@@ -3099,9 +3432,488 @@ class Isaac:
             eq = re.sub(rf"\bx{base + j}\b", f"x{i}[t-{k}]", eq)
         return eq
 
+    # ── basic mechanisms (owner, 2026-07-15): comparison as organs ──
+    # "adding these basic tools and any other basic computer mechanism
+    # to his toolkit will be extremely helpful." Each returns value +
+    # RECEIPT; larger/smaller ROUTE THROUGH compare (the a-b<0 wiring
+    # made visible — the execution cycle's smallest trace). Algebraic
+    # twins live in the equation grammar (crease/step atoms), so the
+    # same mechanism is sayable in equations AND routable in process.
+
+    def compare(self, a, b, tol=0.0):
+        """Compare two values: the sign of a-b as -1/0/+1, with a receipt.
+        tol widens SAME to a measured tolerance (a floor), never a
+        hand-set default."""
+        d = float(a) - float(b)
+        v = 0 if abs(d) <= tol else (1 if d > 0 else -1)
+        return dict(tool="compare", value=v,
+                    receipt=f"sign({a:g}-{b:g}) -> {v:+d} (tol {tol:g})",
+                    routed_via=[])
+
+    def larger(self, a, b):
+        """Larger of two values, routed THROUGH compare (receipt chain).
+        Algebraic twin the grammar can say: (a+b+|a-b|)/2."""
+        c = self.compare(a, b)
+        v = float(a) if c["value"] >= 0 else float(b)
+        return dict(tool="larger", value=v,
+                    receipt=f"larger({a:g},{b:g}) via compare -> {v:g}",
+                    routed_via=[c])
+
+    def smaller(self, a, b):
+        """Smaller of two values, routed THROUGH compare (receipt chain).
+        Algebraic twin: (a+b-|a-b|)/2."""
+        c = self.compare(a, b)
+        v = float(b) if c["value"] >= 0 else float(a)
+        return dict(tool="smaller", value=v,
+                    receipt=f"smaller({a:g},{b:g}) via compare -> {v:g}",
+                    routed_via=[c])
+
+    def switch(self, cond, then_v, else_v):
+        """The routing primitive: a condition picks the branch and the
+        receipt names the door taken (do op, take result door)."""
+        v = then_v if cond else else_v
+        return dict(tool="switch", value=v,
+                    receipt=f"switch({bool(cond)}) -> "
+                            f"{'then' if cond else 'else'}",
+                    routed_via=[])
+
+    # ── flows: the execution cycle (owner, 2026-07-15) ──────────
+    # "do op, take result door, or return to main program. each node
+    # can act like a function generator." Flows are NET CONTENT
+    # (flow:/step:/chunk: nodes) read by the walker — the kernel
+    # loop's first permanent slice. Every juncture leaves receipts
+    # for the door taken AND the doors bypassed (the consideration
+    # law); every walk lands in the findings ledger.
+
+    def define_flow(self, name, steps):
+        """Author a flow as net content: flow:<name> doors to its
+        first step; each step:<name>.<id> carries a READABLE spec
+        (op = a registered organ, args drawn from state, optional
+        declarative measure, doors with declarative predicates — the
+        last door without 'when' is the default). Same substrate as
+        content, different altitude."""
+        fnode = f"flow:{name}"
+        first = f"step:{name}.{steps[0]['id']}"
+        self.net.add_door(fnode, first, tag="flow-start")
+        self.net.set_meta(fnode, "steps", steps)   # ordered, clonable
+        for st in steps:
+            node = f"step:{name}.{st['id']}"
+            self.net.set_meta(node, "spec", st)
+            for d in st.get("doors", []):
+                self.net.add_door(node, f"step:{name}.{d['to']}",
+                                  tag="flow-next")
+        return fnode
+
+    def _eval_when(self, when, result, state):
+        """Declarative branch predicate, routed THROUGH the compare
+        organ when numeric (the comparison booleans ARE the routing
+        predicates). Returns (fired, receipt)."""
+        if "equals" in when:
+            got = result.get(when["field"])
+            fired = got == when["equals"]
+            return fired, (f"{when['field']}=='{when['equals']}'? "
+                           f"got '{got}' -> {fired}")
+        if "cmp" in when:
+            a = result.get(when["field"])
+            b = when["than"]
+            b = state.get(b, b) if isinstance(b, str) else b
+            c = self.compare(float(a), float(b))
+            fired = (c["value"] < 0) if when["cmp"] == "smaller" \
+                else (c["value"] > 0)
+            return fired, (f"{when['cmp']}({a:.4g},{b:.4g}) via "
+                           f"{c['receipt']} -> {fired}")
+        return False, f"unknown predicate {when} -> refused"
+
+    def walk_flow(self, name, state, hop_cap=12, _depth=0):
+        """THE WALKER: do op -> take result door -> return to main.
+        Accepts a flow name, 'flow:<name>', or a minted
+        'chunk:<name>'. Every step fires or is BYPASSED WITH A
+        RECEIPT; a cyclic flow halts at the hop cap; a step naming a
+        missing organ refuses honestly. Returns (outcome, trace) —
+        the trace is a replayable record."""
+        node = name if str(name).startswith(("flow:", "chunk:")) \
+            else f"flow:{name}"
+        if node.startswith("chunk:"):
+            spec = self.net.get_meta(node, "spec") or {}
+            if spec.get("op") == "chunk":
+                out, sub = self.walk_flow(spec["flow"], state,
+                                          hop_cap, _depth + 1)
+                tr = [dict(step=node, op="chunk",
+                           receipt=f"chunk expanded -> {out}",
+                           nested=sub)]
+                if _depth == 0:
+                    self.record_finding("flow-walk", node, outcome=out,
+                                        hops=len(sub), road=["chunk"])
+                return out, tr
+            return "refused", [dict(step=node,
+                                    receipt="no chunk spec — refused")]
+        flow_short = node.split(":", 1)[1]
+        trace, outcome, hops = [], None, 0
+        nxt = sorted(self.net.get_doors(node, tag="flow-start"))
+        step = nxt[0] if nxt else None
+        while step is not None and outcome is None:
+            if hops >= hop_cap:
+                trace.append(dict(step=step,
+                                  receipt=f"HOP CAP {hop_cap} reached "
+                                          f"— returning to main (no "
+                                          f"runaway walks)"))
+                outcome = "hop-cap"
+                break
+            hops += 1
+            spec = self.net.get_meta(step, "spec") or {}
+            op = spec.get("op")
+            if op == "chunk":
+                sub_out, sub_tr = self.walk_flow(spec["flow"], state,
+                                                 hop_cap, _depth + 1)
+                trace.append(dict(step=step, op="chunk",
+                                  receipt=f"chunk expanded -> "
+                                          f"{sub_out}",
+                                  nested=sub_tr))
+                outcome = sub_out
+                break
+            fn = getattr(self, op, None) if op else None
+            if fn is None or not callable(fn):
+                trace.append(dict(step=step, op=op,
+                                  receipt=f"REFUSED: no organ named "
+                                          f"'{op}' — walk ends "
+                                          f"honestly"))
+                outcome = "refused"
+                break
+            kwargs = {k: state[v]
+                      for k, v in spec.get("args", {}).items()}
+            result = fn(**kwargs)
+            result = result if isinstance(result, dict) \
+                else {"value": result}
+            meas = spec.get("measure")
+            if meas and meas.get("rms_against") is not None:
+                p = np.asarray(result.get("value"), float)
+                yv = np.asarray(state[meas["rms_against"]], float)
+                okm = np.isfinite(p)
+                result["rms"] = float(np.sqrt(
+                    np.mean((p[okm] - yv[okm]) ** 2)))
+            state[spec.get("out", f"_{spec.get('id', 'r')}")] = result
+            rec = dict(step=step, op=op,
+                       receipt=f"ran {op}; keys {sorted(result)[:6]}")
+            taken, door_receipts = None, []
+            for d in spec.get("doors", []):
+                if "when" not in d:
+                    if taken is None:
+                        taken = d["to"]
+                        door_receipts.append(f"-> {d['to']} "
+                                             f"(default door)")
+                    else:
+                        door_receipts.append(f"bypassed {d['to']}: an "
+                                             f"earlier door already "
+                                             f"fired")
+                    continue
+                fired, why = self._eval_when(d["when"], result, state)
+                if fired and taken is None:
+                    taken = d["to"]
+                    door_receipts.append(f"-> {d['to']}: {why}")
+                else:
+                    door_receipts.append(f"bypassed {d['to']}: {why}")
+            rec["doors"] = door_receipts
+            trace.append(rec)
+            step = None if taken is None \
+                else f"step:{flow_short}.{taken}"
+        if outcome is None:
+            outcome = state.get("_outcome", "done")
+        if _depth == 0:
+            self.record_finding(
+                "flow-walk", node, outcome=outcome, hops=hops,
+                road=[t["step"].split(".")[-1]
+                      for t in trace if "step" in t])
+        return outcome, trace
+
+    def mint_chunk(self, flow_name, name, minted_after=None):
+        """THE FUNCTION GENERATOR v1 (owner: "each node can act like
+        a function generator"): a chain that keeps winning becomes
+        ONE node — a new step whose op is the recorded chain,
+        registered under the chunks hub, walkable by name."""
+        node = f"chunk:{name}"
+        flow = flow_name if str(flow_name).startswith("flow:") \
+            else f"flow:{flow_name}"
+        self.net.add_door("chunks", node, tag="chunk")
+        self.net.set_meta(node, "spec",
+                          dict(id=name, op="chunk", flow=flow,
+                               minted_after=minted_after))
+        return node
+
+    def _flow_success_steps(self, flow):
+        node = flow if str(flow).startswith("flow:") else f"flow:{flow}"
+        steps = self.net.get_meta(node, "steps") or []
+        return {st["id"] for st in steps if st.get("success")}
+
+    def flow_tally(self, name=None, window=None):
+        """Win/loss tallies per flow from the walk ledger. A win = a
+        walk ending on a step the flow DECLARED success=True (a flow
+        with no declared successes counts outcome=='done'). window=W
+        judges only each flow's last W walks (recent-window, the
+        word-election shape)."""
+        rows = list(reversed(self.recall_findings(kind="flow-walk",
+                                                  limit=10_000)))
+        per = {}
+        for w in rows:
+            fl = w.get("name")
+            if name and fl not in (name, f"flow:{name}"):
+                continue
+            per.setdefault(fl, []).append(w)
+        tally = {}
+        for fl, ws in per.items():
+            ws2 = ws[-window:] if window else ws
+            succ = self._flow_success_steps(fl)
+            wins = 0
+            for w in ws2:
+                rd = w.get("road") or []
+                if succ:
+                    wins += int(bool(rd) and rd[-1] in succ)
+                else:
+                    wins += int(w.get("outcome") == "done")
+            tally[fl] = dict(wins=wins, walks=len(ws2))
+        return tally
+
+    def elect_flow(self, candidates, task, window=None):
+        """Elect the champion flow for a task by MEASURED win rate —
+        word elections generalized to PROCESS. Losers stay on the
+        books with their tallies; the task node carries the champion
+        with an active/superseded chain (never erased — the
+        read_floor pattern); the election lands in the ledger."""
+        tallies = {}
+        for c in candidates:
+            t = self.flow_tally(c, window=window)
+            tallies[c] = t.get(f"flow:{c}", dict(wins=0, walks=0))
+
+        def rate(d):
+            return d["wins"] / max(d["walks"], 1)
+
+        champ = max(candidates,
+                    key=lambda c: (rate(tallies[c]),
+                                   tallies[c]["wins"]))
+        node = f"task:{task}"
+        old = self.net.get_meta(node, "champion")
+        rec = dict(flow=champ, window=window, tallies=tallies)
+        if old is not None:
+            chain = old.get("superseded") or []
+            if old.get("flow") != champ:
+                prev = {k: v for k, v in old.items()
+                        if k != "superseded"}
+                chain = chain + [prev]
+            rec["superseded"] = chain
+        self.net.add_door("tasks", node, tag="task")
+        self.net.set_meta(node, "champion", rec)
+        self.record_finding("flow-election", task, champion=champ,
+                            window=window, tallies=tallies)
+        return dict(champion=champ, tallies=tallies,
+                    receipt=f"champion '{champ}' by win rate; losers "
+                            f"kept on the record")
+
+    def branch_flow(self, src, new_name, at_step, door, extra_steps):
+        """PIECEWISE FLOW SUPERSESSION, the mechanical half: clone a
+        flow, graft ONE door at the named step (before its default
+        door) plus the steps that door leads to. The intelligent half
+        stays where it belongs — the miner names the condition, the
+        election decides, the loser is kept."""
+        import copy
+        steps = copy.deepcopy(self.net.get_meta(f"flow:{src}", "steps")
+                              or [])
+        if not steps:
+            return None
+        placed = False
+        for st in steps:
+            if st["id"] == at_step:
+                doors = st.setdefault("doors", [])
+                idx = next((i for i, d in enumerate(doors)
+                            if "when" not in d), len(doors))
+                doors.insert(idx, copy.deepcopy(door))
+                placed = True
+        if not placed:
+            return None
+        pos = next(i for i, st in enumerate(steps)
+                   if st["id"] == at_step) + 1
+        steps[pos:pos] = copy.deepcopy(extra_steps)
+        node = self.define_flow(new_name, steps)
+        self.net.set_meta(node, "branched_from",
+                          dict(src=f"flow:{src}", at_step=at_step,
+                               door=door))
+        return node
+
+    def _outlier_source(self, enum, X, y, half):
+        """THE OUTLIER'S OWN LAW (owner, 2026-07-15): "if the outlier
+        is a plus something else, can it quantify that something else
+        ... and identify the model of the source?" Rows the admitted
+        law cannot carry are ISOLATED (5*MAD-from-median — robust to
+        the bend the outliers themselves cause) and their deviations
+        QUANTIFIED in units. Three-way verdict: exact grain multiples
+        whose clean majority re-certifies machine-exact -> MIS-ENTRY
+        (cells quarantined with receipts; the law superseded by its
+        clean refit); a lawful pattern of their own, past a scrambled-
+        deviation control -> SECOND SOURCE (news, not error; recorded,
+        never silently merged); neither -> deviations kept on the
+        record. ONE ROUND ONLY (never flag->model->flag). Mutates enum
+        ONLY on a confirmed mis-entry cure. v1 constants (5*MAD, 0.35
+        cap, 0.8 grid fraction) are hand-set — the standing
+        tests-over-thresholds debt, filed."""
+        p_all = np.concatenate([enum.predict(X[:half]),
+                                enum.predict(X[half:])])
+        d = y - p_all
+        med = float(np.median(d))
+        mad = float(np.median(np.abs(d - med))) + 1e-12
+        flag = np.abs(d - med) > 5.0 * mad
+        k = int(flag.sum())
+        rec = dict(kind="none", n_flagged=k, rounds=1,
+                   mad=round(mad, 6),
+                   why=f"{k} rows beyond 5*MAD of the admitted law")
+        grain_road, _ = self._floor_grain(y)
+        # road A' — THE CLEAN-MAJORITY SEARCH (the rival-form duel
+        # fused into the owner's road): a flexible fit ABSORBS point
+        # poison (battery O1, wrong-kept: only 2/6 poisoned rows
+        # survived as outliers of the 16-term fit), so isolation must
+        # run against SIMPLE RIVAL FORMS — a 2-term form cannot bend
+        # around single cells. For exact-checkable data (grain
+        # evidenced): find a simple pure-variable form that is
+        # machine-exact on >=85% of rows with the remainder sitting
+        # on the grain — that form BEATS the absorber, and the
+        # remainder is quarantined.
+        if grain_road:
+            n_vars = X.shape[1]
+            g = float(grain_road["sigma"]) * np.sqrt(12.0)
+            pv = [(i,) for i in range(n_vars)]
+            pv += [(i, j) for i in range(n_vars)
+                   for j in range(i, n_vars)]
+            pv += [(i, j, kk) for i in range(n_vars)
+                   for j in range(i, n_vars)
+                   for kk in range(j, n_vars)]
+            cols_all = {t: np.prod([X[:, a] for a in t], axis=0)
+                        for t in pv}
+            base = y - y.mean()
+            bs = base.std() + 1e-12
+            ranked = sorted(pv, key=lambda t: -abs(float(
+                np.corrcoef(cols_all[t], base)[0, 1]))
+                if cols_all[t].std() > 1e-12 else 0.0)[:12]
+            from itertools import combinations
+            snap = (list(enum.terms), enum.coefs.copy(), enum.intercept)
+            for kk in (1, 2, 3):
+                for sub in combinations(ranked, kk):
+                    C = np.column_stack([cols_all[t] for t in sub]
+                                        + [np.ones(len(y))])
+                    beta0, *_ = np.linalg.lstsq(C, y, rcond=None)
+                    r = y - C @ beta0
+                    rm = float(np.median(r))
+                    rmad = float(np.median(np.abs(r - rm))) + 1e-12
+                    fl = np.abs(r - rm) > 5.0 * rmad
+                    if fl.sum() == 0 or fl.sum() > 0.15 * len(y):
+                        continue
+                    keep = ~fl
+                    beta, *_ = np.linalg.lstsq(C[keep], y[keep],
+                                               rcond=None)
+                    rk = y - C @ beta
+                    scale = float(max(np.max(np.abs(y)), 1e-12))
+                    if np.max(np.abs(rk[keep])) / scale > _EXACT_REL:
+                        continue
+                    mult = rk[fl] / g
+                    hit = (np.abs(mult - np.round(mult)) < 0.05) \
+                        & (np.abs(np.round(mult)) >= 1)
+                    if float(np.mean(hit)) < 0.8:
+                        continue
+                    # the simple form wins: supersede + quarantine.
+                    # terms are var-atom tuples (var atoms are specs
+                    # 0..n_vars-1 by construction).
+                    enum.terms = [tuple(t) for t in sub]
+                    enum.coefs = beta[:-1]
+                    enum.intercept = float(beta[-1])
+                    kf = int(fl.sum())
+                    rec.update(
+                        kind="mis-entry", n_flagged=kf,
+                        why=(f"a simple {kk}-term form is machine-"
+                             f"exact on {int(keep.sum())}/{len(y)} "
+                             f"rows; the {kf} leftovers sit exact "
+                             f"grain multiples (quantum {g:g}) off it "
+                             f"— the flexible fit had ABSORBED them; "
+                             f"cells quarantined, never banked"),
+                        quarantined=[
+                            dict(row=int(i), y=float(y[i]),
+                                 predicted=round(float((C @ beta)[i]),
+                                                 6),
+                                 deviation=round(float(rk[i]), 6))
+                            for i in np.where(fl)[0]])
+                    return rec, True
+            enum.terms, enum.coefs, enum.intercept = snap
+        # flag-dependent roads below need enough (and few enough)
+        # outliers OF THE ADMITTED FIT — A' above needs neither
+        # (the absorber hides its poison; battery O1, wrong-kept)
+        if k < 3:
+            return rec, False
+        if k > 0.35 * len(y):
+            rec["why"] += (" — too many to be outliers: the LAW is "
+                           "suspect, not the data; pass refused")
+            return rec, False
+        dev = d[flag]
+        rec["deviation_rms"] = round(float(np.sqrt(np.mean(dev ** 2))), 6)
+        # road A — MIS-ENTRY vs the admitted fit's own deviations
+        if grain_road:
+            quantum = None
+            for qcand in (float(grain_road["sigma"]) * np.sqrt(12.0),
+                          float(grain_road["sigma"])):
+                m = dev / qcand
+                hit = (np.abs(m - np.round(m)) < 0.05) \
+                    & (np.abs(np.round(m)) >= 1)
+                if float(np.mean(hit)) >= 0.8:
+                    quantum = qcand
+                    break
+            if quantum is not None:
+                snap = (list(enum.terms), enum.coefs.copy(),
+                        enum.intercept)
+                tr_ok, ho_ok = ~flag[:half], ~flag[half:]
+                if tr_ok.sum() >= 8 and ho_ok.sum() >= 4:
+                    ex = _exact_road(enum.specs, enum.A[tr_ok],
+                                     y[:half][tr_ok], X[half:][ho_ok],
+                                     y[half:][ho_ok], X.shape[1])
+                    if ex is not None:
+                        enum.terms = [tuple(t) for t in ex]
+                        D = enum._design(enum.A[tr_ok])
+                        beta = np.linalg.lstsq(D, y[:half][tr_ok],
+                                               rcond=None)[0]
+                        enum.coefs = beta[:-1]
+                        enum.intercept = float(beta[-1])
+                        p_c = enum.predict(X[half:][ho_ok])
+                        rms_c = float(np.sqrt(np.mean(
+                            (y[half:][ho_ok] - p_c) ** 2)))
+                        scale = float(max(np.max(np.abs(y)), 1e-12))
+                        if rms_c / scale < _EXACT_REL:
+                            rec["kind"] = "mis-entry"
+                            rec["why"] = (
+                                f"{k} cells sit an exact grain "
+                                f"multiple off the law (quantum "
+                                f"{quantum:g}); the clean majority "
+                                f"re-certifies machine-exact — cells "
+                                f"quarantined, never banked")
+                            rec["quarantined"] = [
+                                dict(row=int(i), y=float(y[i]),
+                                     predicted=round(float(p_all[i]), 6),
+                                     deviation=round(float(d[i]), 6))
+                                for i in np.where(flag)[0]]
+                            return rec, True
+                        enum.terms, enum.coefs, enum.intercept = snap
+        # road B — SECOND SOURCE: do the deviations have their own law?
+        if k >= 24:
+            rs = Isaac().discover(X[flag], dev, outlier_pass=False)
+            rng = np.random.default_rng(97)
+            rs_s = Isaac().discover(X[flag], rng.permutation(dev),
+                                    outlier_pass=False)
+            if rs["verdict"] == "UNDERSTOOD" \
+                    and rs_s["verdict"] != "UNDERSTOOD":
+                rec["kind"] = "second-source"
+                rec["source_equation"] = rs["equation"]
+                rec["source_certificate"] = rs.get("certificate")
+                rec["why"] = (f"{k} rows carry a LAWFUL deviation — "
+                              f"news, not error: {rs['equation']} "
+                              f"(scrambled control minted nothing)")
+        return rec, False
+
     # ── discovery: the challenge loop ───────────────────────────
 
-    def discover(self, X, y, name=None, verbose=False):
+    def discover(self, X, y, name=None, verbose=False, told_sigma=None,
+                 outlier_pass=True):
         """THE CHALLENGE LOOP. Given examples of something he cannot yet do
         (inputs X -> outcome y), find the rule. Half the examples are held
         out — the rule must WORK, not merely fit. Four honest verdicts:
@@ -3143,6 +3955,18 @@ class Isaac:
         enum = _Enumerator()
         enum.fit(X[:half], y[:half])
         p = enum.predict(X[half:])
+        # THE EXACT ROAD (S2b requirement 4): machine precision proven
+        # on unseen rows outranks statistics — it may override the
+        # admitted form (exactness on fresh rows is the rival-killer),
+        # and it is how a law with 8 planets gets said at all.
+        exact_stamp = False
+        ex_terms = _exact_road(enum.specs, enum.A, y[:half],
+                               X[half:], y[half:], X.shape[1])
+        if ex_terms is not None:
+            enum.terms = [tuple(t) for t in ex_terms]
+            enum._refit(y[:half])
+            p = enum.predict(X[half:])
+            exact_stamp = True
         ss = float(np.sum((y[half:] - y[half:].mean()) ** 2))
         r2 = 1 - float(np.sum((y[half:] - p) ** 2)) / max(ss, 1e-12)
         # right-enough-to-use vs form-true: a surrogate can match the law on
@@ -3165,7 +3989,96 @@ class Isaac:
         # says — it must never be discarded because capture scored higher
         # (the CAPTURED-erases-law bug, 2026-07-03 audit)
         has_law = bool(enum.terms) and r2 >= 0.2
-        if enum.terms and r2 >= 0.9:
+
+        # ═══ THE VERDICT REWRITE (S2b, 2026-07-15): UNDERSTOOD is
+        # EARNED before examiners and a ruler — r2 is a reported
+        # number, no longer the judge. Replay: can any candidate form
+        # predict the held-out leftover (selection-corrected)? Pool:
+        # can ANYTHING cheap (grammar-free)? Certificate: is the
+        # residual machine-exact, within an EVIDENCED floor, above it,
+        # or uncertifiable (no floor evidenced — said so, never
+        # assumed)? Every examiner fires or leaves a bypass receipt.
+        # floors come from the CURED organ (read_floor: consensus-
+        # ejected repeats, coarsest-consistent grain, told road with
+        # contradiction flagging) — reuse law, never a rival reader
+        if told_sigma is not None and name:
+            tn = f"floor:{name}"
+            if not self.net.get_meta(tn, "told"):
+                self.net.set_meta(tn, "told",
+                                  dict(sigma=float(told_sigma),
+                                       who="caller"))
+        fl = self.read_floor(y, X[:, :d_raw], name=name)
+        floor_std, floor_why = fl["floor"], fl["why"]
+        if told_sigma is not None and not name:
+            if floor_std is None or float(told_sigma) > floor_std:
+                floor_std = float(told_sigma)
+                floor_why = f"told {told_sigma:g} | " + floor_why
+        legs = dict(replay=dict(state="bypassed: no law admitted"),
+                    pool=dict(state="bypassed: no law admitted"))
+        resid_ho = y[half:] - p
+        scale_y = float(max(np.max(np.abs(y)), 1e-12))
+        rms_ho = float(np.sqrt(np.mean(resid_ho ** 2)))
+        if enum.terms and (exact_stamp or rms_ho / scale_y < _EXACT_REL):
+            certificate = "machine-exact"
+            legs = dict(replay=dict(state="bypassed: machine-exact"),
+                        pool=dict(state="bypassed: machine-exact"))
+        else:
+            if enum.terms:
+                A_ho = np.column_stack([_atom_col(X[half:], s)
+                                        for s in enum.specs])
+                rngv = np.random.default_rng(1234 + len(y))
+                st, who, obs, thr = _replay_scan(
+                    enum, A_ho, X[half:, :d_raw], resid_ho, rngv)
+                legs["replay"] = dict(state=st, who=who,
+                                      obs=round(obs, 4),
+                                      thr=round(thr, 4))
+                resid_tr = y[:half] - enum.predict(X[:half])
+                Xp = np.vstack([X[:half, :d_raw], X[half:, :d_raw]])
+                rp = np.concatenate([resid_tr, resid_ho])
+                if len(rp) >= _POOL_MIN_N:
+                    cp, tp, scream = _pool_scream(
+                        Xp, rp, rng_seed=4321 + len(y))
+                    legs["pool"] = dict(
+                        state="scream" if scream else "quiet",
+                        cap=round(cp, 4), thr=round(tp, 4))
+                else:
+                    legs["pool"] = dict(
+                        state=f"bypassed: n={len(rp)} < {_POOL_MIN_N}"
+                              f" (measured scope)")
+            if floor_std is not None:
+                certificate = (("within floor"
+                                if rms_ho <= 3 * floor_std
+                                else "above floor") + f" ({floor_why})")
+            else:
+                certificate = "uncertified (no floor evidenced)"
+        # THE OUTLIER'S OWN LAW (owner, 2026-07-15): when a law stands
+        # but is not machine-exact, the rows it cannot carry get
+        # isolated, quantified, and ASKED WHAT THEY ARE — mis-entry
+        # (quarantine + clean refit supersedes), a second source
+        # (news, recorded), or unknown (kept).
+        outrec = None
+        if outlier_pass and enum.terms and floor_std is not None \
+                and certificate != "machine-exact":
+            outrec, cured_o = self._outlier_source(enum, X, y, half)
+            if cured_o:
+                p = enum.predict(X[half:])
+                ss = float(np.sum((y[half:] - y[half:].mean()) ** 2))
+                r2 = 1 - float(np.sum((y[half:] - p) ** 2)) \
+                    / max(ss, 1e-12)
+                resid_ho = y[half:] - p
+                rms_ho = float(np.sqrt(np.mean(resid_ho ** 2)))
+                certificate = (f"machine-exact (clean majority; "
+                               f"{outrec['n_flagged']} cells "
+                               f"quarantined as mis-entry)")
+                legs = dict(
+                    replay=dict(state="bypassed: clean-refit "
+                                      "machine-exact (outlier road)"),
+                    pool=dict(state="bypassed: clean-refit "
+                                    "machine-exact (outlier road)"))
+        surprise = (legs["replay"].get("state") == "fired"
+                    or legs["pool"].get("state") == "scream")
+        if enum.terms and r2 >= 0.9 and not surprise \
+                and not certificate.startswith("above floor"):
             verdict = "UNDERSTOOD"
         elif cap_r2 > max(cap_null + 0.1, 0.2) and cap_r2 > r2 + 0.1:
             verdict = "CAPTURED"
@@ -3265,7 +4178,13 @@ class Isaac:
                          f"collect more or confirm() at the probes"])
 
         rivals = []
-        if has_law:
+        if has_law and not (outrec is not None
+                            and outrec.get("kind") == "mis-entry"):
+            # on a mis-entry cure the rival contest is already settled
+            # by clean-majority machine-exactness — and rival_check's
+            # state restore REFITS on the contaminated train, which
+            # would re-poison the cured constants (battery O1,
+            # wrong-kept: err 6.7e-2 reappeared through this door)
             rivals = enum.rival_check(y[:half])
         eq_str = self._rename_lags(enum.equation(), d_raw + len(comps),
                                    lags)
@@ -3292,6 +4211,10 @@ class Isaac:
                 lag_scan=list(getattr(self, "_last_lag_scan", []))))
             self.net.set_meta(node, "equation", eq_str)
             self.net.set_meta(node, "accounting", accounting)
+            self.net.set_meta(node, "certificate", certificate)
+            self.net.set_meta(node, "verdict_legs", legs)
+            if outrec is not None:
+                self.net.set_meta(node, "outliers", outrec)
             if dossier:
                 self.net.set_meta(node, "residual_dossier", dossier)
             self._teach_fact(node, "explains", name or "challenge")
@@ -3308,6 +4231,7 @@ class Isaac:
             "law" if has_law else "verdict",
             name or "challenge", verdict=verdict, equation=eq_str,
             r2=r2, r2_edge=r2_edge, scope=scope, captured_r2=cap_r2,
+            certificate=certificate, floor=floor_why, legs=legs,
             n=len(y), d=X.shape[1], rivals=riv_summary,
             accounting=accounting, dossier=dossier,
             model=(dict(terms=list(enum.terms), coefs=enum.coefs,
@@ -3321,6 +4245,8 @@ class Isaac:
             capture = self.capture_net(name, X[:, :d_raw], y)
         return dict(verdict=verdict, equation=eq_str,
                     r2=r2, r2_edge=r2_edge, scope=scope, captured_r2=cap_r2,
+                    certificate=certificate, floor=floor_why, legs=legs,
+                    outliers=outrec,
                     rivals=riv_summary, accounting=accounting,
                     dossier=dossier, adequacy=adequacy, capture=capture)
 
