@@ -75,7 +75,103 @@ def _bin_records(names, X):
     return recs
 
 
+def _detect_totals(cols, R):
+    """Exact-books totals detection (v1 scope, said plainly): a SUM
+    COLUMN is machine-exact equal to the sum of ALL other numeric
+    columns on >=60% of rows (>=3 balancing; chance balancing at
+    machine tolerance is ~0, and the DISSENTING rows are exactly what
+    the cross-checks then hunt — a 90% bar declared no structure on
+    the very grid whose one corrupted cell was the point, A9c
+    wrong-kept 2026-07-17), >=2 parts; a TOTALS ROW is the LAST row
+    only (the spreadsheet convention), balancing >=60% of columns
+    against the column sums above it. Noisy totals are NOT detected —
+    no evidenced floor covers them, and a guessed tolerance is the
+    floor-abuse the lane refuses."""
+    n, d = R.shape
+    tol = 1e-9 * np.maximum(1.0, np.abs(R).max(0))
+    sum_col, parts = None, []
+    if d >= 3 and n >= 4:
+        for t in range(d):
+            keep = [j for j in range(d) if j != t]
+            bal = np.abs(R[:, keep].sum(1) - R[:, t]) \
+                <= max(tol.max(), 1e-9)
+            if bal.mean() >= 0.6 and bal.sum() >= 3:
+                sum_col, parts = cols[t], [cols[j] for j in keep]
+                break
+    totals_row = None
+    if n >= 5:
+        col_sums = R[:-1].sum(0)
+        bal = np.abs(R[-1] - col_sums) <= np.maximum(tol, 1e-9)
+        if bal.mean() >= 0.6:
+            totals_row = n - 1
+    if sum_col is None and totals_row is None:
+        return None
+    return dict(sum_column=sum_col, parts=parts, totals_row=totals_row)
+
+
+def _totals_checks(cols, R, structure):
+    """Cells + sum checks for cross_check: per-row checks where a sum
+    column exists, per-column checks where a totals row exists; the
+    totals row's own row check is the grand total."""
+    n = R.shape[0]
+    tr = structure["totals_row"]
+    data_rows = [i for i in range(n) if i != tr]
+    cell = (lambda i, c: f"totals:{c}" if i == tr else f"r{i}:{c}")
+    values = {cell(i, c): float(R[i, j])
+              for i in range(n) for j, c in enumerate(cols)}
+    checks = []
+    if structure["sum_column"]:
+        sc, parts = structure["sum_column"], structure["parts"]
+        for i in range(n):
+            checks.append(dict(
+                name=f"{'grand total' if i == tr else f'row {i}'}: "
+                     f"{'+'.join(parts)} = {sc}",
+                cells=[cell(i, p) for p in parts],
+                total=cell(i, sc)))
+    if tr is not None:
+        for c in cols:
+            checks.append(dict(name=f"column {c} total",
+                               cells=[cell(i, c) for i in data_rows],
+                               total=cell(tr, c)))
+    return values, checks
+
+
 def _audit_table(mind, item, target, resolutions, asks, records):
+    # ── the totals wiring (cross_check's named rung): books that
+    # carry totals get the ECC treatment BEFORE the law pass; a
+    # totals row is bookkeeping, excluded from law/row audit, said ──
+    tbl0 = item["name"]
+    R = np.asarray(item["rows"], float)
+    structure = _detect_totals(item["columns"], R) \
+        if R.ndim == 2 and R.size else None
+    if structure is None:
+        cross = dict(structure=None, n_checks=0,
+                     why="no totals structure detected (v1 scope: a "
+                         "machine-exact sum column over >=2 parts, a "
+                         "last-row totals row; noisy totals are not "
+                         "detected — no floor, no guess)")
+    else:
+        values, checks = _totals_checks(item["columns"], R, structure)
+        got = mind.cross_check(values, checks, floor=0.0,
+                               name=f"audit:{tbl0}:totals")
+        cross = dict(structure=structure, n_checks=got["n_checks"],
+                     passed=got["passed"], failed=got["failed"],
+                     consistent=got["consistent"],
+                     components=got["components"], why=got["why"])
+        for comp in got["components"]:
+            records.append(dict(record="cross-check", table=tbl0,
+                                verdict=comp["verdict"],
+                                cells=comp["cells"],
+                                candidates=comp["candidates"],
+                                why=comp["why"]))
+        if structure["totals_row"] is not None:
+            item = dict(item, rows=[r for i, r in
+                                    enumerate(item["rows"])
+                                    if i != structure["totals_row"]])
+            cross["totals_row_note"] = (
+                "the totals row is bookkeeping — checked by the "
+                "cross-checks above, excluded from the law pass and "
+                "row audit (it is not an observation)")
     tbl = item["name"]
     names, X, y, target_name = _table_xy(item, target)
     for col, sig in (resolutions or {}).items():
@@ -244,6 +340,7 @@ def _audit_table(mind, item, target, resolutions, asks, records):
     counts["unflagged"] = max(0, n - counts["error"] - counts["news"]
                               - counts["duplicate"]
                               - counts["unvalidatable"])
+    counts["inconsistent"] = len(cross.get("components") or [])
     for fl in flags:
         records.append(dict(record="flag", table=tbl, **{
             k: v for k, v in fl.items() if k != "receipt"},
@@ -252,7 +349,7 @@ def _audit_table(mind, item, target, resolutions, asks, records):
                 dropped_columns=item.get("dropped_columns", []),
                 floors=floors, law=law, flags_status=flags_status,
                 flags=flags, news_factors=news_factors, counts=counts,
-                recalibration=recal)
+                recalibration=recal, cross_checks=cross)
 
 
 def audit_source(source, target=None, resolutions=None, mod=None):
@@ -301,6 +398,7 @@ def audit_source(source, target=None, resolutions=None, mod=None):
         error=sum(r["counts"]["error"] for r in reps),
         news=sum(r["counts"]["news"] for r in reps),
         duplicate=sum(r["counts"]["duplicate"] for r in reps),
+        inconsistent=sum(r["counts"]["inconsistent"] for r in reps),
         unvalidatable=sum(r["counts"]["unvalidatable"] for r in reps),
         laws=sum(1 for r in reps
                  if r["law"]["verdict"] in ("UNDERSTOOD", "PARTIAL")),

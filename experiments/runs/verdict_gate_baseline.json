@@ -1,0 +1,1007 @@
+{
+ "mode": "baseline",
+ "rows": [
+  {
+   "family": "F1 true-law",
+   "seed": 0,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0008,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 1,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.001,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 2,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0016,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 3,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0009,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 4,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0037,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 5,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0017,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 6,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.003,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 7,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0025,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 8,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0012,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 9,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0021,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 10,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0024,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 11,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0011,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 12,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0032,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 13,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0037,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 14,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0021,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 15,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0031,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 16,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0019,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 17,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0021,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 18,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0021,
+   "wrong_confident": false
+  },
+  {
+   "family": "F1 true-law",
+   "seed": 19,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0027,
+   "wrong_confident": false
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 0,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9994,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0248,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 1,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9446,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5182,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 2,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9849,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2707,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 3,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9958,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1358,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 4,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9574,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5348,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 5,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9371,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2509,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 6,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9619,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.4196,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 7,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0251,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 8,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9916,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1183,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 9,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9989,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0751,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 10,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9545,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.3169,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 11,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9999,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0241,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 12,
+   "verdict": "CAPTURED",
+   "r2": 0.8534,
+   "certificate": null,
+   "legs": null,
+   "wrong_confident": false
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 13,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.983,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1593,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 14,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9622,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2745,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 15,
+   "verdict": "PARTIAL",
+   "r2": 0.866,
+   "certificate": null,
+   "legs": null,
+   "wrong_confident": false
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 16,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9961,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0981,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 17,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9576,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2847,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 18,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9486,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.453,
+   "wrong_confident": true
+  },
+  {
+   "family": "F2 additive-hole",
+   "seed": 19,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9696,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2397,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 0,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9477,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.4028,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 1,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9613,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5478,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 2,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9418,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5606,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 3,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9612,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.231,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 4,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9459,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.4019,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 5,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9761,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2982,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 6,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9883,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1857,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 7,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9547,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.3887,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 8,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9699,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.4399,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 9,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9632,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1875,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 10,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.93,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.3956,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 11,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9468,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.6043,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 12,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9493,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2573,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 13,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9839,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1379,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 14,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9726,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.1805,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 15,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9711,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.6847,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 16,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9304,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 17,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9578,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.4287,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 18,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9402,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.2372,
+   "wrong_confident": true
+  },
+  {
+   "family": "F3 near-miss",
+   "seed": 19,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.959,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.3896,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 0,
+   "verdict": "PARTIAL",
+   "r2": 0.7511,
+   "certificate": null,
+   "legs": null,
+   "wrong_confident": false
+  },
+  {
+   "family": "F4 blended",
+   "seed": 1,
+   "verdict": "NO RULE",
+   "r2": -1.1384,
+   "certificate": null,
+   "legs": null,
+   "wrong_confident": false
+  },
+  {
+   "family": "F4 blended",
+   "seed": 2,
+   "verdict": "CAPTURED",
+   "r2": -0.9676,
+   "certificate": null,
+   "legs": null,
+   "wrong_confident": false
+  },
+  {
+   "family": "F4 blended",
+   "seed": 3,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9638,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.6819,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 4,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9651,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.6778,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 5,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9964,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.8164,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 6,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9836,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.4777,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 7,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9883,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5835,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 8,
+   "verdict": "PARTIAL",
+   "r2": 0.7818,
+   "certificate": null,
+   "legs": null,
+   "wrong_confident": false
+  },
+  {
+   "family": "F4 blended",
+   "seed": 9,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9952,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.6701,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 10,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9874,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.209,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 11,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9968,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5613,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 12,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9931,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5192,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 13,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.998,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.5679,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 14,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9718,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.6969,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 15,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9316,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.1724,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 16,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9232,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.4865,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 17,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9714,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.5113,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 18,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9619,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 3.7578,
+   "wrong_confident": true
+  },
+  {
+   "family": "F4 blended",
+   "seed": 19,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9862,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 1.3327,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 0,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9998,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0085,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 1,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9996,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0111,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 2,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9997,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0104,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 3,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.013,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 4,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9992,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0146,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 5,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9993,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0131,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 6,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9993,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0171,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 7,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9997,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0099,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 8,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9992,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0141,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 9,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0117,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 10,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0127,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 11,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0134,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 12,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9992,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0118,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 13,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9992,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0113,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 14,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9993,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0159,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 15,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.016,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 16,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0147,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 17,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9607,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0329,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 18,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9995,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0141,
+   "wrong_confident": true
+  },
+  {
+   "family": "F5 max-relation",
+   "seed": 19,
+   "verdict": "UNDERSTOOD",
+   "r2": 0.9997,
+   "certificate": null,
+   "legs": null,
+   "truth_median_err": 0.0098,
+   "wrong_confident": true
+  }
+ ],
+ "kepler": {
+  "verdict": "NO RULE",
+  "r2": -0.3514,
+  "certificate": null
+ },
+ "total_wrong": 74,
+ "f1_avail": 20,
+ "secs": 22.5
+}

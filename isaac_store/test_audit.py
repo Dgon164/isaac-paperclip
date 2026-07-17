@@ -9,7 +9,12 @@ The differential decides news-vs-error (the commonality miner), never
 a threshold. Floors gate exactness: no ruler, no flags — the ASK is
 the answer (never "just estimate").
 
-Checks A1-A8 (+A0 render). Run: PYTHONHASHSEED=0 python test_audit.py
+Checks A1-A9 (+A0 render). A9 = the totals wiring (cross_check's
+named next rung): tables that carry totals structure get the ECC
+treatment — a failing sum marks the TUPLE false with repair doors,
+row x column checks intersect to a unique corrected candidate, and a
+totals row is bookkeeping, never an outlier to flag.
+Run: PYTHONHASHSEED=0 python test_audit.py
 """
 import io
 import json
@@ -247,6 +252,93 @@ def main():
           and len(rep["tables"]) == 1)
     check("A8b zip-bomb entry refused at the cap; the rest audited", ok,
           "; ".join(s["why"] for s in rep["intake"]["skipped"])[:50])
+
+    # ── A9: THE TOTALS WIRING — cross_check at the audit face ──
+    # (a) the owner's receipt at table scale: total = a + b, one part
+    # corrupted -> the TUPLE marked false with three repair doors;
+    # nothing blamed alone (one check cannot localize).
+    a9 = rng.integers(1, 50, (40, 2)).astype(float)
+    tot = a9.sum(1)
+    tot9 = tot.copy()
+    a9c = a9.copy()
+    a9c[7, 1] += 4.0                     # the corrupted part cell
+    with tempfile.TemporaryDirectory() as td:
+        p = write(td, "a9a.csv", csv_text(
+            ["a", "b", "total"], np.column_stack([a9c, tot9])))
+        rep = audit_source(p)
+    t = rep["tables"][0]
+    cc = t.get("cross_checks") or {}
+    comps = cc.get("components", [])
+    ok = (cc.get("structure", {}).get("sum_column") == "total"
+          and cc.get("failed") == 1 and len(comps) == 1
+          and comps[0]["verdict"] == "FALSE-SOMEWHERE"
+          and len(comps[0]["candidates"]) == 3
+          and t["counts"].get("inconsistent") == 1)
+    check("A9a broken sum: TUPLE marked FALSE-SOMEWHERE, 3 repair "
+          "doors, nothing blamed alone", ok,
+          f"structure {cc.get('structure')}, "
+          f"components {[c['verdict'] for c in comps]}")
+
+    # (b) THE CONTROL — same books, clean: structure found, all
+    # checks balance, zero inconsistency flags.
+    with tempfile.TemporaryDirectory() as td:
+        p = write(td, "a9b.csv", csv_text(
+            ["a", "b", "total"], np.column_stack([a9, tot])))
+        rep = audit_source(p)
+    t = rep["tables"][0]
+    cc = t.get("cross_checks") or {}
+    ok = (cc.get("structure", {}).get("sum_column") == "total"
+          and cc.get("failed") == 0 and cc.get("consistent")
+          and t["counts"].get("inconsistent") == 0)
+    check("A9b clean books control: structure found, every check "
+          "balances, 0 flags", ok,
+          f"checks {cc.get('n_checks')}, failed {cc.get('failed')}")
+
+    # (c) the ECC move end to end: parts + total column + totals row;
+    # ONE corrupted interior cell -> its row check and its column
+    # check intersect -> CORRECTED-CANDIDATE at the exact cell with
+    # the exact value; the totals row is bookkeeping, excluded from
+    # the row audit, and said.
+    g = rng.integers(1, 30, (8, 3)).astype(float)
+    grid = np.column_stack([g, g.sum(1)])            # a,b,c,total
+    grid = np.vstack([grid, grid.sum(0)])            # totals row
+    true_v = grid[2, 1]
+    grid[2, 1] += 7.0                    # the corrupted interior cell
+    with tempfile.TemporaryDirectory() as td:
+        p = write(td, "a9c.csv", csv_text(["a", "b", "c", "total"],
+                                          grid))
+        rep = audit_source(p)
+    t = rep["tables"][0]
+    cc = t.get("cross_checks") or {}
+    comps = cc.get("components", [])
+    cand = comps[0]["candidates"][0] if (comps and
+                                         comps[0]["candidates"]) else {}
+    ok = (cc.get("structure", {}).get("totals_row") == 8
+          and len(comps) == 1
+          and comps[0]["verdict"] == "CORRECTED-CANDIDATE"
+          and cand.get("cell") == "r2:b"
+          and abs(cand.get("repaired", 1e9) - true_v) < 1e-9
+          and t["counts"]["rows"] == 8
+          and all(f["row"] != 8 for f in t["flags"]))
+    check("A9c row x column checks intersect: CORRECTED-CANDIDATE at "
+          "r2:b with the true value; totals row = bookkeeping", ok,
+          f"totals_row {cc.get('structure', {}).get('totals_row')}, "
+          f"verdict {[c['verdict'] for c in comps]}, cand {cand}")
+
+    # (d) the false-structure control — an ordinary table must not
+    # have checks invented for it.
+    xs9 = rng.uniform(0, 5, 60)
+    ys9 = 2.0 * xs9 + rng.normal(0, 0.05, 60)
+    with tempfile.TemporaryDirectory() as td:
+        p = write(td, "a9d.csv", csv_text(
+            ["x", "y"], np.column_stack([xs9, ys9])))
+        rep = audit_source(p)
+    t = rep["tables"][0]
+    cc = t.get("cross_checks") or {}
+    ok = (cc.get("structure") is None
+          and cc.get("n_checks", -1) == 0)
+    check("A9d no totals structure -> no checks invented (said, not "
+          "silent)", ok, f"cross_checks {cc}")
 
     # ── the machine-readable records road ──
     kinds = {r["record"] for r in rep["records"]}

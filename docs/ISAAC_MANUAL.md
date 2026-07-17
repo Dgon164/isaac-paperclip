@@ -1095,6 +1095,23 @@ the engine comments. Battery `experiments/rounding_battery.py`
 **7/7**: sin(1.5x) SAYS 1.5; sin(1.75x) SAYS 1.75; exp(-0.4x) SAYS
 0.4; sin(πx) keeps its digits (3.14 — refuses the coarse marks);
 pure noise still NO RULE. Promotion gates: engine + 29 batteries.
+**REBUILT UNDER THE NEW JUDGE (2026-07-17, the alpha-push wall's one
+red, cured):** the night's verdict rewrite exposed that the old
+referee only ever worked when the fit already sat on the mark. Three
+organs now carry it: `_sharpen_k` (shrinking multiplicative grid,
+~2e-5 relative — the last digits are EARNED; a 0.15% frequency error
+leaves a beat the replay leg rightly fires on), `_simple_rival` (a
+blend keeps its extra parts only if its edge PER EXTRA PARAMETER
+beats what noise buys — the clean-majority law at fit end; measured:
+a 4-term blend's edge over the true single wave was exactly
+q*(1-r2)/n, pure parameter count), and the FRESH-ROW COURT in
+`_round_terms` (train r2 cannot arbitrate marks — the true mark 1.5
+cost MORE train r2 than the false mark 3.142-for-π; a mark is
+adopted only if the displaced-alternative column cannot predict its
+held-out residual past a permuted null — the referee and the judge
+share one court). Referee tie is dof-scaled (f=8, χ²(1) 99.5th pct),
+collapsing to machine tie on exact worlds. Battery 7/7 under the new
+judge: all marks UNDERSTOOD (replay quiet), π says 3.1415.
 
 **Law families + which_law (2026-07-12):** overlapping-confusion
 machinery. tell_law now compares CONSTANTS on a form match (5%
@@ -1564,6 +1581,20 @@ gaps, never a unanimity (floor battery F14 pins it). V1 scopes said
 plainly in the module: numeric columns only; OUT-OF-DOMAIN activates
 with inherited laws; near-duplicates only for isolated pairs.
 Promotion gates: engine + 32 batteries.
+**THE TOTALS WIRING (2026-07-17, cross_check's named rung, battery
+A9a-d written first and shown failing):** tables carrying exact-books
+totals structure — a sum column over ≥2 parts (≥60% of rows balancing
+at machine tolerance, ≥3 rows; the dissenters are exactly what the
+checks hunt) and/or a last-row totals row — get the ECC treatment
+BEFORE the law pass: per-row and per-column sum checks through
+`cross_check`. A broken sum marks the TUPLE false with repair doors
+(nothing blamed alone); row × column checks intersect to a unique
+CORRECTED-CANDIDATE at the exact cell with the exact value; a totals
+row is BOOKKEEPING (excluded from law pass and row audit, said in the
+report); ordinary tables get no checks invented. Noisy totals are NOT
+detected — no floor, no guess (the v1 scope, said). Report carries a
+`cross_checks` section + `inconsistent` counts end to end (counts,
+summary, records, render). Battery **18/18**.
 
 **The tools node (owner design 2026-07-15 — "a tools node that he can
 query... the preset files of every thing he has designed or we have

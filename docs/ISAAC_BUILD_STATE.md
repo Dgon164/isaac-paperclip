@@ -1195,3 +1195,75 @@ Self-test 11/11, zero tracebacks. Carried caveat, not hidden:
 step-level credit assignment is CRUDE (whole-walk outcome banks on
 the flow, not per step — the word-elections fresh-eyes #1 caveat,
 now at the flow level; per-step attribution is named segment work).
+
+## 2026-07-17 — SESSION 1 OF THE ALPHA PUSH: the wall re-run, the one red CURED (the fresh-row court), and the totals wiring
+THE WALL (handoff step 1): full 45-gate re-run against the night
+engine as ONE pass — engine suite, the 37 promote batteries, the five
+night promotion batteries, the verdict duel (4/4, wrong-confident
+0/100 held), THE GAUNTLET (all datasets reproduce the 07-04 numbers;
+KEPLER FLIPPED: "PREDICTED FAIL" → UNDERSTOOD +1.00*x0^1.5
+machine-exact — the new judge's win on the gauntlet's own stage).
+ONE RED: rounding battery 5/7 — sin(1.75x) lost its mark (two junk
+waves seated at 1.753/1.7), sin(pi*x) demoted to PARTIAL. Honest
+breakage the night's per-promotion gates never saw (they ran
+self-test + own batteries, not the full wall).
+
+THE PROMOTE ROAD HEALED FIRST: research's isaac.py was STALE
+(pre-#11) — the night's engine work landed in dc directly; running
+promote.py would have overwritten six promotions. research synced to
+the dc engine (commit f565c8d) before any fix; the five night
+batteries + verdict_port_gate + flow probes copied into research so
+the road is self-contained.
+
+THE CURE, three organs, each measured into place (research-first):
+(1) _sharpen_k — a shrinking multiplicative grid on inside-parameters
+(6 rounds, ~2e-5 relative resolution; the coarse 0.7/0.85/1.15/1.4
+climb could not correct a 0.15% frequency error, and the beat such an
+error leaves is EXACTLY what the replay leg fires on). Single-term
+fits only: inside a blend, coordinate sharpening chased the co-fit's
+noise (measured: walked 1.7527 AWAY from 1.75 — wrong-kept).
+(2) _simple_rival — the clean-majority law one level up: a flexible
+blend absorbs its own error (a pair of close waves imitates one wave
+of slightly-wrong k by seating junk on its own beat). Each admitted
+k-term is offered ALONE, sharpened on its clean ridge; the F-test
+shape decides — the blend keeps its extra parts only if its edge PER
+EXTRA PARAMETER beats what noise buys (measured: a 4-term blend's
+train edge over the true single wave was 6.4e-5 = exactly
+q*(1-r2)/n — pure parameter count, no signal). The solo road landed
+k = 3.14159200 from a 3.1387 start.
+(3) THE FRESH-ROW COURT for the rounding referee — train r2 CANNOT
+arbitrate marks (measured: the TRUE mark 1.5 cost 3.0e-5 while the
+FALSE mark 3.142-for-pi cost 2.2e-5 — they overlap); fresh rows can:
+noise-chasing does not replicate on the held-out half, a real beat
+does. A mark is adopted only if the displaced-alternative column
+cannot predict the mark's held-out residual past a permuted null —
+the replay's own question asked BEFORE adoption, so the referee and
+the judge share ONE court instead of convicting each other's
+verdicts. Referee tie widened to f=8 (chi2(1) 99.5th pct; f=4 refused
+true marks on ~1-in-20 draws) — safe ONLY because the fresh-row court
+now catches what the wider tie lets through.
+ROUNDING 7/7 (1.5 and 1.75 said exactly; pi says 3.1415, coarse marks
+refused; noise NO RULE). Re-gate green across the discover-heavy set:
+mechanisms 8/8, outlier 5/5, containers 10/10, flow 12/12, elections
+6/6, duel gate 4/4, lag 14/14, gravity 13/13, floor, told, engine
+suite 11/11.
+
+THE TOTALS WIRING (cross_check's named rung, audit battery FIRST —
+A9a-d written and shown failing 4/4 before the mechanism): the audit
+face detects exact-books totals structure (sum column over >=2 parts;
+last-row totals row) and hands cross_check the row x column sum
+checks. A broken sum marks the TUPLE false with repair doors (A9a:
+3 doors, nothing blamed alone); clean books = zero flags (A9b); row x
+column checks INTERSECT to a unique CORRECTED-CANDIDATE at the exact
+cell with the exact value (A9c: r2:b, 31 → 24); ordinary tables get
+no checks invented (A9d). A totals row is BOOKKEEPING — excluded from
+the law pass and row audit, said in the report. Wrong-kept in the
+detector: the first 90%-balanced bar declared NO STRUCTURE on the
+very grid whose one corrupted cell was the point (8/9 rows); the bar
+is now >=60% + >=3 balancing — the dissenting rows are exactly what
+the cross-checks hunt. Audit battery 18/18; counts/summary/records/
+render all carry the inconsistency numbers.
+
+B3/B4 PREDICTIONS FILED (P10-P18 in dataops_bench/PREDICTIONS.md)
+BEFORE any run, per the plan; bench_b3_sysid.py written. B1/B2 re-run
+and B3/B4 first runs follow the promotion.
