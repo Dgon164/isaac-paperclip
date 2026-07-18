@@ -4438,6 +4438,12 @@ class Isaac:
                 c = active if active != "base" else f"data-{name}"
             self.net.add_door(f"world:{c}", node, tag=f"in:{c}")
             self.net.set_meta(node, "container", c)
+            # THE FACTS LAYER (owner, 2026-07-18): the structure
+            # keeps a sampled breakdown of the datapoints that
+            # earned it — deterministic (same data, same memory),
+            # capped (a sample, never a hoard), referenceable
+            self.net.set_meta(node, "evidence",
+                              self._sample_evidence(X[:, :d_raw], y))
             self._teach_fact(node, "explains", name or "challenge",
                              container=c)
         if verbose:
@@ -4471,6 +4477,60 @@ class Isaac:
                     outliers=outrec,
                     rivals=riv_summary, accounting=accounting,
                     dossier=dossier, adequacy=adequacy, capture=capture)
+
+    # ── THE FACTS LAYER (owner, 2026-07-18: "datapoint breakdowns
+    # he can reference and save... sampling for context and
+    # reference. give him some kind of memory") ──────────────────
+
+    @staticmethod
+    def _sample_evidence(X, y, cap=24):
+        """A deterministic sample of the rows that earned a
+        structure: per-column extremes + an even spread by outcome
+        rank. Same data -> same memory (the artifact claim); capped
+        (a sample, never a hoard — re-feeding stays cheap)."""
+        X = np.asarray(X, float)
+        y = np.asarray(y, float)
+        n = len(y)
+        idx = set()
+        for j in range(X.shape[1]):
+            idx.add(int(np.argmin(X[:, j])))
+            idx.add(int(np.argmax(X[:, j])))
+        idx.add(int(np.argmin(y)))
+        idx.add(int(np.argmax(y)))
+        order = np.argsort(y, kind="stable")
+        for q in np.linspace(0, n - 1, min(12, n)).astype(int):
+            idx.add(int(order[q]))
+        idx = sorted(idx)[:cap]
+        rows = [[float(v) for v in X[i]] + [float(y[i])]
+                for i in idx]
+        return dict(rows=rows, n_source=int(n),
+                    why="extremes + even spread by outcome rank")
+
+    def recall_evidence(self, name):
+        """The saved breakdown behind a law or series — what he
+        remembers of the data that earned the structure."""
+        for node in (f"law:{name}", f"series:{name}"):
+            ev = self.net.get_meta(node, "evidence")
+            if ev:
+                return ev
+        return None
+
+    def context_sample(self, name, x, k=3):
+        """Sampling FOR CONTEXT: the nearest remembered exemplars to
+        a query point — 'what does it look like near here?' — from
+        the facts layer, never the discarded raw."""
+        ev = self.recall_evidence(name)
+        if not ev or not ev.get("rows"):
+            return None
+        E = np.asarray(ev["rows"], float)
+        Xe, ye = E[:, :-1], E[:, -1]
+        x = np.asarray(x, float).reshape(-1)
+        span = np.where(np.ptp(Xe, 0) > 1e-12, np.ptp(Xe, 0), 1.0)
+        d = np.sqrt(((Xe - x) / span) ** 2).sum(1)
+        near = np.argsort(d)[:k]
+        return [dict(x=[float(v) for v in Xe[i]],
+                     y=float(ye[i]), dist=round(float(d[i]), 4))
+                for i in near]
 
     # ── THE HARDER ROAD (the growing grammar, owner 2026-07-18) ──
 
@@ -4844,6 +4904,15 @@ class Isaac:
                 profile=out["profile"], nbins=out["nbins"],
                 t0=float(t[0]), accounting=accounting,
                 container=c, receipts=rec))
+            # the facts layer: remembered points + the largest
+            # leftovers (the residual's own witnesses)
+            ev = self._sample_evidence(t.reshape(-1, 1), y)
+            resid = y - trend_pred
+            worst = np.argsort(-np.abs(resid))[:3]
+            ev["leftovers"] = [dict(t=float(t[i]), y=float(y[i]),
+                                    resid=round(float(resid[i]), 4))
+                               for i in worst]
+            self.net.set_meta(node, "evidence", ev)
             self.record_finding("series", name, period=out["period"],
                                 accounting=accounting,
                                 trend=tr.get("equation"))
@@ -5014,8 +5083,21 @@ class Isaac:
                    err_norm=round(err / scale, 6), n=len(y_new),
                    checks=len(hist))
         if verdict == "DRIFT":
-            duel = self.supersession_duel(name, X_new, y_new)
+            # THE REPLAY COURT (the facts layer's win): the drift
+            # duel runs on remembered evidence + the new batch — the
+            # incumbent's world is REPRESENTED in the court that may
+            # unseat it, no fresh-data dependence for history
+            ev = self.net.get_meta(node, "evidence")
+            if ev and ev.get("rows"):
+                E = np.asarray(ev["rows"], float)
+                Xd = np.vstack([E[:, :-1], X_new])
+                yd = np.concatenate([E[:, -1], y_new])
+            else:
+                Xd, yd = X_new, y_new
+            duel = self.supersession_duel(name, Xd, yd)
             out["duel"] = (duel.get("verdict") if duel else None)
+            out["duel_court"] = (f"{len(yd) - len(y_new)} remembered "
+                                 f"+ {len(y_new)} new rows")
         self.record_finding("watch", name, verdict=verdict,
                             err_norm=out["err_norm"], n=len(y_new),
                             duel=out.get("duel"))

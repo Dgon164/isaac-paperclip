@@ -1525,6 +1525,33 @@ wants a periodicity kind). Still queued: the rank-ruler pool for
 extreme-leverage tables; the effort dial budgeted and receipted
 under the consideration law.
 
+## THE FACTS LAYER (owner, 2026-07-18, after the size question):
+## "we can have a facts layer. we have the main structural
+## information, and then datapoint breakdowns he can reference and
+## save. yes? sampling for context and reference. give him some
+## kind of memory."
+STATUS: DESIGN CAPTURED; built same day. THE TWO LAYERS, named: the
+STRUCTURE layer (laws, series, relations, concepts — what he
+understands) and the FACTS layer (sampled datapoints KEPT with the
+structure they earned — what he remembers). Until now discover ate
+the rows and kept only the law (ranges, never the data); the facts
+layer completes the wisdom laws' other half — not just wrongs kept,
+EVIDENCE kept. THE MECHANISM: at minting, a DETERMINISTIC sample of
+source rows rides the node as `evidence` meta — per-column extremes
++ an even spread by outcome rank (~24 rows, bytes tiny; same data =
+same sample, the artifact claim extended); series keep sampled
+(t,y) + their largest leftovers. REFERENCE: recall_evidence(name) =
+the saved breakdown; context_sample(name, x) = nearest remembered
+exemplars to a query (sampling FOR CONTEXT — answering "what does
+it look like near here?"). THE REPLAY COURT (the functional win):
+the watch's drift duel now runs on SAVED EVIDENCE + the new batch
+combined — the incumbent's world is REPRESENTED in the court that
+may unseat it (fairness made structural; no fresh-data dependence
+for history). Containers: evidence wears its law's world. Size
+discipline: capped rows, measured bytes (he stays small — the facts
+layer is a sample, never a hoard; raw re-feeding remains cheap by
+the road-trials ruling).
+
 ## THE CONCEPT TOWER (owner, 2026-07-18, after the periodicity
 ## honesty check): "he needs to be able to build conceptual
 ## structures. so periodicity, or other relations that are not

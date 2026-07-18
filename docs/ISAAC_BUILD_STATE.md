@@ -1521,3 +1521,21 @@ fundamental (finite-sample luck can crown a harmonic — the smallest
 past-null peak DIVIDING the tallest at >=60% height is the
 fundamental). A1-A4 all shipped same day: the full data analyst
 stands.
+
+## 2026-07-18 — THE FACTS LAYER PROMOTED (#24): STRUCTURE + MEMORY
+Owner: "we have the main structural information, and then datapoint
+breakdowns he can reference and save... give him some kind of
+memory." Every minted law/series now KEEPS a deterministic sampled
+breakdown of the rows that earned it (extremes + even spread by
+outcome rank, capped <=24 — 20,000 rows remembered as 14; same
+data = same memory to the byte); series also name their largest
+leftovers. recall_evidence(name) = the breakdown;
+context_sample(name, x) = nearest remembered exemplars ("what does
+it look like near here?"). THE REPLAY COURT: the watch's drift duel
+runs on remembered + new rows — the incumbent's world REPRESENTED
+in the court that may unseat it (receipt: "12 remembered + 60 new
+rows"; still honestly SUPERSEDED when the world truly moved).
+Memory survives save/load; mind with a 20k-row law = 7 KB. Battery
+facts_layer_battery.py 7/7 permanent. Also this hour: THE PUSH —
+both repos verified clean @ origin; isaac_home + prologue backed up
+(timestamped zips, copies never moves).
