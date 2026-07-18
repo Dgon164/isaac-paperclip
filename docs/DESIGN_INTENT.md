@@ -1560,7 +1560,20 @@ switch-on-time + the periodicity kind + decomposition); A2
 cross-container correlation (triangulation build; CO2 vs temperature
 as the flagship real pair); A3 the watch (standing monitors +
 supersession on arrival); A4 the analyst face (one command, full
-report). RESEARCH AGENDA riding along (owner's questions): dossier
+report).
+A1 PROMOTED same day (#20): analyze_series/apply_series — period
+FIRST on the differenced series past a shuffle null with THE
+FUNDAMENTAL RULE (smallest local peak within 90% of the tallest —
+harmonics fixed), profile folded-and-learned past its own null on a
+scaffold that never ships, trend law on the adjusted series
+(use_lags=False: a time index's lags are affine clones), complete
+accounting =100, own container, forecasting. Battery 8/8 permanent.
+RECEIPTS: sunspots ~11-yr SAID (10.45, ac 0.535 vs null 0.227);
+monthly CO2 = 99.4% trend + 12.0-mo period + 6.2ppm Keeling
+sawtooth + 0.2% dark. WRONG-KEPT jewel: deterministic AM was FULLY
+ARTICULATED as exact sidebands — the machine outdid the prediction.
+NAMED DEBTS: jump-point threshold proposals; periodicity as a
+first-class structural kind (the growing grammar's rung 4). RESEARCH AGENDA riding along (owner's questions): dossier
 of what his net holds per meal; selection-precision curve as laws
 scale 8 -> 80; grown-word reuse tracking (elections receipts); the
 dark residuals as SECOND-SOURCE candidates (CO2's leftover IS

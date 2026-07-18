@@ -4117,7 +4117,7 @@ class Isaac:
     # ── discovery: the challenge loop ───────────────────────────
 
     def discover(self, X, y, name=None, verbose=False, told_sigma=None,
-                 outlier_pass=True, container=None):
+                 outlier_pass=True, container=None, use_lags=True):
         """THE CHALLENGE LOOP. Given examples of something he cannot yet do
         (inputs X -> outcome y), find the rule. Half the examples are held
         out — the rule must WORK, not merely fit. Four honest verdicts:
@@ -4144,7 +4144,7 @@ class Isaac:
         # null-gated, so exchangeable rows change nothing. Lag columns
         # are built BEFORE any domain drop can remove interior rows —
         # a lagged value is only true on the original spacing.
-        lags = self._propose_lags(X, y)
+        lags = self._propose_lags(X, y) if use_lags else []
         lag_cols = self._lag_columns(X, lags) if lags else None
         comps = self._applicable_composites(d_raw)
         if comps:
@@ -4650,6 +4650,198 @@ class Isaac:
                        "kept dark, kept honest)")
         final["harder"] = rec
         return final
+
+    # ── THE TREND ROAD (the analyst segment, owner 2026-07-18) ──
+
+    def analyze_series(self, t, y, name=None, container=None,
+                       max_period=None):
+        """THE TREND ROAD (the analyst segment, owner 2026-07-18: a
+        trend line "is just one job that a data analyst would do").
+        A time series decomposed with receipts, nothing assumed:
+        TREND by the ordinary discover vocabulary (changepoints come
+        free — the switch atoms fire on time like any column; a
+        refusal means flat, said so); PERIOD by autocorrelation past
+        a shuffle null, sharpened by parabolic refine (bracket+refine
+        law — never a preset frequency menu); the SEASONAL PROFILE
+        is FOLDED AND LEARNED (per-phase offsets — a shape, never a
+        forced sinusoid), admitted only past its own shuffle null;
+        ACCOUNTING is complete: trend% + seasonal% + residual% = 100.
+        The residual stays honestly dark (an amplitude-varying cycle
+        says its period and keeps its amplitude variation as named
+        leftover). The series lands in its own container (the
+        per-dataset default); apply_series() forecasts from it."""
+        t = np.asarray(t, float)
+        y = np.asarray(y, float)
+        o = np.argsort(t)
+        t, y = t[o], y[o]
+        n = len(y)
+        rec = dict(bypassed=[])
+        c = container
+        if c is None:
+            active = getattr(self, "active_container", "base")
+            c = active if active != "base" else \
+                (f"data-{name}" if name else "base")
+        step = float(np.median(np.diff(t))) or 1.0
+        # 1) PERIOD FIRST, on the DIFFERENCED series — differencing
+        # kills trend and keeps cycles, so the trend fit can never
+        # eat the cycle before it is measured (run-1 lesson)
+        period, prof, nbins, r2_seas = None, None, 0, 0.0
+        bins_all = None
+        dy = np.diff(y)
+        maxlag = int(min(n // 3, max_period or n // 3))
+        if maxlag >= 3 and dy.std() > 1e-12:
+            def _ac(sig, lag):
+                a, b = sig[:-lag], sig[lag:]
+                if a.std() < 1e-12 or b.std() < 1e-12:
+                    return 0.0
+                return float(np.corrcoef(a, b)[0, 1])
+            acs = [_ac(dy, L) for L in range(2, maxlag + 1)]
+            rng = np.random.default_rng(17)
+            nullmax = 0.0
+            for _ in range(20):
+                ds = dy.copy()
+                rng.shuffle(ds)
+                nullmax = max(nullmax, max(abs(_ac(ds, L))
+                                           for L in range(2, maxlag + 1)))
+            # THE FUNDAMENTAL RULE (run-2 lesson): a cycle's autocorr
+            # is equally tall at every multiple of its period, and
+            # argmax wanders to harmonics. Candidates = local peaks
+            # past the null; among those within 90% of the tallest,
+            # the SMALLEST lag is the fundamental.
+            cands = [i for i in range(len(acs))
+                     if acs[i] > nullmax
+                     and (i == 0 or acs[i] >= acs[i - 1])
+                     and (i == len(acs) - 1 or acs[i] >= acs[i + 1])]
+            if cands:
+                topv = max(acs[i] for i in cands)
+                best = min(i for i in cands if acs[i] >= 0.9 * topv)
+                # parabolic refine around the integer peak
+                if 0 < best < len(acs) - 1:
+                    y0, y1, y2 = acs[best - 1], acs[best], acs[best + 1]
+                    den = (y0 - 2 * y1 + y2)
+                    off = 0.5 * (y0 - y2) / den if abs(den) > 1e-12 \
+                        else 0.0
+                    off = float(np.clip(off, -0.5, 0.5))
+                else:
+                    off = 0.0
+                period = (best + 2 + off) * step
+                rec["period_ac"] = round(acs[best], 3)
+                rec["period_null"] = round(nullmax, 3)
+            else:
+                best = int(np.argmax(acs))
+                rec["bypassed"].append(
+                    f"period: best autocorr {acs[best]:.2f} <= null "
+                    f"{nullmax:.2f} — no cycle said")
+        # 2) THE PROFILE — folded on a moving-average detrend (the
+        # scaffold never ships: the trend LAW is fit afterward),
+        # admitted only past its own shuffle null
+        if period is not None:
+            w = int(max(2, round(period / step)))
+            ma = np.convolve(y, np.ones(w) / w, mode="same")
+            half_w = w // 2
+            core = slice(half_w, n - half_w)
+            d0 = (y - ma)[core]
+            tc = t[core]
+            nbins = int(max(4, min(24, round(period / step))))
+            phase = ((tc - t[0]) % period) / period
+            bins = np.minimum((phase * nbins).astype(int), nbins - 1)
+            prof = np.array([d0[bins == k].mean()
+                             if np.any(bins == k) else 0.0
+                             for k in range(nbins)])
+            prof = prof - prof.mean()
+            sfit = prof[bins]
+            r2_seas = 1 - float(np.sum((d0 - sfit) ** 2)) \
+                / max(float(np.sum((d0 - d0.mean()) ** 2)), 1e-12)
+            rng = np.random.default_rng(19)
+            null_seas = 0.0
+            for _ in range(20):
+                ds = d0.copy()
+                rng.shuffle(ds)
+                pn = np.array([ds[bins == k].mean()
+                               if np.any(bins == k) else 0.0
+                               for k in range(nbins)])
+                rn = 1 - float(np.sum((ds - pn[bins]) ** 2)) \
+                    / max(float(np.sum((ds - ds.mean()) ** 2)), 1e-12)
+                null_seas = max(null_seas, rn)
+            rec["seasonal_null"] = round(null_seas, 3)
+            if r2_seas <= null_seas:
+                rec["bypassed"].append(
+                    f"profile: explains {r2_seas:.2f} <= null "
+                    f"{null_seas:.2f} — period said, shape refused")
+                prof, r2_seas, nbins = None, 0.0, 0
+            else:
+                phase_all = ((t - t[0]) % period) / period
+                bins_all = np.minimum((phase_all * nbins).astype(int),
+                                      nbins - 1)
+        # 3) THE TREND LAW on the seasonally-adjusted series (lags of
+        # a time index are affine clones of it — never proposed here)
+        y_adj = y - (prof[bins_all] if prof is not None else 0.0)
+        trend_name = f"{name}-trend" if name else None
+        tr = self.discover(t.reshape(-1, 1), y_adj, name=trend_name,
+                           container=c, use_lags=False)
+        trend_pred = None
+        if trend_name and tr["verdict"] in ("UNDERSTOOD", "PARTIAL"):
+            trend_pred = self.apply_law(trend_name, t.reshape(-1, 1))
+        if trend_pred is None:
+            trend_pred = np.full(n, float(y_adj.mean()))
+            rec["bypassed"].append(
+                f"trend: {tr['verdict']} — flat (mean) stands, said")
+        # 4) COMPLETE ACCOUNTING — trend + seasonal + residual = 100
+        var_y = max(float(np.var(y)), 1e-12)
+        after_t = float(np.var(y - trend_pred))
+        after_ts = float(np.var(y - trend_pred
+                                - (prof[bins_all] if prof is not None
+                                   else 0.0)))
+        p_trend = 100.0 * (1 - after_t / var_y)
+        p_seas = 100.0 * (after_t - after_ts) / var_y
+        p_resid = 100.0 - p_trend - p_seas
+        accounting = dict(trend=round(p_trend, 1),
+                          seasonal=round(p_seas, 1),
+                          residual=round(p_resid, 1))
+        out = dict(trend_verdict=tr["verdict"],
+                   trend_equation=tr.get("equation"),
+                   period=(round(period, 4) if period else None),
+                   profile=(None if prof is None else
+                            [round(v, 4) for v in prof]),
+                   nbins=(nbins if prof is not None else 0),
+                   accounting=accounting, receipts=rec,
+                   container=c)
+        if name:
+            node = f"series:{name}"
+            self.net.add_door("series", node, tag="series")
+            self.net.add_door(f"world:{c}", node, tag=f"in:{c}")
+            self.net.set_meta(node, "series", dict(
+                trend_law=trend_name, period=out["period"],
+                profile=out["profile"], nbins=out["nbins"],
+                t0=float(t[0]), accounting=accounting,
+                container=c, receipts=rec))
+            self.record_finding("series", name, period=out["period"],
+                                accounting=accounting,
+                                trend=tr.get("equation"))
+        return out
+
+    def apply_series(self, name, t_new):
+        """Forecast from an analyzed series: trend law + the learned
+        seasonal profile at each time's phase. Honest scope: the
+        trend law's own range labels apply; no series = None."""
+        s = self.net.get_meta(f"series:{name}", "series")
+        if not s:
+            return None
+        t_new = np.asarray(t_new, float)
+        if s["trend_law"] and self.net.get_meta(
+                f"law:{s['trend_law']}", "model"):
+            base = self.apply_law(s["trend_law"],
+                                  t_new.reshape(-1, 1))
+        else:
+            base = np.zeros(len(t_new))
+        if base is None:
+            return None
+        if s["period"] and s["profile"]:
+            phase = ((t_new - s["t0"]) % s["period"]) / s["period"]
+            bins = np.minimum((phase * s["nbins"]).astype(int),
+                              s["nbins"] - 1)
+            base = base + np.asarray(s["profile"])[bins]
+        return base
 
     def apply_law(self, name, X):
         """Apply a discovered law: the challenge, now computable.

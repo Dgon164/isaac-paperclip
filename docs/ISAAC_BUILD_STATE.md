@@ -1457,3 +1457,24 @@ the permanent wall: the law wears the grown word's name
 crystallizes, the real planets' honest PARTIAL predicts Eris 0.786
 vs ~0.82, the null refuses to dig, the word survives save/load.
 Boundary held: no ceiling in code, never no code.
+
+## 2026-07-18 — THE ANALYST'S TREND ROAD (A1) PROMOTED (promotion #20)
+analyze_series/apply_series: period FIRST on the DIFFERENCED series
+(trend can never eat the cycle) past a shuffle null w/ THE
+FUNDAMENTAL RULE (local peaks past null; smallest lag within 90% of
+the tallest — autocorr is equally tall at every multiple and argmax
+wanders to harmonics), parabolic refine; seasonal profile FOLDED AND
+LEARNED on a moving-average scaffold that never ships, past its own
+null; trend law by ordinary discover on the adjusted series
+(use_lags=False — a time index's lags are affine clones; new
+discover param); changepoints free via switch atoms; COMPLETE
+accounting trend+seasonal+residual=100; series in its own container;
+forecasting via apply_series. Battery analyst_trend_battery.py 8/8
+permanent. RECEIPTS: sunspots' ~11-yr cycle SAID (10.45 yr, ac 0.535
+vs null 0.227 — the meal-2 refusal answered at the analyst level);
+monthly CO2 = trend 99.4% + 12.0-month period + 6.2ppm Keeling
+sawtooth + 0.2% dark; planted worlds exact; shuffled refuses.
+WRONG-KEPTS: deterministic AM was FULLY ARTICULATED as sidebands
+(machine outdid the prediction); harmonic argmax; lag-clones on
+time. NAMED DEBTS: threshold proposal at observed jump points;
+periodicity as a first-class STRUCTURAL KIND (rung 4).
