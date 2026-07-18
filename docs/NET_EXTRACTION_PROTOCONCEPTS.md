@@ -271,3 +271,43 @@ filed first, both CONFIRMED):**
   packing exists (P0's regime), and the toolkit needs both reads.
   Named open door: activation-space atoms (the superposition may
   live in activations, not first-layer weights).
+
+## THE FRAME (owner, 2026-07-17, closing the sitting): IDEOLOGICAL
+## CHEMISTRY, AND WHERE THE SEGMENT LANDS
+"the final output layer is where the 'ideas' become concrete and
+tabulated, but the building blocks for those is constructed along
+the way. its ideological chemistry. add this group, subtract this
+group, carry this group, combine these groups, etc. they are group
+superposition concepts and algebra, and then they reinforce
+different elements and groups and interact to create a final
+pattern match that says this is most like this structured equation,
+use that output. we are just creating a concept net replacement and
+correlating them into isaac speech."
+
+The chemistry named, mapped to what is already measured:
+- GROUPS = the assemblies (P1: no single neuron implements a gate;
+  the functional unit is the group, and its contribution receipt is
+  the sum).
+- ADD / SUBTRACT = the signed interference (P0-A3: +cos reinforce,
+  −cos suppress — measured, behaviorally confirmed).
+- COMBINE = the interaction terms (the AND assemblies; order-3
+  excess for triples when the circuits deepen).
+- CARRY = a group passing through a layer intact — the decode
+  primitive DEEP nets need next: detect near-identity propagation
+  of a group across a layer (the composition receipt made
+  mechanical). Named build target for the deep-net rung.
+- THE OUTPUT LAYER = the TABULATOR: group votes summed against
+  templates, "most like this structured equation, use that output"
+  — recognition as most-complete-match with the hallucination law
+  at the last layer (below the floor: unlearned, refuse).
+
+THE LANDING, made explicit: the decode's product is not a report —
+it is a CONCEPT NET REPLACEMENT. Groups become nodes; add/subtract/
+carry/combine become doors and flows; the readable equations enter
+as told laws (tell_law, provenance "decoded from weights",
+told-unverified, belief earned); and the whole thing CORRELATES
+INTO ISAAC SPEECH — the report/learned-speech road says what the
+foreign net knows ("the b-quark pair mass matters most; the
+azimuthal angles carry nothing") in earned words. A foreign net in,
+a citizen of his net out — the same door his predecessor's telling
+used at the launch.
