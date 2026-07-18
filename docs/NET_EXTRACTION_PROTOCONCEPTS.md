@@ -132,3 +132,48 @@ is a CANDIDATE until planted/ablation behavior earns it.
 Next rungs unchanged: P1 planted circuit (drop algebra / order-3
 excess as the interaction meter), P2 his own pools, P3 the HIGGS
 deep net.
+
+## OWNER RULINGS ON FIRST LIGHT (2026-07-17, same sitting)
+
+**1. Inhibition = CHECKLISTS WITH REQUIREMENTS, not full veto.**
+"thats the veto, but it doesnt have full veto powers, what im
+thinking is it is basically checklists. it has requirements. what
+information is present in the initial." The algebra agrees exactly:
+a ReLU neuron IS a soft checklist — required evidence (positive
+weights) minus disqualifiers (negative weights) must clear the pass
+mark (the bias). A disqualifier can be OVERRULED by enough
+requirements — partial veto, graded, conditional — which is
+precisely what A3 measured (suppression bites only when features
+co-occur). A FULL veto would be a multiplicative gate — a product
+with the switch atom — a DIFFERENT form, distinguishable in Isaac's
+own grammar: soft checklist = linear+threshold; hard veto =
+x·[disqualifier absent]. The decode can now ask, per neuron, WHICH
+kind it is — a checkable claim, not a metaphor. (Distinct from the
+shelved veto-nets deliverable — this READS requirement structure as
+information; it deploys nothing.)
+
+**2. ENGINEERED SUPERPOSITION: overlapping refined pools.**
+"overalapping several refined pools to create harmonic structures
+and... interference patterns of information essentially, but we can
+point at the direct sources and not need the full informational
+interactions if we are clever about it." The inversion of the decode
+problem: emergent superposition must be UNMIXED (P0 proved we can);
+CONSTRUCTED superposition comes pre-receipted — every component
+points at its direct source because we built it. And A3's sign
+lesson becomes a design rule instead of a discovery: overlap pools
+so that concepts which rarely co-occur get OPPOSING directions
+(the packing trick, engineered on purpose), confusable concepts get
+separated ones. This lands on the already-queued ENSEMBLE PROBE (N
+frozen pools, agreement past scrambled nulls) — the harmonic/
+interference framing is its design upgrade.
+
+**3. THE HALLUCINATION LAW (incomplete ideas).**
+"we take the most complete idea, and if there is no good match, its
+unlearned. its just not present, and best fit would be a
+hallucination." Recognition takes the MOST COMPLETE checklist
+match; below the match floor the honest answer is UNLEARNED — not
+present — because a forced best fit IS a hallucination. This is the
+rank-plus-abstention pattern (which_law's NONE, honest silence, NO
+RULE) promoted to a standing law of recognition, and "unlearned" is
+not a dead end: it is the frontier signal that feeds the
+curriculum loop (weakness named -> drilled -> re-elected).
