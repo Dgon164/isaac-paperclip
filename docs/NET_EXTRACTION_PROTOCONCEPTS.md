@@ -444,3 +444,52 @@ rows and run the whole model):
   inhibitor RAISED it 5/5 — amplify/inhibit, exactly as the owner
   framed it, confirmed by weight-level intervention on the real
   model.
+
+## THE FULL ENUMERATION + TWO INSTRUMENT CORRECTIONS
+## (gpt2_full_enumeration.py 3/3, 2026-07-17 — owner: "gpt 2 not
+## just a subsample... all the 50k token outputs?")
+
+Scope answered: the model was always full GPT-2 (117M, real
+weights); the enumeration now covers ALL 50,257 outputs per head
+(direct path) and ALL 144 heads (720 full-model ablations). Two
+instrument lessons en route, both wrong-kept, both cures already
+laws elsewhere in the project:
+
+1. THE LOGIT-SPACE STOPWORD. Removing a head shifts the final
+   layernorm scale, moving ALL logits together — and softmax is
+   SHIFT-INVARIANT: the common mode carries zero choice
+   information. Raw pushes were contaminated (head 0 read +19.19
+   raw on ' four'; measured ablation +1.44). The meaningful
+   quantity is the SPECIFIC push, demeaned over candidates — the
+   base-rate law's THIRD domain in one day (words, weight space,
+   logit space). SUPERSEDES the first GPT-2 probe's magnitudes
+   (its signs and the head-8-inhibits findings survive; its
+   +10..+28 headline numbers were mostly common mode — corrected,
+   kept).
+2. CANDIDATES IN PLAY. The raw 50k-vocab read is swamped by dead
+   tokens (control chars, junk in uncalibrated LN territory). The
+   owner's checklist frame is the cure: the tabulator considers
+   the checkboxes IN THE RUNNING — the top-200 baseline candidates.
+
+WHAT THE CORRECTED READING FINDS (the information):
+- Layer-11 heads run the ENDGAME of the candidate race, and their
+  specific work is largely SUPPRESSION AND TIE-BREAKING: on
+  'Paris is the capital of', the heads' strongest specific action
+  is pushing DOWN the rival countries (Morocco, Tunisia, Belgium,
+  Bulgaria...); on the dialogue prompt, head 8 specifically
+  AMPLIFIES the 'you'-family (_you, you, _yours) while suppressing
+  _her/_his/_she — family selection, context-dependent.
+- THE SPECIFIC-PUSH GATE: per-head predicted-vs-measured candidate
+  vectors agree at mean rank-corr 0.65 (0.73/0.57/0.66 per prompt)
+  — the quick simplified interaction genuinely predicts what full
+  ablation does to the race.
+- THE MEDIATION CURVE (all 144 heads, demeaned): L9-L10 most
+  direct (0.39/0.47); L11's raw agreement was common-mode
+  illusion (specific: -0.02 — its heads act through the final MLP
+  more than assumed); L3 NEGATIVE (-0.38): its heads' direct read
+  ANTI-correlates with their total effect — chain-dominated
+  influence, sign-inverted downstream; early layers ~0 (pure
+  chains). THE CHAINS ARE MEASURED IN AGGREGATE; naming individual
+  chains (which downstream component picks up which head's output)
+  = the drop algebra's pair-excess applied at head level — the
+  named next instrument.
