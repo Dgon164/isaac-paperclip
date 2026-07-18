@@ -1525,6 +1525,43 @@ wants a periodicity kind). Still queued: the rank-ruler pool for
 extreme-leverage tables; the effort dial budgeted and receipted
 under the consideration law.
 
+## THE ENGINEER LANE (owner decisions D1-D14, 2026-07-17/18 parallel
+## sessions; full bundle FILED at docs/engineer/ — SESSION_NOTES +
+## engineer-lane-checklist + commercialization review + information-
+## structure overview + Learning-by-Decomposition draft)
+D1 COMMITTED: Isaac's next capability arc is ENGINEERING — software
+-> mechanical -> electrical; E0 (kinds / multi-view identity / slot
+signatures / TMS dependency propagation) GATES EVERYTHING and is
+the first build. The lane's grammar: every later rung is the four
+E0 courts wearing domain costume; verdict vocabulary CONTAINED/
+UNCONTAINED/REFUSED = CONSISTENT/WOUND/DOF-OPEN = BALANCED/RESIDUAL
+(one three-verdict shape); instruments (geometry kernel, SPICE,
+compilers) measure and never mind. KEY DESIGNS: CAD semantics for
+kinds (parts as parametric RECIPES; constraint arithmetic courts —
+OD = ID + 2*wall: two given derive the third, three consistent =
+corroboration, inconsistent = refusal w/ residual, one = named DOF);
+MULTI-REPRESENTATION (no canonical decomposition; consistency
+courts between views; LOD for meaning); SLOT SIGNATURES (inputs +
+outputs + RESIDUE mandatory — division is two-in two-out; a shape
+without its residue slot is an accounting error); TMS propagation
+(dependencies typed fixed/relative, anchored in VOCABULARY not
+per-model authorship); goal recovery from game mechanism (D6-D7:
+forbidden vs punished vs FREE; the modded-game null; the
+superstition null; margin = distance-to-wall as THE engineering
+quantity); redundancy = lives w/ independence courts (D8);
+court depth set by wall hardness never by available time (D9);
+NET-EXTRACTION FIDELITY DEFINED (D11: signal accounting per neuron;
+progressive replacement; condensed-vs-parked %) — the GPT-2
+2,300-node claim's decisive open test; big-model road gated on the
+TIERED CRYSTALLIZER (O(n^2) knee ~800 nodes) (D12); persistence-
+ethic heuristic parked as research, explicitly NOT alignment-solved
+(D13); Challenger retrospective queued (D14). CONVERGENCE NOTED:
+E0.1 kinds = the concept tower's rung 2; E0.2 multi-view = the
+multi-representation duel design; D11's residual court = the pools;
+the analyst face = the commercialization core lane. BUILD QUEUE (the
+dev's order): E0.1-E0.4 -> C1-C2 -> G-rung -> fidelity harness ->
+tiered crystallizer.
+
 ## THE FACTS LAYER (owner, 2026-07-18, after the size question):
 ## "we can have a facts layer. we have the main structural
 ## information, and then datapoint breakdowns he can reference and
