@@ -383,3 +383,64 @@ composes it in layer 2, x4 must cross both layers.
   (the verdict was honestly PARTIAL). Named debt: the crease is
   DISCOVERABLE but not TELLABLE (_parse_equation lacks the absd
   pattern) — extend the telling vocabulary through gates.
+
+## CLARIFICATION (owner): THE TARGET IS FACTOR ENUMERATION, NOT
+## EQUATION FORMS
+"we are not looking for the crease. we are looking to enumerate the
+input contribution signals. so out of the complex inputs, what are
+the actual things. example, you have gpt2. it could be 64x12 i
+think. and those 12 things are the primary factors. we only care
+about how those 12 things contribute to the output activation. the
+way it works is it amplifies certain carriers and inhibits others.
+so of those 12 atoms or whatever, what are the combinations that
+each output is looking for."
+
+The deliverable, restated: complex inputs decompose into a small
+set of PRIMARY FACTORS (in transformers the architecture hands them
+to us — 12 heads x 64 dims; elsewhere the unmixer finds them). Per
+OUTPUT, the decode enumerates:
+  (1) WHICH factors it reads (amplified carriers vs inhibited),
+  (2) the CONTRIBUTION SIGNAL inside each factor's block (the
+      direction it actually reads, not the whole block),
+  (3) the COMBINATIONS it is looking for (which factors must
+      co-occur — the checklist at factor level).
+Isaac's equation grammar remains the internal landing (the citizen
+road), but the reported product is the factor-contribution table.
+Named rung: GPT-2 small itself (12 heads/layer), when the weights
+road is set up.
+
+## FACTOR ENUMERATION VALIDATED — INCLUDING ON REAL GPT-2
+## (factor_enumeration_probe.py 4/4; gpt2_head_enumeration.py 3/3;
+## 2026-07-17, the same sitting as the clarification)
+
+PLANTED (12 factor-blocks x 8 dims, 6 outputs, trained net, decode
+gets weights + block boundaries only): recipes enumerated 6/6 EXACT
+— every amplified pair named with gain (1.99-2.07 vs true 2.0),
+every inhibitor named at -1, nothing extra; contribution SIGNALS
+inside the blocks read at min |cos| 0.975 / mean 0.991 (the
+single-operating-point Jacobian was fragile at thresholds — 0.42 on
+one slot — cured by averaging over an amplitude grid, wrong-kept);
+scrambled control 0/6.
+
+REAL GPT-2 (small, 12 heads x 64 — the owner's example verbatim;
+final attention layer; per-head contribution to the correct
+next-token logit; PREDICTED = remove the head's direct term and
+recompute only final-LN+unembed; MEASURED = zero the head's W_O
+rows and run the whole model):
+- Specimen sane 5/5 prompts. The enumeration is READABLE: head 0
+  is the dominant amplifier for factual completions (+10 to +19
+  logits: 'Paris is the capital of'->France, 'Two plus two
+  equals'->four); head 11 amplifies the dialogue completion
+  ('How are'->you at +28.7); and HEAD 8 IS A STANDING INHIBITOR
+  on four of five prompts (-9.8 to -21.9) — a suppressor head the
+  enumeration surfaced on its own.
+- Rank agreement predicted~measured across heads: mean 0.77
+  (0.40-0.95 per prompt); MEDIATION SHARE 0.44 reported — a real
+  finding: roughly half of head influence flows through the final
+  MLP, not the direct path. Named next door: extend the quick
+  simplified interactions one block deeper.
+- SIGN RECEIPTS PERFECT: ablating the predicted top amplifier
+  LOWERED the correct-token logit 5/5; ablating the predicted top
+  inhibitor RAISED it 5/5 — amplify/inhibit, exactly as the owner
+  framed it, confirmed by weight-level intervention on the real
+  model.
