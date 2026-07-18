@@ -1539,3 +1539,20 @@ Memory survives save/load; mind with a 20k-row law = 7 KB. Battery
 facts_layer_battery.py 7/7 permanent. Also this hour: THE PUSH —
 both repos verified clean @ origin; isaac_home + prologue backed up
 (timestamped zips, copies never moves).
+
+## 2026-07-18 — THE ENGINEER LANE: E0 + C1-C2 PROBE-GREEN
+Owner's parallel-session bundle (D1-D14) filed at docs/engineer/;
+sheet capture done. E0 gate 8/8 (engineer_e0_probe: tube court w/
+derive/corroborate/refuse-residual/DOF-OPEN; kind-vs-scrambled;
+multi-view machine-exact + cone WOUND; slot signatures w/ mandatory
+residue; TMS propagate + VERIFY-NEVER-REPAIR — run-1 lesson: a
+verifier that repairs can never flag). C1-C2 8/8
+(engineer_c12_probe: read->map AS DOORS, exactly-once completeness,
+map-alone regeneration, valid-scramble null — run-1's line shuffle
+broke syntax and passed cheap, wrong-kept, AST-shuffle now; the
+containment court's three verdicts: holey's 3 planted escapes
+NAMED w/ input/exception/line + reproduced, solid CONTAINED
+201/201 by enumeration, mystery REFUSED w/ eval named — vocabulary
+scan BEFORE enumeration because enumerating unreasoned code is not
+proof). NEXT: G-rung (game goal recovery), engine promotion of the
+lane's courts, fidelity harness.
