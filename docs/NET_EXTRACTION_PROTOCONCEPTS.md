@@ -177,3 +177,52 @@ rank-plus-abstention pattern (which_law's NONE, honest silence, NO
 RULE) promoted to a standing law of recognition, and "unlearned" is
 not a dead end: it is the frontier signal that feeds the
 curriculum loop (weakness named -> drilled -> re-elected).
+
+## CLARIFICATION (owner, same sitting): THE FOREIGN NET IS THE POINT
+"we need to know the trained information from scratch. if we have an
+unbuilt net, one that someone has provided only the weights for, we
+need to decode it." The engineered-pools road is for OUR OWN
+representations; it does not replace the requirement. The
+requirement is the blind decode: weights in, trained information
+out, no training data, no provenance, no cooperation.
+
+What weights-only honestly yields, and where meaning grounds:
+- STRUCTURE always: atoms per layer, per-neuron checklist cards
+  (requirements/disqualifiers/pass mark), signed interference,
+  soft-vs-hard veto per neuron — the ALGEBRA of what it computes,
+  composed layer by layer into readable form (ReLU = the switch
+  atom keeps every step in Isaac's grammar).
+- MEANING grounds at the boundary: first-layer atoms are
+  combinations of the INPUT dimensions — if the provider names the
+  inputs (HIGGS columns are named physics), meaning propagates
+  upward through the composition. Unnamed inputs = an honest
+  anonymous circuit diagram, said as such, never guessed at.
+- THE SPECIMEN IS RUNNABLE: provided weights mean we can EXECUTE
+  the net on inputs WE construct — interrogation, not training
+  data. So the fresh-row court exists for foreign nets too:
+  decode from weights, PREDICT behavior, confirm on synthesized
+  probes; ablation receipts likewise. A claim with no surviving
+  prediction is not a decode, it is a story.
+- WITHOUT planted truth, the null discipline carries everything:
+  scrambled-weights controls (structure exists at all), restart
+  stability (the basis is pinned vs non-identifiable — SAID),
+  cross-layer consistency (atoms leaving layer k must reappear in
+  layer k+1's checklists — the composition receipt).
+
+LADDER REVISED — the blind protocol added:
+  P0  planted superposition (DONE 7/7).
+  P1  planted circuit — interactions read by drop algebra /
+      order-3 excess.
+  P1.5 THE BLIND DRILL: we train a net, the decoder receives ONLY
+      the weight matrices — no data, no truth, no hints. It files
+      its claims FIRST (atoms, cards, interference, predicted
+      behaviors on synthesized probes); THEN the unblinding scores
+      them. The predictions-filed discipline, applied to nets.
+      This is the honest rehearsal for "someone provided only the
+      weights."
+  P2  his own pools (constructed specimen).
+  P3  the HIGGS deep net — named inputs, real physics, the prize.
+  Landing spot for a successful decode: the foreign net's laws
+  enter Isaac's net as TOLD knowledge (tell_law / flows) with
+  provenance "decoded from provided weights" — told-unverified,
+  belief earned by data, like any other teacher.
