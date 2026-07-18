@@ -2448,6 +2448,17 @@ class Isaac:
 
     # ── whole-mind persistence ──────────────────────────────────
 
+    def __getstate__(self):
+        """Runtime-only registries never persist: ext ops are the
+        INITIATOR's job on every resurrection (capability belongs to
+        code, experience to the net)."""
+        d = dict(self.__dict__)
+        d.pop("_ext_ops", None)
+        return d
+
+    def __setstate__(self, d):
+        self.__dict__.update(d)
+
     def save(self, path):
         """Snapshot the WHOLE mind — net, doors, types, facts, laws,
         compiled matrix, activation log, world state, findings — one file.
@@ -3159,6 +3170,30 @@ class Isaac:
         self.net.set_meta(node, "record", rec)
         return node
 
+    def register_ext_op(self, name, fn, does=""):
+        """THE INITIATOR'S DOOR (owner law, 2026-07-17: code owns
+        exactly two jobs — the base loop and the initiator). An
+        EXTERNAL ACT (a conversation partner, file I/O — the world)
+        registers as a runtime op the walker can run, so a lived
+        pipeline's flow can be NET CONTENT end to end. The registry
+        is RUNTIME-ONLY, never pickled: a resurrected mind honestly
+        REFUSES ext-op walks until its initiator re-registers (same
+        law as tools re-cataloging — capability belongs to code,
+        experience to the net). Each ext op also carries a tool node
+        (tag ext-op) so the tools catalog can say it exists."""
+        if not hasattr(self, "_ext_ops"):
+            self._ext_ops = {}
+        self._ext_ops[str(name)] = fn
+        node = f"tool:{name}"
+        self.net.add_door("tools", node, tag="ext-op")
+        if not self.net.get_meta(node, "record"):
+            self.net.set_meta(node, "record", dict(
+                does=str(does) or "external act (initiator-"
+                "registered; runtime-only)", how="via flows",
+                tags=["ext-op"], method=None, used=0, passed=0,
+                recent=[]))
+        return node
+
     def catalog_tools(self):
         """The preset files of everything built: every public engine
         method with a docstring registers itself (first sentence =
@@ -3731,11 +3766,15 @@ class Isaac:
                 outcome = sub_out
                 break
             fn = getattr(self, op, None) if op else None
+            if fn is None and op:      # the initiator's runtime ops
+                fn = getattr(self, "_ext_ops", {}).get(op)
             if fn is None or not callable(fn):
                 trace.append(dict(step=step, op=op,
                                   receipt=f"REFUSED: no organ named "
                                           f"'{op}' — walk ends "
-                                          f"honestly"))
+                                          f"honestly (ext ops need "
+                                          f"their initiator after a "
+                                          f"resurrection)"))
                 outcome = "refused"
                 break
             kwargs = {k: state[v]

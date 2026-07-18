@@ -15,7 +15,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 import isaac as mod                                    # noqa: E402
 from isaac_store.sparring import (OllamaPartner, harvest,      # noqa: E402
-                                  isaac_says, run_session)
+                                  isaac_says, run_drill_flow,
+                                  run_session)
 
 PASS, FAIL = 0, 0
 
@@ -271,6 +272,69 @@ def main():
           n_vet3 == 0 and "hello there my friend" in corpus3
           and mu.net.get_meta("quarantine:practice",
                               "active") is None)
+
+    # ── K. KERNEL FIRST LIGHT (handoff item C; owner's acceptance
+    # law on the sheet): the drill session AS A FLOW — the walker is
+    # the actual top level for a lived pipeline; code owns only the
+    # base loop (walk_flow) and the initiator (registers the
+    # external acts); the pipeline itself is NET CONTENT he can
+    # tally, branch, and elect. ──
+    from isaac_store.sparring import IsaacAccount
+    import json as _json
+    with tempfile.TemporaryDirectory() as td:
+        home = os.path.join(td, "home")
+        acct = IsaacAccount(home, mod)
+        pk = StubPartner([
+            "let us practice greetings today my friend .",
+            "remember this fact : five plus five equals nine .",
+            "hello there my friend , how are you doing ?",
+            "let us practice greetings today my friend .",
+            "hello there my friend , how are you doing ?",
+        ], max_calls=10)
+        out_k, tr_k = run_drill_flow(acct, pk, SCEN, turns=10)
+        walks = acct.mind.recall_findings(kind="flow-walk", limit=3)
+        check("K1 THE KERNEL IS THE TOP LEVEL: the drill walked as "
+              "a flow, road on the ledger",
+              out_k == "done" and walks
+              and walks[0]["road"] == ["converse", "bank",
+                                       "journal", "save"],
+              f"outcome {out_k}, road "
+              f"{walks[0]['road'] if walks else '?'}")
+        corpus_ok = os.path.exists(acct.corpus_path)
+        jl = [_json.loads(ln) for ln in
+              open(acct.journal_path, encoding="utf-8")]
+        drill_entries = [e for e in jl if e.get("kind") == "drill"]
+        check("K2 the acts were REAL: corpus banked, journal entry, "
+              "mind saved",
+              corpus_ok and drill_entries
+              and os.path.exists(acct.mind_path)
+              and "vetted_out" in drill_entries[-1],
+              f"journal {drill_entries[-1] if drill_entries else '?'}")
+        q = acct.mind.net.get_meta("quarantine:practice", "active")
+        with open(acct.corpus_path, encoding="utf-8") as f:
+            ck = f.read()
+        check("K3 the vet rides INSIDE the flow: the false claim "
+              "quarantined, never banked",
+              q is not None
+              and "five plus five equals nine" not in ck,
+              f"quarantine holds {len(q) if q else 0} claim(s)")
+        m_back = mod.Isaac.load(acct.mind_path)
+        out_r, tr_r = m_back.walk_flow("drill", {})
+        check("K4 resurrection: the flow persists as net content; "
+              "the walk refuses honestly until the initiator "
+              "returns", out_r == "refused"
+              and "initiator" in tr_r[-1]["receipt"])
+        run_drill_flow(acct, StubPartner(
+            ["hello there my friend , nice to see you ."],
+            max_calls=6), SCEN, turns=6)
+        tally = acct.mind.flow_tally("drill")
+        rec = (tally.get("flow:drill") or tally.get("drill") or {}) \
+            if isinstance(tally, dict) else {}
+        check("K5 the pipeline is HIS to improve: walks tallied, "
+              "wins counted (the branch/elect machinery applies "
+              "to flow:drill like any flow)",
+              isinstance(rec, dict) and rec.get("walks", 0) >= 2
+              and rec.get("wins", 0) >= 1, f"tally {tally}")
 
     print()
     print(f"SPARRING BATTERY: {PASS}/{PASS + FAIL} checks passed")

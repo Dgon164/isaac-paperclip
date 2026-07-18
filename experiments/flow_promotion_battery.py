@@ -1,5 +1,5 @@
-"""flow_promotion_battery.py — PROMOTION #15 BATTERY: the flow walker
-becomes ENGINE ORGANS (define_flow / walk_flow / mint_chunk — the
+﻿"""flow_promotion_battery.py â€” PROMOTION #15 BATTERY: the flow walker
+becomes ENGINE ORGANS (define_flow / walk_flow / mint_chunk â€” the
 kernel loop's first permanent slice). Research basis:
 flow_walker_probe.py 10/10; this battery gates the same behavior
 through the engine, plus registration and the walk ledger.
@@ -23,7 +23,7 @@ PREDICTIONS (filed before the engine is touched; wrong ones kept)
   W11 REGISTRATION: define_flow / walk_flow / mint_chunk in the
      catalog (every tool ships with its node).
   W12 THE WALK LEDGER: every walk leaves a findings entry
-     (kind='flow-walk' with outcome + road) — walks are receipts,
+     (kind='flow-walk' with outcome + road) â€” walks are receipts,
      searchable like any other outcome.
   GATE (separate): engine self-test 11/11.
 
@@ -98,7 +98,7 @@ def main():
 
     def check(name, ok, detail):
         checks.append(ok)
-        print(f"  [{'ok ' if ok else 'FAIL'}] {name} — {detail}")
+        print(f"  [{'ok ' if ok else 'FAIL'}] {name} â€” {detail}")
 
     mind = Isaac()
     mind.define_flow("triage", triage_steps())
@@ -148,7 +148,7 @@ def main():
     check("W6 missing organ refused honestly", out6 == "refused",
           tr6[-1]["receipt"][:60])
 
-    # W7 — chunk by name
+    # W7 â€” chunk by name
     greens = int(road(tr2)[-1] == "report_pass")
     for s in (7, 8):
         og, tg = mind.walk_flow("triage", make_state("law", s))
@@ -191,12 +191,43 @@ def main():
           {"define_flow", "walk_flow", "mint_chunk"} <= names,
           f"{sorted({'define_flow', 'walk_flow', 'mint_chunk'} & names)}")
 
-    # W12 — the walk ledger
+    # W12 â€” the walk ledger
     walks = mind.recall_findings(kind="flow-walk", limit=50)
     check("W12 walks land in the findings ledger",
           len(walks) >= 5 and all("road" in w for w in walks[:3]),
           f"{len(walks)} walk records; latest road "
           f"{walks[0].get('road') if walks else '?'}")
+
+    # W13 â€” THE INITIATOR'S DOOR (owner law 2026-07-17): an external
+    # act registers as a runtime op; the walker runs it with the
+    # same receipts; it NEVER pickles.
+    m13 = isaac_mod.Isaac()
+    seen = []
+    m13.register_ext_op("ping_world", lambda note: seen.append(note)
+                        or dict(pong=str(note)),
+                        does="test external act")
+    m13.define_flow("extflow", [
+        dict(id="go", op="ping_world", args=dict(note="msg"),
+             out="r", doors=[], success=True)])
+    out13, tr13 = m13.walk_flow("extflow", dict(msg="hello world"))
+    check("W13 an initiator-registered external act walks with "
+          "receipts", out13 == "done" and seen == ["hello world"]
+          and "ping_world" in tr13[0]["receipt"],
+          f"outcome {out13}, receipt {tr13[0]['receipt'][:40]}")
+
+    # W14 â€” resurrection: ext ops are runtime-only; a loaded mind
+    # REFUSES the walk honestly until its initiator re-registers.
+    import pickle as _p
+    m14 = _p.loads(_p.dumps(m13))
+    out14a, tr14a = m14.walk_flow("extflow", dict(msg="again"))
+    m14.register_ext_op("ping_world",
+                        lambda note: dict(pong=str(note)))
+    out14b, _ = m14.walk_flow("extflow", dict(msg="again"))
+    check("W14 ext ops never pickle: resurrected walk REFUSES "
+          "honestly; re-registration heals it",
+          out14a == "refused" and "initiator" in tr14a[0]["receipt"]
+          and out14b == "done",
+          f"{out14a} -> {out14b}")
 
     dt = time.perf_counter() - t0
     npass = sum(checks)

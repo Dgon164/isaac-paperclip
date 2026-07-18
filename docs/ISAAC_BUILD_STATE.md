@@ -1287,3 +1287,27 @@ test_sparring.py (written first, shown failing): false claim
 "five plus five equals nine" quarantined with doors a->4/b->4/c->10
 and ABSENT from the corpus; true claim "two plus two equals four"
 banks; plain language identical to before. 22/22.
+
+## 2026-07-17 (launch day, cont.) — KERNEL FIRST LIGHT: the drill
+## session IS a flow (battery-first, sparring 27/27, flow 14/14)
+The handoff's item C and the owner's base-loop/initiator law, made
+real. ENGINE (gated): register_ext_op — THE INITIATOR'S DOOR: an
+external act (conversation partner, file I/O) registers as a
+runtime op the walker can run; the registry NEVER pickles
+(__getstate__ drops it) — a resurrected mind honestly REFUSES
+ext-op walks until its initiator re-registers (flow battery W13/
+W14). STORE: run_drill_flow = the initiator + one walk — registers
+drill_converse/drill_bank/drill_journal/drill_save as ext ops,
+authors flow:drill ONCE as net content, then hands control to
+walk_flow: THE BASE LOOP IS THE TOP LEVEL; the Python function
+never sequences the pipeline. The drill's banking act carries the
+vet inside (K3: a false claim arriving mid-conversation is
+quarantined by the flow's own road). Battery K1-K5: the walk's road
+[converse, bank, journal, save] on the ledger; real artifacts
+(corpus, transcript, journal entry with vetted_out, mind saved);
+resurrection honest; flow_tally counts the drill's walks and wins —
+flow:drill is HIS to tally, branch, and elect. THE ACCEPTANCE TEST
+(the sheet): from here, improving the drill = Isaac changing
+flow:drill in his net (branch_flow/elect_flow) — never editing
+Python. Code that accumulates domain decisions is the old trap
+wearing the kernel's clothes.

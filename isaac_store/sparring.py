@@ -127,6 +127,94 @@ def run_session(mind, partner, scenario, turns=10):
     return transcript
 
 
+# ── KERNEL FIRST LIGHT (owner's acceptance law, 2026-07-17, on the
+# sheet): the drill session AS A FLOW. Code owns exactly two jobs
+# here — the BASE LOOP (walk_flow, the engine's walker) and the
+# INITIATOR (this function: registers the drill's external acts as
+# runtime ops and authors the flow once). The pipeline itself —
+# converse -> bank -> journal -> save — is NET CONTENT: it walks
+# with receipts, lands in the walk ledger, and is Isaac's to tally,
+# BRANCH, and ELECT. The acceptance test: improving the drill means
+# Isaac changing flow:drill in his net, never us editing Python.
+DRILL_STEPS = [
+    dict(id="converse", op="drill_converse", args={}, out="conv",
+         doors=[dict(to="bank")]),
+    dict(id="bank", op="drill_bank", args=dict(conv="conv"),
+         out="bank", doors=[dict(to="journal")]),
+    dict(id="journal", op="drill_journal",
+         args=dict(conv="conv", bank="bank"), out="jr",
+         doors=[dict(to="save")]),
+    dict(id="save", op="drill_save", args={}, out="sv", doors=[],
+         success=True),
+]
+
+
+def run_drill_flow(account, partner, scenario, turns=10):
+    """THE INITIATOR + one walk. Registers the external acts
+    (conversation, banking with the vet inside, journal, save) as
+    runtime ops on the account's mind, authors flow:drill if it is
+    not already net content, then hands control to the BASE LOOP:
+    walk_flow is the top level; this function never sequences the
+    pipeline itself."""
+    mind = account.mind
+
+    def _converse():
+        tr = run_session(mind, partner, scenario, turns=turns)
+        return dict(transcript=tr,
+                    partner_turns=sum(1 for t in tr
+                                      if t["who"] == "partner"))
+
+    def _bank(conv):
+        texts = [t["text"].lower() for t in conv["transcript"]
+                 if t["who"] == "partner"]
+        from collections import Counter
+        cnt = Counter()
+        for x in texts:
+            cnt.update(set(_grams(x)))
+        fs = {g for g, c in cnt.items() if c >= 3}
+        n_pairs, before, after, _, n_vet = harvest(
+            mind, [conv["transcript"]], fs,
+            corpus_path=account.corpus_path)
+        return dict(pairs=n_pairs, fragments_before=before,
+                    fragments_after=after, vetted_out=n_vet)
+
+    def _journal(conv, bank):
+        n0 = account.sessions_so_far()
+        with open(os.path.join(
+                account.home, "transcripts",
+                f"session_{n0:05d}.json"), "w",
+                encoding="utf-8") as f:
+            json.dump(conv["transcript"], f, indent=1)
+        entry = dict(kind="drill", session=n0, road="flow",
+                     pairs=bank["pairs"],
+                     fragments_after=bank["fragments_after"],
+                     vetted_out=bank["vetted_out"],
+                     partner_turns=conv["partner_turns"],
+                     ts=time.time())
+        account._journal(entry)
+        return dict(entry=entry)
+
+    def _save():
+        mind.save(account.mind_path)
+        return dict(saved=True)
+
+    mind.register_ext_op("drill_converse", _converse,
+                         does="one budgeted conversation with the "
+                              "practice partner (external act)")
+    mind.register_ext_op("drill_bank", _bank,
+                         does="bank the session: vet at the front "
+                              "door, pairs to corpus, relearn "
+                              "through the excess null")
+    mind.register_ext_op("drill_journal", _journal,
+                         does="transcript to disk + the practice "
+                              "journal entry (external act)")
+    mind.register_ext_op("drill_save", _save,
+                         does="persist the mind (external act)")
+    if not mind.net.get_meta("flow:drill", "steps"):
+        mind.define_flow("drill", DRILL_STEPS)
+    return mind.walk_flow("drill", {})
+
+
 # ── the vet at the front door (owner design 2026-07-15: "bad
 # english is interpreted, but not implemented"; wired at the launch
 # 2026-07-17 — admission discipline from his FIRST conversation).
