@@ -1573,7 +1573,16 @@ monthly CO2 = 99.4% trend + 12.0-mo period + 6.2ppm Keeling
 sawtooth + 0.2% dark. WRONG-KEPT jewel: deterministic AM was FULLY
 ARTICULATED as exact sidebands — the machine outdid the prediction.
 NAMED DEBTS: jump-point threshold proposals; periodicity as a
-first-class structural kind (the growing grammar's rung 4). RESEARCH AGENDA riding along (owner's questions): dossier
+first-class structural kind (the growing grammar's rung 4).
+A2 PROMOTED same day (#21): relate_series — alignment on the shared
+key; levels REPORTED with the spurious-trend receipt, never judged;
+differences judged across lead/lag vs THE ALIGNMENT NULL (circular
+shifts preserve internal structure, destroy only the pairing);
+RELATED mints a relation: node doored into both worlds (meaningful
+doors made real). Battery 6/6 permanent. THE REAL RECEIPT: annual
+CO2 growth ~ GISTEMP RELATED (corr 0.61 vs null 0.493, same-year,
++) while two independent random walks at levels 0.984 were REFUSED
+— the trap that fools human analysts, refused by construction. RESEARCH AGENDA riding along (owner's questions): dossier
 of what his net holds per meal; selection-precision curve as laws
 scale 8 -> 80; grown-word reuse tracking (elections receipts); the
 dark residuals as SECOND-SOURCE candidates (CO2's leftover IS

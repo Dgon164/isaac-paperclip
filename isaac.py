@@ -4843,6 +4843,98 @@ class Isaac:
             base = base + np.asarray(s["profile"])[bins]
         return base
 
+    def relate_series(self, ta, ya, tb, yb, name=None,
+                      containers=None, max_shift=5):
+        """CROSS-CONTAINER CORRELATION (A2 of the analyst segment;
+        the triangulation thread built — owner 2026-07-12: two
+        datasets as "halves of the same whole", owner 2026-07-18:
+        "finding correlations between different things"). Two series
+        aligned on their shared key (the overlap window; B
+        interpolated onto A's points), then judged on DIFFERENCES —
+        levels co-move trivially when both trend (the spurious-
+        correlation trap), so level correlation is REPORTED with
+        that receipt but never judged; the differenced correlation
+        is scanned across lead/lag shifts and faces THE ALIGNMENT
+        NULL: circular shifts of B preserve each side's internal
+        structure and destroy only the true pairing — a real
+        relation dies when alignment does, a spurious one survives
+        it. Verdict RELATED (sign, strength, who leads) or NO
+        RELATION SAID. A RELATED pair mints a relation:<name> node
+        doored to both worlds (the meaningful-doors design: the
+        relationship as a first-class thing)."""
+        ta = np.asarray(ta, float)
+        ya = np.asarray(ya, float)
+        tb = np.asarray(tb, float)
+        yb = np.asarray(yb, float)
+        rec = dict(bypassed=[])
+        lo, hi = max(ta.min(), tb.min()), min(ta.max(), tb.max())
+        keep = (ta >= lo) & (ta <= hi)
+        if keep.sum() < 12:
+            rec["bypassed"].append(
+                f"overlap {int(keep.sum())} points < 12 — refused")
+            return dict(verdict="NO RELATION SAID", receipts=rec)
+        t = ta[keep]
+        a = ya[keep]
+        b = np.interp(t, tb, yb)
+        levels = float(np.corrcoef(a, b)[0, 1])
+        da, db = np.diff(a), np.diff(b)
+        n = len(da)
+        if da.std() < 1e-12 or db.std() < 1e-12:
+            rec["bypassed"].append("a flat side — nothing to relate")
+            return dict(verdict="NO RELATION SAID", receipts=rec)
+
+        def _c(x, z):
+            if x.std() < 1e-12 or z.std() < 1e-12:
+                return 0.0
+            return float(np.corrcoef(x, z)[0, 1])
+
+        best_s, best_r = 0, _c(da, db)
+        for s in range(1, max_shift + 1):
+            r1 = _c(da[s:], db[:-s])       # b leads a by s
+            r2 = _c(da[:-s], db[s:])       # a leads b by s
+            if abs(r1) > abs(best_r):
+                best_s, best_r = s, r1
+            if abs(r2) > abs(best_r):
+                best_s, best_r = -s, r2
+        rng = np.random.default_rng(23)
+        offsets = rng.choice(np.arange(max_shift + 3,
+                                       n - max_shift - 3),
+                             size=min(40, max(8, n // 4)),
+                             replace=False)
+        nullmax = 0.0
+        for k in offsets:
+            dbr = np.roll(db, int(k))
+            m = max(abs(_c(da, dbr)),
+                    max(abs(_c(da[s:], dbr[:-s]))
+                        for s in range(1, max_shift + 1)))
+            nullmax = max(nullmax, m)
+        rec["levels_corr"] = round(levels, 3)
+        rec["levels_receipt"] = ("levels co-move trivially under "
+                                 "shared trends — reported, never "
+                                 "judged")
+        rec["null"] = round(nullmax, 3)
+        related = abs(best_r) > nullmax
+        leader = ("b" if best_s > 0 else "a") if best_s else "none"
+        out = dict(verdict=("RELATED" if related
+                            else "NO RELATION SAID"),
+                   corr=round(best_r, 3), shift=abs(best_s),
+                   leader=leader, n=n, levels=round(levels, 3),
+                   receipts=rec)
+        if related and name:
+            node = f"relation:{name}"
+            self.net.add_door("relations", node, tag="relation")
+            for c in (containers or []):
+                self.net.add_door(f"world:{c}", node, tag=f"in:{c}")
+            self.net.set_meta(node, "relation", dict(
+                corr=out["corr"], shift=out["shift"],
+                leader=leader, n=n, null=rec["null"],
+                levels=rec["levels_corr"],
+                containers=list(containers or [])))
+            self.record_finding("relation", name, corr=out["corr"],
+                                shift=out["shift"], leader=leader,
+                                n=n, null=rec["null"])
+        return out
+
     def apply_law(self, name, X):
         """Apply a discovered law: the challenge, now computable.
         (Distinct from solve(), the token-problem solver.) A law with

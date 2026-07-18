@@ -1478,3 +1478,15 @@ WRONG-KEPTS: deterministic AM was FULLY ARTICULATED as sidebands
 (machine outdid the prediction); harmonic argmax; lag-clones on
 time. NAMED DEBTS: threshold proposal at observed jump points;
 periodicity as a first-class STRUCTURAL KIND (rung 4).
+
+## 2026-07-18 — A2: CROSS-CONTAINER CORRELATION PROMOTED (#21)
+relate_series: two series aligned on the shared key; LEVELS reported
+w/ the spurious-trend receipt, NEVER judged (two independent random
+walks co-move at 0.984 — refused); DIFFERENCES judged across
+lead/lag shifts vs THE ALIGNMENT NULL (circular shifts keep each
+side's internal structure, kill only the pairing); RELATED mints a
+relation: node doored into BOTH worlds (the meaningful-doors design
+made real). Battery analyst_relate_battery.py 6/6 permanent. THE
+REAL RECEIPT: annual CO2 growth ~ GISTEMP anomaly RELATED at corr
+0.61 vs null 0.493, same-year, sign + (the carbon cycle breathing
+with temperature — found by his own court, not told).
