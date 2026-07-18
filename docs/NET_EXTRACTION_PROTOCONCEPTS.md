@@ -343,3 +343,43 @@ max-err 0.02, and the counterfactual receipts were computed the
 same way. The method IS collect-and-immediately-use; the deep-net
 rung extends the substitution upward, not a carry tracer.
 Replaces the earlier "carry-detection" build target.
+
+## THE THEORIES VALIDATED (netdecode_deep_probe.py, 7/7, 2026-07-17
+## — "these are theories. so lets validate and assemble.")
+
+Specimen: a TWO-hidden-layer net (5->8->6->1) trained to 0.007 on
+y = 2*AND(XOR(x0,x1), x2) + x4 — XOR forms in layer 1, the AND
+composes it in layer 2, x4 must cross both layers.
+
+- SUBSTITUTION COLLAPSES DEPTH — CONFIRMED. The decode reads cards
+  bottom-up once, then the flat interaction expansion holds
+  everything: pairs (0,2)=+1.99, (1,2)=+1.99, TRIPLE (0,1,2)=-3.99
+  (the order-3 excess, measured in a deep net), x4=+1.0, nothing
+  else. The flat form ALONE — no stepping at use time — predicts
+  all 32 input patterns at max err 0.037, including the 4- and
+  5-feature patterns it never probed (any order-4 junk the net had
+  learned would have shown there).
+- CARRY FOR FREE — CONFIRMED. x4 crossed two layers and landed as
+  a pure linear term, every interaction <= 0.017. No carry
+  detector exists anywhere in the code. Depth was the neural
+  substrate's problem; the algebra never had it.
+- INTERVENTION-GRADE PREDICTION — CONFIRMED, with a gem: silencing
+  the full (0,1) machinery, the cards predicted the outcome
+  EXACTLY before the run — every composed term to 0.00, and x4 to
+  0.97, NOT 1.00, because the assembly shares neurons with x4's
+  path and the cards knew the collateral damage in advance.
+  Wrong-kept en route: selecting the assembly by pair-excess alone
+  missed its LINEAR members (the x0+x1 riders) — an assembly
+  includes its linear parts; the cards correctly predicted the
+  partial collapse that mistake produced.
+- THE CITIZEN ASSEMBLED — CONFIRMED. The decoded flat form
+  generated examples; Isaac DISCOVERED the law in his own grammar
+  (creases and products — an EQUIVALENT form, exact on the domain);
+  his law vs the original foreign net across all 32 patterns:
+  max err 0.011. A stranger's weights, through the decode, through
+  his own court, now a law node in his net. Named niceness door:
+  his equation is an equivalent form, not the canonical minimal
+  one — canonical simplification is a future door, not a defect
+  (the verdict was honestly PARTIAL). Named debt: the crease is
+  DISCOVERABLE but not TELLABLE (_parse_equation lacks the absd
+  pattern) — extend the telling vocabulary through gates.
