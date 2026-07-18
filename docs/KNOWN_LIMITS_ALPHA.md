@@ -63,13 +63,6 @@ load-bearing as what it does.**
     (their evidence lived in correction records and early seeding)
     — the raw-record door, open.
 
-## Standing hard rules (they bound every claim above)
-
-Deliverables are readable equations with receipts, never nets.
-Belief is measured, never told. Wrongs are kept, classified, and
-superseded — never erased. A refusal is an answer with the same
-standing as a law. Complete numbers only: coverage multiplied
-through, refusals counted against the total.
 13. **The get_doors flake (open anomaly, 2 sightings).** Twice —
     2026-07-15 during the #13 gates and 2026-07-17 during a promote
     wall — one engine-suite invocation crashed with
@@ -80,3 +73,11 @@ through, refusals counted against the total.
     failing gate's FULL output (experiments/runs/gate_failures/),
     so the next strike carries its traceback. Unexplained =
     unfinished; the watch stands.
+
+## Standing hard rules (they bound every claim above)
+
+Deliverables are readable equations with receipts, never nets.
+Belief is measured, never told. Wrongs are kept, classified, and
+superseded — never erased. A refusal is an answer with the same
+standing as a law. Complete numbers only: coverage multiplied
+through, refusals counted against the total.
