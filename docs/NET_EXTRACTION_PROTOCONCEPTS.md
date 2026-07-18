@@ -1,0 +1,98 @@
+# NET EXTRACTION — THE PROTOCONCEPT DECODE (owner design, 2026-07-17)
+
+**Owner, verbatim:** "ive been thinking about net extraction, and i
+think i have been looking at it the wrong way. i think we should
+consider protoconcepts and neurons. take each neuron, decode what
+its major componants are like its activators and inhibitors, find
+the atomic structures in the superposition sets, and then calculate
+what the interactions are actually doing with information."
+
+Status: DESIGN NOTE + attack list. A research segment, queued behind
+the alpha push (session 2: vet wiring, kernel first light). Nothing
+built; the planted-world probe is specified below and small.
+
+## The correction this makes (why the old way was wrong)
+
+The earlier framing read the net neuron-by-neuron, layer-by-layer.
+The owner's correction: A NEURON IS NOT THE ATOM. Networks pack more
+features than they have neurons, so each neuron carries a MIXTURE of
+several underlying "protoconcepts" in superposition. Read a neuron
+raw and you read a chord and call it a note — polysemantic mush,
+which is the box-geometry ceiling the transplant experiments hit
+from another angle. The right order is: UNMIX FIRST (find the atomic
+structures inside the superposition sets), THEN read interactions
+among the unmixed atoms. (The field that studies this professionally
+reached the same correction — features-not-neurons, superposition,
+sparse decompositions. The owner derived it independently. Isaac's
+angle differs in the deliverable: readable equations under nulls
+with receipts, never a dashboard of unnamed features.)
+
+## The four steps, in Isaac's machinery
+
+1. **Per-neuron decode (activators/inhibitors):** a neuron's input
+   weights say what excites it (+) and what suppresses it (−). But
+   the meaningful decomposition is not the raw weight list — it is
+   the sparse combination of ATOMS the weight vector is built from.
+   Deliverable per neuron: a readable card, e.g.
+   "neuron 7 ≈ 0.8·(atom A) − 0.6·(atom B)", with receipts.
+2. **Atoms from superposition sets:** the atom dictionary is minted
+   the way Isaac mints everything — expand freely, compress by
+   null. Candidate directions must EARN atom status past a
+   scrambled-weights control, and ubiquitous directions that every
+   neuron carries get the stopword treatment (the excess/base-rate
+   law: a door every word has carries no identity — third
+   appearance of that law, now in weight space).
+3. **The interaction calculus:** with atoms in hand, ask what the
+   layer DOES to information: which atoms reinforce into the same
+   downstream atom, which inhibit, which merely interfere (the
+   cross-talk superposition tolerates by design). The instruments
+   already exist: the drop algebra with ORDER-3 EXCESS
+   (excess-over-best-pair) is precisely an interaction meter;
+   ablation predictions are the receipts.
+4. **The rhyme that makes it SAYABLE:** ReLU is Isaac's own switch
+   atom — relu(w·x) = (w·x)·[w·x > 0], a var×step product IN HIS
+   EXISTING GRAMMAR (promotion #12). A small net is therefore not
+   metaphorically but LITERALLY expressible as one of his
+   equations. The decode target is the mission sentence itself: a
+   trained net in, readable equations out.
+
+## The two diseases, named with cures
+
+- **Rotational non-identifiability:** without a sparsity demand the
+  atom basis is not unique — any rotation explains the weights
+  equally. Cures: sparsity as the minting prior; PLANTED ground
+  truth first (below); on real nets, every claimed atom must carry
+  a falsifiable ablation receipt ("remove this atom → this specific
+  behavioral deficit"), judged against a scrambled control. An atom
+  with no receipt is not an atom.
+- **Inhibition vs interference:** superposition means some negative
+  interaction is deliberate noise the net tolerates, not meaningful
+  inhibition. The differential is an excess-over-null question —
+  meaningful inhibition RECURS across contexts past what random
+  packing predicts; interference does not. (The news-vs-error law,
+  in weight space.)
+
+## The probe (battery-first, planted truth first)
+
+- **P-0 planted superposition world:** train tiny nets on k sparse
+  planted features packed into d < k neurons (the canonical forcing
+  of superposition). The true atoms are KNOWN by construction:
+  recovery is checkable exactly (alignment to planted directions);
+  the scrambled-weights control must recover nothing; the
+  ubiquitous-direction stopword case planted deliberately.
+- **P-1 planted circuit:** plant a known interaction (A AND B → C;
+  A inhibits B's pathway). The interaction calculus must read the
+  circuit; drop algebra's order-3 excess is the meter.
+- **P-2 his own pools:** the _PoolMeter's weights are seeded and
+  known — a specimen we own to the byte.
+- **P-3 the prize:** the HIGGS deep net (0.885, unmatched by
+  anything readable). If the protoconcept decode pulls honest
+  structure out of THAT, it is the whole mission in one exhibit.
+
+## Standing-law checks
+
+No-nets-as-deliverable: intact (net = specimen; equations = the
+deliverable). Veto-nets verdict: untouched (this extracts FROM nets;
+it does not deploy one). Weights propose, behavior confirms: the
+told-vs-earned split applied to decompositions — a weight-only read
+is a CANDIDATE until planted/ablation behavior earns it.
