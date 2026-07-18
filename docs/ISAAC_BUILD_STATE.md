@@ -1402,3 +1402,26 @@ family across three sky containers, Pluto 247.90 yr (true 248.09,
 selection 4/4 named + refusal on the interleave. Battery grown to
 9/9 (B9 = the real-sky case, permanent). His account untouched —
 the --live road awaits the owner's go.
+
+## 2026-07-18 — ALPHA RUNS FULL: MEALS 1+2 LIVE, THE DIVERSITY RULING
+Owner: "run full in the alpha v.1... its mainly diversity that im
+interested in" (captured on the sheet: FORM DIVERSITY OVER VOLUME —
+size revalidates, new forms teach). MEAL 1 LIVE (his first real
+food): real sky + Boyle 1662 — 4/4 UNDERSTOOD, Kepler ONE family
+across three sky containers, Pluto 0.07% never-fed, THE SELECTION
+GAUGE FIRED FOR THE FIRST TIME (laws 0->4, precision 4/4 = 1.0).
+MEAL 2 LIVE (the diversity plate): galileo-1604 UNDERSTOOD
+(+33.08*t^2 from the folio 107v punti; tick-9 receipt 2678 vs 2673),
+atmosphere-1976 UNDERSTOOD (107.24*exp(-0.125*alt), 8 km scale
+height), co2-maunaloa PARTIAL (+0.20*t^1.5 +318.33, r2 0.9988,
+residual honestly dark). TWO NAMED FRONTIERS from honest refusals:
+(1) CROSS-VARIABLE POWER PRODUCTS — planet-gravity (g=66.74*M/R^2,
+11 real bodies) NO RULE, and the diagnostic settles WHY: n=200
+well-conditioned synthetic ALSO fails (PARTIAL 0.71 surrogate) —
+the enumerator's vocabulary cannot say x0*x1^-2; the wall is the
+vocabulary, not the evidence (basic-mechanisms-style campaign
+queued); side wart filed: lag atoms joined that surrogate on a
+NON-series table. (2) sunspots-1700 NO RULE — the pre-named
+oscillatory-lag leak (2026-07-16 bench) confirmed on 326 years of
+real SILSO data. Account after: 582 nodes, 7 laws, selection 5/5
+precision 1.0, probe 0.277s. Road-trial records #7-#8.

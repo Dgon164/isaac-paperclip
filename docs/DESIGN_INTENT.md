@@ -1465,3 +1465,15 @@ real; battery grown to 9/9 (B9 = the real-sky case, permanent).
 Dry receipts: 4/4 UNDERSTOOD, ONE family across three sky
 containers, Pluto 0.07% never-fed, selection 4/4 + refusal.
 NAMED RUNG: one FORM COURT deciding same-form everywhere.
+THE DIVERSITY RULING (owner, 2026-07-18, the standing feeding
+order): "from now on, lets run full in the alpha v.1... diverse
+forms, large sets, i want to really push it. larger sets dont do
+much theoretically because after he gets the structure down it is
+just revalidating what he already knows so those arent high
+priority. its mainly diversity that im interested in." The law:
+FEEDING PRIORITY = FORM DIVERSITY OVER VOLUME — a bigger table of a
+learned structure only revalidates; a NEW FORM is new knowledge.
+The live account (isaac_home) is the standing feeding target from
+here on (alpha v1 road trials, full on); every meal dry-proves
+first, then feeds live, journals kind=meal, logs its road-trial
+line.
