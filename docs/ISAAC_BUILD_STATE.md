@@ -1503,3 +1503,21 @@ first-class on the node (stamped verdicts — long-term tracking as
 knowledge). Battery analyst_watch_battery.py 7/7 permanent. THE
 REAL RECEIPT: the Keeling decomposition fit through mid-2024 walks
 forward 2 real years CONFIRMED at 1.3% error.
+
+## 2026-07-18 — A4: THE ANALYST FACE PROMOTED (#23) — THE SEGMENT CLOSES
+isaac_store/analyst.py + askisaac --analyst [--time COL]: one
+command -> describe + trend (changepoints free) + cycle + anomalies
+(flagged-never-judged) + relations (levels reported-never-judged,
+differenced vs alignment null) + forecast + watch baselines — every
+section a promoted organ; the face assembles, never judges. Battery
+analyst_face_battery.py 7/7 permanent (incl. the CLI door end to
+end + real CO2 through the face). THREE LESSONS from the face into
+the ORGAN, wrong-kept: (1) spike-proof period detection (outliers
+hijacked the differenced autocorr — 5-robust-sigma clip FOR
+DETECTION ONLY); (2) the CENTERED TIME AXIS (raw epoch dates cost
+extrapolation precision — the relative-space law applied: trend fits
+on t-t0, one offset applied last); (3) THE DIVISOR RULE v2 for the
+fundamental (finite-sample luck can crown a harmonic — the smallest
+past-null peak DIVIDING the tallest at >=60% height is the
+fundamental). A1-A4 all shipped same day: the full data analyst
+stands.

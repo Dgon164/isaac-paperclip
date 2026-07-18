@@ -1574,6 +1574,15 @@ sawtooth + 0.2% dark. WRONG-KEPT jewel: deterministic AM was FULLY
 ARTICULATED as exact sidebands — the machine outdid the prediction.
 NAMED DEBTS: jump-point threshold proposals; periodicity as a
 first-class structural kind (the growing grammar's rung 4).
+A4 PROMOTED same day (#23) — THE SEGMENT CLOSES: the analyst face
+(isaac_store/analyst.py; askisaac --analyst) — one command, every
+section a promoted organ, the face assembles never judges; battery
+7/7 permanent incl. the CLI door. Three face-lessons moved INTO the
+organ (wrong-kept): spike-proof detection clip (informer only);
+the CENTERED TIME AXIS (relative-space law applied to trend fits);
+THE DIVISOR RULE v2 (a harmonic can out-poll the fundamental by
+finite-sample luck — the smallest past-null peak dividing the
+tallest at >=60% height takes the seat).
 A3 PROMOTED same day (#22): watch/watch_series — a law DEFENDS ITS
 SEAT on arriving data; baseline-then-judged against the watch's own
 accumulated normal (self-calibrating; v1 constants filed); DRIFT

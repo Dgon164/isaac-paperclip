@@ -42,8 +42,24 @@ def main():
     p.add_argument("--speak", action="store_true",
                    help="LEARNED speech (trained from the corpus, all "
                         "or nothing) with the full report beneath")
+    p.add_argument("--analyst", action="store_true",
+                   help="the ANALYST face: trend + cycle + anomalies "
+                        "+ relations + forecast + the watch, per "
+                        "column, plain language with receipts")
+    p.add_argument("--time", default=None, metavar="COL",
+                   help="the time column for --analyst (else "
+                        "auto-detected: first strictly-increasing)")
     a = p.parse_args()
     mod = bridge.load_isaac_module()
+
+    if a.analyst:
+        from isaac_store.analyst import analyst_source, render_analyst
+        rep = analyst_source(a.source, time_col=a.time, mod=mod)
+        if a.json:
+            print(json.dumps(rep, default=str, indent=2))
+        else:
+            print(render_analyst(rep))
+        return
 
     if a.audit:
         from isaac_store.audit import audit_source, render_audit

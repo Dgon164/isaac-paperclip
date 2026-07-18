@@ -4689,6 +4689,18 @@ class Isaac:
         period, prof, nbins, r2_seas = None, None, 0, 0.0
         bins_all = None
         dy = np.diff(y)
+        # spike-proof detection (the face's lesson): heavy outliers
+        # hijack the differenced autocorrelation — clip at 5 robust
+        # sigmas FOR DETECTION ONLY (informer, never judge; the
+        # profile and accounting still see the real data)
+        med_d = float(np.median(dy))
+        mad_d = float(np.median(np.abs(dy - med_d))) * 1.4826
+        if mad_d > 1e-12:
+            lo_c, hi_c = med_d - 5 * mad_d, med_d + 5 * mad_d
+            n_clip = int(np.sum((dy < lo_c) | (dy > hi_c)))
+            if n_clip:
+                dy = np.clip(dy, lo_c, hi_c)
+                rec["detection_clip"] = n_clip
         maxlag = int(min(n // 3, max_period or n // 3))
         if maxlag >= 3 and dy.std() > 1e-12:
             def _ac(sig, lag):
@@ -4714,8 +4726,19 @@ class Isaac:
                      and (i == 0 or acs[i] >= acs[i - 1])
                      and (i == len(acs) - 1 or acs[i] >= acs[i + 1])]
             if cands:
-                topv = max(acs[i] for i in cands)
-                best = min(i for i in cands if acs[i] >= 0.9 * topv)
+                # v2 (the face's lesson): among harmonics, finite-
+                # sample luck can make a MULTIPLE the tallest peak —
+                # the fundamental is the smallest past-null peak that
+                # DIVIDES the tallest (integer ratio) at >=60% of its
+                # height; unrelated small peaks cannot steal the seat
+                top = max(cands, key=lambda i: acs[i])
+                best = top
+                for i in sorted(cands):
+                    ratio = (top + 2) / (i + 2)
+                    if (acs[i] >= 0.6 * acs[top]
+                            and abs(ratio - round(ratio)) <= 0.15):
+                        best = i
+                        break
                 # parabolic refine around the integer peak
                 if 0 < best < len(acs) - 1:
                     y0, y1, y2 = acs[best - 1], acs[best], acs[best + 1]
@@ -4778,11 +4801,16 @@ class Isaac:
         # a time index are affine clones of it — never proposed here)
         y_adj = y - (prof[bins_all] if prof is not None else 0.0)
         trend_name = f"{name}-trend" if name else None
-        tr = self.discover(t.reshape(-1, 1), y_adj, name=trend_name,
+        # the time axis is CENTERED for the trend fit (the relative-
+        # space law: an epoch offset is one factor applied last —
+        # raw calendar dates at large offsets cost extrapolation
+        # precision, the face's second lesson)
+        tc0 = (t - t[0]).reshape(-1, 1)
+        tr = self.discover(tc0, y_adj, name=trend_name,
                            container=c, use_lags=False)
         trend_pred = None
         if trend_name and tr["verdict"] in ("UNDERSTOOD", "PARTIAL"):
-            trend_pred = self.apply_law(trend_name, t.reshape(-1, 1))
+            trend_pred = self.apply_law(trend_name, tc0)
         if trend_pred is None:
             trend_pred = np.full(n, float(y_adj.mean()))
             rec["bypassed"].append(
@@ -4832,7 +4860,7 @@ class Isaac:
         if s["trend_law"] and self.net.get_meta(
                 f"law:{s['trend_law']}", "model"):
             base = self.apply_law(s["trend_law"],
-                                  t_new.reshape(-1, 1))
+                                  (t_new - s["t0"]).reshape(-1, 1))
         else:
             base = np.zeros(len(t_new))
         if base is None:
