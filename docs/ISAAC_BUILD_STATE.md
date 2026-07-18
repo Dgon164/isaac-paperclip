@@ -1381,3 +1381,24 @@ interleaved mix — the >=2-laws precondition of the selection gauge,
 first demonstrated. Battery container_crystal_battery.py 8/8 joins
 the permanent wall. Curriculum ruling same message: staging =
 convenience, never a gate.
+
+## 2026-07-18 — THE FIRST MEAL STAGED + MEASURED-JITTER KINSHIP
+## (promotion #18)
+Meal 1 built (meal1_first_laws.py, dry/--live): REAL sky + Boyle's
+actual 1662 table. Two findings from the first real food, both
+cured through the full road: (1) 6-7 row dishes REFUSED (3 training
+rows after holdout) — cured by more real moons (more knowledge, not
+looser gates; both moon tables now 11-12 real bodies); (2)
+MEASURED-JITTER KINSHIP — real data earned exponents 1.5/1.49938/
+1.5007 and machine-identical form grouping called kin strangers (0
+families, wrong-kept in the battery's B9): crystallize_forms now
+groups by atom structure with inner constants at the family
+machinery's own 5% tolerance, family id snapped to quarter-step
+ruler marks — Kepler's form is ONE node (lawform:6b98f4af) told,
+discovered, synthetic or real. Dry receipts: 4/4 UNDERSTOOD
+(+1.00*a^1.5; +1413.86*V^-1 from Boyle's own rows, r2 0.99995), ONE
+family across three sky containers, Pluto 247.90 yr (true 248.09,
+0.07%), Adrastea 0.2979 d (true 0.2983), Pan 0.5761 d (true 0.575),
+selection 4/4 named + refusal on the interleave. Battery grown to
+9/9 (B9 = the real-sky case, permanent). His account untouched —
+the --live road awaits the owner's go.

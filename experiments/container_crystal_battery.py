@@ -30,6 +30,14 @@ _install_law/crystallize_forms). The battery pins:
   B8 TOLD AND CRYSTALLIZED FAMILIES UNIFY: a told same-form law joins
      the SAME lawform node the crystallizer minted (crc32 naming
      shared with tell_law — all methods, one concept).
+  B9 MEASURED-JITTER KINSHIP (the first real meal's finding,
+     2026-07-18): REAL data — the Sun's planets, Jupiter's moons,
+     Saturn's moons (NASA/JPL values) — earns jittered exponents
+     (1.5 / 1.49938 / 1.5007), one form wearing measurement noise.
+     Machine-identical grouping called these kin strangers (0
+     families, wrong-kept); structure grouping with inner constants
+     judged at the family machinery's own 5% tolerance mints ONE
+     family, THREE variants, constants never smushed.
 
 Run: cd experiments && PYTHONHASHSEED=0 python container_crystal_battery.py
 """
@@ -205,6 +213,42 @@ def main():
           "methods", ok8,
           f"told status {told['status']}, family {told.get('family')} "
           f"vs crystallized {fam_node}")
+
+    # B9 — measured-jitter kinship on REAL sky data (NASA/JPL values)
+    real = Isaac()
+    REAL = dict(
+        solar=([0.387, 0.723, 1.000, 1.524, 5.203, 9.537, 19.191,
+                30.069],
+               [0.2408, 0.6152, 1.0000, 1.8808, 11.862, 29.457,
+                84.011, 164.79]),
+        jupiter=([128.0, 181.4, 221.9, 421.8, 671.1, 1070.4, 1882.7,
+                  11165.0, 11461.0, 11717.0, 11741.0],
+                 [0.2948, 0.4982, 0.6745, 1.7691, 3.5512, 7.1546,
+                  16.689, 240.92, 250.56, 259.20, 259.64]),
+        saturn=([139.4, 141.7, 151.5, 185.5, 238.0, 294.7, 377.4,
+                 527.1, 1221.9, 1481.0, 3560.8, 12947.8],
+                [0.6127, 0.6285, 0.6950, 0.9424, 1.3702, 1.8878,
+                 2.7369, 4.5175, 15.945, 21.277, 79.331, 550.56]))
+    rr = np.random.default_rng(0)
+    verds = []
+    for nm, (xs, ys) in REAL.items():
+        Xr = np.asarray(xs, float).reshape(-1, 1)
+        yr = np.asarray(ys, float)
+        ordr = rr.permutation(len(yr))
+        verds.append(real.discover(Xr[ordr], yr[ordr],
+                                   name=f"orbits-{nm}")["verdict"])
+    crys_r = real.crystallize_forms()
+    fam_r = crys_r["families"][0] if crys_r["families"] else \
+        dict(members=[], containers=[])
+    ok9 = (verds == ["UNDERSTOOD"] * 3
+           and len(crys_r["families"]) == 1
+           and len(fam_r["members"]) == 3
+           and len(fam_r["containers"]) == 3)
+    check("B9 measured-jitter kinship — real sky, one family, three "
+          "variants", ok9,
+          f"verdicts {verds}; families {len(crys_r['families'])}, "
+          f"members {len(fam_r['members'])} across "
+          f"{len(fam_r['containers'])} containers")
 
     dt = time.perf_counter() - t0
     npass = sum(checks)

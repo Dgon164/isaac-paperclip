@@ -1083,7 +1083,14 @@ own constants (never smushed; the parent holds form, never numbers).
 THE TOOTH: only laws EARNED UNDERSTOOD in their own container may
 crystallize (kinship between confusions is not knowledge — that is
 what kills the scrambled-assignment null: pseudo-worlds mint PARTIAL
-mixtures, excluded with receipts). Same form + same constants across
+mixtures, excluded with receipts). MEASURED-JITTER KINSHIP (the
+first real meal, 2026-07-18): real data earns jittered inner
+constants (the sky's three orbital systems minted exponents 1.5 /
+1.49938 / 1.5007) — forms group by atom STRUCTURE with inner
+constants judged at the family machinery's own 5% tolerance, and the
+family id snaps to the coarsest quarter-step ruler mark, so Kepler's
+form is ONE node (lawform:6b98f4af) told, discovered, synthetic, or
+real. Named next rung: one FORM COURT for same-form everywhere. Same form + same constants across
 containers = a WITNESS record (the universality road; any parent's
 entry into BASE stays the full court's job). Selection composes:
 `which_law` names the right law per world and REFUSES an interleaved

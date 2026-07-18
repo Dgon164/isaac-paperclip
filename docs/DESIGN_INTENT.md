@@ -1451,3 +1451,17 @@ the session road (source identity -> container, _teach_fact made
 container-aware), crystallize_across as an engine organ reading the
 law's own certificate instead of a carried verdict, batteries +
 walls per the healed promote road.
+THE FIRST REAL MEAL (2026-07-18, meal1_first_laws.py — promotion
+#18): real sky (8 planets, 11 Jupiter + 12 Saturn moons, NASA/JPL) +
+Boyle's actual 1662 table. TWO REAL-FOOD FINDINGS, cured through the
+road: (a) 6-7 row dishes REFUSE (3 training rows after holdout) —
+cure was MORE REAL MOONS, never a loosened gate; (b) MEASURED-JITTER
+KINSHIP — real data earned exponents 1.5/1.49938/1.5007 and
+machine-identical form grouping called kin strangers: forms now
+group by atom structure w/ inner constants at the family machinery's
+own 5% tolerance, family id snapped to quarter-step marks — KEPLER'S
+FORM IS ONE NODE (lawform:6b98f4af) told, discovered, synthetic, or
+real; battery grown to 9/9 (B9 = the real-sky case, permanent).
+Dry receipts: 4/4 UNDERSTOOD, ONE family across three sky
+containers, Pluto 0.07% never-fed, selection 4/4 + refusal.
+NAMED RUNG: one FORM COURT deciding same-form everywhere.

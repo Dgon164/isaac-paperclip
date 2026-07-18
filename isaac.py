@@ -5248,8 +5248,61 @@ class Isaac:
         WITNESS record (one law multiply confirmed — the universality
         road; promoting any parent into BASE stays the full court's
         job, never this organ's). Every exclusion carries a receipt
-        (consideration law: bypassed, with the why)."""
+        (consideration law: bypassed, with the why).
+        MEASURED-JITTER KINSHIP (the first real meal's finding,
+        2026-07-18): real data earns jittered inner constants — the
+        three orbital systems minted exponents 1.5 / 1.49938 / 1.5007,
+        one form wearing measurement noise — and machine-identical
+        signatures called kin strangers. Forms now group by atom
+        STRUCTURE, inner constants judged the same at the SAME 5%
+        relative tolerance the family machinery already applies to
+        outer constants (_coefs_match: one tolerance, one concept of
+        'same number'); the family id snaps each inner constant to
+        the coarsest quarter-step ruler mark inside the tolerance
+        (1.49938 -> 1.5), so told and crystallized families still
+        unify on clean forms. NAMED NEXT RUNG: one FORM COURT
+        deciding same-form everywhere (tell_law's match check still
+        uses exact signatures)."""
         import zlib
+        SENT = -999
+
+        def _struct(m):
+            terms = []
+            for t in m["terms"]:
+                atoms = []
+                for a in t:
+                    kind, i, j, k = m["specs"][a]
+                    atoms.append((str(kind),
+                                  SENT if i is None else int(i),
+                                  SENT if j is None else int(j),
+                                  None if k is None else float(k)))
+                atoms.sort(key=lambda s: s[:3])
+                terms.append(tuple(atoms))
+            terms.sort(key=lambda t: tuple(a[:3] for a in t))
+            key = tuple(tuple(a[:3] for a in t) for t in terms)
+            ks = [a[3] for t in terms for a in t]
+            return key, ks
+
+        def _kclose(ka, kb):
+            for a, b in zip(ka, kb):
+                if a is None and b is None:
+                    continue
+                if a is None or b is None:
+                    return False
+                if abs(a - b) > 0.05 * max(abs(a), abs(b), 1e-9):
+                    return False
+            return True
+
+        def _canon_k(vals):
+            vals = [v for v in vals if v is not None]
+            if not vals:
+                return None
+            m0 = sum(vals) / len(vals)
+            q = round(m0 * 4) / 4.0        # quarter-step ruler marks
+            if abs(q - m0) <= 0.05 * max(abs(m0), 1e-9):
+                return q
+            return round(m0, 3)
+
         groups, excluded = {}, []
         for node in list(self.net.meta):
             n = str(node)
@@ -5265,12 +5318,43 @@ class Isaac:
                                      why="not earned UNDERSTOOD in its "
                                          "own container"))
                 continue
-            groups.setdefault(self._form_signature(m), []).append((n, c))
+            key, ks = _struct(m)
+            groups.setdefault(key, []).append((n, c, ks))
         out = dict(families=[], witnesses=[], excluded=excluded)
-        for sig, members in groups.items():
+        clusters = []
+        for key, membs in groups.items():
+            for item in membs:
+                placed = False
+                for ckey, cl in clusters:
+                    if ckey == key and any(_kclose(item[2], o[2])
+                                           for o in cl):
+                        cl.append(item)
+                        placed = True
+                        break
+                if not placed:
+                    clusters.append((key, [item]))
+        for key, membs in clusters:
+            members = [(n, c) for n, c, _ in membs]
             containers = sorted({c for _, c in members})
             if len(members) < min_members or len(containers) < 2:
                 continue
+            # the family signature: canonical (mark-snapped) inner
+            # constants per aligned position — same label grammar and
+            # crc32 as tell_law, so clean told forms land on the node
+            canon = [_canon_k([ks[p] for _, _, ks in membs])
+                     for p in range(len(membs[0][2]))]
+            sig_terms, pos = [], 0
+            for t in key:
+                labs = []
+                for (kind, i, j) in t:
+                    kk = canon[pos]
+                    pos += 1
+                    labs.append(_atom_label(
+                        (kind, None if i == SENT else i,
+                         None if j == SENT else j,
+                         None if kk is None else round(kk, 3))))
+                sig_terms.append(tuple(sorted(labs)))
+            sig = tuple(sorted(sig_terms))
             models = [self.net.get_meta(n, "model") for n, _ in members]
             if all(self._coefs_match(models[0], m2) for m2 in models[1:]):
                 w = dict(members=sorted(n for n, _ in members),

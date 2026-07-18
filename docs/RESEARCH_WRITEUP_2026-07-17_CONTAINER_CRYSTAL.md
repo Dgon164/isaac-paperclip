@@ -119,3 +119,31 @@ piecewise-answerable; testing refusal requires true superposition
 - **Crystallization at higher levels**: relations among lawforms
   (the recursive-pools rung, probe-proven 10/10) — families of
   families when the food creates them.
+
+## Postscript (2026-07-18): the first real meal, and what it taught
+
+Meal 1 was staged dry (his account untouched): the Sun's eight
+planets, eleven moons of Jupiter, twelve of Saturn (NASA/JPL
+values), and Robert Boyle's original 1662 pressure table. The real
+food immediately taught two lessons synthetic food never could:
+
+**Small dishes refuse.** Six rows is three training rows after
+holdout — both moon systems came back NO RULE. The cure was more
+real moons, which is more knowledge, not a loosened gate.
+
+**Real kinship wears jitter.** The three orbital laws earned
+exponents 1.5, 1.49938, 1.5007 — one form in three measured coats —
+and machine-identical form grouping called them strangers (0
+families). Cure: forms group by atom structure with inner constants
+judged at the family machinery's own 5% tolerance (one tolerance,
+one concept of "same number"), and the family id snaps to the
+coarsest quarter-step ruler mark. Kepler's third law is now ONE node
+— `lawform:6b98f4af` — whether told, discovered, synthetic, or read
+off the actual sky. Baked into the wall as the battery's B9.
+
+Dry receipts, complete numbers: 4/4 UNDERSTOOD; `+1.00*a^1.5`
+(solar), `+1413.86*V^-1` from Boyle's own rows at r² 0.99995; ONE
+family across the three sky containers; Pluto predicted 247.90 yr
+(true 248.09 — 0.07% off, never fed); Adrastea 0.2979 d (true
+0.2983); Pan 0.5761 d (true 0.575); selection 4/4 named, AMBIGUOUS
+refusal on the interleaved mix.
