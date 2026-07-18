@@ -16,7 +16,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
 import isaac as mod                                    # noqa: E402
 from isaac_store.sparring import (OllamaPartner, harvest,      # noqa: E402
                                   frontier_curriculum, isaac_says,
-                                  run_drill_flow, run_session)
+                                  read_failures, run_drill_flow,
+                                  run_session)
 
 PASS, FAIL = 0, 0
 
@@ -428,6 +429,77 @@ def main():
               and s_after == "learned-fragment",
               f"before={s_before}, after={s_after} "
               f"({u_after[:30] if u_after else '?'})")
+
+    # ── FR. THE DEEP FAILURE READ (the experiment the docs called
+    # E3, plumbed at the owner's word: "see if he makes any mistakes
+    # or misses and corrects them later"): every failure receipt his
+    # life keeps — silences AND wrongs-with-corrections — featured
+    # by the context that produced them; the differential names what
+    # they share; the archive is READ, never written. ──
+    with tempfile.TemporaryDirectory() as td:
+        home = os.path.join(td, "home")
+        from isaac_store.sparring import IsaacAccount as _IA2
+        acct4 = _IA2(home, mod)
+        pdir = os.path.join(home, "transcripts")
+        rng5 = __import__("numpy").random.default_rng(6)
+        # silences: uncorrelated background (no condition to name)
+        for k in range(4):
+            sess = [("hello there my good friend .",
+                     bool(rng5.random() < 0.3)) for _ in range(6)]
+            _plant_session(pdir, k, sess)
+        # wrongs-with-corrections: EVERY correction context carries
+        # a number (the shared condition lives in the correction
+        # road, invisible to transcript mining alone)
+        # statements (not questions), mixed lengths — so the ONLY
+        # condition the corrections share beyond the background is
+        # HAS_NUMBER (first plant conflated ends_q; caught by FR2)
+        wrongs = [dict(context=c, said="...", verdict="fail",
+                       correction="the right number is said .")
+                  for c in [
+                      "two plus three makes six .",
+                      "the number four comes right after five .",
+                      "she counted 7 apples in the tiny basket .",
+                      "our lesson number 3 starts now my friend .",
+                      "he wrote 9 letters yesterday .",
+                      "the 2 of us practice each day together ."]]
+        acct4.mind.net.set_meta("speech:wrong", "record", wrongs)
+        corpus_before = ""
+        scen4, finding4, counts4 = read_failures(acct4.mind, home)
+        named4 = {f_ for f_, v, _ in finding4.get("named", [])}
+        check("FR1 the deep read: the corrections' shared condition "
+              "NAMED (has_number) across sources",
+              "has_number" in named4 and counts4["wrongs"] == 6
+              and counts4["silences"] >= 1,
+              f"named {sorted(named4)}; counts {counts4}")
+        check("FR2 a curriculum comes back for it",
+              scen4 is not None
+              and scen4["target"]["feature"] == "has_number",
+              f"target {scen4['target'] if scen4 else '?'}")
+
+    # FR3: the archive is READ, never written — point the read at a
+    # second account's home; its files must be byte-identical after
+    with tempfile.TemporaryDirectory() as td:
+        home2 = os.path.join(td, "arch")
+        from isaac_store.sparring import IsaacAccount as _IA3
+        arch = _IA3(home2, mod)
+        pdir2 = os.path.join(home2, "transcripts")
+        _plant_session(pdir2, 0,
+                       [("how are you today ?", True)] * 5)
+        arch.mind.save(arch.mind_path)
+        before_bytes = {}
+        for root, _, fs in os.walk(home2):
+            for fn in fs:
+                p = os.path.join(root, fn)
+                before_bytes[p] = open(p, "rb").read()
+        reader = mod.Isaac()          # a fresh mind does the reading
+        _, f5, c5 = read_failures(reader, home2)
+        same = all(open(p, "rb").read() == b
+                   for p, b in before_bytes.items())
+        check("FR3 the archive is read, never written (every byte "
+              "identical after); the finding returns to the READER",
+              same and c5["silences"] == 5
+              and isinstance(f5.get("named"), list),
+              f"bytes same={same}, counts {c5}")
 
     print()
     print(f"SPARRING BATTERY: {PASS}/{PASS + FAIL} checks passed")

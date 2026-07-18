@@ -1341,3 +1341,20 @@ FULL output now saves to experiments/runs/gate_failures/ — the
 traceback can never be lost a third time. Filed in
 KNOWN_LIMITS_ALPHA #13; the watch stands; promotion re-run on the
 unchanged commit.
+
+## 2026-07-17 (launch day, cont.) — THE DEEP FAILURE READ plumbed
+## (the docs' "E3"; battery-first, sparring 33/33)
+Owner: "lets get that plumbed and see if he makes any mistakes or
+misses and corrects them later." read_failures(mind, home): every
+failure receipt a life keeps — SILENCES from transcripts + WRONGS-
+WITH-CORRECTIONS from the tutored road — featured by the context
+that produced them (_line_features: ends_q/first/length/has_number);
+the differential miner names what failures share past the null; the
+top condition returns as a drill scenario (_scenario_for, shared
+with frontier_curriculum). FR1: a condition living ONLY in the
+correction road (has_number) named alone across sources (first
+plant conflated ends_q — caught, fixed: plants must separate
+conditions). FR2 curriculum returned. FR3 THE ARCHIVE IS READ,
+NEVER WRITTEN — every byte identical after; the finding lands in
+the reading mind. v1 sources said: transcripts + speech:wrong (vet
+quarantines keep claims, not lines — named future source).

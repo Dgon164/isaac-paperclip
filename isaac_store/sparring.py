@@ -227,6 +227,18 @@ def run_drill_flow(account, partner, scenario, turns=10):
 # invented curriculum. The drill then runs through the KERNEL flow
 # (run_drill_flow), and the next mining measures whether the
 # weakness moved: named -> drilled -> re-measured.
+def _line_features(text):
+    """A heard line -> the features every failure road shares."""
+    t = text.lower()
+    words = t.split()
+    return dict(
+        ends_q="yes" if t.rstrip().endswith("?") else "no",
+        first=words[0] if words else "_",
+        length="short" if len(words) <= 6 else "long",
+        has_number="yes" if any(w.isdigit() or w in _NUMWORDS
+                                for w in words) else "no")
+
+
 def _frontier_records(home, last_n=8):
     tdir = os.path.join(home, "transcripts")
     recs, failed = [], []
@@ -251,14 +263,73 @@ def _frontier_records(home, last_n=8):
                     and t["source"] in ("silence",
                                         "learned-fragment",
                                         "corrected"):
-                words = heard.split()
-                recs.append(dict(
-                    ends_q="yes" if heard.rstrip().endswith("?")
-                    else "no",
-                    first=words[0] if words else "_",
-                    length="short" if len(words) <= 6 else "long"))
+                recs.append(_line_features(heard))
                 failed.append(t["source"] == "silence")
     return recs, failed
+
+
+def _scenario_for(feat, val):
+    """A named losing condition -> the drill scenario that targets
+    it (repetition-teaching, the measured-adjustment-#1 shape)."""
+    if feat == "ends_q" and val == "yes":
+        what = ("question-shaped prompts — drill short questions "
+                "with their answers, repeated")
+        opener = "let us practice questions and answers ."
+    elif feat == "has_number" and val == "yes":
+        what = ("lines with numbers — drill tiny number exchanges "
+                "(what is two plus three -> it is five), repeated")
+        opener = "let us practice numbers ."
+    elif feat == "first":
+        what = (f"lines starting with '{val}' — drill short "
+                f"exchanges opening with '{val}', repeated")
+        opener = f"let us practice lines that start with {val} ."
+    else:
+        what = (f"the named condition {feat}={val} — drill short "
+                f"repeated exchanges in that shape")
+        opener = "let us practice this the same way each time ."
+    return dict(
+        opener=opener,
+        system=("You are a patient english tutor for a beginner "
+                "named isaac. His measured weakness: " + what +
+                ". Teach by REPETITION: use the same short "
+                "sentences many times across the session, vary "
+                "little, one idea per line."),
+        target=dict(feature=feat, value=val))
+
+
+def read_failures(mind, home, last_n=30, name="failures"):
+    """THE DEEP FAILURE READ (the experiment the planning docs
+    called E3; plumbed 2026-07-17 — owner: "see if he makes any
+    mistakes or misses and corrects them later"). Every failure
+    receipt a life keeps, featured by the context that produced it:
+    SILENCES from the transcripts, WRONGS-WITH-CORRECTIONS from the
+    tutored road (their contexts are failures BY VERDICT). The
+    differential miner names what the failures share past the null;
+    the top named condition returns as a drill scenario. The read
+    is READ-ONLY on the home: the finding lands in the READING
+    mind's net, never the archive's. v1 sources, said: transcripts
+    + speech:wrong records (vet quarantines keep claims, not lines
+    — a named future source)."""
+    recs, failed = _frontier_records(home, last_n)
+    n_sil = sum(failed)
+    wrongs = mind.net.get_meta("speech:wrong", "record") or []
+    for w in wrongs:
+        ctx = w.get("context") or ""
+        if ctx:
+            recs.append(_line_features(ctx))
+            failed.append(True)
+    counts = dict(silences=int(n_sil), wrongs=len(wrongs),
+                  records=len(recs))
+    if not recs or not any(failed):
+        return None, dict(named=[],
+                          why="no receipts / no failures"), counts
+    finding = mind.mine_commonality(recs, failed,
+                                    name=f"frontier:{name}")
+    named = finding.get("named") or []
+    if not named:
+        return None, finding, counts
+    feat, val, _ = named[0]
+    return _scenario_for(feat, val), finding, counts
 
 
 def frontier_curriculum(account, last_n=8, name="speech"):
@@ -277,27 +348,7 @@ def frontier_curriculum(account, last_n=8, name="speech"):
     if not named:
         return None, finding
     feat, val, _ = named[0]
-    if feat == "ends_q" and val == "yes":
-        what = ("question-shaped prompts — drill short questions "
-                "with their answers, repeated")
-        opener = "let us practice questions and answers ."
-    elif feat == "first":
-        what = (f"lines starting with '{val}' — drill short "
-                f"exchanges opening with '{val}', repeated")
-        opener = f"let us practice lines that start with {val} ."
-    else:
-        what = (f"the named condition {feat}={val} — drill short "
-                f"repeated exchanges in that shape")
-        opener = "let us practice this the same way each time ."
-    scenario = dict(
-        opener=opener,
-        system=("You are a patient english tutor for a beginner "
-                "named isaac. His measured weakness: " + what +
-                ". Teach by REPETITION: use the same short "
-                "sentences many times across the session, vary "
-                "little, one idea per line."),
-        target=dict(feature=feat, value=val))
-    return scenario, finding
+    return _scenario_for(feat, val), finding
 
 
 # ── the vet at the front door (owner design 2026-07-15: "bad
