@@ -215,6 +215,91 @@ def run_drill_flow(account, partner, scenario, turns=10):
     return mind.walk_flow("drill", {})
 
 
+# ── FRONTIER -> CURRICULUM (owner, 2026-07-15: "he just needs to
+# see that hey, this keeps losing in these conditions, group them
+# and find why"; wired 2026-07-17 — the self-learning loop's
+# closing arc). His OWN recent life is the evidence: every reply he
+# gave, featured by the line he heard (question-shaped? first word?
+# length), with SILENCE as the failure signal; mine_commonality's
+# null-gated differential names the losing condition — a gap WITH
+# EVIDENCE — and the named condition becomes the next drill's
+# scenario. Nothing named past the null = honest nothing, no
+# invented curriculum. The drill then runs through the KERNEL flow
+# (run_drill_flow), and the next mining measures whether the
+# weakness moved: named -> drilled -> re-measured.
+def _frontier_records(home, last_n=8):
+    tdir = os.path.join(home, "transcripts")
+    recs, failed = [], []
+    if not os.path.isdir(tdir):
+        return recs, failed
+    files = sorted(f for f in os.listdir(tdir)
+                   if f.endswith(".json"))
+    for fname in files[-last_n:]:
+        try:
+            tr = json.load(open(os.path.join(tdir, fname),
+                                encoding="utf-8"))
+        except Exception:
+            continue
+        if not (isinstance(tr, list) and tr
+                and isinstance(tr[0], dict) and "who" in tr[0]):
+            continue
+        heard = None
+        for t in tr:
+            if t["who"] == "partner":
+                heard = t["text"].lower()
+            elif t["who"] == "isaac" and heard is not None \
+                    and t["source"] in ("silence",
+                                        "learned-fragment",
+                                        "corrected"):
+                words = heard.split()
+                recs.append(dict(
+                    ends_q="yes" if heard.rstrip().endswith("?")
+                    else "no",
+                    first=words[0] if words else "_",
+                    length="short" if len(words) <= 6 else "long"))
+                failed.append(t["source"] == "silence")
+    return recs, failed
+
+
+def frontier_curriculum(account, last_n=8, name="speech"):
+    """Mine the recent window of his own life; if a losing condition
+    is NAMED past the null, build the drill scenario that targets it
+    and return (scenario, finding); otherwise (None, finding) — the
+    honest nothing. The finding lands in his net either way
+    (commonality:frontier:<name>)."""
+    recs, failed = _frontier_records(account.home, last_n)
+    if not recs or not any(failed):
+        return None, dict(named=[],
+                          why="no receipts / no failures to mine")
+    finding = account.mind.mine_commonality(
+        recs, failed, name=f"frontier:{name}")
+    named = finding.get("named") or []
+    if not named:
+        return None, finding
+    feat, val, _ = named[0]
+    if feat == "ends_q" and val == "yes":
+        what = ("question-shaped prompts — drill short questions "
+                "with their answers, repeated")
+        opener = "let us practice questions and answers ."
+    elif feat == "first":
+        what = (f"lines starting with '{val}' — drill short "
+                f"exchanges opening with '{val}', repeated")
+        opener = f"let us practice lines that start with {val} ."
+    else:
+        what = (f"the named condition {feat}={val} — drill short "
+                f"repeated exchanges in that shape")
+        opener = "let us practice this the same way each time ."
+    scenario = dict(
+        opener=opener,
+        system=("You are a patient english tutor for a beginner "
+                "named isaac. His measured weakness: " + what +
+                ". Teach by REPETITION: use the same short "
+                "sentences many times across the session, vary "
+                "little, one idea per line."),
+        target=dict(feature=feat, value=val))
+    return scenario, finding
+
+
 # ── the vet at the front door (owner design 2026-07-15: "bad
 # english is interpreted, but not implemented"; wired at the launch
 # 2026-07-17 — admission discipline from his FIRST conversation).

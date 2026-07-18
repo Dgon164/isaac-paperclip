@@ -1311,3 +1311,21 @@ flow:drill is HIS to tally, branch, and elect. THE ACCEPTANCE TEST
 flow:drill in his net (branch_flow/elect_flow) — never editing
 Python. Code that accumulates domain decisions is the old trap
 wearing the kernel's clothes.
+
+## 2026-07-17 (launch day, cont.) — FRONTIER→CURRICULUM: the
+## self-learning loop CLOSES (battery-first, sparring 30/30)
+Handoff item 6, the owner's 07-15 design ("he just needs to see
+that hey, this keeps losing in these conditions, group them and
+find why") wired end to end: frontier_curriculum(account) features
+every reply in his recent transcripts by the line he HEARD
+(question-shaped / first word / length) with SILENCE as the failure
+signal, and mine_commonality's null-gated differential names the
+losing condition — a gap WITH evidence. The named condition builds
+the next drill's scenario (repetition-teaching, targeted); nothing
+named past the null = honest nothing, no invented curriculum (FC2).
+FC3 = THE WHOLE LOOP IN ONE CHECK: planted life where questions
+always met silence → 'ends_q=yes' NAMED → scenario built → drilled
+through run_drill_flow (THE KERNEL — the walker as top level) →
+re-probed: before=silence, after=learned-fragment ("i am fine thank
+you my friend"). Weakness named → drilled → capability measurably
+moved, every stage receipted in his own net.

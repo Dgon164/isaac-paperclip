@@ -15,8 +15,8 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(
     os.path.abspath(__file__))))
 import isaac as mod                                    # noqa: E402
 from isaac_store.sparring import (OllamaPartner, harvest,      # noqa: E402
-                                  isaac_says, run_drill_flow,
-                                  run_session)
+                                  frontier_curriculum, isaac_says,
+                                  run_drill_flow, run_session)
 
 PASS, FAIL = 0, 0
 
@@ -335,6 +335,99 @@ def main():
               "to flow:drill like any flow)",
               isinstance(rec, dict) and rec.get("walks", 0) >= 2
               and rec.get("wins", 0) >= 1, f"tally {tally}")
+
+    # ── FC. FRONTIER -> CURRICULUM (handoff item 6; owner 07-15:
+    # "he just needs to see that hey, this keeps losing in these
+    # conditions, group them and find why"): weakness named from his
+    # OWN receipts -> a drill scenario built for it -> drilled
+    # through the KERNEL flow -> the capability measurably moves. ──
+    import json as _json2
+
+    def _plant_session(pdir, k, rows):
+        tr = []
+        for heard, silent in rows:
+            tr.append(dict(who="partner", text=heard,
+                           source="model"))
+            tr.append(dict(who="isaac",
+                           text="..." if silent else "hello .",
+                           source="silence" if silent
+                           else "learned-fragment"))
+        with open(os.path.join(pdir, f"session_{k:05d}.json"), "w",
+                  encoding="utf-8") as f:
+            _json2.dump(tr, f)
+
+    with tempfile.TemporaryDirectory() as td:
+        home = os.path.join(td, "home")
+        from isaac_store.sparring import IsaacAccount as _IA
+        acct = _IA(home, mod)
+        pdir = os.path.join(home, "transcripts")
+        rng2 = __import__("numpy").random.default_rng(3)
+        rows = []
+        for k in range(6):
+            sess = []
+            for _ in range(8):
+                if rng2.random() < 0.5:
+                    sess.append(("how are you doing today ?", True))
+                else:
+                    sess.append(("the weather is nice today .",
+                                 bool(rng2.random() < 0.15)))
+            _plant_session(pdir, k, sess)
+        scen, finding = frontier_curriculum(acct)
+        named = {f_ for f_, v, _ in finding.get("named", [])}
+        check("FC1 the weakness NAMED from his own receipts: "
+              "question-shaped prompts lose",
+              "ends_q" in named and scen is not None
+              and "question" in scen["system"].lower(),
+              f"named {sorted(named)}; scenario opener "
+              f"{scen['opener'][:40] if scen else '?'}")
+
+    with tempfile.TemporaryDirectory() as td:
+        home = os.path.join(td, "home")
+        from isaac_store.sparring import IsaacAccount as _IA
+        acct2 = _IA(home, mod)
+        pdir = os.path.join(home, "transcripts")
+        rng3 = __import__("numpy").random.default_rng(4)
+        for k in range(6):
+            sess = [("hello there my good friend .",
+                     bool(rng3.random() < 0.5)) for _ in range(8)]
+            _plant_session(pdir, k, sess)
+        scen2, finding2 = frontier_curriculum(acct2)
+        check("FC2 no recurring condition -> honest NOTHING (no "
+              "invented curriculum)",
+              scen2 is None and not finding2.get("named"),
+              f"named {finding2.get('named')}")
+
+    with tempfile.TemporaryDirectory() as td:
+        home = os.path.join(td, "home")
+        from isaac_store.sparring import IsaacAccount as _IA
+        acct3 = _IA(home, mod)
+        pdir = os.path.join(home, "transcripts")
+        rng4 = __import__("numpy").random.default_rng(5)
+        for k in range(6):
+            sess = []
+            for _ in range(8):
+                if rng4.random() < 0.5:
+                    sess.append(("how are you doing today ?", True))
+                else:
+                    sess.append(("the weather is nice today .",
+                                 False))
+            _plant_session(pdir, k, sess)
+        scen3, _ = frontier_curriculum(acct3)
+        probe = "how are you doing today ?"
+        u_before, s_before = isaac_says(acct3.mind, probe)
+        drillp = StubPartner(["how are you doing today ?",
+                              "i am fine thank you my friend ."],
+                             max_calls=14)
+        out_fc, _ = run_drill_flow(acct3, drillp,
+                                   scen3 or SCEN, turns=14)
+        u_after, s_after = isaac_says(acct3.mind, probe)
+        check("FC3 THE LOOP CLOSES: weakness -> curriculum -> KERNEL "
+              "drill -> he now answers where he was silent",
+              scen3 is not None and out_fc == "done"
+              and s_before == "silence"
+              and s_after == "learned-fragment",
+              f"before={s_before}, after={s_after} "
+              f"({u_after[:30] if u_after else '?'})")
 
     print()
     print(f"SPARRING BATTERY: {PASS}/{PASS + FAIL} checks passed")
