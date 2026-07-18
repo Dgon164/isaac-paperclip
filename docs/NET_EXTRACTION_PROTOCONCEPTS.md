@@ -226,3 +226,48 @@ LADDER REVISED — the blind protocol added:
   enter Isaac's net as TOLD knowledge (tell_law / flows) with
   provenance "decoded from provided weights" — told-unverified,
   belief earned by data, like any other teacher.
+
+## RUNGS P1 / P1.5 / P2 / P3-FIRST-BITE — all run 2026-07-17, the
+## same day as the design ("lets find out how much we can find out")
+
+**netdecode_probe.py 8/8:**
+- P1 planted circuit: AND(0,1) read from weights at coefficient
+  2.00 (true 2.0) — carried by an ASSEMBLY [neurons 6,7], per-
+  neuron contributions 0.80+1.19 summing to the coefficient (the
+  receipt). First-pass lesson, wrong-kept: NO single neuron
+  implements the gate — trained nets distribute; the truthful unit
+  is the assembly. THE COUNTERFACTUAL RECEIPT: the cards predicted
+  the ablation outcome (excess 0.00, linear path 1.00) BEFORE the
+  intervention; the run confirmed (0.01, 1.00).
+- P1.5 THE BLIND DRILL 5/5: five foreign nets, decoder saw ONLY
+  weight matrices — every hidden pair named, every coefficient
+  within 0.03, every readable summary carried the behavior (table
+  max-err <= 0.021). "Someone provided only the weights" is now a
+  practiced motion.
+- P2 inverted — THE HALLUCINATION LAW ON THE DECODER: planted
+  weights -> structure DECLARED (12.5x sparse gain, restart
+  stability 1.00); random pool weights -> NO STRUCTURE declared
+  (1.0x, 0.54) — unlearned, not present, no invented atoms.
+
+**netdecode_higgs.py — REAL PHYSICS (machinery 2/2, predictions
+filed first, both CONFIRMED):**
+- Specimen: 28->32->1 ReLU net trained here on 800k HIGGS rows,
+  test AUC 0.7959 on 200k fresh (the 0.885 deep monster remains
+  the prize).
+- FROM THE WEIGHTS ALONE, with names: the net's top-5 carriers are
+  m_bb, m_wbb, m_jjj, m_wwbb, m_jlv — ALL seven engineered mass
+  invariants outrank the low-level detector features (HP1 CONFIRMED
+  at 4.3x mean share) — the physics story read straight off W.
+- HP2 CONFIRMED: 6/7 phi angles land in ranks 23-28 — the net
+  LEARNED rotational symmetry and the decode sees it in the
+  weights.
+- THE RECEIPT AT RATIO 1605x: ablating the decode's top-3 named
+  features costs 0.1605 AUC; its bottom-3 cost -0.0001. The
+  reading is the computation.
+- HONEST FINDING, filed: the REAL first layer shows NO sparse
+  atomic structure (gain 0.99x vs scrambled) — dense mixing, not
+  dictionary packing, at this width/inputs. The carried-weight +
+  card reads work anyway; the sparse-atom tool applies where
+  packing exists (P0's regime), and the toolkit needs both reads.
+  Named open door: activation-space atoms (the superposition may
+  live in activations, not first-layer weights).
