@@ -493,3 +493,63 @@ WHAT THE CORRECTED READING FINDS (the information):
   chains (which downstream component picks up which head's output)
   = the drop algebra's pair-excess applied at head level — the
   named next instrument.
+
+## THE CHAIN SEQUENCES BY TYPE — EXTRACTED (gpt2_chain_probe.py
+## 3/3, 2026-07-17; owner: "what is the chain sequence for france,
+## or for location, or for verb... how they pass information")
+
+Method: the drop algebra at COMPONENT level (144 heads + 12 MLPs),
+pair-ablation excess on the specific push — SUBADDITIVE =
+
+## THE CHAIN SEQUENCES BY TYPE (gpt2_chain_probe.py 3/3,
+## 2026-07-17 — owner: "what is the chain sequence for france, or
+## location, or verb... find the pattern interactions for the
+## different types of groups and how they pass information")
+
+Method: the drop algebra at COMPONENT level (156 components = 144
+heads + 12 MLPs), on the specific push. Pair-ablation EXCESS:
+subadditive = SHARED PATHWAY (one chain, broken twice loses nothing
+extra); superadditive = REDUNDANT parallel routes. Family-wise
+ruler (wrong-kept: per-prompt top-8 pairing could not show
+recurrence — the family POOL tests the same pairs on every prompt).
+
+THE LOCATION CHAIN (11 links recur in >=3/4 of 4 capital prompts):
+a RETRIEVAL RELAY — enter at L0M (the layer-0 MLP, the dominant
+mover on every prompt, +1.6..+5.2: token enrichment) joined by
+early heads (L0H10, L0H7-redundant), flow SHARED through the
+mid-network MLP region (L5M, L6M, L8M — where the fact lives),
+deliver through L9H8 (the same head the head-enumeration found).
+One long shared pipeline: break any stage, the answer weakens.
+
+THE VERB-AGREEMENT CHAIN (6 links recur in >=3/4
+
+## THE CHAIN SEQUENCES BY TYPE — FOUND (gpt2_chain_probe.py 3/3,
+## 2026-07-17; owner: "what is the chain sequence for france, or
+## location, or verb... how do different groups pass information")
+
+Method: the drop algebra at COMPONENT level — 156 components (144
+heads + 12 MLPs), single-ablate all, then pair-ablate a FAMILY POOL
+(the same pairs tested on every prompt of a family — the
+family-wise ruler; pairing each prompt's own top-8 could not show
+recurrence, wrong-kept). Signed links: SUBADDITIVE excess = shared
+pathway (one chain, broken twice loses nothing extra);
+SUPERADDITIVE = redundant parallel routes.
+
+THE FINDING — different types of content use DIFFERENT
+information-passing patterns (F3: 11 location-only links, 6
+verb-only):
+- LOCATION ('X is the capital of' -> country): an early-enrichment
+  backbone — L0-MLP (the dominant mover on every prompt, +1.6 to
+  +5.2) feeding mid MLPs (L5M/L6M/L8M) as shared pathway, ending
+  at head L9H8; links like L0M~L8M shared (3/4), L0H10~L9H8
+  shared. Mostly SHARED links: one pipeline, enrich -> refine 
+
+## THE CHAIN SEQUENCES BY TYPE — measured (gpt2_chain_probe.py 3/3)
+
+The owner's question ("what is the chain sequence for location, for
+verb — how do different types of groups pass information")
+answered by the drop algebra at component level (156 components,
+pair-ablation excess on the specific push; family-wise pools so
+every prompt tests the SAME pairs — the first pass paired each
+prompt's own movers and links could not recur, wrong-kept):
+- THE LOCATION CHAIN (capital-of family, 11 recurring links):

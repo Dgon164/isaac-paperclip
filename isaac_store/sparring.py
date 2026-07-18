@@ -127,18 +127,82 @@ def run_session(mind, partner, scenario, turns=10):
     return transcript
 
 
+# ── the vet at the front door (owner design 2026-07-15: "bad
+# english is interpreted, but not implemented"; wired at the launch
+# 2026-07-17 — admission discipline from his FIRST conversation).
+# Checkable claims in a partner's line are checked against his own
+# arithmetic BEFORE the line can join the corpus. A failing line is
+# INTERPRETED — quarantined verbatim with assumed-intent doors, the
+# conversation continues — but never IMPLEMENTED (banked/relearned).
+# Uncheckable language flows the ordinary excess-null road: never a
+# free pass, never a quarantine. v1 scope, said: plus/minus claims,
+# digits and number words to twenty.
+import re as _re
+
+_NUMWORDS = {w: float(i) for i, w in enumerate(
+    "zero one two three four five six seven eight nine ten eleven "
+    "twelve thirteen fourteen fifteen sixteen seventeen eighteen "
+    "nineteen twenty".split())}
+_NUM = r"(\d+|" + "|".join(_NUMWORDS) + r")"
+_CLAIM_RE = _re.compile(
+    _NUM + r"\s*(plus|\+|minus|-)\s*" + _NUM
+    + r"\s*(?:=|equals|equal|is|makes)\s*" + _NUM)
+
+
+def _num(tok):
+    return float(tok) if tok.isdigit() else _NUMWORDS[tok]
+
+
+def extract_claims(text):
+    """Arithmetic assertions in a line -> vet_intake claims."""
+    out = []
+    for i, m in enumerate(_CLAIM_RE.finditer(text.lower())):
+        a, op, b, c = (_num(m.group(1)), m.group(2),
+                       _num(m.group(3)), _num(m.group(4)))
+        if op in ("plus", "+"):        # a + b = c
+            values = dict(a=a, b=b, c=c)
+            cells, total = ["a", "b"], "c"
+        else:                          # a - b = c  <=>  c + b = a
+            values = dict(a=a, b=b, c=c)
+            cells, total = ["c", "b"], "a"
+        out.append(dict(name=f"claim{i}", kind="sum", values=values,
+                        cells=cells, total=total))
+    return out
+
+
+def vet_texts(mind, texts, name="practice"):
+    """The banking path's gate: (clean_texts, n_quarantined). The
+    vet organ keeps every failing line verbatim at quarantine:<name>
+    with its assumed-intent doors — interpreted, available, never
+    learned."""
+    clean, nq = [], 0
+    for t in texts:
+        claims = extract_claims(t)
+        if claims:
+            got = mind.vet_intake(claims, name=name)
+            if got["quarantined"]:
+                nq += 1
+                continue
+        clean.append(t)
+    return clean, nq
+
+
 # ── the harvest: the model's words become null-gated lessons ─────
 def harvest(mind, transcripts, feats, corpus_path=None, n_perm=40,
             min_evidence=4):
     """Adjacent (heard -> next-said) pairs from sessions join the
     accumulated corpus; learn_speech re-admits fragments through its
     excess null. Returns (n_pairs_added, admitted_before, admitted
-    _after). The corpus file is the raw record — kept, re-learnable,
-    auditable."""
+    _after, learned, n_vetted_out). The corpus file is the raw
+    record — kept, re-learnable, auditable; lines the vet
+    quarantined never enter it."""
     lines = []
+    n_vetted = 0
     for tr in transcripts:
         texts = [t["text"].lower() for t in tr
                  if t["who"] == "partner"]
+        texts, nq = vet_texts(mind, texts)
+        n_vetted += nq
         for a, b in zip(texts, texts[1:]):
             fs = [f"heard:{g}" for g in set(_grams(a)) & feats]
             if fs:
@@ -157,7 +221,7 @@ def harvest(mind, transcripts, feats, corpus_path=None, n_perm=40,
                            min_evidence=min_evidence)
     after = sum(1 for n in list(mind.net.meta)
                 if str(n).startswith("speech:heard:"))
-    return len(lines), before, after, learned
+    return len(lines), before, after, learned, n_vetted
 
 
 SCENARIOS = dict(
@@ -346,10 +410,10 @@ class IsaacAccount:
             fs = fs | {g for g, c in cnt.items() if c >= 3}
             before = self.fragments()
             if (s + 1) % relearn_every == 0:
-                n_pairs, _, after, _ = harvest(
+                n_pairs, _, after, _, n_vet = harvest(
                     self.mind, [tr], fs, corpus_path=self.corpus_path)
             else:
-                n_pairs, after = 0, before
+                n_pairs, after, n_vet = 0, before, 0
             silence = sum(1 for t in tr if t["who"] == "isaac"
                           and t["source"] == "silence")
             spoke = sum(1 for t in tr if t["who"] == "isaac"
@@ -358,6 +422,7 @@ class IsaacAccount:
                          fragments_before=before,
                          fragments_after=after,
                          silence=silence, spoke=spoke,
+                         vetted_out=n_vet,
                          partner_calls=partner.calls, ts=time.time())
             self._journal(entry)
             progress.append(entry)

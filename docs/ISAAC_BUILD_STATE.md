@@ -1267,3 +1267,23 @@ render all carry the inconsistency numbers.
 B3/B4 PREDICTIONS FILED (P10-P18 in dataops_bench/PREDICTIONS.md)
 BEFORE any run, per the plan; bench_b3_sysid.py written. B1/B2 re-run
 and B3/B4 first runs follow the promotion.
+
+## 2026-07-17 (launch day, cont.) — THE VET AT THE FRONT DOOR: wired
+## into the practice loop's banking path (battery-first, 22/22)
+The named rung from promotion #10 ("wire into the live sparring/
+practice loop") landed before his first practice conversation, per
+the fresh-start ruling: admission discipline from the permanent
+record's first entry. sparring.py gains extract_claims (v1 scope,
+said: plus/minus arithmetic, digits + number words to twenty) and
+vet_texts — every partner line carrying a checkable claim is vetted
+through vet_intake BEFORE the banking road; a failing line is
+INTERPRETED (kept verbatim at quarantine:practice with assumed-
+intent doors — the typo concept) but never IMPLEMENTED (never
+enters the corpus, never relearned as speech evidence); uncheckable
+language flows the ordinary excess-null road — never a free pass,
+never a quarantine. harvest() returns the vetted-out count; the
+practice journal carries vetted_out per session. Battery V1-V4 in
+test_sparring.py (written first, shown failing): false claim
+"five plus five equals nine" quarantined with doors a->4/b->4/c->10
+and ABSENT from the corpus; true claim "two plus two equals four"
+banks; plain language identical to before. 22/22.

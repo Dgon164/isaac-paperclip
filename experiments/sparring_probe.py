@@ -1,4 +1,4 @@
-"""sparring_probe.py — the first live conversations (owner,
+﻿"""sparring_probe.py â€” the first live conversations (owner,
 2026-07-12: "lets try getting a small llm with a series of prompts
 that it can use to talk to isaac and isaac can talk back to. we need
 to make sure to monitor and adjust. for the first thing maybe about
@@ -9,7 +9,7 @@ nothing leaves the machine). Isaac is SEEDED with what he learned
 from DailyDialog earlier today (his admitted heard->reply fragments)
 and speaks ONLY those or silence. Two sessions run back to back;
 between them the harvest turns the partner's words into null-gated
-lessons — the monitoring question is whether session two knows
+lessons â€” the monitoring question is whether session two knows
 things session one did not.
 
 Full transcripts printed and saved: monitor and adjust.
@@ -61,18 +61,18 @@ def seed_from_dailydialog(mind, lines_out):
 
 def show(lines, tr, title):
     lines.append("")
-    lines.append(f"── {title} ──")
+    lines.append(f"â”€â”€ {title} â”€â”€")
     for t in tr:
         tag = f" [{t['source']}]" if t["who"] == "isaac" else ""
         lines.append(f"  {t['who']:7s}: {t['text'][:76]}{tag}")
 
 
 def main():
-    lines = ["SPARRING PROBE — first live conversations (2026-07-12)",
+    lines = ["SPARRING PROBE â€” first live conversations (2026-07-12)",
              f"partner: {MODEL} via local ollama", ""]
     partner = OllamaPartner(MODEL, max_calls=40)
     if not partner.reachable():
-        print("REFUSED: no local partner reachable — start ollama and "
+        print("REFUSED: no local partner reachable â€” start ollama and "
               "pull the model")
         sys.exit(1)
 
@@ -92,7 +92,7 @@ def main():
     feats2 = feats | {g for g, c in sfreq.items() if c >= 3}
     cpath = os.path.join(ROOT, "data", "dialogue",
                          "sparring_corpus.txt")
-    n_pairs, before, after, _ = harvest(mind, [tr1], feats2,
+    n_pairs, before, after, _, _ = harvest(mind, [tr1], feats2,
                                         corpus_path=cpath)
     lines.append("")
     lines.append(f"harvest: {n_pairs} heard->reply pairs banked; "
