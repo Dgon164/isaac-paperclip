@@ -96,3 +96,39 @@ deliverable). Veto-nets verdict: untouched (this extracts FROM nets;
 it does not deploy one). Weights propose, behavior confirms: the
 told-vs-earned split applied to decompositions — a weight-only read
 is a CANDIDATE until planted/ablation behavior earns it.
+
+## FIRST LIGHT — probe run 2026-07-17, same sitting as the design
+(`experiments/protoconcept_probe.py`, PYTHONHASHSEED=0, **7/7**)
+
+- **A1 the instrument:** 6 planted atoms in 20 dims, 96 neurons each
+  a signed 2-sparse mixture — atoms recovered at **min |cos| 1.000**;
+  neuron cards (support + signs) **95/96 exact**, the one miss
+  counted; SCRAMBLED control: sparse structure GONE (residual 0.066
+  → 0.766) — atomic structure is not free, it must be in the rows.
+  Operating floor MEASURED: ~8 users per atom starved the decoder
+  (24-neuron first try), ~32 works — said, not hidden.
+- **A2 the stopword law, third domain:** the ubiquitous direction is
+  the COMMON MODE — subtract what everyone shares before asking what
+  distinguishes. Sign-flip permutation null: QUIET on the control
+  (0.147 <= thr 0.258), FLAGGED where planted (0.706 > 0.279),
+  direction named at |cos| 0.978; atoms recover at 0.999 after
+  base-rate removal. (First try hunted it as a dictionary atom — the
+  alternation smeared it; wrong-kept.)
+- **A3 a trained net, decoded from weights:** 6 sparse features
+  forced into 3 neurons (tied-weight ReLU autoencoder, SGD from
+  scratch, reconstruction rel-err 0.02). Superposition REAL: 3/3
+  neurons carry >=2 features; readable activator/inhibitor card per
+  neuron. **THE SIGNED INTERFERENCE LAW, behaviorally confirmed:**
+  +cos feature pairs co-activate (predicted pairs = measured pairs
+  2/2 exact), −cos pairs mutually SUPPRESS (3/4 overall). The
+  first-light lesson, wrong-kept: |cos| predicted nothing — the
+  ReLU reads antipodal packing as zero, because MUTUAL INHIBITION
+  is the net's packing trick for features that rarely co-occur. The
+  sign is the information story: what the interactions are actually
+  doing with information is (a) confusable-pair cross-talk where
+  embeddings agree and (b) deliberate mutual inhibition where they
+  oppose.
+
+Next rungs unchanged: P1 planted circuit (drop algebra / order-3
+excess as the interaction meter), P2 his own pools, P3 the HIGGS
+deep net.
