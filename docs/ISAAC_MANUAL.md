@@ -1047,6 +1047,52 @@ road (proven: save_pack/load_pack preserves law + status). Battery
 Isaac parses his own printed equations). Suite 11/11. Promotion
 gates: engine + 10 batteries.
 
+**Containers — world-scoped truth (owner design, 2026-07-15 night;
+promoted with the #11–#16 arc):** "certain details or facts change
+depending on the world or situation you put it in." A container is a
+DOOR TAG (`in:<world>`) saying which facts are IN FORCE — one
+concept node carries every world's doors (brooms sweep in base and
+fly in harry-potter on the SAME node). `open_world(container)` =
+routing state; `teach(s, r, o, container=)` stamps the active world
+unless told; `ask(s, r, container=, inherit=)` routes by world —
+fiction inherits base ONE-WAY with a receipt, base NEVER inherits
+fiction (the anti-poisoning wall, measured 0 leaks / 0 drift);
+cross-world difference is NOT contradiction, in-world contradiction
+still flags (`container_tensions`, both kept). BASE IS THE REAL
+WORLD — reality as currently understood, the expensive container:
+the only one measurements feed.
+
+**Per-dataset containers + cross-domain crystallization (owner
+design, 2026-07-17, the feeding design):** "each dataset is
+defaulted to its own container, and it can crystalize the container
+structures into cross domain structures." Container = SOURCE
+IDENTITY, never a hand-filed subject — the taxonomy EMERGES.
+`discover(X, y, name=, container=)`: a bare feed lands in the
+dataset's OWN world (`data-<name>`), an open non-base world captures
+it (the session road), an explicit `container=` wins; the law node
+wears its container + its EARNED verdict, and its explains-fact is
+stamped too (`_teach_fact` is container-aware — before this, every
+discovered fact rode the container-less road into base's answers:
+the measured leak, closed). `tell_law` lands in the world it was
+told IN (a decoded foreign net tells its laws inside its own
+container). `crystallize_forms()`: laws grouped by coefficient-free
+form; a form spanning distinct containers mints the `lawform:`
+parent with `variant` doors — SAME crc32 naming as tell_law, so told
+and crystallized families UNIFY on one node; each variant keeps its
+own constants (never smushed; the parent holds form, never numbers).
+THE TOOTH: only laws EARNED UNDERSTOOD in their own container may
+crystallize (kinship between confusions is not knowledge — that is
+what kills the scrambled-assignment null: pseudo-worlds mint PARTIAL
+mixtures, excluded with receipts). Same form + same constants across
+containers = a WITNESS record (the universality road; any parent's
+entry into BASE stays the full court's job). Selection composes:
+`which_law` names the right law per world and REFUSES an interleaved
+superposition (NONE — new variant candidate) — the ≥2-laws
+precondition of the selection-at-scale gauge. Probe
+`experiments/container_crystal_probe.py` 8/8 (run-1 wrong-kepts in
+the docstring: the tooth's origin; the range-separable-mix lesson);
+permanent gate `experiments/container_crystal_battery.py` 8/8.
+
 **Told RULES — generation, not duplication (owner design + owner
 correction, 2026-07-12):** "he didnt learn it. you fed him a pattern
 and he had to mimic it. thats not generation, thats duplication...

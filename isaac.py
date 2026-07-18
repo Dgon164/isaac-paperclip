@@ -2438,13 +2438,19 @@ class Isaac:
         self.phase_log[circle].append((len(self.activation_log), cur))
         return extras
 
-    def _teach_fact(self, subject, relation, obj):
+    def _teach_fact(self, subject, relation, obj, container=None):
         """Index a discovered relation for the reasoning layer (fact_index +
         a tagged door). Not teach(): the tokenizer would shred structured
-        node names like 'wave:a_b[2]'."""
+        node names like 'wave:a_b[2]'. CONTAINERS (owner, 2026-07-17):
+        the fact wears the world it landed in (active container unless
+        told) — before this stamp, every discovered fact rode the
+        container-less road into base's answers (the measured leak,
+        container_crystal_probe D8)."""
         if obj not in self.fact_index[(subject, relation)]:
             self.fact_index[(subject, relation)].append(obj)
         self.net.add_door(str(subject), str(obj), tag=relation)
+        c = container or getattr(self, "active_container", "base")
+        self.net.add_door(str(subject), str(obj), tag=f"in:{c}")
 
     # ── whole-mind persistence ──────────────────────────────────
 
@@ -4111,7 +4117,7 @@ class Isaac:
     # ── discovery: the challenge loop ───────────────────────────
 
     def discover(self, X, y, name=None, verbose=False, told_sigma=None,
-                 outlier_pass=True):
+                 outlier_pass=True, container=None):
         """THE CHALLENGE LOOP. Given examples of something he cannot yet do
         (inputs X -> outcome y), find the rule. Half the examples are held
         out — the rule must WORK, not merely fit. Four honest verdicts:
@@ -4413,11 +4419,26 @@ class Isaac:
             self.net.set_meta(node, "accounting", accounting)
             self.net.set_meta(node, "certificate", certificate)
             self.net.set_meta(node, "verdict_legs", legs)
+            # the earned verdict lives ON the node: crystallize_forms
+            # admits only what was EARNED in its own container
+            self.net.set_meta(node, "verdict", verdict)
             if outrec is not None:
                 self.net.set_meta(node, "outliers", outrec)
             if dossier:
                 self.net.set_meta(node, "residual_dossier", dossier)
-            self._teach_fact(node, "explains", name or "challenge")
+            # PER-DATASET CONTAINERS (owner, 2026-07-17: "each dataset
+            # is defaulted to its own container"): container = SOURCE
+            # identity, never a hand-filed subject. Explicit kwarg
+            # wins; an open non-base world is respected (the session
+            # road); otherwise the dataset's own world, never base.
+            c = container
+            if c is None:
+                active = getattr(self, "active_container", "base")
+                c = active if active != "base" else f"data-{name}"
+            self.net.add_door(f"world:{c}", node, tag=f"in:{c}")
+            self.net.set_meta(node, "container", c)
+            self._teach_fact(node, "explains", name or "challenge",
+                             container=c)
         if verbose:
             print(f"    discover[{name}]: {verdict} [{scope}]  R2 {r2:.3f}  "
                   f"edge {r2_edge:.3f}  captured {cap_r2:.3f}  "
@@ -5154,6 +5175,13 @@ class Isaac:
         self.net.set_meta(node, "status",
                           dict(state="TOLD-UNVERIFIED", provenance=who,
                                equation=equation))
+        # CONTAINERS (owner, 2026-07-17): a told law lands in the
+        # world it was told IN — base when told plainly, its source's
+        # world when a container is open (a decoded foreign net tells
+        # its laws inside its own container; THE CITIZEN's door).
+        c = getattr(self, "active_container", "base")
+        self.net.add_door(f"world:{c}", node, tag=f"in:{c}")
+        self.net.set_meta(node, "container", c)
         self.record_finding("told_law", name, equation=equation,
                             provenance=who)
 
@@ -5201,6 +5229,72 @@ class Isaac:
         self.record_finding("which_law", name or "?", verdict=verdict,
                             ranking=scores[:5], n=len(y))
         return dict(verdict=verdict, law=name, ranking=scores[:5])
+
+    def crystallize_forms(self, min_members=2):
+        """CROSS-DOMAIN CRYSTALLIZATION (owner, 2026-07-17: "each
+        dataset is defaulted to its own container, and it can
+        crystalize the container structures into cross domain
+        structures"). Laws are grouped by coefficient-free form; a
+        form spanning distinct containers mints the lawform: parent
+        (tell_law's variant machinery one level up — same crc32
+        naming, so told and crystallized families UNIFY on one node),
+        each variant keeping its own constants (never smushed; the
+        parent holds form, never numbers). THE TOOTH: only laws that
+        EARNED UNDERSTOOD in their own container may crystallize —
+        kinship between confusions is not knowledge (the receipt:
+        scrambled pseudo-worlds mint PARTIAL mixtures and are
+        excluded, which is exactly how the scrambled-assignment null
+        dies). Same form + SAME constants across containers = a
+        WITNESS record (one law multiply confirmed — the universality
+        road; promoting any parent into BASE stays the full court's
+        job, never this organ's). Every exclusion carries a receipt
+        (consideration law: bypassed, with the why)."""
+        import zlib
+        groups, excluded = {}, []
+        for node in list(self.net.meta):
+            n = str(node)
+            if not n.startswith("law:"):
+                continue
+            m = self.net.get_meta(n, "model")
+            c = self.net.get_meta(n, "container")
+            if not m or not c:
+                continue
+            v = self.net.get_meta(n, "verdict")
+            if v != "UNDERSTOOD":
+                excluded.append(dict(node=n, container=c, verdict=v,
+                                     why="not earned UNDERSTOOD in its "
+                                         "own container"))
+                continue
+            groups.setdefault(self._form_signature(m), []).append((n, c))
+        out = dict(families=[], witnesses=[], excluded=excluded)
+        for sig, members in groups.items():
+            containers = sorted({c for _, c in members})
+            if len(members) < min_members or len(containers) < 2:
+                continue
+            models = [self.net.get_meta(n, "model") for n, _ in members]
+            if all(self._coefs_match(models[0], m2) for m2 in models[1:]):
+                w = dict(members=sorted(n for n, _ in members),
+                         containers=containers,
+                         why="same form AND same constants across "
+                             "containers — one law seen twice, never "
+                             "a family")
+                out["witnesses"].append(w)
+                self.record_finding("crossdomain_witness",
+                                    ",".join(w["members"]),
+                                    containers=containers)
+                continue
+            fam = f"lawform:{zlib.crc32(repr(sig).encode()):08x}"
+            for n, _ in members:
+                self.net.add_door(fam, n, tag="variant")
+                self.net.meta[n].setdefault("status", {})["family"] = fam
+            self.record_finding("crossdomain_form", fam,
+                                members=sorted(n for n, _ in members),
+                                containers=containers)
+            out["families"].append(dict(family=fam,
+                                        members=sorted(n for n, _
+                                                       in members),
+                                        containers=containers))
+        return out
 
     def supersession_duel(self, name, X, y, margin=0.02):
         """The owner's test: when data arrives, the told/incumbent law

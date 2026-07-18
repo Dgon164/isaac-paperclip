@@ -1366,3 +1366,88 @@ acceptance test for kernel first light (session 2, drill-as-flow):
 after it, improving the drill means ISAAC changing HIS net (branch,
 elect, mint) — never us editing Python. Code that accumulates
 domain decisions is the old trap wearing the kernel's clothes.
+
+## PER-DATASET CONTAINERS + CROSS-DOMAIN CRYSTALLIZATION (owner,
+## 2026-07-17, the feeding design): "what if we had it so that each
+## dataset is defaulted to its own container, and it can crystalize
+## the container structures into cross domain structures."
+STATUS: DESIGN CAPTURED same-step; this RESOLVES the standing
+"container stamping at intake" item (the top open owner item since
+the launch). THE DEFAULT FLIPS: container-less intake no longer
+lands in base — every intake door (discover on a table, sessions
+with a partner, tell_law, a decoded foreign net) stamps its
+SOURCE's own container (in:<source>) by default. Container = SOURCE
+IDENTITY (the dataset, the partner model, the decoded net — never
+per-session; provenance is measured, not designed). Base stays THE
+EXPENSIVE CONTAINER (the real-world section's law): nothing enters
+base except through the full court — a dataset container admits
+cheaply by its source's fiat, exactly the hypotheticals-as-cheap-
+containers move with datasets as the first citizens. WHY THIS IS
+THE RIGHT STAMPING ANSWER: it kills the hand-taxonomy trap — nobody
+designs an ontology of subjects ("the less you do, the more you let
+Isaac do"); the taxonomy EMERGES — cross-domain structure is FOUND,
+not filed. THE CRYSTALLIZATION ROAD, all existing organs pointed one
+new way: same form across >=2 containers = the lawform-variant
+machinery one level up (same form + different constants = siblings
+under one lawform: parent — the PARENT is the cross-domain
+structure, doored from every container that carries a variant);
+relations among structures = the recursive-pools rung (probe-proven
+10/10; level-matched nulls apply); the crystallizer's group→crystal
+is the same move on a container's contents. THE DISCIPLINE: two
+containers are two independently-earned instruments — agreement
+across them is the 13-inch-foot discipline for free, and the null is
+LEVEL-MATCHED: scramble the fact→container assignment and a real
+cross-domain mint must die; the anti-poisoning walls stay measured
+(base byte-identical under dataset ingestion; cross-container
+difference is NOT contradiction; in-container contradiction still
+flags). COMPOSES WITH: incomplete-information-across-datasets (the
+triangulation thread — per-dataset containers give the halves of one
+whole a home address each, and cross-container comparison is where
+resolution lives); selection-at-scale (which-container is routing
+state the selection instrument can watch). PROBE SHAPE: two
+synthetic datasets sharing a hidden common FORM with different
+constants + one unrelated stranger; containers auto-stamped at
+intake; crystallization names the shared form across exactly the two
+kindred containers (never the stranger) and mints the lawform parent
+doored from both; scrambled assignment mints NOTHING; base
+byte-identical throughout; promotion of the parent into base goes
+THROUGH THE GATES or not at all.
+ALSO CAPTURED (owner, same message — the feeding ruling): a staged
+curriculum is a CONVENIENCE, never a requirement — order-of-
+operations feeding hands him the low-dimensional structures cheaply
+("it has the lower dimensional structures and doesnt need to work as
+hard to find them"), "but he seems to be pretty efficient now."
+Staging is adopted where it is cheap; it never gates intake.
+RECEIPT — PROBE-PROVEN same day, then PROMOTED same day (#17:
+discover container= + per-dataset default + verdict-on-node,
+container-aware _teach_fact, _install_law stamping,
+crystallize_forms with the tooth; battery
+container_crystal_battery.py 8/8 joins the permanent wall; told and
+crystallized families proven to UNIFY, lawform:6b98f4af both roads).
+Probe (container_crystal_probe.py, 8/8, 4.0s): Kepler's third law fed as
+two star systems (sol 1.0*a^1.5, trappist 4.9*a^1.5) + one stranger
+(falling bodies 3.0*t^2), each auto-stamped into its own container;
+crystallization minted exactly ONE lawform parent spanning exactly
+the two orbit worlds (variant doors both ways, stranger excluded,
+constants machine-exact per world at 3e-16/1e-15, parent holds form
+never numbers); selection by container: which_law names the right
+law per world and refuses the interleaved mix (NONE — and this is
+the >=2-laws selection-gauge precondition demonstrated); base
+byte-identical throughout (0 drift on 6 questions). TWO RUN-1
+FAILURES, both kept as the probe's real findings: (a) THE TOOTH —
+scrambled pseudo-worlds minted PARTIAL mixture-laws (linear
+surrogates +7.84*x0 / +9.77*x0) and crystallized; cure: ONLY LAWS
+THAT EARNED UNDERSTOOD IN THEIR OWN CONTAINER MAY CRYSTALLIZE
+(kinship between confusions is not knowledge) — with the tooth the
+null dies clean (families 0, excluded-by-verdict 2); (b) a
+range-separable mix is honestly piecewise-answerable — the refusal
+test needs SUPERPOSITION (interleaved worlds). THE WOUND, MEASURED
+(the promotion case): discover()'s _teach_fact indexes 'law:<n>
+explains <n>' with NO container tag and ask()'s base road answers
+container-less facts — the raw road provably leaks every dataset
+feeding into base (D8: raw mind answers under base; shim-stamped
+mind does not). PROMOTION SHAPE: stamping inside discover/tell_law/
+the session road (source identity -> container, _teach_fact made
+container-aware), crystallize_across as an engine organ reading the
+law's own certificate instead of a carried verdict, batteries +
+walls per the healed promote road.

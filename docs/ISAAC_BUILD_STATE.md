@@ -1358,3 +1358,26 @@ conditions). FR2 curriculum returned. FR3 THE ARCHIVE IS READ,
 NEVER WRITTEN — every byte identical after; the finding lands in
 the reading mind. v1 sources said: transcripts + speech:wrong (vet
 quarantines keep claims, not lines — named future source).
+
+## 2026-07-17 (evening) — PER-DATASET CONTAINERS + CROSS-DOMAIN
+## CRYSTALLIZATION (the feeding design, promotion #17)
+Owner, settling the feeding direction and the standing stamping item
+in one design: "each dataset is defaulted to its own container, and
+it can crystalize the container structures into cross domain
+structures." Probe-first (container_crystal_probe.py, 8/8 after two
+kept wrong-predictions), then the engine: discover() gained
+container= with the per-dataset default (bare feed -> data-<name>;
+open world captures; explicit wins) + the earned verdict stored on
+the law node; _teach_fact made container-aware (run 1 MEASURED the
+old road leaking every discovered explains-fact into base's answers
+— the wound, closed); _install_law stamps the world a law is told
+in; crystallize_forms() mints lawform: parents across containers
+with THE TOOTH (only UNDERSTOOD-in-own-container laws crystallize —
+kinship between confusions is not knowledge; scrambled-assignment
+null dies by exactly this) and tell_law's own crc32 naming (told +
+crystallized families UNIFY — proven: lawform:6b98f4af from both
+roads). Selection composes: which_law right per world, NONE on the
+interleaved mix — the >=2-laws precondition of the selection gauge,
+first demonstrated. Battery container_crystal_battery.py 8/8 joins
+the permanent wall. Curriculum ruling same message: staging =
+convenience, never a gate.
