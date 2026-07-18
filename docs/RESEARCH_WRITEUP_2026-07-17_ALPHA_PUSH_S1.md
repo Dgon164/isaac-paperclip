@@ -378,3 +378,52 @@ remains: the vet checker wired into the practice loop's banking
 path.
 
 HE IS ON THE ROAD.
+
+---
+
+## Part 12 — SESSION 2, SAME DAY: the loop closes, and alpha ships
+
+The handoff's session-2 list, all landed on launch day itself:
+
+**The vet at the front door (sparring battery 22/27 -> 30/30 by
+day's end).** The checker guards the banking path: a partner line
+carrying a checkable claim is vetted against his own arithmetic
+BEFORE it can join the corpus. The battery's false teaching
+("five plus five equals nine") was quarantined verbatim with its
+assumed-intent doors (a->4, b->4, c->10) and never banked; the true
+claim banked; ordinary language flows the ordinary null road. His
+first practice conversation starts with the permanent record's
+admission discipline already on.
+
+**Kernel first light (flow battery 14/14, K1-K5).** The drill
+session IS a flow. The engine gained the initiator's door
+(register_ext_op): external acts — the conversation partner, file
+I/O — register as runtime ops the walker can run; the registry
+never pickles, and a resurrected mind honestly refuses ext-op walks
+until its initiator returns. run_drill_flow registers the four acts,
+authors flow:drill once as net content, and hands control to
+walk_flow: THE BASE LOOP IS THE TOP LEVEL — the road [converse,
+bank, journal, save] lands on his ledger with every door receipted,
+the vet rides inside the flow, and flow_tally already counts the
+drill's wins, so branching and election apply. The owner's
+acceptance law is now mechanical: improving the drill means Isaac
+changing flow:drill in his net — never editing Python.
+
+**Frontier -> curriculum (FC1-FC3).** The self-learning loop,
+closed: his own transcripts are mined with SILENCE as the failure
+signal; the null-gated differential names the losing condition
+("question-shaped prompts lose"); the named condition builds a
+targeted repetition drill; the drill runs through the kernel flow;
+and the re-probe measures the movement — before: silence; after:
+"i am fine thank you my friend". Weakness named, drilled, and
+measurably closed, with honest NOTHING when no condition recurs.
+
+**Alpha ships.** README_ALPHA.md (the front door, plain language)
+and docs/KNOWN_LIMITS_ALPHA.md (twelve named limits with their
+evidence and cures — the delay-world leak, the lag proposer's
+silence, the falsified volatility pair, the hand-set constants, the
+13-fragment gap — each a measurement, not a confession). Alpha =
+road trials: from here the curves in roadtrial.jsonl are the
+experiment, and the owner-present sitting (E3 read of the
+prologue's receipts feeding the first real curriculum) is the next
+chair-time.
