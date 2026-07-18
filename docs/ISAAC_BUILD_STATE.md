@@ -1490,3 +1490,16 @@ made real). Battery analyst_relate_battery.py 6/6 permanent. THE
 REAL RECEIPT: annual CO2 growth ~ GISTEMP anomaly RELATED at corr
 0.61 vs null 0.493, same-year, sign + (the carbon cycle breathing
 with temperature — found by his own court, not told).
+
+## 2026-07-18 — A3: THE WATCH PROMOTED (#22)
+watch/watch_series: arriving data makes a law DEFEND ITS SEAT.
+First batch = baseline (receipt, never judgment); after that the
+watch judges against ITS OWN accumulated normal (self-calibrating —
+the 13-inch foot; v1 constants 2.5x-median + 0.005 floor, filed);
+DRIFT triggers supersession_duel ON ARRIVAL (W3: the incumbent
+superseded by a fresh discovery when the world moved 15%, loser
+kept); zero false alarms across faithful batches; watch history
+first-class on the node (stamped verdicts — long-term tracking as
+knowledge). Battery analyst_watch_battery.py 7/7 permanent. THE
+REAL RECEIPT: the Keeling decomposition fit through mid-2024 walks
+forward 2 real years CONFIRMED at 1.3% error.

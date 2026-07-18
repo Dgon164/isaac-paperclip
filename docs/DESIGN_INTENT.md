@@ -1574,6 +1574,13 @@ sawtooth + 0.2% dark. WRONG-KEPT jewel: deterministic AM was FULLY
 ARTICULATED as exact sidebands — the machine outdid the prediction.
 NAMED DEBTS: jump-point threshold proposals; periodicity as a
 first-class structural kind (the growing grammar's rung 4).
+A3 PROMOTED same day (#22): watch/watch_series — a law DEFENDS ITS
+SEAT on arriving data; baseline-then-judged against the watch's own
+accumulated normal (self-calibrating; v1 constants filed); DRIFT
+runs supersession_duel ON ARRIVAL (incumbent superseded when the
+world moved 15%, loser kept); watch history stamped first-class on
+the node. Battery 7/7 permanent; Keeling walks 2 held-out years
+CONFIRMED at 1.3%.
 A2 PROMOTED same day (#21): relate_series — alignment on the shared
 key; levels REPORTED with the spurious-trend receipt, never judged;
 differences judged across lead/lag vs THE ALIGNMENT NULL (circular

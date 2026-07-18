@@ -23,6 +23,7 @@ Knowledge is doors. Structure is discovered. Everything enters, nothing leaves.
 
 from collections import defaultdict
 import re
+import time
 import numpy as np
 
 
@@ -4933,6 +4934,87 @@ class Isaac:
             self.record_finding("relation", name, corr=out["corr"],
                                 shift=out["shift"], leader=leader,
                                 n=n, null=rec["null"])
+        return out
+
+    def _watch_judge(self, node, kind, err_norm, n):
+        """The watch's shared court: the FIRST batch establishes the
+        baseline (a receipt, never a judgment); after that, a batch
+        drifts when its normalized error exceeds max(2.5x the median
+        of confirmed history, 0.005) — v1 hand-set constants, filed
+        as such (the known-limits discipline). The watch learns its
+        own normal from its own measurements (the 13-inch foot: the
+        instrument earns its consistency)."""
+        hist = self.net.get_meta(node, kind) or []
+        if not hist:
+            verdict = "BASELINE"
+        else:
+            med = float(np.median([h["err"] for h in hist
+                                   if h["verdict"] != "DRIFT"] or [0]))
+            verdict = "DRIFT" if err_norm > max(2.5 * med, 0.005) \
+                else "CONFIRMED"
+        hist.append(dict(err=round(float(err_norm), 6), n=int(n),
+                         verdict=verdict,
+                         stamp=time.strftime("%Y-%m-%d %H:%M:%S")))
+        self.net.set_meta(node, kind, hist)
+        return verdict, hist
+
+    def watch(self, name, X_new, y_new):
+        """THE WATCH (A3 of the analyst segment; owner 2026-07-18:
+        "trends and tracking of long term things"). New data arrives
+        at a law's world and the law DEFENDS ITS SEAT: predictions
+        vs actuals, error normalized by the batch's own scale,
+        judged against the watch's accumulated normal. CONFIRMED
+        batches are witnesses (belief grows the ordinary way); DRIFT
+        is flagged with receipts and the incumbent immediately faces
+        the SUPERSESSION DUEL on the new data — winner active, loser
+        kept wearing its numbers. Every check appends to the node's
+        watch history: long-term tracking as first-class knowledge."""
+        node = f"law:{name}"
+        if self.net.get_meta(node, "model") is None:
+            return None
+        X_new = np.asarray(X_new, float)
+        y_new = np.asarray(y_new, float)
+        p = self.apply_law(name, X_new)
+        if p is None:
+            return dict(verdict="UNCHECKABLE",
+                        why="law does not apply to these columns")
+        err = float(np.sqrt(np.mean((y_new - p) ** 2)))
+        scale = max(float(np.sqrt(np.mean(y_new ** 2))), 1e-12)
+        verdict, hist = self._watch_judge(node, "watch",
+                                          err / scale, len(y_new))
+        out = dict(verdict=verdict, err=round(err, 6),
+                   err_norm=round(err / scale, 6), n=len(y_new),
+                   checks=len(hist))
+        if verdict == "DRIFT":
+            duel = self.supersession_duel(name, X_new, y_new)
+            out["duel"] = (duel.get("verdict") if duel else None)
+        self.record_finding("watch", name, verdict=verdict,
+                            err_norm=out["err_norm"], n=len(y_new),
+                            duel=out.get("duel"))
+        return out
+
+    def watch_series(self, name, t_new, y_new):
+        """The watch for an analyzed series: the standing forecast
+        (trend law + learned profile) meets the arriving months;
+        same court, same receipts, same history on the node."""
+        node = f"series:{name}"
+        if self.net.get_meta(node, "series") is None:
+            return None
+        t_new = np.asarray(t_new, float)
+        y_new = np.asarray(y_new, float)
+        p = self.apply_series(name, t_new)
+        if p is None:
+            return dict(verdict="UNCHECKABLE",
+                        why="series does not apply")
+        err = float(np.sqrt(np.mean((y_new - p) ** 2)))
+        scale = max(float(np.sqrt(np.mean(y_new ** 2))), 1e-12)
+        verdict, hist = self._watch_judge(node, "watch",
+                                          err / scale, len(y_new))
+        out = dict(verdict=verdict, err=round(err, 6),
+                   err_norm=round(err / scale, 6), n=len(y_new),
+                   checks=len(hist))
+        self.record_finding("watch_series", name, verdict=verdict,
+                            err_norm=out["err_norm"], n=len(y_new))
         return out
 
     def apply_law(self, name, X):
