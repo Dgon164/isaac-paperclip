@@ -311,3 +311,35 @@ foreign net knows ("the b-quark pair mass matters most; the
 azimuthal angles carry nothing") in earned words. A foreign net in,
 a citizen of his net out — the same door his predecessor's telling
 used at the launch.
+
+## CORRECTION (owner, same sitting): NO CARRY — DEPTH IS THE NET'S
+## PROBLEM, NOT OURS
+"the carry is a direct shortcut. we dont need the carry. see in
+these systems it works as a step through the thing. with us, it is
+specifically not. we are assembling from componants. we collect and
+immidiately use the parts. we are just able to see from the parts
+that are here, we run the quick simplified interactions, and we can
+say this will be the activation signal, find the checkboxes that
+most match."
+
+The ruling: depth is an artifact of the NEURAL substrate — it can
+only compute by stepping a signal through layers, so "carry" exists
+there as a mechanism. The concept-net replacement does NOT inherit
+that constraint and needs no carry detector. Extraction reads
+bottom-up (layer k's groups are the vocabulary for layer k+1's
+checklists), but then SUBSTITUTION COLLAPSES THE DEPTH: layer-(k+1)
+cards are rewritten over layer-k group expressions and simplified;
+a "carried" group falls out as an identity term for free — the
+algebra handles carry, no primitive required. The extracted form is
+FLAT: components + quick simplified interactions + the tabulation.
+Use is direct: collect the parts present, run the closed-form
+interactions, predict the activation signal, find the checkboxes
+that most match (the hallucination law below the floor).
+
+The evidence already on the table: blind_decode NEVER steps —
+neuron_resp is closed-form per card, the B2 truth tables were
+predicted from the summary (not by simulating the weights) at
+max-err 0.02, and the counterfactual receipts were computed the
+same way. The method IS collect-and-immediately-use; the deep-net
+rung extends the substitution upward, not a carry tracer.
+Replaces the earlier "carry-detection" build target.
