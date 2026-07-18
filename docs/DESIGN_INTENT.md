@@ -1465,6 +1465,59 @@ real; battery grown to 9/9 (B9 = the real-sky case, permanent).
 Dry receipts: 4/4 UNDERSTOOD, ONE family across three sky
 containers, Pluto 0.07% never-fed, selection 4/4 + refusal.
 NAMED RUNG: one FORM COURT deciding same-form everywhere.
+## THE GROWING GRAMMAR (owner, 2026-07-18, after the vocabulary
+## wall was measured): "the algebra enumeration stuff we have going
+## is hand coded still. ideally we have a system that can grow and
+## expand and experiment. so we need isaac to be able to work harder
+## on problems and look for novel solutions, not just the ones we
+## programmed."
+THE WOUND, NAMED AT ITS ROOT: the enumerator is the last big organ
+living entirely in code — a hand menu wearing the discoverer's
+clothes (the representation-engine keystone already said it: a
+method that lives only in code cannot be examined, duelled, or
+superseded). The diversity meals measured the ceiling: g=M/R^2
+unsayable at ANY n (vocabulary, not evidence). THE DESIGN = the
+genesis loop pointed at ALGEBRA, on existing organs: (1) SCREAM —
+the pool says whether a dark residual HAS structure (no scream = no
+dig, receipt); (2) AIM — ablation names WHERE it lives (informer,
+never judge); (3) EXPERIMENT — novel coordinates COMPOSED from
+combinators applied recursively over the named variables (nesting
+the menu never did), ranked by log-ruler correlation (leverage dies
+under the log); (4) THE COURT unchanged — every candidate faces
+ordinary discover (nulls, holdout, examiners; the search widens,
+the court never loosens); (5) MINT + GROW — winners join the
+composite registry and are OFFERED FIRST on every future problem
+(growth = reuse before search). THE USAGE-LAW BOUNDARY, explicit:
+hand-built stays the combinator GENERATORS + the epistemics; what
+Isaac owns is WHICH compositions exist, survive, and are offered —
+the claim is never "no code", it is NO CEILING IN CODE.
+RUNG 1 PROBE-PROVEN same day (harder_road_probe.py, 7/7, 24s):
+plain road dark on clean g=66.74*M/R^2 (PARTIAL 0.711 surrogate);
+scream real 0.311 vs null -0.245 (scrambled: quiet, REFUSES to
+dig); aim names exactly {M,R}, decoy 0.007; FIRST candidate tried
+courts UNDERSTOOD +66.74*c machine-exact — a coordinate nobody
+programmed; the earned word then carries a fresh Coulomb-shaped
+world with NO NEW SEARCH and the two laws CRYSTALLIZE cross-domain
+(the grown vocabulary immediately participates in kinship). THREE
+LESSONS WRONG-KEPT IN THE PROBE: (a) tiny tables skip the aim with
+a receipt (the Sun drowned the pool; the court still judges); (b)
+the informer ranks in LOG space (leverage made every M-loaded
+candidate score ~1.0 linearly); (c) THE REAL PLANETS' PARTIAL IS
+THE MACHINE BEING RIGHT — form said (+66.74*c, r2 0.9948), residual
+above floor kept dark, and it IS dark: published g carries rotation
+and oblateness the point-mass form does not explain; mint withheld
+(the garden grows only on UNDERSTOOD).
+THE HONEST LADDER: rung 1 done (composition search + effort
+escalation, probe); rung 2 = vocabulary as NET CONTENT (atoms/
+combinators as nodes with receipts, seeded by the initiator, read
+by the enumerator; registry generalized to powered products — the
+promotion campaign); rung 3 = elections/supersession on the
+vocabulary itself (methods duel, losers wear defeats); rung 4 =
+new structural KINDS from structured leftovers (the genesis loop's
+open-research rung — named, never promised). Promotion also wants:
+the rank-ruler pool for extreme-leverage tables; the effort dial
+budgeted and receipted under the consideration law.
+
 THE DIVERSITY RULING (owner, 2026-07-18, the standing feeding
 order): "from now on, lets run full in the alpha v.1... diverse
 forms, large sets, i want to really push it. larger sets dont do
