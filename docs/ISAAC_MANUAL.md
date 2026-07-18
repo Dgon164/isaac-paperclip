@@ -1090,7 +1090,44 @@ constants (the sky's three orbital systems minted exponents 1.5 /
 constants judged at the family machinery's own 5% tolerance, and the
 family id snaps to the coarsest quarter-step ruler mark, so Kepler's
 form is ONE node (lawform:6b98f4af) told, discovered, synthetic, or
-real. Named next rung: one FORM COURT for same-form everywhere. Same form + same constants across
+real. Named next rung: one FORM COURT for same-form everywhere.
+
+**The growing grammar — the harder road (owner design, 2026-07-18):**
+"the algebra enumeration stuff we have going is hand coded still.
+ideally we have a system that can grow and expand and experiment...
+look for novel solutions, not just the ones we programmed." The
+genesis loop pointed at algebra. `discover_harder(X, y, name=,
+container=, effort=)`: plain discover first (the earned vocabulary
+is already offered there); on a dark verdict — SCREAM (a frozen
+pool asks whether the residual has structure at all; no scream = no
+dig, receipted; tables under 24 rows skip the aim and dig
+everywhere, the court still judges), AIM (per-column ablation names
+the carriers — informer, never judge), EXPERIMENT (composed
+coordinates: products of powers over the named variables, ranked by
+LOG-ruler correlation — leverage dies under the log; proportional
+exponent vectors deduped sign-fixed), THE COURT UNCHANGED (every
+candidate faces ordinary discover), MINT + GROW (the winner
+registers as a `powerprod` composite — `register_composite` gained
+the op, `_augment_with` builds its |x|^e product column with domain
+rows dropping honestly — and the final law is re-discovered wearing
+the grown word's NAME: `+66.74*(x0*x1^-2)`). A qualifying PARTIAL
+through the composed coordinate registers the ENABLER and keeps
+belief honest: form said, residual dark, and a PARTIAL law never
+crystallizes (the tooth). Receipts ride the result under `harder`.
+THE BOUNDARY (usage law): hand-built stays the combinator
+generators + the epistemics — no ceiling in code, never no code.
+Receipts: the vocabulary wall measured (g=M/R^2 PARTIAL 0.711
+surrogate at ANY n); the harder road courts it UNDERSTOOD exact,
+first candidate; a fresh Coulomb world solves PLAIN through the
+earned word and crystallizes kinship; the 11 real planets say the
+form at r2 0.9948 with belief PARTIAL (rotation/oblateness ARE dark
+to the point-mass form) and predict Eris 0.786 vs ~0.82 measured;
+the grown word survives save/load. Probe
+`experiments/harder_road_probe.py` 7/7 (three wrong-kept lessons);
+permanent gate `experiments/harder_road_battery.py` 7/7. Named
+rungs: vocabulary elections (methods duel); new structural KINDS
+from structured leftovers (open research — the sunspot cycle wants
+a periodicity kind). Same form + same constants across
 containers = a WITNESS record (the universality road; any parent's
 entry into BASE stays the full court's job). Selection composes:
 `which_law` names the right law per world and REFUSES an interleaved

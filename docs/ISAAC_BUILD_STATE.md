@@ -1441,3 +1441,19 @@ leftover). Full capture + ladder on the design sheet. NEXT = the
 promotion campaign (registry generalized to powered products;
 harder road as engine organ; rank-ruler pool; effort dial under the
 consideration law).
+
+## 2026-07-18 — THE GROWING GRAMMAR PROMOTED (rung 2, promotion #19)
+The probe's shims became engine: register_composite gained
+POWERPROD (products of powers — the combinators nested),
+_augment_with builds the grown word's column (domain rows drop
+honestly), _applicable_composites offers it forward, and
+discover_harder is the escalation organ (scream -> aim -> compose
+-> the ordinary court -> mint + grow; receipts under 'harder';
+small tables dig everywhere with a receipt; qualifying PARTIAL
+registers the enabler while belief stays the court's — a PARTIAL
+law never crystallizes). Battery harder_road_battery.py 7/7 joins
+the permanent wall: the law wears the grown word's name
+(+66.74*(x0*x1^-2)), Coulomb solves PLAIN through the earned word +
+crystallizes, the real planets' honest PARTIAL predicts Eris 0.786
+vs ~0.82, the null refuses to dig, the word survives save/load.
+Boundary held: no ceiling in code, never no code.

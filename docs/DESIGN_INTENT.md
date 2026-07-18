@@ -1508,15 +1508,22 @@ above floor kept dark, and it IS dark: published g carries rotation
 and oblateness the point-mass form does not explain; mint withheld
 (the garden grows only on UNDERSTOOD).
 THE HONEST LADDER: rung 1 done (composition search + effort
-escalation, probe); rung 2 = vocabulary as NET CONTENT (atoms/
-combinators as nodes with receipts, seeded by the initiator, read
-by the enumerator; registry generalized to powered products — the
-promotion campaign); rung 3 = elections/supersession on the
+escalation, probe); rung 2 PROMOTED same day (#19: powerprod in
+register_composite/_augment_with/_applicable_composites;
+discover_harder as the escalation organ with receipts under
+'harder'; qualifying PARTIAL registers the ENABLER while belief
+stays the court's — a PARTIAL law never crystallizes; battery
+harder_road_battery.py 7/7 permanent: the law wears the grown
+word's name +66.74*(x0*x1^-2), Coulomb solves PLAIN through the
+earned word + crystallizes kinship, the real planets' honest
+PARTIAL predicts Eris 0.786 vs ~0.82, the null refuses to dig, the
+word survives save/load); rung 3 = elections/supersession on the
 vocabulary itself (methods duel, losers wear defeats); rung 4 =
 new structural KINDS from structured leftovers (the genesis loop's
-open-research rung — named, never promised). Promotion also wants:
-the rank-ruler pool for extreme-leverage tables; the effort dial
-budgeted and receipted under the consideration law.
+open-research rung — named, never promised; the sunspot cycle
+wants a periodicity kind). Still queued: the rank-ruler pool for
+extreme-leverage tables; the effort dial budgeted and receipted
+under the consideration law.
 
 THE DIVERSITY RULING (owner, 2026-07-18, the standing feeding
 order): "from now on, lets run full in the alpha v.1... diverse

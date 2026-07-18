@@ -4471,6 +4471,186 @@ class Isaac:
                     rivals=riv_summary, accounting=accounting,
                     dossier=dossier, adequacy=adequacy, capture=capture)
 
+    # ── THE HARDER ROAD (the growing grammar, owner 2026-07-18) ──
+
+    def _pool_fit(self, X, y, seed=13, width=32, ridge=1e-3):
+        rng = np.random.default_rng(seed)
+        Xs = (X - X.mean(0)) / np.where(X.std(0) > 1e-12, X.std(0), 1.0)
+        W = rng.normal(0, 1, (X.shape[1], width))
+        b = rng.normal(0, 1, width)
+        H = np.tanh(Xs @ W + b)
+        half = len(y) // 2
+        A = H[:half]
+        w = np.linalg.solve(A.T @ A + ridge * np.eye(width),
+                            A.T @ y[:half])
+        p = H[half:] @ w
+        ss = float(np.sum((y[half:] - y[half:].mean()) ** 2))
+        r2 = 1 - float(np.sum((y[half:] - p) ** 2)) / max(ss, 1e-12)
+        return r2, (Xs, W, b, w, half)
+
+    def _pool_scream(self, X, y, n_null=5):
+        """Does structure exist AT ALL? The frozen lens (13-inch
+        foot: uncalibrated, relationally honest) vs scrambled-y."""
+        real, _ = self._pool_fit(X, y)
+        rng = np.random.default_rng(7)
+        nulls = []
+        for _ in range(n_null):
+            ys = y.copy()
+            rng.shuffle(ys)
+            r, _ = self._pool_fit(X, ys)
+            nulls.append(r)
+        return real, max(nulls), real > max(0.2, max(nulls) + 0.1)
+
+    def _pool_aim(self, X, y):
+        """WHERE does it live? Per-column permutation damage names
+        the carriers — an informer, never a judge (the Fisher law)."""
+        r2, (Xs, W, b, w, half) = self._pool_fit(X, y)
+        rng = np.random.default_rng(11)
+        drops = []
+        for i in range(X.shape[1]):
+            Xp = Xs.copy()
+            col = Xp[half:, i].copy()
+            rng.shuffle(col)
+            Xp[half:, i] = col
+            H = np.tanh(Xp @ W + b)
+            p = H[half:] @ w
+            ss = float(np.sum((y[half:] - y[half:].mean()) ** 2))
+            r2p = 1 - float(np.sum((y[half:] - p) ** 2)) / max(ss, 1e-12)
+            drops.append(r2 - r2p)
+        top = max(drops) if drops else 0.0
+        named = [i for i, d in enumerate(drops)
+                 if d > 0.2 * top and d > 0.02]
+        return named, [round(d, 3) for d in drops]
+
+    _HARDER_GRID = [-3.0, -2.0, -1.5, -1.0, -0.5, 0.5, 1.0, 1.5,
+                    2.0, 3.0]
+
+    def _compose_candidates(self, X, y, named, top_k=8):
+        """Novel coordinates: products of powers over the NAMED
+        variables (nesting the combinator menu never did). Ranked by
+        LOG-ruler correlation when signs allow — leverage dies under
+        the log — as an INFORMER only; the court judges. Proportional
+        exponent vectors are deduped sign-fixed (any representative
+        closes at court: the enumerator holds powers of the column)."""
+        import itertools
+        half = len(y) // 2
+        logroad = bool(np.all(np.abs(y[:half]) > 1e-12))
+        ly = np.log(np.abs(y[:half])) if logroad else None
+        seen = {}
+        for exps in itertools.product(self._HARDER_GRID + [0.0],
+                                      repeat=len(named)):
+            if all(e == 0.0 for e in exps) or all(e <= 0 for e in exps):
+                continue
+            first = next(e for e in exps if e)
+            if first < 0:
+                exps = tuple(-e for e in exps)   # sign-fixed canonical
+            with np.errstate(all="ignore"):
+                c = np.ones(len(y))
+                for v, e in zip(named, exps):
+                    if e:
+                        c = c * np.power(np.abs(X[:, v]), e)
+            if not np.isfinite(c).all() or c[:half].std() < 1e-12:
+                continue
+            if logroad and np.all(np.abs(c[:half]) > 1e-12):
+                lc = np.log(np.abs(c[:half]))
+                r = abs(float(np.corrcoef(lc, ly)[0, 1])) \
+                    if lc.std() > 1e-12 else 0.0
+            else:
+                r = abs(float(np.corrcoef(c[:half], y[:half])[0, 1]))
+            if np.isfinite(r) and (exps not in seen
+                                   or r > seen[exps][0]):
+                seen[exps] = (r, c)
+        cands = [(r, e, c) for e, (r, c) in seen.items()]
+        cands.sort(key=lambda t: (
+            -round(t[0], 6),
+            sum(1 for e in t[1] if e != int(e)),
+            sum(abs(e) for e in t[1])))
+        return cands[:top_k]
+
+    def discover_harder(self, X, y, name=None, container=None,
+                        effort=1):
+        """THE HARDER ROAD (owner, 2026-07-18: "we need isaac to be
+        able to work harder on problems and look for novel solutions,
+        not just the ones we programmed") — the genesis loop pointed
+        at algebra. Plain discover first (the earned vocabulary is
+        already offered there); if the verdict is dark: SCREAM (does
+        the residual have structure at all? no scream = no dig, with
+        a receipt; small tables skip the aim and dig everywhere —
+        the court still judges), AIM (ablation names the carriers),
+        EXPERIMENT (composed coordinates over the named variables),
+        THE COURT UNCHANGED (every candidate faces ordinary discover
+        — the search widens, the court never loosens), MINT + GROW
+        (the winner registers as a powerprod composite and is offered
+        to every future problem). A qualifying PARTIAL through the
+        composed coordinate registers the ENABLER and keeps belief
+        honest: the form is said, the residual stays dark, and a
+        PARTIAL law never crystallizes (the tooth). Receipts ride on
+        the result under 'harder' (consideration law)."""
+        X = np.asarray(X, float)
+        y = np.asarray(y, float)
+        rec = dict(road="", tried=0, bypassed=[])
+        res = self.discover(X, y, name=name, container=container)
+        if res["verdict"] == "UNDERSTOOD":
+            rec["road"] = "plain road (earned vocabulary included)"
+            res["harder"] = rec
+            return res
+        d = X.shape[1]
+        if len(y) >= 24:
+            real, nullmax, scream = self._pool_scream(X, y)
+            rec["scream"] = [round(real, 3), round(nullmax, 3)]
+            if not scream:
+                rec["bypassed"].append("no scream — nothing to dig "
+                                       "for")
+                res["harder"] = rec
+                return res
+            named, drops = self._pool_aim(X, y)
+            rec["named"], rec["drops"] = named, drops
+            if not named:
+                rec["bypassed"].append("scream but no named carrier")
+                res["harder"] = rec
+                return res
+        else:
+            named = list(range(d))
+            rec["named"] = named
+            rec["road"] = ("small table — dug everywhere with a "
+                           "receipt; the court decides")
+        named = named[:3]
+        best, best_partial = None, None
+        for r, exps, c in self._compose_candidates(
+                X, y, named, top_k=8 * max(1, int(effort))):
+            rec["tried"] += 1
+            trial = self.discover(np.column_stack([X, c]), y)
+            if trial["verdict"] == "UNDERSTOOD":
+                best = exps
+                break
+            if (trial["verdict"] == "PARTIAL"
+                    and f"x{d}" in trial.get("equation", "")
+                    and trial["r2"] > max(res["r2"] + 0.1, 0.99)
+                    and (best_partial is None
+                         or trial["r2"] > best_partial[1])):
+                best_partial = (exps, trial["r2"])
+        if best is None and best_partial is None:
+            rec["bypassed"].append("no composition survived the "
+                                   "court")
+            res["harder"] = rec
+            return res
+        exps = best if best is not None else best_partial[0]
+        cname = self.register_composite(
+            "powerprod", list(named), exps=list(exps),
+            provenance=("harder road: courted UNDERSTOOD"
+                        if best is not None else
+                        "harder road: form-said enabler "
+                        "(uncertified — belief stays the court's)"))
+        final = self.discover(X, y, name=name, container=container)
+        rec["mint"] = cname
+        rec["road"] = ("novel coordinate courted UNDERSTOOD; the "
+                       "vocabulary grew" if best is not None else
+                       "form said through the composed coordinate; "
+                       "belief stays PARTIAL (residual above floor, "
+                       "kept dark, kept honest)")
+        final["harder"] = rec
+        return final
+
     def apply_law(self, name, X):
         """Apply a discovered law: the challenge, now computable.
         (Distinct from solve(), the token-problem solver.) A law with
@@ -7969,13 +8149,21 @@ class Isaac:
                                                  a / np.where(b == 0, 1, b),
                                                  np.nan), "/")}
 
-    def register_composite(self, op, features, provenance=""):
-        """Mint a combination as a first-class node. Idempotent."""
+    def register_composite(self, op, features, provenance="", exps=None):
+        """Mint a combination as a first-class node. Idempotent.
+        POWERPROD (the growing grammar, owner 2026-07-18): products
+        of powers over variables — the combinators nested, which the
+        hand menu never did; minted by the harder road, offered to
+        every future problem like any earned word."""
         features = [int(f) for f in features]
         if op == "mean":                          # collective coordinate
             cname = "mean(" + ",".join(f"x{f}" for f in features) + ")"
         elif op == "log":                         # arity-1 transform:
             cname = f"log(x{features[0]})"        # domain-guarded (x > 0)
+        elif op == "powerprod":
+            parts = [f"x{f}" if e == 1 else f"x{f}^{e:g}"
+                     for f, e in zip(features, exps) if e]
+            cname = "(" + "*".join(parts) + ")"
         else:
             sym = self._COMP_OPS[op][1]
             cname = "(" + sym.join(f"x{f}" for f in features) + ")"
@@ -7983,6 +8171,8 @@ class Isaac:
             return cname
         comp = dict(op=op, features=features, name=cname,
                     provenance=provenance)
+        if op == "powerprod":
+            comp["exps"] = [float(e) for e in exps]
         self.composites.append(comp)
         node = f"comb:{cname}"
         self.net.add_door("combination", node, tag="comb")
@@ -8005,6 +8195,13 @@ class Isaac:
                 with np.errstate(divide="ignore", invalid="ignore"):
                     cols.append(np.where(v > 1e-12, np.log(
                         np.where(v > 1e-12, v, 1.0)), np.nan))
+            elif c["op"] == "powerprod":          # the grown word:
+                with np.errstate(all="ignore"):   # |x_i|^e_i products,
+                    v = np.ones(len(X))           # domain rows drop
+                    for f, e in zip(c["features"], c["exps"]):
+                        if e:
+                            v = v * np.power(np.abs(X[:, f]), e)
+                    cols.append(np.where(np.isfinite(v), v, np.nan))
             else:
                 i, j = c["features"][0], c["features"][1]
                 with np.errstate(divide="ignore", invalid="ignore"):
@@ -8016,7 +8213,7 @@ class Isaac:
         return [c for c in self.composites
                 if max(c["features"]) < d
                 and (len(c["features"]) == 2
-                     or c["op"] in ("mean", "log"))]
+                     or c["op"] in ("mean", "log", "powerprod"))]
 
     @staticmethod
     def _rename_composites(eq, d_raw, comps):
