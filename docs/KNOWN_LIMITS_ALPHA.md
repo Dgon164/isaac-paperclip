@@ -70,3 +70,13 @@ Belief is measured, never told. Wrongs are kept, classified, and
 superseded — never erased. A refusal is an answer with the same
 standing as a law. Complete numbers only: coverage multiplied
 through, refusals counted against the total.
+13. **The get_doors flake (open anomaly, 2 sightings).** Twice —
+    2026-07-15 during the #13 gates and 2026-07-17 during a promote
+    wall — one engine-suite invocation crashed with
+    TypeError: unhashable set; both times the identical rerun
+    passed, and a 25-run hunt under identical conditions caught
+    nothing (0/25). Bounds so far: only ever strikes inside promote
+    walls, roughly 2 in 100+ invocations. The harness now saves any
+    failing gate's FULL output (experiments/runs/gate_failures/),
+    so the next strike carries its traceback. Unexplained =
+    unfinished; the watch stands.

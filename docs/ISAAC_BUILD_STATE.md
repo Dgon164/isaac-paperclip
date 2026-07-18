@@ -1329,3 +1329,15 @@ through run_drill_flow (THE KERNEL — the walker as top level) →
 re-probed: before=silence, after=learned-fragment ("i am fine thank
 you my friend"). Weakness named → drilled → capability measurably
 moved, every stage receipted in his own net.
+
+## 2026-07-17 — the get_doors flake, SECOND SIGHTING (filed)
+The frontier-curriculum promote wall went 31 gates green and the
+engine suite struck the 07-15 open anomaly: TypeError unhashable
+set, tail-line only (the wall then rightly REFUSED promotion). Hunt:
+25 back-to-back engine-suite runs, identical cwd/env/seed — 0/25
+reproduced. Bounds: 2 sightings, both inside promote walls, never
+in direct runs. HARNESS CURE (dc promote.py): every failing gate's
+FULL output now saves to experiments/runs/gate_failures/ — the
+traceback can never be lost a third time. Filed in
+KNOWN_LIMITS_ALPHA #13; the watch stands; promotion re-run on the
+unchanged commit.
