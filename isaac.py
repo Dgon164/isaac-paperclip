@@ -4532,6 +4532,302 @@ class Isaac:
                      y=float(ye[i]), dist=round(float(d[i]), 4))
                 for i in near]
 
+    # ── THE DOSSIER (the specifics layer; owner 2026-07-18 evening:
+    # "having the law is great, but sometimes you need to reference
+    # a specific sample... averages, extremes, ratios, sigfigs, std
+    # dev, median and mode... as well as time frames"). THE DESIGN
+    # SENTENCE: THE DOSSIER DESCRIBES, THE COURT JUDGES — every
+    # number here is a description with its method receipt; trend
+    # VERDICTS, nulls, and belief stay the analyst court's. ──────
+
+    @staticmethod
+    def _fy_to_ymd(fy):
+        """Fractional year -> (y, m, d), the exact inverse of the
+        intake road's _fy (noon-of-day convention)."""
+        import datetime as _dt
+        y = int(np.floor(fy))
+        days = _dt.date(y, 12, 31).timetuple().tm_yday
+        doy = int(np.clip(np.round((fy - y) * days + 0.5), 1, days))
+        d = _dt.date(y, 1, 1) + _dt.timedelta(days=doy - 1)
+        return y, d.month, d.day
+
+    def _column_stats(self, col, y, row_at):
+        """One column's descriptive card. Every entry carries how it
+        was measured; a mode with no recurring value REFUSES."""
+        y = np.asarray(y, float)
+        n = len(y)
+        card = dict(n=n, mean=float(np.mean(y)),
+                    median=float(np.median(y)),
+                    lo=dict(value=float(y.min()),
+                            row=row_at(int(np.argmin(y)))),
+                    hi=dict(value=float(y.max()),
+                            row=row_at(int(np.argmax(y)))))
+        card["std"] = (dict(value=float(np.std(y, ddof=1)),
+                            why="sample std (n-1)") if n > 1 else
+                       dict(value=None, why="one row — no spread"))
+        grain, g_why = self._floor_grain(y)
+        if grain:
+            step = grain["step"]
+            # decimals = smallest k that round-trips the step
+            # (0.25 -> 2, 2.5 -> 1, 5.0 -> 0; review find)
+            decs = next(k for k in range(13)
+                        if abs(round(step, k) - step)
+                        <= 1e-9 * max(1.0, abs(step)))
+            card["resolution"] = dict(
+                step=float(step), consistency=grain["consistency"],
+                decimals=int(decs),
+                why="the grain court (storage resolution, lower "
+                    "bound only)")
+            snapped = np.round(y / step) * step
+        else:
+            card["resolution"] = dict(step=None, why=g_why)
+            snapped = y
+        vals, counts = np.unique(snapped, return_counts=True)
+        top = int(counts.max())
+        if top < 2:
+            card["mode"] = dict(value=None,
+                                why="no recurring value (all "
+                                    "distinct at resolution)")
+        else:
+            tied = [float(v) for v in vals[counts == top]]
+            card["mode"] = dict(value=tied[0], count=top,
+                                ties=tied[:3] if len(tied) > 1
+                                else None,
+                                n_tied=len(tied),
+                                why="most frequent at the grain's "
+                                    "own resolution")
+        return card
+
+    @staticmethod
+    def _ymd_to_fy(g):
+        """(y, m, d) -> fractional year (the intake road's own
+        convention, noon of day)."""
+        import datetime as _dt
+        y, mo, dd = g
+        days = _dt.date(y, 12, 31).timetuple().tm_yday
+        doy = _dt.date(y, mo, dd).timetuple().tm_yday
+        return y + (doy - 0.5) / days
+
+    def _frame_cards(self, ymd, V, vcols, cap=240):
+        """Calendar frames: avg/lo/hi/n per bucket per column, plus
+        a DESCRIBED slope (least squares over bucket averages —
+        described, never judged; the court's verdict lives on the
+        analyst road). The bucket time axis is the CALENDAR ITSELF
+        (fractional years from ymd), never the caller's time column
+        — so per_year is per year by construction (review find: a
+        leading id column used to mislabel the slope's unit).
+        Frames where aggregation would be identity (data already at
+        that grain) are skipped WITH the receipt."""
+        fy = np.array([self._ymd_to_fy(g) for g in ymd])
+        frames = []
+        for level, key, label in (
+                ("year", lambda g: (g[0],), "{0:04d}"),
+                ("month", lambda g: g[:2], "{0:04d}-{1:02d}"),
+                ("day", lambda g: g[:3], "{0:04d}-{1:02d}-{2:02d}")):
+            buckets = {}
+            for i, g in enumerate(ymd):
+                buckets.setdefault(key(g), []).append(i)
+            ks = sorted(buckets)
+            if len(ks) < 2:
+                frames.append(dict(level=level, skipped="span too "
+                                   "short (fewer than 2 buckets)"))
+                continue
+            if len(ks) == len(ymd):
+                frames.append(dict(level=level,
+                                   skipped="data already at this "
+                                           "grain — averaging would "
+                                           "change nothing"))
+                continue
+            total = len(ks)
+            kept = ks[-cap:]
+            rows = []
+            for k in kept:
+                idx = buckets[k]
+                r = dict(bucket=label.format(*k), n=len(idx),
+                         t=float(np.mean(fy[idx])), cols={})
+                for j, c in vcols:
+                    v = V[idx][:, j]
+                    r["cols"][c] = dict(
+                        avg=float(np.mean(v)), lo=float(v.min()),
+                        hi=float(v.max()),
+                        std=(float(np.std(v, ddof=1))
+                             if len(v) > 1 else None))
+                rows.append(r)
+            fr = dict(level=level, buckets=rows, n_buckets=total)
+            if total > cap:
+                fr["capped"] = (f"kept the last {cap} of {total} "
+                                f"buckets — a sample, never a hoard")
+            if len(rows) >= 3:
+                bt = np.array([r["t"] for r in rows])
+                window = ("least squares over bucket averages"
+                          if total <= cap else
+                          f"least squares over the last {len(rows)}"
+                          f" of {total} bucket averages")
+                fr["slopes"] = {
+                    c: dict(per_year=float(np.polyfit(
+                        bt, np.array([r["cols"][c]["avg"]
+                                      for r in rows]), 1)[0]),
+                            buckets_used=len(rows),
+                            buckets_total=total,
+                            why=f"described, not judged — {window}")
+                    for _j, c in vcols}
+            frames.append(fr)
+        return frames
+
+    def take_dossier(self, columns, rows, name, time_index=None,
+                     ymd=None, target=None, container=None,
+                     provenance=None):
+        """The specifics layer for a DATASET: descriptive cards per
+        column (mean/median/mode/std/resolution, extremes WITH their
+        rows), example rows via the facts-layer sampler, calendar
+        frames, sign-safe ratio cards, and a taken-history so the
+        trend LINE is tracked across re-takes. Net content: lands at
+        dossier:<name>, container-stamped, pickled with his life."""
+        R = np.asarray(rows, float)
+        good = np.isfinite(R).all(1)
+        R = R[good]
+        if ymd is not None:
+            ymd = [g for g, ok in zip(ymd, good) if ok]
+        if len(R) < 3:
+            return dict(refused=f"{len(R)} usable rows — a dossier "
+                                f"needs at least 3")
+        cols = list(columns)
+        ti = time_index
+        vcols = [(j, c) for j, c in enumerate(cols) if j != ti]
+        if not vcols:
+            return dict(refused="only the time column survived — a "
+                                "dossier needs at least one value "
+                                "column")
+        if target is not None and (target not in cols
+                                   or cols.index(target) == ti):
+            return dict(refused=f"target '{target}' is the time "
+                                f"column or not a column — value "
+                                f"columns: {[c for _j, c in vcols]}")
+        tgt = target if target in cols else vcols[-1][1]
+        tj = cols.index(tgt)
+
+        def row_at(i):
+            return {c: float(R[i][j]) for j, c in enumerate(cols)}
+
+        stats = {c: self._column_stats(c, R[:, j], row_at)
+                 for j, c in vcols}
+        examples = self._sample_evidence(
+            np.delete(R, tj, axis=1), R[:, tj])
+        examples["columns"] = [c for j, c in enumerate(cols)
+                               if j != tj] + [tgt]
+        examples["why"] += " (the facts-layer sampler, reused)"
+
+        ratios = []
+        pairs = [(a, b) for x, (a, _ca) in enumerate(vcols)
+                 for (b, _cb) in vcols[x + 1:]]
+        if len(vcols) > 6:
+            pairs = [(a, b) for a, b in pairs
+                     if tgt in (cols[a], cols[b])]
+        for a, b in pairs:
+            va, vb = R[:, a], R[:, b]
+            pair = f"{cols[a]}/{cols[b]}"
+            if np.all(vb > 0) or np.all(vb < 0):
+                q = va / vb
+                ratios.append(dict(
+                    pair=pair, mean=float(np.mean(q)),
+                    std=(float(np.std(q, ddof=1)) if len(q) > 1
+                         else None),
+                    lo=float(q.min()), hi=float(q.max())))
+            else:
+                ratios.append(dict(pair=pair, refused="denominator "
+                              "crosses or touches zero — a ratio "
+                              "there is a lie waiting"))
+        if len(vcols) > 6:
+            ratios.append(dict(note=f"{len(vcols)} value columns — "
+                          f"ratio cards limited to pairs holding "
+                          f"the target '{tgt}'"))
+
+        if ymd is None and ti is not None:
+            import re as _re
+            tv = R[:, ti]
+            # band alone cannot tell years from odometers (review
+            # find): the column's NAME must also look calendar-like
+            name_ok = bool(_re.search(
+                r"(?i)year|date|time|epoch|^yr$|^t$|^fy$",
+                str(cols[ti]).strip()))
+            if (len(tv) and tv.min() >= 1000.0 and tv.max() <= 3000.0
+                    and np.all(np.diff(tv) >= 0) and name_ok):
+                ymd = [self._fy_to_ymd(v) for v in tv]
+                cal_why = ("calendar derived from the year-valued "
+                           f"time column '{cols[ti]}'")
+            else:
+                cal_why = None
+        else:
+            cal_why = "calendar told by the intake road" \
+                if ymd is not None else None
+        if ymd is not None:
+            frames = self._frame_cards(ymd, R, vcols)
+        else:
+            frames = dict(refused="no calendar time (none told, "
+                                  "none derivable — a year-band "
+                                  "column also needs a calendar-"
+                                  "sounding name) — frames refused; "
+                                  "the stats stand")
+
+        node = f"dossier:{name}"
+        history = list(self.net.get_meta(node, "history") or [])
+        # identity from the last entry, never the capped length
+        # (review find: the cap froze the counter at 41)
+        entry = dict(take=(history[-1]["take"] + 1) if history
+                     else 1, n=int(len(R)),
+                     target=tgt,
+                     target_mean=stats[tgt]["mean"])
+        if isinstance(frames, list):
+            for fr in frames:
+                for c, s in (fr.get("slopes") or {}).items():
+                    if c == tgt:
+                        entry[f"slope_per_year_{fr['level']}"] = \
+                            s["per_year"]
+        history.append(entry)
+        if len(history) > 40:
+            history = history[-40:]
+
+        dossier = dict(node=node, name=name, n=int(len(R)),
+                       columns=cols,
+                       time=dict(column=(cols[ti] if ti is not None
+                                         else None),
+                                 calendar=cal_why),
+                       target=tgt, stats=stats, examples=examples,
+                       frames=frames, ratios=ratios,
+                       history=history,
+                       why="THE DOSSIER DESCRIBES, THE COURT JUDGES")
+        for k in ("columns", "time", "target", "stats", "examples",
+                  "frames", "ratios", "history"):
+            self.net.set_meta(node, k, dossier[k])
+        if provenance:
+            self.net.set_meta(node, "provenance", dict(provenance))
+            dossier["provenance"] = dict(provenance)
+        elif self.net.get_meta(node, "provenance") is not None:
+            # a re-take without provenance must not wear the old
+            # stamp on new numbers (review find)
+            self.net.set_meta(node, "provenance", None)
+        c = container or getattr(self, "active_container", "base")
+        self.net.add_door(f"world:{c}", node, tag=f"in:{c}")
+        self.net.set_meta(node, "container", c)
+        self.record_finding("dossier", name, n=int(len(R)),
+                            target=tgt, take=entry["take"])
+        return dossier
+
+    def recall_dossier(self, name):
+        """The saved specifics behind a dataset — what he can point
+        at when the law alone is not the answer."""
+        node = f"dossier:{name}"
+        stats = self.net.get_meta(node, "stats")
+        if not stats:
+            return None
+        out = dict(node=node, name=name, stats=stats)
+        for k in ("columns", "time", "target", "examples", "frames",
+                  "ratios", "history", "provenance", "container"):
+            v = self.net.get_meta(node, k)
+            if v is not None:
+                out[k] = v
+        return out
+
     # ── THE HARDER ROAD (the growing grammar, owner 2026-07-18) ──
 
     def _pool_fit(self, X, y, seed=13, width=32, ridge=1e-3):

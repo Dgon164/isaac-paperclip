@@ -1891,3 +1891,94 @@ the anatomy's engine map. Its own R&D segment runs before any
 integration — owner's standing verdict: "early results look
 promising, but there are likely several failure points that are as
 of yet undiscovered."
+
+## 14. THE SPECIFICS LAYER — the dossier + the plot face (2026-07-18 evening) — [VERIFIED: dossier_battery.py 12/12 + real-data run]
+
+THE DESIGN SENTENCE: **THE DOSSIER DESCRIBES, THE COURT JUDGES.**
+The law is the headline; the dossier is the reference material
+under it — the specific samples, the standard descriptive numbers,
+the calendar breakdowns, the plots. Every number wears its method
+receipt; refusals are loud; nothing here judges (trend verdicts,
+nulls, and belief stay the analyst court's).
+
+`take_dossier(columns, rows, name, time_index=, ymd=, target=,
+container=, provenance=)` → stores `dossier:<name>` in the net
+(container-stamped, pickled with his life) and returns the card:
+- **stats per column**: n, mean, median, std (n−1; refuses at n=1),
+  mode with count and ties (all-distinct REFUSES: "no recurring
+  value"), resolution/decimals via the promoted grain court
+  (`_floor_grain` — reuse, typo-hardened), lo/hi **with their full
+  rows** (the specific samples the owner asked for).
+- **examples**: `_sample_evidence` reused — extremes + even spread
+  by outcome rank, deterministic, capped.
+- **frames**: avg/lo/hi/std + n per **day / month / year** bucket
+  when a calendar exists (told by intake's calendar road, or
+  derived from a year-valued time column in [1000, 3000]); a frame
+  at the data's own grain is SKIPPED with the identity receipt;
+  buckets capped at 240 with the cap said; ≥3 buckets earn a
+  **described slope** (least squares over bucket averages,
+  "described, not judged").
+- **ratios**: pairwise cards only where the denominator's sign is
+  constant; zero-crossing → refused with why; >6 value columns →
+  target pairs only, said.
+- **history**: each re-take appends (take, n, target mean, frame
+  slopes) capped at 40 — the trend LINE tracked across feedings.
+`recall_dossier(name)` reads it back; it survives save/load.
+
+**The calendar road (intake)**: date-string columns are TIME
+wearing words — parsed (ISO YYYY-MM-DD, YYYY-MM at mid-month,
+M/D/YYYY with the whole-column day-first flip on evidence of a
+first part beyond 12), converted to fractional years (the house
+unit) with exact (y,m,d) kept aligned through both row filters,
+never dropped. Unparseable → the ordinary dropped-with-why
+accounting.
+
+**The plot face (`isaac_store/plot.py`)**: stdlib SVG, no new
+dependency, deterministic bytes. Points, error bars (± residual
+rms when the court has a trend, else ± half the grain — the bar
+SAYS which), the court's trend dashed, frame averages stepped,
+anomalies ringed (flagged, never judged). `askisaac <csv>
+--analyst --plot [DIR]` writes one per column;
+`analyst_source(mind=...)` runs the whole face on a live account
+(the meal road — dossiers persist there).
+
+## 15. THE TELLING ROAD — plain-English law telling (2026-07-18 evening) — [VERIFIED: telling_battery.py 13/13 + first live telling, road-trial #15]
+
+**"ohm's law is v=ir" → parsed, vetted, landed, echoed, usable at
+once, believed only when measured.** The organ
+(`isaac_store/telling.py`) is translation + vet ONLY — knowledge
+lands through the promoted doors (tell_law + the curriculum's
+application fact-bundle: uses-form/output/slots as facts), so the
+NAME survives a shared shape (ohm and rect-area are one form
+wearing two labels).
+
+- `parse_told_law(text)` — the v1 grammar, declared: `<name> is
+  <out>=<expr>`; single-letter quantities (ir reads i·r); pi; `^`
+  powers (halves, negatives); squares emitted as the house
+  canonical `x*x`; `/q` division; bare number = intercept. NO
+  parentheses/functions; `/ab` refused as ambiguous. Six refusals,
+  each naming its why.
+- `tell_english(mind, text, who=, container=)` — the name vet is
+  container-blind (a name is a name in every world): a held name
+  with a DIFFERENT form refuses ("a different form must win a
+  duel, not a retelling"); a retelling becomes a witness on HIS
+  OWN node. New forms land TOLD-UNVERIFIED (usable at once via
+  apply_law; `law_confidence` stays None until data earns it);
+  same-form-same-constants = MATCHES witness; same-form-different-
+  constants = VARIANT family. The echo renders back what was
+  STORED — a mis-parse is visible at the door.
+- `recall_law(mind, name)` — name → the form, the equation
+  rendered in the teller's letters ("voltage = +1.00*current*
+  resistance"), state, who, witnesses, container. Reads told and
+  discovered meta shapes both.
+- Front door: `askisaac --tell "kepler's law is t=a^1.5"` (dry
+  parse card) / `--tell ... --account <home>` (lands + saves,
+  `.bak` first) / `--recall NAME --account <home>`.
+- Validate later: `validate_law(name, X, y)` — the told law HOLDS
+  or FAILS on measured rows; the first live coulombs-form held at
+  r² 1.000000 on 50 fresh rows.
+
+First live telling (2026-07-18 20:35, road-trial #15): told
+Kepler in English, he answered MATCHES — the sentence recognized
+as the law he DISCOVERED from the real sky. Account 843→853
+nodes, 37→39 laws, 311→320 facts, selection precision 1.0 held.

@@ -52,6 +52,85 @@ def _num(v):
         return False
 
 
+# ── the calendar road (the specifics layer, owner 2026-07-18: "avg
+# per day, avg per month, avg per year") — a date column is TIME
+# wearing words; it used to be dropped as non-numeric. Declared v1
+# formats: ISO YYYY-MM-DD (also /-separated, optional time part),
+# YYYY-MM (filed at mid-month), and M/D/YYYY (year LAST; the column
+# decides month-first vs day-first by its own evidence — any first
+# part beyond 12 flips the whole column, never a per-row guess).
+# Conversion is fractional years (the house unit — SILSO's 1700.5);
+# the exact (y,m,d) rows ride along so frames never re-derive
+# calendar from floats.
+import datetime as _dt
+
+_ISO = re.compile(r"^(\d{4})[-/](\d{1,2})(?:[-/](\d{1,2}))?"
+                  r"(?:[T ].*)?$")
+_MDY = re.compile(r"^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$")
+
+
+def _fy(y, m, d):
+    days = _dt.date(y, 12, 31).timetuple().tm_yday
+    doy = _dt.date(y, m, d).timetuple().tm_yday
+    return y + (doy - 0.5) / days
+
+
+def _date_column(vals):
+    """All-or-mostly dates -> (ymd list, fractional years, format
+    receipt), else None. >=90% must parse; failures become NaN rows
+    (dropped WITH the ordinary accounting, never silently)."""
+    vals = [str(v).strip() for v in vals]
+    live = [v for v in vals if v]
+    if len(live) < 3:
+        return None
+
+    def _valid(y, m, d):
+        try:
+            _dt.date(y, m, d)
+            return True
+        except ValueError:
+            return False
+
+    # only rows that VALIDATE as real dates under the day-first
+    # reading may vote the column day-first — a '99/99/2024'
+    # sentinel is garbage, not evidence (review find, 2026-07-18)
+    day_first = any(
+        (mm := _MDY.match(v)) and int(mm.group(1)) > 12
+        and _valid(int(mm.group(3)), int(mm.group(2)),
+                   int(mm.group(1)))
+        for v in live)
+    fmt = None
+    out = []
+    n_ok = 0
+    for v in vals:
+        got = None
+        m = _ISO.match(v)
+        if m:
+            y, a, b = int(m.group(1)), int(m.group(2)), m.group(3)
+            got = (y, a, int(b)) if b else (y, a, 15)
+            fmt = fmt or ("YYYY-MM (mid-month)" if b is None
+                          else "ISO YYYY-MM-DD")
+        else:
+            m = _MDY.match(v)
+            if m:
+                a, b, y = (int(m.group(1)), int(m.group(2)),
+                           int(m.group(3)))
+                got = (y, b, a) if day_first else (y, a, b)
+                fmt = fmt or ("D/M/YYYY (column evidence: a first "
+                              "part beyond 12)" if day_first
+                              else "M/D/YYYY (declared month-first)")
+        if got:
+            try:
+                _dt.date(*got)
+            except ValueError:
+                got = None
+        out.append(got)
+        n_ok += got is not None
+    if n_ok < max(3, 0.9 * len(live)):
+        return None
+    return (out, [(_fy(*g) if g else float("nan")) for g in out], fmt)
+
+
 def _rows_to_table(name, rows, prov):
     """Rows of strings -> numeric table (header auto-detected;
     non-numeric columns dropped BUT ACCOUNTED)."""
@@ -63,24 +142,49 @@ def _rows_to_table(name, rows, prov):
         header, rows = [str(h).strip() for h in rows[0]], rows[1:]
     width = max(len(r) for r in rows)
     names = header or [f"col{i}" for i in range(width)]
-    keep, dropped = [], []
+    keep, dropped, cal = [], [], None
+    numeric = {}
     for c in range(width):
         vals = [r[c] if c < len(r) else "" for r in rows]
         if sum(_num(v) for v in vals) >= 0.9 * len(vals):
             keep.append(c)
+            continue
+        got = _date_column(vals)
+        if got:
+            ymd, fys, fmt = got
+            keep.append(c)
+            numeric[c] = fys
+            if cal is None:  # the FIRST date column is the calendar
+                cal = dict(index_in_keep=len(keep) - 1,
+                           column=(names[c] if c < len(names)
+                                   else f"col{c}"),
+                           format=fmt, ymd=ymd,
+                           converted="fractional years (ymd kept)")
         else:
             dropped.append(names[c] if c < len(names) else f"col{c}")
     if len(keep) < 2:
         return None
-    data = [[float(r[c]) if c < len(r) and _num(r[c]) else float("nan")
-             for c in keep] for r in rows]
-    data = [r for r in data if all(v == v for v in r)]  # drop NaN rows
+    data, kept_ymd = [], []
+    for i, r in enumerate(rows):
+        vals = [numeric[c][i] if c in numeric
+                else (float(r[c]) if c < len(r) and _num(r[c])
+                      else float("nan"))
+                for c in keep]
+        if all(v == v for v in vals):  # drop NaN rows, ymd aligned
+            data.append(vals)
+            kept_ymd.append(cal["ymd"][i] if cal else None)
     if len(data) < 3:
         return None
-    return dict(kind="table", name=name,
+    item = dict(kind="table", name=name,
                 columns=[names[c] if c < len(names) else f"col{c}"
                          for c in keep],
                 rows=data, dropped_columns=dropped, provenance=prov)
+    if cal:
+        item["calendar"] = {k: cal[k] for k in
+                            ("index_in_keep", "column", "format",
+                             "converted")}
+        item["ymd"] = kept_ymd
+    return item
 
 
 def _strip_html(b):

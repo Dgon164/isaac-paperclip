@@ -23,10 +23,26 @@ from isaac_store.speech_learn import (learn_speech,     # noqa: E402
 
 def main():
     p = argparse.ArgumentParser(description="Ask Isaac about your data")
-    p.add_argument("source",
+    p.add_argument("source", nargs="?", default=None,
                    help="a csv/tsv/json/jsonl/npy/npz/xlsx file, a "
                         "folder, a zip, or raw/rich text "
                         "(txt/md/html/rtf/docx)")
+    p.add_argument("--tell", default=None, metavar="SENTENCE",
+                   help="tell him a law in plain english, e.g. "
+                        "\"ohm's law is v=ir\" — parsed, vetted, "
+                        "echoed back; DRY unless --account names "
+                        "his home")
+    p.add_argument("--recall", default=None, metavar="NAME",
+                   help="ask what he holds under a told name "
+                        "(needs --account)")
+    p.add_argument("--account", default=None, metavar="DIR",
+                   help="his home directory (e.g. "
+                        "Documents/isaac_home) — telling LANDS "
+                        "there and is saved; a .bak of mind.isaac "
+                        "is written first")
+    p.add_argument("--container", default=None,
+                   help="the world a told law lands in (with "
+                        "--tell --account)")
     p.add_argument("--target", default=None)
     p.add_argument("--json", action="store_true")
     p.add_argument("--audit", action="store_true",
@@ -49,12 +65,72 @@ def main():
     p.add_argument("--time", default=None, metavar="COL",
                    help="the time column for --analyst (else "
                         "auto-detected: first strictly-increasing)")
+    p.add_argument("--plot", nargs="?", const="plots", default=None,
+                   metavar="DIR",
+                   help="with --analyst: write an SVG per column "
+                        "(points, error bars, trend, frame "
+                        "averages) into DIR (default ./plots)")
     a = p.parse_args()
     mod = bridge.load_isaac_module()
 
+    if a.tell or a.recall:
+        from isaac_store.telling import (tell_english, recall_law,
+                                         parse_told_law)
+        if a.account:
+            import shutil
+            mp = os.path.join(a.account, "mind.isaac")
+            if not os.path.isfile(mp):
+                print(f"[no mind at {mp}]")
+                return
+            if a.tell:
+                shutil.copy2(mp, mp + ".bak")
+            mind = mod.Isaac.load(mp)
+        else:
+            mind = mod.Isaac()
+        if a.recall:
+            got = recall_law(mind, a.recall)
+            if not got:
+                print(f"[he holds nothing under "
+                      f"'{a.recall}'{'' if a.account else ' — dry mind; name his home with --account'}]")
+            else:
+                print(f"{got['name']}: {got['said']}")
+                print(f"  form {got['form']} [{got['state']}] "
+                      f"who={got['who']}; witnesses "
+                      f"{got['witnesses']}")
+            return
+        got = (tell_english(mind, a.tell, who="owner",
+                            container=a.container)
+               if a.account else parse_told_law(a.tell))
+        if got.get("refused"):
+            print(f"[refused: {got['refused']}]")
+            return
+        print(f"heard: {got['said']}")
+        if a.account:
+            r = got["tell"]
+            print(f"  landed: {r.get('status')}"
+                  + (f" (form {got['form']})"
+                     if r.get("status") == "MATCHES" else "")
+                  + f"; who=owner; container={got['container']}")
+            mind.save(mp)
+            print(f"  saved ({mp}; .bak kept)")
+        else:
+            print(f"  [dry — name {got['name']}, slots "
+                  f"{got['slots']}, canonical "
+                  f"{got['positional']}; add --account to teach "
+                  f"him]")
+        return
+
+    if a.source is None:
+        p.error("source is required unless --tell/--recall is used")
+
+    if a.plot is not None and not a.analyst:
+        print("[--plot refused: plots ride the analyst face — "
+              "re-run with --analyst]")
+
     if a.analyst:
         from isaac_store.analyst import analyst_source, render_analyst
-        rep = analyst_source(a.source, time_col=a.time, mod=mod)
+        rep = analyst_source(a.source, time_col=a.time, mod=mod,
+                             plots=a.plot)
         if a.json:
             print(json.dumps(rep, default=str, indent=2))
         else:

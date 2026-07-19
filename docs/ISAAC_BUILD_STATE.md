@@ -1690,3 +1690,66 @@ emitted (runs/*.svg): the 25-step receipted PROCESSING TRACE, the
 UNDERSTANDING MAP (ego-graph of 'connected'), the ASSESSMENT MAP.
 Solver v2 regained its all-knowns consistency branch (wrong-kept:
 v2 had lost want=None).
+
+## 2026-07-18 (evening) — THE SPECIFICS LAYER / THE DOSSIER 12/12
+Owner: "having the law is great, but sometimes you need to
+reference a specific sample... averages, extremes, ratios, sigfigs,
+std dev, median and mode... as well as time frames. avg per day,
+avg per month, avg per year, track trend lines. plot data points,
+error bars." THE DESIGN SENTENCE: THE DOSSIER DESCRIBES, THE COURT
+JUDGES. New: (1) intake's calendar road — date-string columns
+PARSED (ISO / YYYY-MM / M-D-Y with column-evidence day-first flip)
+into fractional years with exact ymd kept aligned, never dropped;
+(2) take_dossier/recall_dossier (isaac.py, by the facts layer) —
+per-column n/mean/median/std(n-1)/mode-with-count (all-distinct
+REFUSES), resolution via the promoted grain court (reuse), extremes
+WITH their full rows, example rows via _sample_evidence (reuse),
+calendar frames avg-per-day/month/year (identity frames skipped
+with the receipt; buckets capped, said), sign-safe ratio cards
+(zero-crossing denominators refused), described-never-judged frame
+slopes, and a taken-history so the trend LINE is tracked across
+re-takes; net content at dossier:<name>, container-stamped,
+pickled with his life; (3) isaac_store/plot.py — stdlib SVG plot
+face (points, error bars ± residual rms or half-grain, the court's
+trend dashed, frame averages stepped, anomalies ringed; same input
+= same bytes); (4) the analyst face renders the dossier and
+askisaac grew --plot; analyst_source(mind=) opens the live meal
+road. Battery dossier_battery.py 12/12 (leap-year Feb-2024 29-day
+bucket hand-exact; D/M flip by evidence; decimal-year calendar
+derivation; the 1..8 refusal; SVG mark-count + byte determinism).
+Real-data receipt: 820 Keeling rows -> resolution 0.01 read off
+the instrument, avg-per-year 315.237 (1958) -> 430.503 (2026),
+described slope 1.67445 ppm/yr, monthly frame honestly skipped
+(data already at that grain). Regressions green: intake 19/19,
+analyst face 7/7, trend 8/8, told-knowledge 13/13, facts-layer
+7/7, audit 18/18.
+
+## 2026-07-18 (evening) — THE TELLING ROAD 13/13 + FIRST LIVE
+## TELLING (road-trial #15) + THE REVIEW PINS 18/18
+Owner: "tell him things in plain english... 'ohm's law is v=ir'...
+use it but validate with more information later." Built as
+TRANSLATION + VET ONLY (isaac_store/telling.py ~250 lines):
+parse_told_law (v1 grammar declared, six named refusals),
+tell_english (container-blind name vet; retell = witness on HIS
+OWN node; lands via tell_law + uses-form/output/slots facts —
+the curriculum's shapes-and-labels ontology reused whole),
+recall_law (reads told AND discovered meta). askisaac grew --tell/
+--recall/--account (dry by default; .bak before live saves).
+telling_battery.py 13/13 permanent. FIRST LIVE TELLING: kepler
+told in english -> MATCHES his DISCOVERED solar-system law;
+coulombs-form + pendulum-period = first english-born knowledge,
+validated HOLDS same sitting; 853 nodes / 39 laws / 320 facts /
+precision 1.0 (road-trial #15); mind.isaac.bak kept.
+ALSO THIS SESSION: the specifics-layer adversarial review (22
+agents, every finding refuted-or-confirmed by EXECUTED probes)
+confirmed 18 finds, all fixed + pinned as battery cases D13-D18:
+newest-first/shuffled dated files now reordered WITH receipt;
+declared calendar beats the id-column scan; frame slopes take
+their axis from the calendar itself (per_year true by
+construction); sentinel dates can't vote day-first; decimals
+round-trip; no phantom trend when the court refused; XML-safe
+plots; hostile headers sanitized; takes monotonic past the
+history cap; stale provenance cleared; loud refusals for
+target=time and time-only tables. dossier_battery.py 18/18;
+regressions: intake 19/19, audit 18/18, analyst 7/7+8/8+6/6+7/7,
+facts 7/7, told-knowledge 13/13.

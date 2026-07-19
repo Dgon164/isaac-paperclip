@@ -1824,3 +1824,77 @@ The live account (isaac_home) is the standing feeding target from
 here on (alpha v1 road trials, full on); every meal dry-proves
 first, then feeds live, journals kind=meal, logs its road-trial
 line.
+
+## THE SPECIFICS LAYER / THE DOSSIER (owner, 2026-07-18 evening,
+## returning to the facts layer after the telling-road design):
+## "having the law is great, but sometimes you need to reference a
+## specific sample. he needs to take recurring or important points,
+## averages, extremes, ratios, sigfigs, std dev, median and mode,
+## that kind of thing for a dataset as well as time frames. avg per
+## day, avg per month, avg per year, track trend lines. plot data
+## points, error bars all the standard data analysis stuff you
+## would need."
+THE DESIGN SENTENCE: THE DOSSIER DESCRIBES, THE COURT JUDGES. A
+dossier is per-dataset MEMORY (facts-layer kin): descriptive
+numbers with method receipts, specific example ROWS he can point
+at, calendar-frame breakdowns, and described (never judged) frame
+slopes — while trend VERDICTS, nulls, and belief stay the analyst
+court's. Reuse before build (the sheet's own law): resolution =
+read_floor's grain court (typo-hardened, promoted); example rows =
+_sample_evidence (extremes + rank spread, deterministic, capped);
+frame trends judged = analyze_series when buckets suffice; source
+identity = intake's sha provenance riding into the dossier node.
+NEW ORGANS: (1) intake parses calendar-date columns instead of
+dropping them (fractional years + exact ymd kept; formats declared,
+refusals loud); (2) take_dossier/recall_dossier on the mind —
+per-column n/mean/std(n-1)/median/mode-with-count (mode REFUSES on
+all-unique: "no recurring value, said"), min/max WITH their full
+rows, resolution + decimals via the grain court; per-frame
+(day/month/year as the span supports) avg/min/max/n + described
+slope; pairwise ratio stats ONLY where the denominator's sign is
+constant (else refused with why); trend_history appended per
+re-take (track the line, not just the level). All net content,
+container-stamped, pickled with his life. (3) the plot face:
+stdlib SVG (points, trend overlay, error bars from residual rms or
+the floor, frame-average steps, anomaly rings) — the observed-maps
+precedent, no new dependency. Battery permanent; the analyst face
+renders the dossier and a --plot flag writes the SVGs.
+
+## THE TELLING ROAD (owner, 2026-07-18 evening, after the specifics
+## layer): "can we just do teach without injection? do front door
+## stuff? did we ever figure out just how to tell him things in
+## plain english?... if he could just interpret 'ohm's law is v=ir'
+## and he would create a node for ohms law containing v=ir and will
+## use it but validate with more information later."
+THE ORGAN IS TRANSLATION + VET ONLY (isaac_store/telling.py) —
+knowledge lands through the PROMOTED doors: tell_law (MATCHES =
+witness on the shared form; new forms TOLD-UNVERIFIED, usable at
+once, belief measured never told) + the curriculum's own
+application fact-bundle (uses-form/output/slots taught as facts,
+so the NAME survives the shared shape — ohm and rect-area are one
+form wearing two labels, the shapes discovery honored). THE V1
+TELLING GRAMMAR, declared: "<name> is <out>=<expr>"; single-letter
+quantities (physics style — ir reads i*r); pi known; powers incl.
+halves and negatives; squares emitted as the house canonical x*x;
+NO parentheses/functions (refused BY NAME); /ab refused as
+ambiguous. THE NAME VET, container-blind: a held name with a
+DIFFERENT form refuses ("a different form must win a duel, not a
+retelling"); a RETELLING lands as a witness on HIS OWN node, never
+on a same-form stranger the scan meets first (session-1 dry-prove
+find). READ PROPOSES, THE ECHO CONFIRMS: every accepted telling is
+echoed back rendered from what was stored. Front door: askisaac
+--tell "..." (dry parse card by default; --account = his home,
+.bak first, saved after) + --recall NAME. Battery 13/13 permanent
+(incl. told-Kepler MATCHES a DISCOVERED law; validate-later HOLDS/
+FAILS; cross-container names; save/load). FIRST LIVE TELLING
+2026-07-18 20:35 (road-trial #15): kepler-told RECOGNIZED as his
+own discovered sky law (witness who=owner ON a discovered node);
+circle-area retold = witness on the curriculum's node; coulombs-
+form + pendulum-period = the first plain-english knowledge of his
+life, validated HOLDS on 50 fresh rows same sitting; account
+843->853 nodes, 37->39 laws, 311->320 facts, precision 1.0 held.
+PARKED, NAMED: multi-letter quantity names (vocabulary elections
+road); functions/parens (v2 grammar); triples ("X is a Y") through
+the same vet; who-stamps on teach() facts (the audit's engine-side
+stamping item); the LLM-ear (model proposes the parse, the
+instrument confirms — model words are DATA through the vet).
