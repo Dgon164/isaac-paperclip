@@ -1640,3 +1640,19 @@ dependency + Kirchhoff from the SAME organ, zero per-domain Python.
 THE EDIT: one teach() and welds carry torque. STANDING DISCIPLINE
 captured on the sheet: a rung is DONE when content is NET and
 courts are GENERIC, hand-domain code ABLATED in the battery.
+
+## 2026-07-18 — THE CHECKLIST CURRICULUM (owner tactic change)
+docs/engineer/CURRICULUM_CHECKLIST.md: ~330 testable items across
+CAD/mechanical (sketch entities, constraints, features, datums,
+tolerances+GD&T+fits, mass properties, assemblies+mates, machine
+elements, construction gates), Python (types, scope, operators,
+collections, control flow, functions, OOP, modules, shapes+bugs-as-
+negative-knowledge, program courts), electrical (fundamentals,
+passives, semiconductors, digital, analysis courts), and
+tracing/blueprinting (mechanical drawings both directions,
+schematics+netlists, diagrams general). THE GRADING STANDARD: A
+LEARN (enters the NET — ownership law), B UNDERSTAND (courts he
+wasn't told the answers to), C USE (construction, instrument-
+checked, transfer). 24 items already green with receipts; the doc
+is the lane's SCOREBOARD (results appended inline; partial grades
+honest; wrong predictions kept next to items).
