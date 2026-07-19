@@ -2110,3 +2110,64 @@ each moment, and the instrument (real git) confirms — READ
 PROPOSES, THE INSTRUMENT CONFIRMS, now at the state level. Git is
 his own metaphysics as a tool: commits are maps, the stage is the
 candidate tense, status is the tension report.
+
+## INTERNAL MODELLING — THE UMBRELLA NAME (owner, 2026-07-19):
+## "internal modelling is what ive been trying to say with shapes
+## and theory of mind and stuff. being able to model current and
+## potential states of something."
+THE UNIFICATION: this is the one capacity under the variable-and-
+value (a model with dimensions), the internal simulator (running
+the model forward), form-by-comparison (building the model from
+instances), the three tenses (the model's time axis: current
+state = present; potential states = candidate/future), and the
+desync law (the model and the thing DRIFT — an update on one
+never updates the other; operational access = the standing right
+to re-court the instrument and resync). Theory of mind is
+internal modelling pointed at another system that has its own
+state (git's three trees; a grader; a person). THE NEXT TURN OF
+THE SAME CRANK: internal modelling pointed at HIMSELF — a model
+of his own current capabilities (what he can compose today) and
+his potential states (what he would need to pass the wall in
+front of him). A repeating failure with a shared shape is a
+TENSION REPORT between those two self-tenses; the ask road and
+the stuck court are that tension made speakable.
+
+## DIAGNOSIS — EVALUATING BACKWARD (owner, 2026-07-19, correcting
+## the umbrella: "yes but not quite. really its being able to
+## model the cause and effect of failure modes. there is an
+## expected state, what is different between the expected state
+## and the current state that is preventing this from working.
+## its evaluating backward. this is the state we are in, this is
+## the output. we dont know what will cause that state exactly.
+## but we know the initial state. there are only so many
+## variables to adjust, and figuring out which ones will work and
+## what the state needs to be for everything for that structure
+## to work... if you are diagnosing an engine, you are under the
+## understanding of the fire triangle, but with an engine you
+## need air, spark, fuel, and compression. and you can check each
+## state directly."
+THE DESIGN SENTENCE: FORWARD RUNS THE MODEL, DIAGNOSIS RUNS IT
+BACKWARD. Every working structure carries a REQUIREMENTS MODEL:
+the finite set of state-variables that must each hold their
+expected value for the structure to work (the engine's four:
+air, spark, fuel, compression). A failure is an OBSERVED OUTPUT
+whose cause is not directly known — but the variables are few,
+enumerable, and EACH ONE'S STATE CAN BE CHECKED DIRECTLY
+(operational access, per variable). The road: (1) hold the
+expected state per variable; (2) court each instrument and
+compare expected vs current — the differences are the SUSPECTS;
+(3) adjust the suspect, re-run, and let the court rule (the
+injection diagnostic: a one-variable wall is confirmed when one
+adjustment un-darks the cluster). THE FIRE-TRIANGLE CLAUSE: the
+requirements model itself can be WRONG FOR THIS SYSTEM — you
+arrive holding three variables and the engine has four. That is
+the signature that separates the two stuck-kinds: EVERY KNOWN
+VARIABLE CHECKS GREEN AND IT STILL FAILS = the model is missing
+a variable. That residue is not a defeat, it is a NAMED UNKNOWN
+— the moment to characterize the missing variable from what the
+failures share (form-by-comparison over the failure records) and
+either ASK (the telling road runs in reverse: he speaks the gap)
+or PROBE (design the experiment that would expose the fourth
+variable). Wrongs kept: a superseded requirements model is
+retired by supersession with the discovering failure cited,
+never overwritten.
