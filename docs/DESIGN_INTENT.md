@@ -2085,3 +2085,28 @@ the whole engine is one shape-kind flowing imagination ->
 actuality -> memory, with receipts at each gate. Every future
 node wears its not-yet honestly (TOLD-UNVERIFIED, PARTIAL,
 candidate, dark) — belief is measured at the gate, never before.
+
+## DUAL STATE TRACKING / THE DESYNC LAW (owner, 2026-07-19, on
+## the git Status wall): "he is supposed to do that. what was, is
+## and will be. so it says create a file. you create the file,
+## then check if it gets the error. the file is created, but...
+## he doesnt have dual state tracking yet? thing exists, but he
+## thinks it exists for all which is what happens when it is
+## committed. but if its not committed then they are out of sync.
+## and he needs to realize that an update on one thing does not
+## update the others."
+THE ORGAN: THE TENSE TRACKER — one NAME, three tense slots:
+PRESENT (the working file), CANDIDATE (the stage — what will
+be), PAST (the commit — what was). Operations TRANSFER content
+between slots (create/update -> present only; add -> present
+copied to candidate; commit -> candidate snapshotted to past);
+an update on one slot NEVER updates the others (THE DESYNC LAW).
+git status is the TENSION REPORT between the tenses: untracked =
+present-only; changes-to-be-committed = candidate differs from
+past; not-staged = present differs from candidate; clean = all
+three agree. THE COURT DISCIPLINE: he walks a lesson's steps IN
+ORDER updating his tense model, PREDICTS the status phrases at
+each moment, and the instrument (real git) confirms — READ
+PROPOSES, THE INSTRUMENT CONFIRMS, now at the state level. Git is
+his own metaphysics as a tool: commits are maps, the stage is the
+candidate tense, status is the tension report.

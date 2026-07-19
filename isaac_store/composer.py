@@ -617,3 +617,66 @@ def record_attempt(mind, lesson, candidate_receipt, court):
         bug=(None if green else court.get("why", "")),
         rolled_back=not green)
     return green
+
+
+class TenseTracker:
+    """THE TENSE TRACKER (owner 2026-07-19: "he doesnt have dual
+    state tracking yet? thing exists, but he thinks it exists for
+    all... an update on one thing does not update the others").
+    One NAME, three tense slots — PRESENT (working), CANDIDATE
+    (staged: what will be), PAST (committed: what was). Operations
+    TRANSFER content between slots; the DESYNC LAW: an update to
+    one slot never updates the others. status() is the TENSION
+    REPORT between the tenses — which is exactly what git status
+    prints."""
+
+    def __init__(self):
+        self.present, self.candidate, self.past = {}, {}, {}
+
+    def create(self, name, content):
+        self.present[name] = content          # present ONLY
+
+    update = create
+
+    def add(self, name=None):
+        names = [name] if name else list(self.present)
+        for n in names:
+            if n in self.present:
+                self.candidate[n] = self.present[n]
+
+    def commit(self):
+        self.past = dict(self.candidate)      # snapshot to the
+        #                                       past; the stage
+        #                                       now agrees with it
+
+    def status(self):
+        untracked = sorted(n for n in self.present
+                           if n not in self.candidate
+                           and n not in self.past)
+        to_be_committed = sorted(
+            n for n in self.candidate
+            if self.candidate[n] != self.past.get(n))
+        not_staged = sorted(
+            n for n in self.present
+            if n in self.candidate
+            and self.present[n] != self.candidate[n])
+        return dict(untracked=untracked,
+                    to_be_committed=to_be_committed,
+                    not_staged=not_staged,
+                    clean=not (untracked or to_be_committed
+                               or not_staged))
+
+    def predict_phrases(self):
+        """The phrases real git status will print for this state
+        — his PREDICTION, courted by the instrument."""
+        st = self.status()
+        out = []
+        if st["to_be_committed"]:
+            out.append("Changes to be committed:")
+        if st["not_staged"]:
+            out.append("Changes not staged for commit:")
+        if st["untracked"]:
+            out.append("Untracked files")
+        if st["clean"]:
+            out.append("working tree clean")
+        return out
