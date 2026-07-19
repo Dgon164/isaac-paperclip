@@ -1753,3 +1753,23 @@ history cap; stale provenance cleared; loud refusals for
 target=time and time-only tables. dossier_battery.py 18/18;
 regressions: intake 19/19, audit 18/18, analyst 7/7+8/8+6/6+7/7,
 facts 7/7, told-knowledge 13/13.
+
+## 2026-07-19 — RUNG 0 OF THE SCALING CAMPAIGN: THE FREE COURT
+## UNRIGGED + THE OWNERSHIP GATE WALLED + THE CEILING MEASURED
+The provenance audit's one confirmed violation CURED the honest
+way: read_goal_sheet's free court now subtracts the attrs the
+sheet's OWN courts claimed (rewards/buffers/fatal filings), never
+a hand list of the snake exam's variables — N8 answers ['lucky']
+through a legitimate derivation (engineer battery 10/10 unchanged).
+The reader's identifier-vocabulary ceiling is now DECLARED in the
+module docstring. engineer_transplant_probe (hand courts ablated,
+answers reproduced from net content, 8/8) joins the PERMANENT wall
+— ownership enforced on every promote, not proven once. THE
+CEILING, MEASURED: the same game renamed (score->points,
+food->apple, ...) reads CONTROL = 2 rewards/1 buffer/3 fatal/1
+forbidden/free [lucky] vs ALIEN = 0/0/0/0/free [active, charm,
+points] — courts silent (honest), semantics gone. The
+classification SHAPES (bounds/membership/<=0, accumulator,
+drain-refill-cap) are already vocabulary-free; reader v2 = find
+candidates by WRITE-SHAPE, classify by the existing shapes. That
+is the scaling campaign's first build.

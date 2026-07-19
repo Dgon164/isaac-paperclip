@@ -13,7 +13,13 @@ v1 vocabulary limits, named: constraint courts are arithmetic
 (linear recipes); the goal-sheet reader's classification shapes are
 bounds-tests / membership / <=0 / dead-data-flow; containment's
 proof is exhaustive enumeration over finite regions after a
-vocabulary scan (enumerating unreasoned code is not proof)."""
+vocabulary scan (enumerating unreasoned code is not proof). The
+goal-sheet reader's COURTS are additionally keyed to one game's
+identifier vocabulary (score/food/body/energy/DIRS/W/H) — a
+DECLARED ceiling (on programs wearing other names the sheet goes
+quiet, it never guesses); the FREE court is vocabulary-clean (dead
+data flow minus what the sheet's own courts claimed). Reader v2 =
+semantics from structure, the scaling campaign's first build."""
 import ast
 
 import numpy as np
@@ -307,6 +313,10 @@ def read_goal_sheet(class_src):
 
     sheet = dict(rewards={}, buffers={}, forbidden=[], fatal=[],
                  free=[], reward_source=None)
+    claimed = set()   # attrs the sheet's OWN courts classified —
+    #                   the free court subtracts THESE, never a
+    #                   hand list of one exam's variable names
+    #                   (ownership-audit violation, cured 2026-07-19)
     for w in writes:
         if w.get("attr") == "score" and w["kind"] == "AugAssign":
             try:
@@ -317,6 +327,7 @@ def read_goal_sheet(class_src):
                      if w["guards"] else None)
             sheet["rewards"]["score"] = dict(valence=val,
                                              guard=guard)
+            claimed.add(w["attr"])
             if guard and "food" in guard:
                 sheet["reward_source"] = ("next cell == food (read "
                                           "from the reward's guard)")
@@ -336,6 +347,7 @@ def read_goal_sheet(class_src):
     for w in writes:
         if w.get("attr") != "energy":
             continue
+        claimed.add(w["attr"])
         if w["kind"] == "AugAssign" and not w["guards"]:
             en["drain"] = -ast.literal_eval(w["value"])
         if w["kind"] == "Assign" and isinstance(w["value"], ast.Call) \
@@ -349,6 +361,7 @@ def read_goal_sheet(class_src):
         if w.get("attr") == "alive" and w["kind"] == "Assign" \
                 and isinstance(w["value"], ast.Constant) \
                 and w["value"].value is False and w["guards"]:
+            claimed.add(w["attr"])
             test = w["guards"][-1][0]
             ops = (test.values if isinstance(test, ast.BoolOp)
                    and isinstance(test.op, ast.Or) else [test])
@@ -387,7 +400,5 @@ def read_goal_sheet(class_src):
                            and n.attr != w["attr"]}
     for c in calls:
         read_names.add(c["on"].replace("self.", ""))
-    sheet["free"] = sorted(written - read_names
-                           - {"alive", "score", "dir", "food",
-                              "energy"})
+    sheet["free"] = sorted(written - read_names - claimed)
     return sheet
