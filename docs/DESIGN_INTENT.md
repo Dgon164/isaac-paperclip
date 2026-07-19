@@ -2029,3 +2029,32 @@ comparison-as-registration keystone arriving at code. PARKED,
 NAMED: comparing two instances' TRACES (dynamic form discovery);
 the new-instance reader ("he doesn't know what is what until he
 learns to fully read code") = trace + comparison composed.
+
+## THE ONE ONTOLOGY (owner, 2026-07-19, closing the night): "they
+## shouldnt be separate things. there is maps, and then there is
+## internal structures. they are effectively one for one, but a
+## structure can be recomposed, but a map is a map. it shows what
+## is at the time of recording. its just a structure node. its
+## just another shape instance."
+THE UNIFICATION: three levels, one kind of thing.
+  FORM     — the topology; recomposable; the variable
+             (lawform, codeform, flow-shape)
+  INSTANCE — dimensions set; one thing at a time; mountable
+             (law variant, codeshape, the mounted main.py)
+  MAP      — an instance OBSERVED at a time; frozen; "what was,
+             when" (the trace, code_map's output, the study
+             ledger's entries, the dossier, recall_evidence,
+             the observed-map SVGs)
+A map is NOT a separate machinery — it is itself a structure
+node, another shape instance, whose content happens to be a
+recording. THE OPERATING RULE THAT FALLS OUT: maps are never
+recomposed, only SUPERSEDED by new recordings (supersession-not-
+overwrite was always this law; the trajectory law was always this
+law — a submitted pass is a map); forms are never frozen, only
+INSTANTIATED. PARKED, NAMED (next session's opening design work):
+THE ONE-ONTOLOGY MIGRATION — trace var: nodes, lesson: ledger
+entries, dossiers, code_maps, codeforms/codeshapes audited onto
+the single form/instance/map node discipline with time stamps,
+so the comparator/crystallizer runs over ALL of them uniformly
+(a map of a trace and a map of a dataset are the same kind of
+citizen; forms discovered by comparison work on any of it).
