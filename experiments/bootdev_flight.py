@@ -43,17 +43,25 @@ from isaac_store.composer import (eat_lesson,          # noqa: E402
                                   TOOLSET)
 
 WSL = ["wsl.exe", "-d", "Ubuntu", "-u", "root", "--", "bash", "-lc"]
-WORKDIR = "/root/bookbot"
+WORKDIR = "/root/bookbot"   # overridable: --workdir=/root/x
 ALLOW = re.compile(
     r"^(mkdir |curl (-s?L )?[\"']?https://storage\.googleapis\.com"
-    r"|uv |git |echo |python3? |ls|head |cat |wc |touch )")
+    r"|uv |git |echo |printf |python3? |ls|head |cat |wc |touch "
+    r"|cd |rm |mv |cp |xxd |sort|uniq|grep |find )")
 ANSI = re.compile(r"\x1b\[[0-9;?]*[A-Za-z]")
 
 
 def wsl(cmd, timeout=120):
-    out = subprocess.run(WSL + [cmd], capture_output=True,
-                         text=True, encoding="utf-8",
-                         errors="replace", timeout=timeout)
+    # ONE invocation, command shipped base64 — wsl.exe re-splits
+    # quoted argv (cut -d ' ' arrived mangled) and temp-script
+    # relays go stale under flaky session starts; base64 has no
+    # quotes and nothing shared to race
+    import base64
+    b64 = base64.b64encode(cmd.encode()).decode()
+    out = subprocess.run(
+        WSL + [f"echo {b64} | base64 -d | bash"],
+        capture_output=True, text=True, encoding="utf-8",
+        errors="replace", timeout=timeout)
     return out.stdout + out.stderr
 
 
@@ -66,8 +74,11 @@ def fetch(path):
 
 
 def _run_cmd(command):
+    import base64
+    b64 = base64.b64encode(
+        f"cd {WORKDIR} && {command}".encode()).decode()
     out = subprocess.run(
-        WSL + [f"cd {WORKDIR} && {command}"],
+        WSL + [f"echo {b64} | base64 -d | bash"],
         capture_output=True, text=True, encoding="utf-8",
         errors="replace", timeout=180)
     return out.stdout, out.returncode
@@ -87,6 +98,10 @@ def spec_court(lesson):
                     gradeable=False)
     for step in cli:
         out, code = _run_cmd(step["Command"])
+        if os.environ.get("BOOTDEV_DEBUG"):
+            print(f"    [court] wd={WORKDIR} "
+                  f"cmd={step['Command'][:40]!r} exit={code} "
+                  f"out={out[:60]!r}")
         for t in step.get("Tests", []):
             if t.get("ExitCode") is not None and \
                     code != t["ExitCode"]:
@@ -138,22 +153,35 @@ def write_artifact(defs, main_body):
 
 
 def told_commands(readme):
-    cmds = []
+    """Whole ```sh blocks, one script each — a cd inside a block
+    holds for the block (the lesson's own sequence). A block is
+    admitted only if EVERY line is on the allowlist."""
+    blocks = []
     for block in re.findall(r"```(?:sh|bash)\n(.*?)```", readme,
                             re.S):
-        for ln in block.strip().split("\n"):
-            ln = ln.strip()
-            if ln and not ln.startswith("#"):
-                cmds.append(ln)
-    return cmds
+        lines = [ln.strip() for ln in block.strip().split("\n")
+                 if ln.strip() and not ln.strip().startswith("#")]
+        if lines and all(ALLOW.match(ln) for ln in lines):
+            blocks.append(" && ".join(lines))
+    return blocks
 
 
 def main():
+    global WORKDIR
     args = [a for a in sys.argv[1:] if not a.startswith("--")]
     cap = 20
     for a in sys.argv[1:]:
         if a.startswith("--max"):
             cap = int(a.split("=")[-1]) if "=" in a else cap
+        if a.startswith("--workdir="):
+            WORKDIR = a.split("=", 1)[1]
+            # Git Bash (MSYS) rewrites unix-looking args into
+            # Windows paths (--workdir=/root/x arrived as
+            # C:/Program Files/Git/root/x — an hour of ghost
+            # hunting, 2026-07-19); strip the mangle
+            m = re.search(r"[A-Za-z]:.*?(/root/.*)$", WORKDIR)
+            if m:
+                WORKDIR = m.group(1)
     course = args[0] if args else \
         "094fd7d4-ec78-4202-96ca-c5f79fc332d2"
 
@@ -173,13 +201,15 @@ def main():
     # THE BENCH PERSISTS (owner: "he seems to start from the
     # beginning every time") — his repo is study state; only the
     # missing pieces are initialized, never a wipe
-    wsl(f"mkdir -p {WORKDIR}/books")
-    wsl(f"cd {WORKDIR} && [ -f books/frankenstein.txt ] || curl "
-        f"-sL https://storage.googleapis.com/qvault-webapp-dynamic"
-        f"-assets/course_assets/frankenstein.txt -o "
-        f"books/frankenstein.txt", timeout=180)
-    wsl(f"[ -f {WORKDIR}/main.py ] || echo "
-        f"'print(\"placeholder\")' > {WORKDIR}/main.py")
+    wsl(f"mkdir -p {WORKDIR}")
+    if "bookbot" in WORKDIR:
+        wsl(f"mkdir -p {WORKDIR}/books")
+        wsl(f"cd {WORKDIR} && [ -f books/frankenstein.txt ] || "
+            f"curl -sL https://storage.googleapis.com/qvault-"
+            f"webapp-dynamic-assets/course_assets/frankenstein.txt"
+            f" -o books/frankenstein.txt", timeout=180)
+        wsl(f"[ -f {WORKDIR}/main.py ] || echo "
+            f"'print(\"placeholder\")' > {WORKDIR}/main.py")
 
     c = fetch(f"/v1/courses/{course}")
     print(f"FLIGHT: {c['Title']} — {c['NumLessons']} lessons\n")
@@ -231,7 +261,8 @@ def main():
                                    f"unchanged — standing bug: "
                                    f"{led['bug'][:40]}"))
                 print(f"  [dark] {title} — ledger: toolset "
-                      f"unchanged, not re-courting")
+                      f"unchanged, not re-courting "
+                      f"(check said: {v.get('why', '?')[:48]})")
                 continue
             L = fetch(uuid)["Lesson"] if not (
                 led and led["status"] == "PASSED") else L
@@ -262,14 +293,32 @@ def main():
                 continue
             if v["green"]:
                 road = "AS-IS"
-            # road 1 — the readme's own told commands (allowlisted)
+            # road 1 — the readme's own told commands (block-wise,
+            # every line allowlisted; a cd holds within its block)
             if road is None:
-                ran = [cm[:40] for cm in told_commands(readme)
-                       if ALLOW.match(cm)
-                       and wsl(f"cd {WORKDIR} && {cm}",
-                               timeout=180) is not None]
-                if ran and spec_court(L)["green"]:
-                    road = f"TOLD-CMDS ({len(ran)})"
+                ran = [b[:40] for b in told_commands(readme)
+                       if wsl(f"cd {WORKDIR} && {b}",
+                              timeout=180) is not None]
+                if ran:
+                    if spec_court(L)["green"]:
+                        road = f"TOLD-CMDS ({len(ran)})"
+                    else:
+                        # THE BENCH FOLLOWS THE STUDENT: a lesson
+                        # that moves into a new repo dir moves the
+                        # bench — with the receipt
+                        sub = wsl(f"cd {WORKDIR} && ls -d */ "
+                                  f"2>/dev/null | head -3").split()
+                        for sd in sub:
+                            cand = f"{WORKDIR}/{sd.rstrip('/')}"
+                            if ".git" in wsl(f"ls -a {cand}"):
+                                old = WORKDIR
+                                WORKDIR = cand
+                                if spec_court(L)["green"]:
+                                    road = (f"TOLD-CMDS ({len(ran)})"
+                                            f" — bench moved into "
+                                            f"{sd.rstrip('/')}")
+                                    break
+                                WORKDIR = old
             # road 2 — compose from the idiom pool + minted shapes
             if road is None and readme:
                 defs = minted_shapes(mind)
