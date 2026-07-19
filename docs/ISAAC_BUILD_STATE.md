@@ -1556,3 +1556,19 @@ NAMED w/ input/exception/line + reproduced, solid CONTAINED
 scan BEFORE enumeration because enumerating unreasoned code is not
 proof). NEXT: G-rung (game goal recovery), engine promotion of the
 lane's courts, fidelity harness.
+
+## 2026-07-18 — THE G-RUNG GREEN 8/8: goals recovered from mechanism
+engineer_grung_probe: Snake instrumented by blind drivers (random /
+ring / scout / STARVER); the goal sheet EARNED from logs — score
+celebrated at +10 measured (79 events), the do by association
+(head==food at 1.0), energy a buffer by LAWFUL DRAIN (-1 constant;
++39 uncapped refill observable only once a starving driver joined —
+THE CORPUS DECIDES WHAT IS KNOWABLE), reverse = LOCKOUT (197
+attempts, 0 taken — the transition does not exist) vs wall = exists
+and kills (P=1.0, base 0.009), fatal predicates at P=1 w/ innocent
+decoys, lucky filed FREE. THE MOD NULL: inverted reward line read
+from code (-10, score dethroned), not culture. THE SUPERSTITION
+NULL: policy bit-identical across lucky streams — no rituals.
+CONSTRUCTION: sheet-policy 15.3x survival, 172-vs-1 score over
+blind random. Four wrong-kept lessons in the docstring (trapped
+start; cap-hidden refill; threshold-vs-evidence; buffer tooth).
