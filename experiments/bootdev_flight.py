@@ -34,9 +34,13 @@ sys.path.insert(0, os.path.abspath(os.path.join(
 import isaac as mod                                    # noqa: E402
 from isaac_store.composer import (eat_lesson,          # noqa: E402
                                   compose_function, compose_main,
-                                  compose_print_main, mint,
+                                  compose_print_main,
+                                  compose_transform,
+                                  compose_chain_main, mint,
                                   minted_shapes, minted_names,
-                                  record_attempt)
+                                  record_attempt, ledger_set,
+                                  ledger_get, ledger_report,
+                                  TOOLSET)
 
 WSL = ["wsl.exe", "-d", "Ubuntu", "-u", "root", "--", "bash", "-lc"]
 WORKDIR = "/root/bookbot"
@@ -112,12 +116,25 @@ def submit(uuid):
     return "✓" in raw or "assed" in clean
 
 
+def read_file(name):
+    out = subprocess.run(WSL + [f"cat {WORKDIR}/{name}"],
+                         capture_output=True, text=True,
+                         encoding="utf-8", errors="replace",
+                         timeout=60)
+    return out.stdout
+
+
+def write_file(name, src):
+    p = subprocess.run(WSL + [f"cat > {WORKDIR}/{name}"],
+                       input=src, capture_output=True, text=True,
+                       encoding="utf-8")
+    return p.returncode == 0
+
+
 def write_artifact(defs, main_body):
     src = ("\n\n".join(defs) + "\n\n" + main_body) if defs \
         else main_body
-    p = subprocess.run(WSL + [f"cat > {WORKDIR}/main.py"],
-                       input=src, capture_output=True, text=True)
-    return p.returncode == 0
+    return write_file("main.py", src)
 
 
 def told_commands(readme):
@@ -148,13 +165,21 @@ def main():
     acct = IsaacAccount(home, mod)
     mind = acct.mind
 
-    # a clean bench: fresh workdir with the book the lessons need
-    wsl(f"rm -rf {WORKDIR} && mkdir -p {WORKDIR}/books")
+    if "--report" in sys.argv[1:]:
+        print("THE STUDY LEDGER — tracked and checked:")
+        print(ledger_report(mind))
+        return
+
+    # THE BENCH PERSISTS (owner: "he seems to start from the
+    # beginning every time") — his repo is study state; only the
+    # missing pieces are initialized, never a wipe
+    wsl(f"mkdir -p {WORKDIR}/books")
     wsl(f"cd {WORKDIR} && [ -f books/frankenstein.txt ] || curl "
         f"-sL https://storage.googleapis.com/qvault-webapp-dynamic"
         f"-assets/course_assets/frankenstein.txt -o "
         f"books/frankenstein.txt", timeout=180)
-    wsl(f"echo 'print(\"placeholder\")' > {WORKDIR}/main.py")
+    wsl(f"[ -f {WORKDIR}/main.py ] || echo "
+        f"'print(\"placeholder\")' > {WORKDIR}/main.py")
 
     c = fetch(f"/v1/courses/{course}")
     print(f"FLIGHT: {c['Title']} — {c['NumLessons']} lessons\n")
@@ -169,7 +194,47 @@ def main():
                 break
             n_done += 1
             uuid, title = les["UUID"], les["Title"]
-            L = fetch(uuid)["Lesson"]
+            # THE LEDGER FIRST — never start from the beginning
+            led = ledger_get(mind, uuid)
+            if led and led["status"] == "PASSED":
+                # THE TRAJECTORY LAW (the thrash of 2026-07-19
+                # taught it): a cumulative course's specs CONFLICT
+                # across time — one main.py cannot satisfy them
+                # all at once. A submitted pass is a HISTORICAL
+                # FACT, never re-courted against a bench that has
+                # rightly moved on.
+                transcript.append((title, "PASS",
+                                   f"ledger: passed via "
+                                   f"{led['road'][:36]}"))
+                print(f"  [done] {title} — ledger (historical "
+                      f"fact, not re-courted)")
+                continue
+            elif led and led["status"] == "DARK" \
+                    and set(led["toolset"]) >= set(TOOLSET):
+                # one cheap reality-check before trusting memory —
+                # the bench may have evolved past the dark (the
+                # replay-court spirit)
+                L = fetch(uuid)["Lesson"]
+                v = spec_court(L)
+                if v.get("green"):
+                    ok = submit(uuid)
+                    ledger_set(mind, uuid, title, "PASSED",
+                               road="AS-IS (bench evolved past "
+                                    "the standing bug)")
+                    transcript.append((title, "PASS",
+                                       "AS-IS — bench evolved"))
+                    print(f"  [PASS] {title} — bench evolved past "
+                          f"the standing bug")
+                    continue
+                transcript.append((title, "DARK",
+                                   f"ledger: dark, toolset "
+                                   f"unchanged — standing bug: "
+                                   f"{led['bug'][:40]}"))
+                print(f"  [dark] {title} — ledger: toolset "
+                      f"unchanged, not re-courting")
+                continue
+            L = fetch(uuid)["Lesson"] if not (
+                led and led["status"] == "PASSED") else L
             if L["Type"] == "type_choice":
                 transcript.append((title, "SKIP",
                                    "browser choice — the owner's "
@@ -185,7 +250,7 @@ def main():
                 if pth not in known_paths:
                     known_paths.append(pth)
             road = None
-            snap = wsl(f"cat {WORKDIR}/main.py 2>/dev/null")
+            snap = read_file("main.py")
 
             # road 0 — as-is (repo already satisfies the spec)
             v = spec_court(L)
@@ -216,9 +281,9 @@ def main():
                     new_funcs[0], got["arg"] or "filepath",
                     pool, minted=None)[:5] if new_funcs else [None]
                 mains = []
-                target = new_funcs[0] if new_funcs else (
-                    minted_names(mind)[-1:] or [None])[0]
-                if target:
+                targets = (new_funcs[:1] if new_funcs
+                           else minted_names(mind))
+                for target in targets:
                     for pth in (known_paths[:2] or [None]):
                         if pth:
                             mains.append(compose_main(target, pth))
@@ -258,12 +323,101 @@ def main():
                         write_artifact([], snap)
                     if road:
                         break
+                # road 2.4 — MODULE-SPLIT: the readme tells the
+                # import structure ("from stats import ..."); the
+                # named module receives his minted shape, main
+                # imports it back — every move readme-told
+                imp = re.search(r"from (\w+) import (\w+)", readme)
+                if road is None and imp:
+                    modname = imp.group(1)
+                    import ast as _ast
+                    try:
+                        tree = _ast.parse(snap)
+                        fns = [n for n in tree.body if isinstance(
+                            n, _ast.FunctionDef)
+                            and n.name not in ("main",)
+                            and "open(" not in _ast.unparse(n)]
+                        rest = [n for n in tree.body
+                                if n not in fns]
+                        if fns:
+                            moved = "\n\n".join(
+                                _ast.unparse(n) for n in fns)
+                            names = ", ".join(n.name for n in fns)
+                            write_file(f"{modname}.py",
+                                       moved + "\n")
+                            newmain = (f"from {modname} import "
+                                       f"{names}\n\n"
+                                       + "\n\n".join(
+                                           _ast.unparse(n)
+                                           for n in rest) + "\n")
+                            write_file("main.py", newmain)
+                            v = spec_court(L)
+                            rec = (f"MODULE-SPLIT({modname}.py <- "
+                                   f"{names}) + IMPORT-FROM-HINT")
+                            record_attempt(mind, title, rec, v)
+                            if v["green"]:
+                                road = "COMPOSE: " + rec
+                                snap = read_file("main.py")
+                            else:
+                                bugs.append(v.get("why", ""))
+                                write_artifact([], snap)
+                    except SyntaxError:
+                        pass
+                # road 2.5 — transform chain: METHOD-FROM-HINT +
+                # BUILTIN-LEN + CALL-BIND + TEMPLATE-FILL (all
+                # told by the readme or born-declared)
+                if road is None and got.get("hints") \
+                        and known_paths:
+                    wants_n = bool(re.search(
+                        r"number of|count", got["assignment"],
+                        re.I))
+                    fname = None
+                    mnoun = re.search(
+                        r"number of (\w+)", got["assignment"],
+                        re.I)
+                    if mnoun:
+                        fname = f"count_{mnoun.group(1)}"
+                    fname = (got["funcs"] or [fname or
+                             "transform"])[0]
+                    if fname == "main":
+                        fname = "transform"
+                    tfs = compose_transform(
+                        fname, got["arg"] or "text",
+                        got["hints"], wants_n)
+                    tmpl = (got.get("templates") or [None])[0]
+                    prior = minted_names(mind)
+                    for tf in tfs:
+                        steps = []
+                        if prior:
+                            steps.append((prior[0],
+                                          known_paths[0]))
+                        steps.append((fname, None))
+                        mn = compose_chain_main(steps, tmpl,
+                                                got["literals"])
+                        write_artifact(
+                            minted_shapes(mind) + [tf["code"]], mn)
+                        v = spec_court(L)
+                        rec = (tf["receipt"]
+                               + " + CALL-BIND chain"
+                               + (" + TEMPLATE-FILL" if tmpl
+                                  else ""))
+                        record_attempt(mind, title, rec, v)
+                        if v["green"]:
+                            road = "COMPOSE: " + rec[:60]
+                            mint(mind, fname, tf["code"],
+                                 tf["receipt"], container,
+                                 f"boot.dev spec green ({title})")
+                            snap = read_file("main.py")
+                            break
+                        bugs.append(v.get("why", ""))
+                        write_artifact([], snap)
                 if road is None and bugs:
                     print(f"         (bug-detection: {len(bugs)} "
                           f"candidates courted+rolled back; last: "
                           f"{bugs[-1][:44]})")
             if road:
                 ok = submit(uuid)
+                ledger_set(mind, uuid, title, "PASSED", road=road)
                 transcript.append((title, "PASS",
                                    road + ("" if ok else
                                            " (run green; submit "
@@ -271,6 +425,8 @@ def main():
                 print(f"  [PASS] {title} — {road}"
                       + ("" if ok else "  [submit?]"))
             else:
+                ledger_set(mind, uuid, title, "DARK",
+                           bug=v.get("why", ""))
                 transcript.append((title, "DARK", v.get("why", "")))
                 print(f"  [DARK] {title} — {v.get('why','')[:52]}")
             time.sleep(5)

@@ -47,8 +47,16 @@ def read_lesson(readme):
     if am:
         arg = am.group(1).lower()
     literals = re.findall(r'"([^"\n]{2,60})"', assignment)
+    # METHOD-FROM-HINT: methods the readme NAMES are told knowledge
+    hints = list(dict.fromkeys(re.findall(r"\.(\w+)\(\)", readme)))
+    # TEMPLATE-FILL: a plain fence holding {slot} is a TOLD output
+    # template ("Replace {num_words} with the actual number")
+    templates = [t.strip() for t in
+                 re.findall(r"```\n([^`]*?\{\w+\}[^`]*?)```",
+                            readme, re.S)]
     return dict(idioms=idioms, goals=goals, funcs=funcs, arg=arg,
-                literals=literals, assignment=assignment)
+                literals=literals, hints=hints,
+                templates=templates, assignment=assignment)
 
 
 def eat_lesson(mind, lesson_title, url, container, readme):
@@ -202,6 +210,58 @@ def compose_function(name, arg, idioms, minted=None):
     return out
 
 
+BORN_BUILTINS = ("print", "len")   # the born code vocabulary,
+#                                    declared and tiny — len is to
+#                                    code what plus is to the vet's
+#                                    number-words
+
+
+def compose_transform(name, arg, hints, wants_number):
+    """METHOD-FROM-HINT (+ BUILTIN-LEN when the goal says 'number
+    of'): a transform function from the readme's OWN named
+    methods. Every atom is told (the hint) or born-declared."""
+    cands = []
+    for h in hints[:3]:
+        body = [f"parts = {arg}.{h}()"]
+        rec = f"METHOD-FROM-HINT(.{h}())"
+        if wants_number:
+            body.append("n = len(parts)")
+            rec += " + BUILTIN-LEN"
+        body.append(f"return {'n' if wants_number else 'parts'}")
+        src = f"def {name}({arg}):\n" + "\n".join(
+            "    " + ln for ln in body)
+        try:
+            ast.parse(src)
+            cands.append(dict(code=src,
+                              receipt=f"DEF-WRAP({name}) + {rec}"))
+        except SyntaxError:
+            continue
+    return cands
+
+
+def compose_chain_main(steps, template=None, literals=()):
+    """CALL-BIND chain + TEMPLATE-FILL: main as a dataflow — each
+    minted/new function's result feeds the next; the readme's told
+    template prints with its slot filled by the LAST computed
+    value (never by the spec's answer — that would be the shallow
+    road)."""
+    lines, last = [], None
+    for i, (fn, argv) in enumerate(steps):
+        var = f"v{i}"
+        call_arg = last if last is not None else (
+            repr(argv) if argv is not None else "")
+        lines.append(f"    {var} = {fn}({call_arg})")
+        last = var
+    if template is not None and last is not None:
+        t = re.sub(r"\{\w+\}", "{" + last + "}", template)
+        lines.append(f"    print(f{t!r})")
+    else:
+        for ln in literals[:3]:
+            lines.append(f"    print({ln!r})")
+    body = "\n".join(lines) or "    pass"
+    return f"def main():\n{body}\n\nmain()\n"
+
+
 def compose_print_main(literals):
     """PRINT-LITERAL: the assignment names its own demanded output
     in quotes — main prints exactly those lines, receipted as the
@@ -246,6 +306,59 @@ def minted_names(mind):
     return [str(n)[len("codeshape:"):] for n in list(mind.net.meta)
             if str(n).startswith("codeshape:")
             and mind.net.get_meta(n, "code")]
+
+
+TOOLSET = ("DEF-WRAP", "SLOT-UNIFY", "SEQUENCE", "RETURN-INSERT",
+           "CALL-IN-MAIN", "PRINT-LITERAL", "METHOD-FROM-HINT",
+           "BUILTIN-LEN", "TEMPLATE-FILL", "CALL-BIND",
+           "MODULE-SPLIT")
+
+
+def ledger_set(mind, uuid, title, status, road="", bug="",
+               artifact_hash=""):
+    """THE STUDY LEDGER (owner 2026-07-19: "a section that can
+    tell what has been tracked and checked. he seems to start from
+    the beginning every time"). One node per lesson in HIS net:
+    status, the road that won (or the bug that stands), the
+    artifact hash, and the TOOLSET at attempt time — so a DARK is
+    retried only when the tools have actually grown."""
+    node = f"lesson:{uuid}"
+    mind.net.set_meta(node, "title", title)
+    mind.net.set_meta(node, "status", status)
+    mind.net.set_meta(node, "road", road)
+    mind.net.set_meta(node, "bug", bug)
+    mind.net.set_meta(node, "artifact", artifact_hash)
+    mind.net.set_meta(node, "toolset", list(TOOLSET))
+    mind.net.add_door("world:study", node, tag="in:study")
+
+
+def ledger_get(mind, uuid):
+    node = f"lesson:{uuid}"
+    st = mind.net.get_meta(node, "status")
+    if st is None:
+        return None
+    return dict(status=st,
+                title=mind.net.get_meta(node, "title"),
+                road=mind.net.get_meta(node, "road"),
+                bug=mind.net.get_meta(node, "bug"),
+                artifact=mind.net.get_meta(node, "artifact"),
+                toolset=mind.net.get_meta(node, "toolset") or [])
+
+
+def ledger_report(mind):
+    """What has been tracked and checked — said plainly."""
+    L = []
+    for n in sorted(list(mind.net.meta)):
+        if not str(n).startswith("lesson:"):
+            continue
+        st = mind.net.get_meta(n, "status")
+        t = mind.net.get_meta(n, "title")
+        road = mind.net.get_meta(n, "road") or ""
+        bug = mind.net.get_meta(n, "bug") or ""
+        L.append(f"  [{st:6}] {t}"
+                 + (f" — via {road[:44]}" if road else "")
+                 + (f" — standing bug: {bug[:40]}" if bug else ""))
+    return "\n".join(L) if L else "  (nothing tracked yet)"
 
 
 def record_attempt(mind, lesson, candidate_receipt, court):
