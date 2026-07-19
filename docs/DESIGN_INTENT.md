@@ -1976,3 +1976,26 @@ allowlist (install/uv/git/echo/mkdir/python), receipted. Browser
 choice lessons: the owner's clicks, never automated. SUBMIT
 discipline: run = free checks; submit only after green + within
 the owner's standing autopilot blessing for this course.
+
+## THE VARIABLE AND THE VALUE (owner, 2026-07-19, after the
+## trajectory-law thrash): "thats the point of the variable and
+## the value... he has the shape, he needs to learn how to shape
+## the shape to make it how he wants. he has a pattern, a
+## topology, and he needs to set the dimensions. it can only be
+## one thing at a time. but he can have multiples of them and
+## each can be a different thing at the same time"
+THE CONVERGENCE: this is the LAW ENGINE's own ontology arriving at
+code. A lawform is a TOPOLOGY; its variants set the DIMENSIONS
+(Earth g / Jupiter g — one shape, many coexisting things). Code
+gets the same: a passed composition is abstracted into its FORM
+(the skeleton — pattern/topology) + its DIMENSIONS (name, arg,
+methods, constants, templates — the settings). One INSTANCE is
+one thing at a time (the mounted main.py); MULTIPLE instances of
+one form coexist, each a different thing (the per-lesson
+artifacts, kept in the study ledger — the trajectory law's
+storage-level cure: nothing is lost when the bench moves on).
+THE NEW ROAD: INSTANTIATE-FORM — reuse before search, upgraded
+from text-reuse to FORM-reuse: take a held codeform, set the new
+lesson's dimensions, court it. Same court as tell_law: same
+skeleton + same dimensions = witness; same skeleton + new
+dimensions = a VARIANT instance in the form's family.

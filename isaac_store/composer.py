@@ -290,9 +290,102 @@ def mint(mind, name, code, receipt, container, court_receipt):
     mind.net.set_meta(node, "container", container)
     mind.net.add_door(f"world:{container}", node,
                       tag=f"in:{container}")
+    # THE VARIABLE AND THE VALUE: every instance abstracts to its
+    # FORM (topology) + DIMENSIONS; same skeleton = one family,
+    # many coexisting instances — the lawform ontology at code
+    try:
+        form = abstract_form(code)
+        import zlib
+        fid = (f"codeform:"
+               f"{zlib.crc32(form['skeleton'].encode()):08x}")
+        held = mind.net.get_meta(fid, "skeleton")
+        mind.net.set_meta(fid, "skeleton", form["skeleton"])
+        mind.net.add_door(fid, node, tag="instance")
+        mind.net.set_meta(node, "form", fid)
+        mind.net.set_meta(node, "dims", form["dims"])
+        if held:
+            mind.record_finding("codeform_variant", name,
+                                family=fid)
+    except (SyntaxError, StopIteration):
+        pass
     mind.record_finding("codeshape", name, receipt=receipt,
                         court=court_receipt)
     return node
+
+
+def abstract_form(code):
+    """THE VARIABLE AND THE VALUE (owner 2026-07-19: "he has a
+    pattern, a topology, and he needs to set the dimensions").
+    A passed composition abstracts into its FORM — the skeleton
+    (topology) with named dimension slots — plus THIS instance's
+    dimension values. One form, many possible instances; each is
+    one thing at a time; many coexist. The same ontology as
+    lawforms and their variants."""
+    tree = ast.parse(code)
+    fn = next(n for n in tree.body
+              if isinstance(n, ast.FunctionDef))
+    dims = dict(name=fn.name,
+                arg=(fn.args.args[0].arg if fn.args.args
+                     else None),
+                methods=[], constants=[])
+
+    class Abs(ast.NodeTransformer):
+        def visit_FunctionDef(self, node):
+            node.name = "__NAME__"
+            self.generic_visit(node)
+            return node
+
+        def visit_arg(self, node):
+            if node.arg == dims["arg"]:
+                node.arg = "__ARG__"
+            return node
+
+        def visit_Name(self, node):
+            if node.id == dims["arg"]:
+                node.id = "__ARG__"
+            return node
+
+        def visit_Call(self, node):
+            self.generic_visit(node)
+            if isinstance(node.func, ast.Attribute) \
+                    and node.func.attr not in dims["methods"]:
+                dims["methods"].append(node.func.attr)
+            if isinstance(node.func, ast.Attribute):
+                node.func.attr = (
+                    f"__M{dims['methods'].index(node.func.attr)}__"
+                    if not node.func.attr.startswith("__M")
+                    else node.func.attr)
+            return node
+
+        def visit_Constant(self, node):
+            if isinstance(node.value, (str, int, float)) \
+                    and not isinstance(node.value, bool):
+                dims["constants"].append(node.value)
+                return ast.copy_location(ast.Constant(
+                    value=f"__C{len(dims['constants']) - 1}__"),
+                    node)
+            return node
+    skel = ast.unparse(Abs().visit(ast.parse(code)))
+    return dict(skeleton=skel, dims=dims)
+
+
+def instantiate(skeleton, dims):
+    """INSTANTIATE-FORM: the held topology with NEW dimensions set
+    — shape the shape. Validity is courted (parse), fitness is the
+    grader's business."""
+    src = skeleton.replace("__NAME__", dims.get("name", "f"))
+    if dims.get("arg"):
+        src = src.replace("__ARG__", dims["arg"])
+    for i, m in enumerate(dims.get("methods", [])):
+        src = src.replace(f"__M{i}__", m)
+    for i, c in enumerate(dims.get("constants", [])):
+        src = src.replace(f"'__C{i}__'", repr(c))
+        src = src.replace(f'"__C{i}__"', repr(c))
+    try:
+        ast.parse(src)
+    except SyntaxError:
+        return None
+    return src
 
 
 def minted_shapes(mind):

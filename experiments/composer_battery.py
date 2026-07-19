@@ -134,6 +134,28 @@ def main():
                                      [])),
           f"who = {m7.net.get_meta(node, 'who')[:28]}")
 
+    # CB8 — THE VARIABLE AND THE VALUE (owner 2026-07-19): the
+    # instance abstracts to topology + dimensions; new dimensions
+    # make a NEW coexisting thing; roundtrip is exact
+    from isaac_store.composer import abstract_form, instantiate
+    form = abstract_form(WANT)
+    back = instantiate(form["skeleton"], form["dims"])
+    v2 = instantiate(form["skeleton"],
+                     dict(name="get_first_line", arg="path",
+                          methods=["readline"], constants=[]))
+    ns = {}
+    exec(back, ns)          # noqa: S102
+    exec(v2, ns)            # noqa: S102
+    ok = (back == WANT
+          and "__NAME__" in form["skeleton"]
+          and form["dims"]["methods"] == ["read"]
+          and "readline()" in v2
+          and "get_book_text" in ns and "get_first_line" in ns)
+    check("CB8 the variable and the value — roundtrip exact; new "
+          "dimensions = a new coexisting thing", ok,
+          f"dims {form['dims']['name']}/{form['dims']['methods']}"
+          f" -> get_first_line/readline")
+
     dt = time.perf_counter() - t0
     npass = sum(checks)
     print(f"\n  BATTERY: {npass} passed, {len(checks) - npass} "
