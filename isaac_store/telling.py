@@ -378,3 +378,23 @@ def render_goal_tree(out):
     for r in out["receipts"]:
         L.append(f"  receipt: {r}")
     return "\n".join(L)
+
+
+# ── the change grammar (rung 3's front door: "set score valence
+# to 20", "make energy cap 150") ─────────────────────────────────
+_CHANGE = re.compile(r"^\s*(?:set|make)\s+([\w-]+)\s+"
+                     r"(valence|drain|refill|cap)\s+(?:to\s+)?"
+                     r"(-?\d+\.?\d*)\s*$", re.IGNORECASE)
+
+
+def parse_change(text):
+    m = _CHANGE.match(text)
+    if not m:
+        return _refuse("not a change order — the v1 shape is "
+                       "\"set <attr> <valence|drain|refill|cap> "
+                       "to <number>\"")
+    field = m.group(2).lower()
+    return dict(court="rewards" if field == "valence"
+                else "buffers",
+                attr=m.group(1).lower(), field=field,
+                to=float(m.group(3)))

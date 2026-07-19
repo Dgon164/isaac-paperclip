@@ -1800,3 +1800,24 @@ INVERTED); power = 12 via power-i2r (he chose P=I^2*R from three
 roads, cycles refused). The campaign sheet + boot.dev intent
 (official CLI + open curriculum repo + manual export road) filed
 in DESIGN_INTENT.
+
+## 2026-07-19 — RUNG 3 v1: THE RETUNE COURT 8/8 — the application
+## circuit closed on code
+Owner: "lets go" (application). THE CIRCUIT: an ENGLISH change
+order ("set score valence to 20") -> parse_change -> the sheet is
+read -> the text edited AT THE READING'S OWN LOCATION (reader v2
+entries now carry their source locs; splices deepest-first) -> the
+ECHO court re-reads the edited text (a mis-edit dies at the door)
+-> the INSTRUMENT runs BOTH versions on one recorded drive and
+reports per-attribute divergences. v1 scope said: constant
+readings only (valence/drain/refill/cap); structural changes = v2.
+retune_battery 8/8 permanent: valence 10->20 eaten at 20; cap
+100->150 saturates at 149 (drain-adjusted); drain -2 with the old
+-1 GONE from behavior; THE ALIEN RETUNE (renamed program, its own
+names — zero vocabulary in the organs); refusals by name; MINIMAL
+SURGERY (one line, one constant, difflib-checked); the mod null
+DRIVEN (reward turned punishment, score b_max 0); the english door
+round-trips. askisaac grew --retune ORDER --on FILE (writes
+<file>.retuned.py, original untouched). Learning (telling road) +
+discovery (the courts) + application (retune) now meet on one
+program.

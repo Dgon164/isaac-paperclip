@@ -266,6 +266,11 @@ def containment_court(source, fname, region):
 
 # ── THE READ ROAD: goal sheets from program text ──────────────────
 
+def _loc(n):
+    return dict(l0=n.lineno, c0=n.col_offset,
+                l1=n.end_lineno, c1=n.end_col_offset)
+
+
 def read_goal_sheet(class_src):
     """The G-rung's read road, v2 (the scaling campaign's rung 1,
     2026-07-19): semantics from WRITE-SHAPE, never from names — the
@@ -374,6 +379,8 @@ def read_goal_sheet(class_src):
             if w["kind"] == "AugAssign" and val is not None \
                     and not w["guards"]:
                 en["drain"] = -val if w["op"] == "Sub" else val
+                en["drain_op"] = w["op"]
+                en["drain_loc"] = _loc(w["value"])
             if w["kind"] == "Assign" \
                     and isinstance(w["value"], ast.Call) \
                     and getattr(w["value"].func, "id", "") == "min" \
@@ -386,6 +393,8 @@ def read_goal_sheet(class_src):
                                      if isinstance(n, ast.Attribute)}:
                     en["cap"] = cap
                     en["refill"] = _const(plus.right)
+                    en["cap_loc"] = _loc(w["value"].args[0])
+                    en["refill_loc"] = _loc(plus.right)
         if en:
             sheet["buffers"][attr] = en
             claimed.add(attr)
@@ -403,7 +412,9 @@ def read_goal_sheet(class_src):
             delta = -val if w["op"] == "Sub" else val
             guard = ast.unparse(w["guards"][-1][0])
             sheet["rewards"][attr] = dict(valence=delta,
-                                          guard=guard)
+                                          guard=guard,
+                                          op=w["op"],
+                                          loc=_loc(w["value"]))
             claimed.add(attr)
             if sheet["reward_source"] is None:
                 sheet["reward_source"] = (f"read from the reward's "
@@ -478,3 +489,119 @@ def read_goal_sheet(class_src):
 
     sheet["free"] = sorted(written - read_names - claimed)
     return sheet
+
+
+# ── THE RETUNE COURT (the scaling campaign's rung 3, owner
+# 2026-07-19: learning, discovery, and APPLICATION — read the
+# sheet, edit the text at the reading's own location, echo by
+# re-reading, verify by RUNNING both versions). v1 scope, said:
+# retunes of CONSTANT readings only (reward valence, buffer
+# drain/refill/cap); structural changes (guards, growth, fatal)
+# are named v2. The program is DATA; nothing here learns. ─────────
+
+def _splice(src, loc, new_text):
+    lines = src.split("\n")
+    if loc["l0"] != loc["l1"]:
+        return None
+    i = loc["l0"] - 1
+    line = lines[i]
+    lines[i] = line[:loc["c0"]] + new_text + line[loc["c1"]:]
+    return "\n".join(lines)
+
+
+def retune(class_src, changes):
+    """changes: list of dict(court='rewards'|'buffers', attr=...,
+    field='valence'|'drain'|'refill'|'cap', to=<number>). Edits are
+    spliced at the sheet's own read locations (deepest-first so
+    offsets hold), then the ECHO COURT re-reads the edited text and
+    every requested field must read back exactly `to` — a mis-edit
+    is visible at the door, never downstream."""
+    sheet = read_goal_sheet(class_src)
+    plan = []
+    for ch in changes:
+        court, attr = ch.get("court"), ch.get("attr")
+        field, to = ch.get("field"), ch.get("to")
+        entry = (sheet.get(court) or {}).get(attr)
+        if entry is None:
+            return dict(refused=f"no {court} entry '{attr}' read "
+                                f"from this program")
+        if court == "rewards" and field == "valence":
+            loc, op = entry.get("loc"), entry.get("op")
+        elif court == "buffers" and field == "drain":
+            loc, op = entry.get("drain_loc"), entry.get("drain_op")
+        elif court == "buffers" and field in ("refill", "cap"):
+            loc, op = entry.get(f"{field}_loc"), "Add"
+        else:
+            return dict(refused=f"field '{field}' is outside the "
+                                f"v1 retune scope (constant "
+                                f"readings only: valence/drain/"
+                                f"refill/cap)")
+        if loc is None:
+            return dict(refused=f"'{attr}.{field}' was read "
+                                f"without a spliceable location")
+        literal = -to if op == "Sub" else to
+        if literal != int(literal) and field in ("cap",):
+            pass
+        text = (f"{int(literal)}" if float(literal).is_integer()
+                else f"{literal}")
+        plan.append((loc, text, ch))
+    plan.sort(key=lambda p: (p[0]["l0"], p[0]["c0"]), reverse=True)
+    edited = class_src
+    for loc, text, _ch in plan:
+        edited = _splice(edited, loc, text)
+        if edited is None:
+            return dict(refused="multi-line value — outside the "
+                                "v1 splice")
+    echo = read_goal_sheet(edited)
+    receipts = []
+    for _loc, _text, ch in plan:
+        entry = (echo.get(ch["court"]) or {}).get(ch["attr"], {})
+        got = entry.get(ch["field"])
+        if got != ch["to"]:
+            return dict(refused=f"echo failed: "
+                                f"{ch['attr']}.{ch['field']} "
+                                f"reads {got}, wanted {ch['to']}")
+        receipts.append(f"{ch['attr']}.{ch['field']}: "
+                        f"{ch['to']} (echoed from the edited text)")
+    return dict(edited=edited, echo=receipts, sheet=echo)
+
+
+def behavior_delta(src_a, src_b, ns_extra, actions, cls=None):
+    """THE INSTRUMENT: run BOTH versions on the same drive and
+    report each numeric attribute's per-step deltas. The drive
+    (globals + action sequence) is the caller's DATA — the organ
+    knows no program's vocabulary."""
+    def run(src):
+        ns = dict(ns_extra)
+        exec(compile(src, "<retune>", "exec"), ns)  # noqa: S102
+        klass = ns[cls] if cls else next(
+            v for v in ns.values()
+            if isinstance(v, type) and hasattr(v, "step"))
+        g = klass()
+        traj = []
+        for a in actions:
+            g.step(a)
+            traj.append({k: v for k, v in vars(g).items()
+                         if isinstance(v, (int, float, bool))
+                         and not k.startswith("_")})
+        return traj
+    ta, tb = run(src_a), run(src_b)
+    deltas = {}
+    keys = set().union(*[set(t) for t in ta + tb])
+    for k in sorted(keys):
+        da = [t.get(k) for t in ta]
+        db = [t.get(k) for t in tb]
+        if da != db:
+            first = next(i for i in range(min(len(da), len(db)))
+                         if da[i] != db[i])
+            steps_b = [round(float(db[i]) - float(db[i - 1]), 9)
+                       for i in range(1, len(db))
+                       if isinstance(db[i], (int, float))
+                       and isinstance(db[i - 1], (int, float))]
+            deltas[k] = dict(first_divergence=first,
+                             a_at=da[first], b_at=db[first],
+                             b_step_deltas=sorted(set(steps_b)),
+                             b_max=max(v for v in db
+                                       if isinstance(v,
+                                                     (int, float))))
+    return deltas

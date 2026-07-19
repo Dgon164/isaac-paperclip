@@ -35,6 +35,14 @@ def main():
     p.add_argument("--recall", default=None, metavar="NAME",
                    help="ask what he holds under a told name "
                         "(needs --account)")
+    p.add_argument("--retune", default=None, metavar="ORDER",
+                   help="apply an english change order to a "
+                        "program: --retune \"set score valence to "
+                        "20\" --on prog.py — reads the sheet, "
+                        "edits at the reading's location, echoes, "
+                        "writes prog.retuned.py")
+    p.add_argument("--on", default=None, metavar="FILE",
+                   help="the program file --retune operates on")
     p.add_argument("--goal", default=None, metavar="GOAL",
                    help="end-goal decomposition over HIS laws: "
                         "\"current from voltage=6 resistance=3\" "
@@ -77,6 +85,31 @@ def main():
                         "averages) into DIR (default ./plots)")
     a = p.parse_args()
     mod = bridge.load_isaac_module()
+
+    if a.retune:
+        from isaac_store.telling import parse_change
+        from isaac_store.engineer import retune
+        if not a.on:
+            print("[--retune needs --on <program.py>]")
+            return
+        ch = parse_change(a.retune)
+        if ch.get("refused"):
+            print(f"[refused: {ch['refused']}]")
+            return
+        src = open(a.on, encoding="utf-8").read()
+        got = retune(src, [ch])
+        if got.get("refused"):
+            print(f"[refused: {got['refused']}]")
+            return
+        out_path = os.path.splitext(a.on)[0] + ".retuned.py"
+        with open(out_path, "w", encoding="utf-8") as f:
+            f.write(got["edited"])
+        for r in got["echo"]:
+            print(f"echo: {r}")
+        print(f"written: {out_path} (the original untouched; "
+              f"behavior verification rides the battery's "
+              f"instrument)")
+        return
 
     if a.goal:
         from isaac_store.telling import parse_goal, render_goal_tree
