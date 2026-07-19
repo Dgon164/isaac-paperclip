@@ -140,6 +140,9 @@ def read_file(name):
 
 
 def write_file(name, src):
+    d = os.path.dirname(name)
+    if d:
+        wsl(f"mkdir -p {WORKDIR}/{d}")
     p = subprocess.run(WSL + [f"cat > {WORKDIR}/{name}"],
                        input=src, capture_output=True, text=True,
                        encoding="utf-8")
@@ -196,6 +199,162 @@ def main():
     if "--report" in sys.argv[1:]:
         print("THE STUDY LEDGER — tracked and checked:")
         print(ledger_report(mind))
+        return
+
+    if "--diagnose" in sys.argv[1:]:
+        # THE DIAGNOSIS FLIGHT (owner 2026-07-19: "its evaluating
+        # backward... there are only so many variables to adjust,
+        # and you can check each state directly"). Standing darks
+        # only: court the structure; walk the requirements model
+        # backward; court each variable at its own instrument;
+        # adjust ONE suspect by the lesson's own told road; the
+        # court re-rules. All-known-variables-green residue = the
+        # fire-triangle clause = an ASK, never a repair.
+        from isaac_store.diagnosis import (diagnose, adjust_roads,
+                                           run_road, say_diagnosis,
+                                           ask_from_darks,
+                                           ask_report, PROSE_PATH)
+        c = fetch(f"/v1/courses/{course}")
+        print(f"DIAGNOSIS FLIGHT: {c['Title']} — evaluating "
+              f"backward on the standing darks\n")
+        transcript = []
+        for ch in c["Chapters"]:
+            for les in (ch.get("Lessons") or []):
+                uuid, title = les["UUID"], les["Title"]
+                led = ledger_get(mind, uuid)
+                if not led or led["status"] not in ("DARK",
+                                                    "RETRY"):
+                    continue
+                L = fetch(uuid)["Lesson"]
+                readme = (L.get("LessonDataCLI") or {}).get(
+                    "Readme", "") or ""
+                d = diagnose(_run_cmd, L)
+                print(f"  {title}:")
+                print("    " + say_diagnosis(d)
+                      .replace("\n", "\n    "))
+                if d["green"]:
+                    ok = submit(uuid)
+                    ledger_set(mind, uuid, title, "PASSED",
+                               road="AS-IS (diagnosis: the bench "
+                                    "already agrees)")
+                    transcript.append((title, "PASS", "as-is"))
+                    continue
+                # bounded injection rounds: one suspect at a time,
+                # told roads only, progress or stop
+                for _round in range(4):
+                    if d["green"] or not d["suspects"]:
+                        break
+                    sus = d["suspects"][0]
+                    roads = adjust_roads(readme, sus,
+                                         lesson_title=title)
+                    if not roads:
+                        print(f"    (no told road moves "
+                              f"{sus['var']['kind']}:"
+                              f"{sus['var']['name'][:24]})")
+                        break
+                    before = [x["var"]["name"]
+                              for x in d["suspects"]]
+                    moved = False
+                    for road in roads:
+                        run_road(_run_cmd, road,
+                                 write_file=write_file,
+                                 admit=lambda ln: bool(
+                                     ALLOW.match(ln)))
+                        d = diagnose(_run_cmd, L)
+                        record_attempt(
+                            mind, title,
+                            f"DIAGNOSIS: adjust "
+                            f"{sus['var']['kind']}:"
+                            f"{sus['var']['name'][:24]} "
+                            f"({road['why'][:32]})",
+                            dict(green=d["green"],
+                                 why=(d.get("failing")
+                                      or "all steps green")))
+                        now = [x["var"]["name"]
+                               for x in d["suspects"]]
+                        if d["green"] or now != before:
+                            moved = True
+                            print(f"    adjusted {sus['var']['kind']}"
+                                  f":{sus['var']['name'][:24]} — "
+                                  f"{'GREEN' if d['green'] else 'progress'}")
+                            break
+                    if not moved:
+                        break
+                if d["green"]:
+                    ok = submit(uuid)
+                    road_s = ("DIAGNOSIS: backward walk + told "
+                              "adjustment")
+                    ledger_set(mind, uuid, title, "PASSED",
+                               road=road_s)
+                    transcript.append((title, "PASS", road_s
+                                       + ("" if ok else
+                                          " (submit unconfirmed)")))
+                    print(f"  [PASS] {title} — cured by "
+                          f"adjustment")
+                else:
+                    why = ("MODEL MISSING A VARIABLE (fire "
+                           "triangle)" if d.get("named_unknown")
+                           else "suspects remain: " + ",".join(
+                               x["var"]["name"][:16]
+                               for x in d["suspects"]))
+                    ledger_set(mind, uuid, title, "DARK",
+                               bug=(d.get("failing") or "")[:60])
+                    transcript.append((title, "DARK", why))
+                    print(f"  [DARK] {title} — {why[:52]}")
+                    # THE RESIDUE ASK: a dark whose roads carry a
+                    # prose reference to another lesson's artifact
+                    # ("path/to/file/from-before"), or a suspect
+                    # no told road moves — each is a NAMED hole,
+                    # filed as his ask (future tense, zero
+                    # belief), never guessed at
+                    for sus in d["suspects"]:
+                        rds = adjust_roads(readme, sus,
+                                           lesson_title=title)
+                        toks = sorted({m for r in rds
+                                       for ln in r.get("lines", [])
+                                       for m in
+                                       PROSE_PATH.findall(ln)})
+                        if toks:
+                            hole = (f"the told road references "
+                                    f"{toks} — artifact(s) from a "
+                                    f"previous lesson I do not "
+                                    f"hold (cross-lesson memory)")
+                        elif not rds:
+                            hole = (f"no told road moves "
+                                    f"{sus['var']['kind']}:"
+                                    f"{sus['var']['name'][:32]} — "
+                                    f"the transfer is not in the "
+                                    f"lesson's text or not in my "
+                                    f"menu")
+                        else:
+                            continue
+                        a = ask_report(
+                            mind, f"lesson:{title[:32]}", hole,
+                            evidence=dict(
+                                lesson=title,
+                                failing=d.get("failing"),
+                                suspect=sus["var"]["name"]))
+                        print(f"    ASK filed: {hole[:64]}")
+                time.sleep(2)
+        ask = ask_from_darks(mind, "gitcourse")
+        if ask["asked"]:
+            print(f"\n  THE ASK (self-generated): "
+                  f"{ask['ask']['hole']}")
+        else:
+            print(f"\n  no ask fired: {ask['why'][:64]}")
+        acct._journal(dict(
+            kind="diagnosis",
+            stamp=time.strftime("%Y-%m-%d %H:%M:%S"),
+            course=c["Title"],
+            transcript=[f"{s}: {t} ({w[:60]})"
+                        for t, s, w in transcript],
+            ask=(ask.get("ask") if ask.get("asked")
+                 else ask.get("why"))))
+        mind.save(acct.mind_path)
+        p = sum(1 for _t, s, _w in transcript if s == "PASS")
+        print(f"\nDIAGNOSIS DONE: {p} cured, "
+              f"{len(transcript) - p} still dark of "
+              f"{len(transcript)}; journal + mind saved.")
         return
 
     # THE BENCH PERSISTS (owner: "he seems to start from the
