@@ -2058,3 +2058,30 @@ the single form/instance/map node discipline with time stamps,
 so the comparator/crystallizer runs over ALL of them uniformly
 (a map of a trace and a map of a dataset are the same kind of
 citizen; forms discovered by comparison work on any of it).
+
+## THE THREE TENSES (owner, 2026-07-19, the closing law): "so
+## there is past present and future. what was, what is, and what
+## could be. where things were, where they are now (stateful
+## tracking) and where they could be, (planning, ideas, thinking,
+## imagination, etc). these are the shapes and they are the same,
+## but its just time dependent."
+ONE SHAPE ONTOLOGY, THREE TENSES:
+  PAST    — what was: the MAP (traces, ledger entries, dossiers,
+            recall_evidence, journals, wrong-kept) — frozen,
+            superseded never recomposed.
+  PRESENT — what is: the MOUNTED INSTANCE (the live account, the
+            bench, watch baselines, the active container) —
+            stateful tracking.
+  FUTURE  — what could be: the CANDIDATE (goal trees with unmet
+            subgoals, uncourted compositions, forecasts,
+            dark leaves saying "teach or discover", TOLD-
+            UNVERIFIED laws, plans/flows before execution) —
+            imagination, held honestly as not-yet.
+THE COURT IS THE GATE BETWEEN TENSES: a candidate courted green
+BECOMES present (mounted); the present observed BECOMES past (a
+map). The watch already reconciles future against arriving
+present (the forecast judged); validate-later was always this;
+the whole engine is one shape-kind flowing imagination ->
+actuality -> memory, with receipts at each gate. Every future
+node wears its not-yet honestly (TOLD-UNVERIFIED, PARTIAL,
+candidate, dark) — belief is measured at the gate, never before.
