@@ -234,6 +234,35 @@ def main():
           cap_ok and lock_ok and eats >= 3,
           f"{eats} eats, cap law exact, lockout held")
 
+    # N11 — THE ALIEN VOCABULARY (rung 1 of the scaling campaign,
+    # 2026-07-19): the same program wearing entirely different
+    # names must read the SAME goal sheet — semantics from
+    # write-shape, never from identifiers. This is the permanent
+    # ablation of the v1 name keys.
+    alien = SNAKE_SRC
+    for a, b in [("score", "points"), ("food", "apple"),
+                 ("body", "tail"), ("energy", "stamina"),
+                 ("alive", "active"), ("dir", "heading"),
+                 ("DIRS", "MOVES"), ("lucky", "charm"),
+                 ("action", "cmd"), ("Snake", "Rover"),
+                 ("W", "XMAX"), ("H", "YMAX")]:
+        alien = alien.replace(a, b)
+    a_sheet = eng.read_goal_sheet(alien)
+    a_en = a_sheet["buffers"].get("stamina", {})
+    check("N11 alien vocabulary — identical sheet, zero shared "
+          "names (the v1 identifier keys stay ablated)",
+          a_sheet["rewards"].get("points", {}).get("valence") == 10
+          and "length" in a_sheet["rewards"]
+          and a_en.get("refill") == 40 and a_en.get("cap") == 100
+          and a_en.get("drain") == -1 and a_en.get("death_at_zero")
+          and len(a_sheet["forbidden"]) == 1
+          and sorted(f["cause"] for f in a_sheet["fatal"])
+          == ["collision", "exhaustion", "wall"]
+          and a_sheet["free"] == ["charm"],
+          f"points +10, stamina {a_en.get('drain')}/"
+          f"{a_en.get('refill')}/{a_en.get('cap')}, free "
+          f"{a_sheet['free']}")
+
     dt = time.perf_counter() - t0
     npass = sum(checks)
     print(f"\n  BATTERY: {npass} passed, {len(checks) - npass} "

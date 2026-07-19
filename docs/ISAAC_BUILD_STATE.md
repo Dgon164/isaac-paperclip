@@ -1773,3 +1773,30 @@ classification SHAPES (bounds/membership/<=0, accumulator,
 drain-refill-cap) are already vocabulary-free; reader v2 = find
 candidates by WRITE-SHAPE, classify by the existing shapes. That
 is the scaling campaign's first build.
+
+## 2026-07-19 — THE SCALING CAMPAIGN RUNGS 1+2: READER V2 (shapes,
+## not names) + THE GOAL TREE (end-goal decomposition) — both
+## proven, walled, and LIVE
+RUNG 1, READER V2: read_goal_sheet rewritten — semantics from
+WRITE-SHAPE (reward = guarded constant accumulator; buffer =
+unguarded drain + min-cap refill; fatal = False-latch, causes by
+the standing generic shapes; length = unconditional-insert/
+guarded-pop; lockout = input-local discarded from state; free =
+dead flow minus claimed). THE PROOF: the alien game (every
+identifier renamed, score->points, food->apple, W/H->XMAX/YMAX,
+Snake->Rover) reads the IDENTICAL sheet — permanent gate N11;
+engineer battery 11/11. RUNG 2, THE GOAL TREE: solve_law promoted
+INTO the engine at last (single-term power-product inversion,
+even-power positive-root receipt, multi-term refused BY NAME) +
+decompose() — quantity index read from the app fact-bundles the
+told roads already write; cycles refused with path receipts; dark
+leaves NAMED ("teach or discover"); duel branches ranked,
+alternatives counted; known values computed bottom-up.
+goal_tree_battery 12/12 (chains, double inversion r from {p,i},
+kepler 1/1.5 root, structure-only asks, ledger). FRONT DOOR:
+askisaac --goal "current from voltage=6 resistance=3" --account.
+LIVE ON HIS ACCOUNT: current = 2 via ohms-law (his curriculum law
+INVERTED); power = 12 via power-i2r (he chose P=I^2*R from three
+roads, cycles refused). The campaign sheet + boot.dev intent
+(official CLI + open curriculum repo + manual export road) filed
+in DESIGN_INTENT.

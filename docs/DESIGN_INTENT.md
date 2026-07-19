@@ -1898,3 +1898,44 @@ road); functions/parens (v2 grammar); triples ("X is a Y") through
 the same vet; who-stamps on teach() facts (the audit's engine-side
 stamping item); the LLM-ear (model proposes the parse, the
 instrument confirms — model words are DATA through the vet).
+
+## THE SCALING CAMPAIGN — CODING LANE (owner, 2026-07-19, blessed
+## "ok lets do that"): "how do we scale and test this thing...
+## i want to see how far we can push the engineering side.
+## learning, discovery, and application, which means he needs to
+## understand end goal decomposition and stuff. maybe we should do
+## it with coding or cad? coding would be easier to test."
+THE ARENA RULING: coding first — a program is a world that grades
+him for free (runnable = the instrument court comes built-in);
+CAD is the second theater behind the mates ladder (M3-M6).
+THE LADDER: rung 0 DONE 2026-07-19 (free court unrigged —
+claimed-set derivation; ownership ablation now a PERMANENT wall
+gate; the reader's identifier ceiling DECLARED + MEASURED: renamed
+game reads 0/0/0/0, courts silent-honest). Rung 1 = READER V2:
+semantics from WRITE-SHAPE, not names (reward = guarded constant
+accumulator; buffer = unguarded drain + min-cap refill; fatal =
+False-latch under guards, causes classified by the existing
+generic shapes: membership->collision, never-written-attr bounds->
+wall, <=0-on-buffer->exhaustion; lockout = input-derived local
+discarded from state) — the alien-renamed game must read the FULL
+sheet with zero shared vocabulary. Rung 2 = THE GOAL TREE (owner's
+"end goal decomposition"): promote the solver into the engine
+(solve_law: single-term power-product inversion, multi-term
+refused loudly) + decompose() — want a quantity, laws in HIS NET
+chain it to knowns, cycles refused with receipts, dark subgoals
+NAMED (a dark leaf is an answer: "this branch needs a law nobody
+holds" — and the telling road can light it). Rung 3 = APPLICATION
+(read sheet -> decompose change -> edit -> verify by RUNNING,
+mod-null tradition). Rung 4 = SCALE (coding curriculum by the told
+roads; laws 39 -> 100+; the selection curve under real load).
+Attack batteries per rung; writeup-law grade throughout.
+BOOT.DEV INTENT (owner has a subscription; "good for testing and
+giving examples and english language"): no public content API;
+the sanctioned roads are (a) the official open-source curriculum
+repo github.com/bootdotdev/curriculum (English lesson structure,
+free), (b) the official bootdev CLI with the owner's own token
+(lesson fetch + local test runs on CLI-enabled courses), (c) the
+manual road — owner exports lesson text/starter code, intake eats
+md/txt already. English lesson statement -> goal sheet -> goal
+tree -> code -> THEIR tests grade him = the rung-3 test bed.
+Respect their terms: his subscription, his token, local use.

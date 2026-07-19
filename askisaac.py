@@ -35,6 +35,11 @@ def main():
     p.add_argument("--recall", default=None, metavar="NAME",
                    help="ask what he holds under a told name "
                         "(needs --account)")
+    p.add_argument("--goal", default=None, metavar="GOAL",
+                   help="end-goal decomposition over HIS laws: "
+                        "\"current from voltage=6 resistance=3\" "
+                        "(needs --account; names without values "
+                        "ask for structure only)")
     p.add_argument("--account", default=None, metavar="DIR",
                    help="his home directory (e.g. "
                         "Documents/isaac_home) — telling LANDS "
@@ -72,6 +77,21 @@ def main():
                         "averages) into DIR (default ./plots)")
     a = p.parse_args()
     mod = bridge.load_isaac_module()
+
+    if a.goal:
+        from isaac_store.telling import parse_goal, render_goal_tree
+        g = parse_goal(a.goal)
+        if g.get("refused"):
+            print(f"[refused: {g['refused']}]")
+            return
+        if not a.account:
+            print("[a goal decomposes over HIS laws — name his "
+                  "home with --account]")
+            return
+        mind = mod.Isaac.load(os.path.join(a.account, "mind.isaac"))
+        out = mind.decompose(g["want"], known=g["known"])
+        print(render_goal_tree(out))
+        return
 
     if a.tell or a.recall:
         from isaac_store.telling import (tell_english, recall_law,

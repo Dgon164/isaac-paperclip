@@ -315,3 +315,66 @@ def recall_law(mind, name):
                 witnesses=len((status.get("witnesses") or [])),
                 container=mind.net.get_meta(node, "container"),
                 slots=slots, output=out)
+
+
+# ── the goal grammar (the scaling campaign's rung 2 front door:
+# "<want> from <name>=<value> <name> ..." — names without values
+# ask for structure only) ─────────────────────────────────────────
+_GOAL = re.compile(r"^\s*([a-zA-Z][\w-]*)\s+from\s+(.+)$",
+                   re.IGNORECASE)
+
+
+def parse_goal(text):
+    m = _GOAL.match(text)
+    if not m:
+        return _refuse("not a goal — the shape is \"<want> from "
+                       "<name>=<value> <name> ...\"")
+    known = {}
+    for tok in re.split(r"[,\s]+", m.group(2).strip()):
+        if not tok:
+            continue
+        if "=" in tok:
+            k, _, v = tok.partition("=")
+            try:
+                known[k.lower()] = float(v)
+            except ValueError:
+                return _refuse(f"'{tok}' — the value after = must "
+                               f"be a number")
+        else:
+            known[tok.lower()] = None
+    if not known:
+        return _refuse("a goal needs at least one known quantity "
+                       "after 'from'")
+    return dict(want=m.group(1).lower(), known=known)
+
+
+def render_goal_tree(out):
+    """The decomposition, said plainly with its receipts."""
+    L = [f"GOAL: {out['goal']}"
+         + (f" = {out['value']:.6g}" if out.get("value") is not None
+            else " (structure only — no full values given)"
+            if not out["dark"] else "")]
+
+    def walk(node, depth):
+        pad = "  " * (depth + 1)
+        q = node["quantity"]
+        if node["status"] == "known":
+            L.append(f"{pad}{q}: known")
+        elif node["status"] == "via":
+            v = (f" = {node['value']:.6g}"
+                 if node.get("value") is not None else "")
+            alt = (f"  [+{node['alternatives']} other road(s)]"
+                   if node.get("alternatives") else "")
+            L.append(f"{pad}{q}{v} via {node['app']}{alt}")
+            for n in node["needs"]:
+                walk(n, depth + 1)
+        else:
+            L.append(f"{pad}{q}: {node['status'].upper()} — "
+                     f"{node.get('why', '')}")
+    walk(out["tree"], 0)
+    if out["dark"]:
+        L.append(f"  DARK (teach or discover these): "
+                 f"{', '.join(out['dark'])}")
+    for r in out["receipts"]:
+        L.append(f"  receipt: {r}")
+    return "\n".join(L)

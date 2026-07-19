@@ -5763,6 +5763,219 @@ class Isaac:
                                 status=status, n=len(y))
         return dict(status=status, r2=r2)
 
+    # ── THE GOAL TREE (the scaling campaign's rung 2, owner
+    # 2026-07-19: "he needs to understand end goal decomposition").
+    # The engine owns only the CHAINING MECHANICS; every step in a
+    # tree is a law or fact from HIS net — a dark leaf is an
+    # answer ("this branch needs a law nobody holds"), and the
+    # telling road can light it. ─────────────────────────────────
+
+    def _law_exponents(self, model):
+        """A single-term power-product law's exponents per slot,
+        or (None, why). The v1 inversion scope, said plainly:
+        y = c * prod(xi^pi) + b — anything else (multi-term, sin/
+        cos/exp/log, lags, composites) is refused BY NAME."""
+        if model.get("lags_used") or model.get("composites_used"):
+            return None, "lag/composite laws are outside the v1 " \
+                         "inversion scope"
+        terms = model["terms"]
+        real_terms = [t for t in terms if t]
+        if len(real_terms) != 1:
+            return None, (f"{len(real_terms)}-term form — "
+                          f"multi-term inversion is outside the "
+                          f"v1 scope (forward apply still stands)")
+        exps = {}
+        for a in real_terms[0]:
+            kind, i, _j, p = model["specs"][a]
+            if kind == "var":
+                exps[i] = exps.get(i, 0.0) + 1.0
+            elif kind == "pow" and p != 0.0:
+                exps[i] = exps.get(i, 0.0) + float(p)
+            else:
+                return None, (f"a {kind} atom — only var/pow "
+                              f"factors invert in v1")
+        coef = float(model["coefs"][terms.index(real_terms[0])])
+        return dict(exps=exps, coef=coef,
+                    intercept=float(model["intercept"])), None
+
+    def solve_law(self, name, given, want):
+        """One law, any unknown: given slot-index -> value (and
+        optionally 'y'), solve for `want` (a slot index, or 'y'
+        for the output). Single-term power-product forms only —
+        refusals name their why. The positive root is taken on
+        even powers, with the receipt saying so."""
+        m = self.net.get_meta(f"law:{name}", "model")
+        if m is None:
+            return dict(refused=f"no law '{name}' held")
+        inv, why = self._law_exponents(m)
+        if inv is None:
+            return dict(refused=f"law '{name}': {why}")
+        exps, coef, b = inv["exps"], inv["coef"], inv["intercept"]
+        if want == "y":
+            prod = 1.0
+            for i, p in exps.items():
+                if i not in given:
+                    return dict(refused=f"slot x{i} not given")
+                prod *= float(given[i]) ** p
+            return dict(value=coef * prod + b, receipt="forward")
+        if want not in exps:
+            return dict(refused=f"x{want} does not appear in "
+                                f"'{name}'")
+        if "y" not in given:
+            return dict(refused="the output value is needed to "
+                                "invert")
+        rest = coef
+        for i, p in exps.items():
+            if i == want:
+                continue
+            if i not in given:
+                return dict(refused=f"slot x{i} not given")
+            rest *= float(given[i]) ** p
+        if rest == 0:
+            return dict(refused="the known factors multiply to "
+                                "zero — the unknown is unread")
+        base = (float(given["y"]) - b) / rest
+        p = exps[want]
+        if base < 0 and (1.0 / p) != round(1.0 / p):
+            return dict(refused=f"no real solution: negative base "
+                                f"under a 1/{p:g} root")
+        val = (abs(base) ** (1.0 / p)) * (
+            -1.0 if base < 0 else 1.0)
+        rec = "inverted"
+        if p % 2 == 0 and base >= 0:
+            rec = "inverted; positive root taken (even power)"
+        return dict(value=float(val), receipt=rec)
+
+    def _quantity_index(self):
+        """His applications, read from the fact bundles the told
+        roads already write: app -> (form, output, slots), and
+        quantity -> the apps that relate it."""
+        apps, qix = {}, {}
+        for (subj, rel), objs in list(self.fact_index.items()):
+            if rel != "uses-form" or not objs:
+                continue
+            form = str(objs[-1])
+            if self.net.get_meta(f"law:{form}", "model") is None:
+                continue
+            out = self.fact_index.get((subj, "output"))
+            slots = self.fact_index.get((subj, "slots"))
+            if not out or not slots:
+                continue
+            slot_names = [s.strip() for s in
+                          str(slots[-1]).split(",") if s.strip()]
+            apps[subj] = dict(form=form, output=str(out[-1]),
+                              slots=slot_names)
+            for q in [str(out[-1])] + slot_names:
+                qix.setdefault(q, []).append(subj)
+        return apps, qix
+
+    def decompose(self, want, known=None, max_depth=6):
+        """END-GOAL DECOMPOSITION: want a quantity; his laws chain
+        it back to what is known. Cycles are refused with
+        receipts; a quantity no law reaches is a NAMED DARK LEAF
+        (that refusal is an answer — it says exactly what to teach
+        or discover next). When `known` carries values, the tree
+        is COMPUTED bottom-up through solve_law. Branch choice is
+        ranked (fewest dark leaves, then smallest tree) and the
+        alternatives are counted, never hidden."""
+        if isinstance(known, (set, frozenset, list, tuple)):
+            known = {k: None for k in known}   # structure-only ask
+        known = dict(known or {})
+        apps, qix = self._quantity_index()
+        dark, receipts = [], []
+
+        def build(q, path):
+            if q in known:
+                return dict(quantity=q, status="known")
+            if q in path:
+                receipts.append(f"cycle refused at '{q}' "
+                                f"(path {'->'.join(path)})")
+                return dict(quantity=q, status="refused",
+                            why="cycle")
+            if len(path) >= max_depth:
+                return dict(quantity=q, status="refused",
+                            why=f"depth {max_depth} reached")
+            options = []
+            for app in qix.get(q, []):
+                a = apps[app]
+                quantities = [a["output"]] + a["slots"]
+                if q != a["output"]:
+                    m = self.net.get_meta(f"law:{a['form']}",
+                                          "model")
+                    inv, why = self._law_exponents(m)
+                    if inv is None:
+                        receipts.append(f"'{app}' cannot be "
+                                        f"inverted for '{q}': "
+                                        f"{why}")
+                        continue
+                needs = [build(o, path + [q])
+                         for o in quantities if o != q]
+                options.append(dict(quantity=q, status="via",
+                                    app=app, form=a["form"],
+                                    needs=needs))
+            if not options:
+                dark.append(q)
+                return dict(quantity=q, status="dark",
+                            why="no law in his net reaches this "
+                                "quantity — teach or discover one")
+
+            def cost(node):
+                if node["status"] in ("known",):
+                    return (0, 1)
+                if node["status"] in ("dark", "refused"):
+                    return (1, 1)
+                cs = [cost(n) for n in node["needs"]]
+                return (sum(c[0] for c in cs),
+                        1 + sum(c[1] for c in cs))
+            options.sort(key=cost)
+            best = options[0]
+            best["alternatives"] = len(options) - 1
+            return best
+
+        tree = build(str(want), [])
+
+        def compute(node):
+            if node["status"] == "known":
+                return known[node["quantity"]]
+            if node["status"] != "via":
+                return None
+            vals = [compute(n) for n in node["needs"]]
+            if any(v is None for v in vals):
+                return None
+            a = apps[node["app"]]
+            names = [n["quantity"] for n in node["needs"]]
+            if node["quantity"] == a["output"]:
+                given = {a["slots"].index(nm): v
+                         for nm, v in zip(names, vals)}
+                got = self.solve_law(a["form"], given, "y")
+            else:
+                given = {}
+                for nm, v in zip(names, vals):
+                    if nm == a["output"]:
+                        given["y"] = v
+                    else:
+                        given[a["slots"].index(nm)] = v
+                got = self.solve_law(a["form"], given,
+                                     a["slots"].index(
+                                         node["quantity"]))
+            if got.get("refused"):
+                receipts.append(f"compute refused at "
+                                f"'{node['app']}': {got['refused']}")
+                return None
+            node["value"] = got["value"]
+            return got["value"]
+
+        value = compute(tree) if all(
+            isinstance(v, (int, float)) for v in known.values()) \
+            and known else None
+        out = dict(goal=str(want), tree=tree,
+                   dark=sorted(set(dark)), receipts=receipts,
+                   value=value)
+        self.record_finding("decomposition", str(want),
+                            dark=len(set(dark)),
+                            solved=value is not None)
+        return out
+
     # ── task responses: told the GOAL, he finds the method ───────
     # (owner, 2026-07-12: "you tell him the goals and he needs to
     # figure out what to do... all he needs to do is respond with

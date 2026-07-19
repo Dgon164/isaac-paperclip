@@ -267,25 +267,40 @@ def containment_court(source, fname, region):
 # ── THE READ ROAD: goal sheets from program text ──────────────────
 
 def read_goal_sheet(class_src):
-    """The G-rung's read road: rewards (valence FROM the text, the
-    do from the reward's guard), buffers (drain/refill/cap read),
-    the lockout from shape (input overwritten from state = the
-    transition does not exist), fatal guards split on OR and
-    classified by shape (bounds/membership/<=0), FREE by dead data
-    flow. v1 shapes vocabulary, named in the module docstring."""
+    """The G-rung's read road, v2 (the scaling campaign's rung 1,
+    2026-07-19): semantics from WRITE-SHAPE, never from names — the
+    v1 identifier vocabulary (score/food/energy/alive/DIRS) is
+    ABLATED; the same program wearing alien names must read the
+    same sheet. The shapes: REWARD = guarded constant accumulator;
+    BUFFER = unguarded constant drain and/or min-capped refill;
+    FATAL = a False-latch (an attr only ever assigned literal False
+    in step) with each guard branch classified by the standing
+    generic shapes (membership-in-a-collection -> collision;
+    bounds against never-written config attrs -> wall; <=0 on a
+    buffer -> exhaustion); LENGTH-REWARD = a collection with
+    unconditional insert and guarded pop (net growth = the pop's
+    else condition); LOCKOUT = an input-derived local overwritten
+    from persistent state under a guard; FREE = dead data flow
+    minus what the sheet's own courts claimed."""
     tree = ast.parse(class_src)
     step = next(n for n in ast.walk(tree)
                 if isinstance(n, ast.FunctionDef)
                 and n.name == "step")
+    step_args = {a.arg for a in step.args.args} - {"self"}
     writes, calls, tests = [], [], []
     input_locals = set()
+
+    def _names(node):
+        return {n.id for n in ast.walk(node)
+                if isinstance(n, ast.Name)}
 
     def walk(body, guards):
         for node in body:
             if isinstance(node, ast.Assign) and \
                     isinstance(node.targets[0], ast.Name):
-                if "DIRS[" in ast.unparse(node.value):
-                    input_locals.add(node.targets[0].id)
+                if _names(node.value) & (step_args | input_locals):
+                    if not isinstance(node.value, ast.Attribute):
+                        input_locals.add(node.targets[0].id)
                 if node.targets[0].id in input_locals \
                         and isinstance(node.value, ast.Attribute):
                     writes.append(dict(kind="input_discard",
@@ -294,16 +309,19 @@ def read_goal_sheet(class_src):
                 tgt = node.targets[0] if isinstance(node, ast.Assign) \
                     else node.target
                 if isinstance(tgt, ast.Attribute):
-                    writes.append(dict(kind=type(node).__name__,
-                                       attr=tgt.attr,
-                                       value=node.value,
-                                       node=node,
-                                       guards=list(guards)))
+                    writes.append(dict(
+                        kind=type(node).__name__, attr=tgt.attr,
+                        value=node.value, node=node,
+                        op=(type(node.op).__name__
+                            if isinstance(node, ast.AugAssign)
+                            else None),
+                        guards=list(guards)))
             if isinstance(node, ast.Expr) and \
                     isinstance(node.value, ast.Call) and \
                     isinstance(node.value.func, ast.Attribute):
                 calls.append(dict(method=node.value.func.attr,
                                   on=ast.unparse(node.value.func.value),
+                                  obj=node.value.func.value,
                                   guards=list(guards)))
             if isinstance(node, ast.If):
                 tests.append(node.test)
@@ -311,83 +329,24 @@ def read_goal_sheet(class_src):
                 walk(node.orelse, guards + [(node.test, "else")])
     walk(step.body, [])
 
-    sheet = dict(rewards={}, buffers={}, forbidden=[], fatal=[],
-                 free=[], reward_source=None)
-    claimed = set()   # attrs the sheet's OWN courts classified —
-    #                   the free court subtracts THESE, never a
-    #                   hand list of one exam's variable names
-    #                   (ownership-audit violation, cured 2026-07-19)
+    def _const(v):
+        try:
+            return ast.literal_eval(v)
+        except Exception:
+            return None
+
+    by_attr = {}
     for w in writes:
-        if w.get("attr") == "score" and w["kind"] == "AugAssign":
-            try:
-                val = ast.literal_eval(w["value"])
-            except Exception:
-                continue
-            guard = (ast.unparse(w["guards"][-1][0])
-                     if w["guards"] else None)
-            sheet["rewards"]["score"] = dict(valence=val,
-                                             guard=guard)
-            claimed.add(w["attr"])
-            if guard and "food" in guard:
-                sheet["reward_source"] = ("next cell == food (read "
-                                          "from the reward's guard)")
-    ins = [c for c in calls if c["method"] == "insert"
-           and "body" in c["on"]]
-    pop = [c for c in calls if c["method"] == "pop"
-           and "body" in c["on"]]
-    if ins and pop and any(
-            g[1] == "else" and "food" in ast.unparse(g[0])
-            for g in pop[0]["guards"]) and not any(
-            "food" in ast.unparse(g[0]) for g in ins[0]["guards"]):
-        sheet["rewards"]["length"] = dict(
-            valence=1,
-            guard="grows exactly on food (insert always, pop "
-                  "unless food)")
-    en = dict()
-    for w in writes:
-        if w.get("attr") != "energy":
-            continue
-        claimed.add(w["attr"])
-        if w["kind"] == "AugAssign" and not w["guards"]:
-            en["drain"] = -ast.literal_eval(w["value"])
-        if w["kind"] == "Assign" and isinstance(w["value"], ast.Call) \
-                and getattr(w["value"].func, "id", "") == "min":
-            en["cap"] = ast.literal_eval(w["value"].args[0])
-            plus = w["value"].args[1]
-            if isinstance(plus, ast.BinOp) and \
-                    isinstance(plus.op, ast.Add):
-                en["refill"] = ast.literal_eval(plus.right)
-    for w in writes:
-        if w.get("attr") == "alive" and w["kind"] == "Assign" \
-                and isinstance(w["value"], ast.Constant) \
-                and w["value"].value is False and w["guards"]:
-            claimed.add(w["attr"])
-            test = w["guards"][-1][0]
-            ops = (test.values if isinstance(test, ast.BoolOp)
-                   and isinstance(test.op, ast.Or) else [test])
-            for op in ops:
-                s = ast.unparse(op)
-                if "in self.body" in s:
-                    sheet["fatal"].append(dict(cause="collision",
-                                               read=s))
-                elif "self.W" in s or "self.H" in s:
-                    sheet["fatal"].append(dict(cause="wall",
-                                               read=s))
-                elif "<= 0" in s:
-                    sheet["fatal"].append(dict(cause="exhaustion",
-                                               read=s))
-                    en["death_at_zero"] = True
-    if en:
-        sheet["buffers"]["energy"] = en
-    for w in writes:
-        if w.get("kind") == "input_discard" and w["guards"]:
-            sheet["forbidden"].append(dict(
-                action="reverse",
-                read=ast.unparse(w["guards"][-1][0]),
-                receipt="the commanded direction is overwritten "
-                        "from persistent state — the transition "
-                        "does not exist"))
-    written = {w["attr"] for w in writes if w.get("attr")}
+        if w.get("attr"):
+            by_attr.setdefault(w["attr"], []).append(w)
+    written = set(by_attr)
+    # collections: attrs that receive mutating calls in step
+    MUTATORS = {"insert", "pop", "append", "remove", "extend",
+                "add", "discard", "appendleft", "popleft"}
+    collections = {c["on"].replace("self.", "") for c in calls
+                   if c["method"] in MUTATORS
+                   and isinstance(c["obj"], ast.Attribute)}
+    # config attrs: read in step, never written in step
     read_names = set()
     for t in tests:
         read_names |= {n.attr for n in ast.walk(t)
@@ -400,5 +359,122 @@ def read_goal_sheet(class_src):
                            and n.attr != w["attr"]}
     for c in calls:
         read_names.add(c["on"].replace("self.", ""))
+    config = read_names - written - collections
+
+    sheet = dict(rewards={}, buffers={}, forbidden=[], fatal=[],
+                 free=[], reward_source=None)
+    claimed = set()
+
+    # BUFFERS: unguarded constant drain and/or min-capped refill
+    for attr, ws in by_attr.items():
+        en = {}
+        for w in ws:
+            val = _const(w["value"]) if w["kind"] == "AugAssign" \
+                else None
+            if w["kind"] == "AugAssign" and val is not None \
+                    and not w["guards"]:
+                en["drain"] = -val if w["op"] == "Sub" else val
+            if w["kind"] == "Assign" \
+                    and isinstance(w["value"], ast.Call) \
+                    and getattr(w["value"].func, "id", "") == "min" \
+                    and len(w["value"].args) == 2:
+                cap = _const(w["value"].args[0])
+                plus = w["value"].args[1]
+                if cap is not None and isinstance(plus, ast.BinOp) \
+                        and isinstance(plus.op, ast.Add) \
+                        and attr in {n.attr for n in ast.walk(plus)
+                                     if isinstance(n, ast.Attribute)}:
+                    en["cap"] = cap
+                    en["refill"] = _const(plus.right)
+        if en:
+            sheet["buffers"][attr] = en
+            claimed.add(attr)
+
+    # REWARDS: guarded constant accumulators (buffers excluded)
+    for attr, ws in by_attr.items():
+        if attr in sheet["buffers"]:
+            continue
+        for w in ws:
+            if w["kind"] != "AugAssign" or not w["guards"]:
+                continue
+            val = _const(w["value"])
+            if val is None:
+                continue
+            delta = -val if w["op"] == "Sub" else val
+            guard = ast.unparse(w["guards"][-1][0])
+            sheet["rewards"][attr] = dict(valence=delta,
+                                          guard=guard)
+            claimed.add(attr)
+            if sheet["reward_source"] is None:
+                sheet["reward_source"] = (f"read from the reward's "
+                                          f"guard: {guard}")
+
+    # LENGTH-REWARD: unconditional insert + guarded pop on one
+    # collection — net growth exactly on the pop's else condition
+    for coll in sorted(collections):
+        ins = [c for c in calls if c["method"] in ("insert",
+               "append", "appendleft")
+               and c["on"].replace("self.", "") == coll]
+        pop = [c for c in calls if c["method"] in ("pop", "popleft")
+               and c["on"].replace("self.", "") == coll]
+        if ins and pop and not ins[0]["guards"] and pop[0]["guards"]:
+            g, side = pop[0]["guards"][-1]
+            cond = ast.unparse(g)
+            grows = (cond if side == "else"
+                     else f"not ({cond})")
+            key = "length" if len(collections) == 1 \
+                else f"length:{coll}"
+            sheet["rewards"][key] = dict(
+                valence=1,
+                guard=f"grows exactly when {grows} (insert "
+                      f"always, pop otherwise)")
+
+    # FATAL: a False-latch — an attr only ever assigned literal
+    # False in step, each guarded write classified by shape
+    for attr, ws in by_attr.items():
+        if not ws or not all(
+                w["kind"] == "Assign"
+                and isinstance(w["value"], ast.Constant)
+                and w["value"].value is False for w in ws):
+            continue
+        claimed.add(attr)
+        for w in ws:
+            if not w["guards"]:
+                continue
+            test = w["guards"][-1][0]
+            inner = test.operand if isinstance(test, ast.UnaryOp) \
+                and isinstance(test.op, ast.Not) else test
+            ops = (inner.values if isinstance(inner, ast.BoolOp)
+                   else [test])
+            for op in ops:
+                s = ast.unparse(op)
+                op_reads = {n.attr for n in ast.walk(op)
+                            if isinstance(n, ast.Attribute)}
+                is_member = any(isinstance(c, (ast.In, ast.NotIn))
+                                for n in ast.walk(op)
+                                if isinstance(n, ast.Compare)
+                                for c in n.ops)
+                if is_member and op_reads & collections:
+                    sheet["fatal"].append(dict(cause="collision",
+                                               read=s))
+                elif op_reads & config:
+                    sheet["fatal"].append(dict(cause="wall",
+                                               read=s))
+                elif op_reads & set(sheet["buffers"]):
+                    sheet["fatal"].append(dict(cause="exhaustion",
+                                               read=s))
+                    for b in op_reads & set(sheet["buffers"]):
+                        sheet["buffers"][b]["death_at_zero"] = True
+
+    # LOCKOUT: input-derived local overwritten from state
+    for w in writes:
+        if w.get("kind") == "input_discard" and w["guards"]:
+            sheet["forbidden"].append(dict(
+                action="reverse",
+                read=ast.unparse(w["guards"][-1][0]),
+                receipt="the commanded input is overwritten from "
+                        "persistent state — the transition does "
+                        "not exist"))
+
     sheet["free"] = sorted(written - read_names - claimed)
     return sheet
