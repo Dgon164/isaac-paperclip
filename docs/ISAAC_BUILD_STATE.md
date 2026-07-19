@@ -1656,3 +1656,18 @@ wasn't told the answers to), C USE (construction, instrument-
 checked, transfer). 24 items already green with receipts; the doc
 is the lane's SCOREBOARD (results appended inline; partial grades
 honest; wrong predictions kept next to items).
+
+## 2026-07-18 — THE FULL CURRICULUM FEED, LIVE (meal 8, the biggest
+## of his life)
+curriculum_feed.py: 48 law applications + 148 facts + 10 negatives
+fed through the promoted doors into 4 domain containers; 28/28
+forms bulk-courted (corrupt refused 28/28; 53/57 unknowns derived —
+4 honest solver-scope misses named); 5/5 constructions from HIS
+content only (LED sizing w/ E12+safety-rule; power 3-view; divider
+by chained laws; H7/g6 + sleeve; bug flagged from negative
+knowledge). THE SHAPES DISCOVERY: 48 applications compress to 28
+forms (ohm=density=hooke=torque=work= one product shape) — the
+shapes-and-labels ontology measured. Account: 627->843 nodes,
+236->1,524 doors, 9->37 laws, 311 facts; SELECTION PRECISION HELD
+AT 1.0 with 4x the laws; probe 0.264s. Scoreboard results appended
+to CURRICULUM_CHECKLIST.md.

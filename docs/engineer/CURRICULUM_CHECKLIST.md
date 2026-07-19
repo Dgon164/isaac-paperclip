@@ -306,3 +306,40 @@ The already-green cluster proves the GRADING MACHINERY works end to end at least
 3. Every A gets its B court and C construction before the box checks; a box may be PARTIALLY checked (A✓B✓C✗) and says so.
 4. Wrong predictions stay in the record next to the item.
 5. This file is the scoreboard: append `— [date, probe, result]` to items as they land.
+
+---
+
+## RESULTS — 2026-07-18, THE FULL FEED (curriculum_feed.py, fed LIVE)
+
+**A-grade (learned, in his net):** 48 law applications over 28 form
+nodes (20 applications landed on SHARED forms — see the shapes
+discovery below), 148 facts, 10 certified negatives — containers:
+cad-mechanical / python-code / electrical / drafting. His account
+after the meal: 843 nodes, 1,524 doors, 37 laws, 311 facts
+(road-trial #14).
+
+**B-grade (courted):** 28/28 forms full-courted — corrupt instances
+refused 28/28; unknowns derived round-trip 53/57 (the 4 misses are
+the generic solver's honest scope limit: mixed-power forms like
+gauss-sum — named, queued for solver v3).
+
+**C-grade (constructed, sampled):** 5/5 — LED resistor sized from
+his law + his E12 facts + his safety rule (350Ω → 390Ω); power
+computed three ways from three of his laws, one answer (multi-view
+on a quantity); a voltage divider solved by CHAINING his laws
+(series → Ohm backward → Ohm forward = 6.0V exact); an H7/g6
+mating pair classified through his fit facts + a sleeve OD from his
+tube law; the mutable-default bug flagged from HIS negative
+knowledge. C coverage is SAMPLED, not exhaustive — the checklist
+boxes above check only where a receipt exists.
+
+**THE SHAPES DISCOVERY (forced by the feed itself):** Ohm's law,
+density, Hooke's law, spring force, torque, work, momentum, Q=CV,
+τ=RC — ALL one form (y = x0·x1). tell_law correctly answered
+MATCHES on every re-telling; the curriculum therefore lands as FEW
+FORMS + MANY APPLICATIONS (fact-bundles binding quantities to
+shared slots) — the shapes-and-labels ontology arriving by itself,
+measured: 48 applications compress to 28 forms.
+
+**SELECTION AT SCALE, first real load:** 37 laws held, precision
+1.0, probe 0.264s, ask 0.0022ms — the gauge's curve begins.
