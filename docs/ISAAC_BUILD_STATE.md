@@ -1821,3 +1821,27 @@ round-trips. askisaac grew --retune ORDER --on FILE (writes
 <file>.retuned.py, original untouched). Learning (telling road) +
 discovery (the courts) + application (retune) now meet on one
 program.
+
+## 2026-07-19 — RUNG 4: MEAL 9 (THE SCALE MEAL) + THE SELECTION
+## CURVE MEASURED + the boot.dev bridge's first breath
+The standing longitudinal question answered under real load:
+52 applications told across 7 tranches (algorithms / systems /
+electrical2 / mechanics2 / thermal / materials / waves — every law
+cited; form diversity per the ruling: log, n·log n, x^3, x^4,
+exp, 1-exp, sin, powerprod inverses, per-material variant
+families). Account LIVE: laws 39 -> 76 (12 new forms, 14 shape
+MATCHES — KE = capacitor-energy = inductor-energy = spring-energy,
+one 0.5·x·y^2 form wearing four labels; 26 variants — the
+conduction family holds copper 401 / aluminum 237 / steel 50 /
+glass 1.05 / concrete 1.4 / pine 0.12, the hooke family eight
+materials), 1,099 nodes, 476 facts, court 52/52 clean. **THE
+CURVE: SELECTION PRECISION 1.0 AT EVERY TRANCHE, probe flat
+0.25-0.29s from 48 through 76 laws** — no knee visible at this
+scale. Live decompositions over the new knowledge: energy = 9 via
+kinetic-energy (6 alternative energy roads counted); heatrate =
+80,200 via conduction-copper (401·2·10/0.1 exact). BOOT.DEV: the
+public repo is the ROADMAP layer (6 path files, English course
+sequences — intake eats them, structure charted BRANCH); lesson
+bodies ride the owner's token through the official CLI = the
+owner-present setup step, named. Meal journaled kind=meal,
+road-trial lines per tranche, mind.isaac.bak kept.
