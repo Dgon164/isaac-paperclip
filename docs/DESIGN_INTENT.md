@@ -1939,3 +1939,40 @@ manual road — owner exports lesson text/starter code, intake eats
 md/txt already. English lesson statement -> goal sheet -> goal
 tree -> code -> THEIR tests grade him = the rung-3 test bed.
 Respect their terms: his subscription, his token, local use.
+
+## THE CODE GENESIS (owner, 2026-07-19, after the honest frontier
+## measurement — Bookbot 1/13 reachable, 12/13 DARK for want of a
+## code-WRITING organ: "ok well lets try to get it going")
+THE HONESTY LAW FIRST: no LLM ghost-writes his homework — that is
+the rigged exam the provenance audit hunts. The measured truth
+that unlocks the design: THE LESSONS TEACH THE IDIOMS THEY DEMAND
+(the Read-File readme hands the student `with open(path) as f:`
+and `f.read()` before asking for get_book_text). So the road is
+the growing-grammar pattern pointed at CODE:
+  1. THE IDIOM MEAL: lesson readme -> fenced code blocks TOLD as
+     idiom content (net nodes, container = the course, who = the
+     lesson title + URL) + the "## Assignment" section read as
+     goals-from-text. Learning from the course = what a student
+     does; every fragment carries its citation.
+  2. THE COMPOSER: born combinators, declared (def-wrap,
+     slot-rename/unify, sequence, return-insert, call-in-main,
+     print of a demanded literal) — hand-built stays the
+     GENERATORS + epistemics; what Isaac owns is WHICH
+     compositions exist, survive, and are offered (minted
+     codeshape nodes, offered first on the next lesson: growth =
+     reuse before search).
+  3. THE COURT: their grader (bootdev run) rules pass/fail — the
+     world grades him for free; PLUS the echo: reader v2 /
+     code_map must read his own artifact back (he may not submit
+     what he cannot read). Fail -> wrong-kept with the diff;
+     no-composition-found -> DARK NAMED (the frontier receipt).
+  4. THE PROPOSER (parked until ollama serves): the local tutor
+     may PROPOSE a fragment as DATA through the vet (sparring
+     precedent) — a proposal that passes the grader AND reads
+     back into his goal sheet is honestly learned; who=tutor
+     stamped, never author-of-record.
+Setup lessons: readme-told shell commands run under a declared
+allowlist (install/uv/git/echo/mkdir/python), receipted. Browser
+choice lessons: the owner's clicks, never automated. SUBMIT
+discipline: run = free checks; submit only after green + within
+the owner's standing autopilot blessing for this course.

@@ -1845,3 +1845,32 @@ sequences — intake eats them, structure charted BRANCH); lesson
 bodies ride the owner's token through the official CLI = the
 owner-present setup step, named. Meal journaled kind=meal,
 road-trial lines per tranche, mind.isaac.bak kept.
+
+## 2026-07-19 (night) — THE CODE GENESIS: FIRST FLIGHT + BUG
+## DETECTION & ROLLBACK (owner: "lets keep it going" + "a perfect
+## learning opportunity for him to figure out bug detection, and
+## rollbacks")
+composer.py grown (PRINT-LITERAL combinator; minted_names;
+record_attempt = the bug-detection+rollback ledger) — composer
+battery 7/7. THE FIRST FLIGHT (bootdev_flight.py) walked Build a
+Bookbot in Python IN ORDER on the owner's live account, THEIR
+grader's own published spec as the court (spec_court — faithful,
+deterministic, no TUI scraping). RESULT, honest: 5 PASSED
+(Welcome, Installing Python, Running Python, Book Data, Read
+File), 1 owner-click (Workspace, multiple-choice), 7 DARK — each
+DARK naming the exact failing check. GROWTH LIVE: Read File PASSED
+by REUSING codeshape:get_book_text minted last night (reuse
+before search) + a fresh composed main. THE BUG-DETECTION +
+ROLLBACK DISCIPLINE (owner's insight, now first-class): each
+candidate is a HYPOTHESIS courted by the spec; 24 code_attempt
+findings in his account — 4 GREEN kept, 20 ROLLED-BACK each with
+its bug named ('stdout missing Found 75767 total words', 'exit
+1'), the artifact restored to last-green every time (never a
+silent clobber — the wound that started this). THE FRONTIER,
+NAMED BY THE FAILURES: v1 combinators reach file-IO + print; the
+NEXT combinators the darks demand = string methods (.split()),
+builtins-on-results (len()), f-string/format interpolation,
+dict+loop, sorting, sys.argv. 13 idiom meals eaten (cited,
+container-stamped). Journal kind=study; mind saved; .bak kept.
+Composer+flight are RESEARCH-side; composer_battery joins the wall
+next promote.
