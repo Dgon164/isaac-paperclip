@@ -1604,3 +1604,22 @@ owner's read-the-code correction). Battery test_engineer.py 10/10
 joins the permanent wall (incl. the literal mod null and the
 instrument court: behavior reproduces the read's cap law exactly).
 v1 vocabulary limits named in the module docstring.
+
+## 2026-07-18 — THE MECHANICAL RUNG 8/8 (owner: park GPT-2, explore)
+engineer_m_probe: UNDERSTANDING PROVEN BY CONSTRUCTION — the tube
+recipe INSTANTIATES: spec sheet (wall 5mm, 1727.9cm3, 13.56kg,
+density cited) + A REAL 3D MODEL (runs/tube.obj, 256v/512f,
+watertight; mesh volume EXACT at the mesh's own ruler and the
+circular recipe within the NAMED 0.16% discretization — the mesh is
+the tube's fourth view, instrument-relative precision); the family
+(a 4in-sch40-ish instance from the same recipe). THE CONTACT
+TAXONOMY as courts: NOT-TOUCHING w/ clearance NAMED / TOUCHING
+(push, never pull) / interference+press-INTENT = CONNECTED (the
+machinist's truth: interference IS a fastening) / same geometry +
+loose intent = WOUND ("two solids, one space") / weld = CONNECTED.
+FORCE PATHS tested by propagation, 6/6 incl. the weakest-link
+chain. PHYSICS FROM CODE: k=3.5, e=0.8, F=-kx READ from sim text;
+INSTRUMENT confirms (k 3.5000 from the measured period, e 0.7999
+from bounce ratios). GPT-2 fidelity PARKED (queued, not dropped).
+NEXT: mates as typed doors (M3), part-stack propagation (M4),
+kinematics (M5), the single-cylinder gate (M6).

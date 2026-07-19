@@ -1562,6 +1562,40 @@ the analyst face = the commercialization core lane. BUILD QUEUE (the
 dev's order): E0.1-E0.4 -> C1-C2 -> G-rung -> fidelity harness ->
 tiered crystallizer.
 
+## THE MECHANICAL EXPLORATION (owner redirect, 2026-07-18 evening):
+## "park gpt2 for now. lets really explore this. im fascinated by
+## this part. i want to see if he can eventually do things like
+## make a 3d model or structural details of a tube, and of
+## eventually an engine, and if he can learn about connected vs
+## touching vs not touching interactions and all that stuff. can we
+## get him to learn interactions and information from code, and
+## physics or anything. we need to see what and how he understands
+## things."
+GPT-2 fidelity PARKED (D11 harness stays queued, not dropped). THE
+DIRECTION: E2 explored deeply — understanding PROVEN BY
+CONSTRUCTION (the Learning-by-Decomposition standard): a recipe he
+holds must INSTANTIATE (a real 3D model emitted from the tube
+recipe — the mesh is a FOURTH VIEW and faces the view court at
+instrument-relative tolerance: the polygonal mesh's own analytic
+volume machine-exact, the circular recipe within discretization);
+learn one tube = own the family (a different instance built from
+the same recipe). THE CONTACT TAXONOMY (owner's ask, now design):
+CONNECTED vs TOUCHING vs NOT TOUCHING as first-class interaction
+kinds decided by GEOMETRY + INTENT — clearance > 0 = NOT TOUCHING
+with the clearance NAMED; contact without a joint = TOUCHING
+(transmits push, never pull); interference = press fit = CONNECTED
+when INTENDED, the same geometry under a loose-assembly intent = a
+WOUND ("two solids, one space"); declared joints (weld) = CONNECTED.
+Force paths walk the contact graph with per-kind transmission rules
+— claims TESTED by propagation, not asserted. PHYSICS FROM CODE:
+the read road pointed at simulation source (F = -k*x, restitution)
+— constants READ from text, then the INSTRUMENT confirms (measured
+period -> k; bounce ratio -> e^2). The standing question the whole
+segment serves: SEE WHAT AND HOW HE UNDERSTANDS — every claim
+carries its derivation, every understanding must construct.
+Ladder beyond: mates as typed doors (M3), part-stack propagation
+(M4), kinematics (M5), the single-cylinder engine gate (M6).
+
 ## THE FACTS LAYER (owner, 2026-07-18, after the size question):
 ## "we can have a facts layer. we have the main structural
 ## information, and then datapoint breakdowns he can reference and
