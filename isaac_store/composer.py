@@ -388,6 +388,153 @@ def instantiate(skeleton, dims):
     return src
 
 
+def var_shape(v):
+    """A variable's SHAPE (owner: "variables also have shapes...
+    they can change depending on the sequence"): type + size, with
+    small scalars kept whole."""
+    t = type(v).__name__
+    try:
+        if isinstance(v, bool) or v is None:
+            return (t, v)
+        if isinstance(v, (int, float)):
+            return (t, v if abs(v) < 10**9 else "big")
+        if isinstance(v, str):
+            return (t, len(v)) if len(v) > 24 else (t, v)
+        if isinstance(v, (list, tuple, set, dict)):
+            return (t, len(v))
+    except Exception:
+        pass
+    return (t, None)
+
+
+def trace_execution(code, call=None, ns_extra=None,
+                    max_steps=3000):
+    """THE INTERNAL SIMULATOR (owner: "simulate and execute the
+    code internally... think about the structures and the outputs
+    and the midstate and everything"). Steps the code with a
+    tracer; every line where a variable's SHAPE changes is a
+    registered event (deltas only — comparison-as-registration).
+    Returns [(lineno, {var: shape})...] — the thought stream."""
+    import sys as _sys
+    events, prev = [], {}
+
+    def tracer(frame, event, arg):
+        if event == "line" and len(events) < max_steps:
+            fid = id(frame)
+            cur = {k: var_shape(v)
+                   for k, v in frame.f_locals.items()
+                   if not k.startswith("__")}
+            before = prev.get(fid, {})
+            changed = {k: v for k, v in cur.items()
+                       if before.get(k) != v}
+            if changed:
+                events.append((frame.f_lineno, changed))
+            prev[fid] = cur
+        return tracer
+
+    ns = dict(ns_extra or {})
+    _sys.settrace(tracer)
+    try:
+        exec(code, ns)                      # noqa: S102
+        if call:
+            eval(call, ns)                  # noqa: S307
+    finally:
+        _sys.settrace(None)
+    return events
+
+
+def eat_trace(mind, label, events, container="study"):
+    """The thought stream lands in the NET: each variable a node,
+    its trajectory of shapes the meta — midstates he can point at."""
+    trajs = {}
+    for line, changed in events:
+        for k, sh in changed.items():
+            trajs.setdefault(k, []).append((line, sh))
+    for k, tr in trajs.items():
+        node = f"var:{label}:{k}"
+        mind.net.set_meta(node, "trajectory", tr[:60])
+        mind.net.set_meta(node, "container", container)
+        mind.net.add_door(f"world:{container}", node,
+                          tag=f"in:{container}")
+    mind.record_finding("trace", label, variables=len(trajs),
+                        steps=len(events))
+    return trajs
+
+
+class _Mismatch(Exception):
+    pass
+
+
+def crystallize_form(code_a, code_b):
+    """FORM-BY-COMPARISON (owner: "the comparator and crystallizer
+    can have print() as a node and then arguments for filling it
+    in"). Two instances walked in parallel: what they SHARE is the
+    form; where they DIFFER are the dimensions. Repeated identical
+    differences collapse to ONE dimension (the same variable seen
+    through its occurrences). Different topologies REFUSE with the
+    place named. Supersedes hand-picked dimension kinds —
+    dimensions are DISCOVERED by registration."""
+    try:
+        ta, tb = ast.parse(code_a), ast.parse(code_b)
+    except SyntaxError as e:
+        return dict(refused=f"unparseable: {e}")
+    dims, seen = [], {}
+
+    def slot(va, vb):
+        key = (repr(va), repr(vb))
+        if key not in seen:
+            dims.append(dict(a=va, b=vb))
+            seen[key] = f"__D{len(dims) - 1}__"
+        return seen[key]
+
+    def walk(a, b, where):
+        if type(a) is not type(b):
+            raise _Mismatch(f"different topologies at {where}: "
+                            f"{type(a).__name__} vs "
+                            f"{type(b).__name__}")
+        if isinstance(a, ast.AST):
+            for f in a._fields:
+                va, vb = getattr(a, f), getattr(b, f)
+                if isinstance(va, ast.AST):
+                    walk(va, vb, f"{where}.{f}")
+                elif isinstance(va, list):
+                    if not isinstance(vb, list) or \
+                            len(va) != len(vb):
+                        raise _Mismatch(
+                            f"different structure at {where}.{f}")
+                    for i, (x, y) in enumerate(zip(va, vb)):
+                        if isinstance(x, ast.AST):
+                            walk(x, y, f"{where}.{f}[{i}]")
+                        elif x != y:
+                            raise _Mismatch(
+                                f"unslottable list difference "
+                                f"at {where}.{f}")
+                else:
+                    if va != vb:
+                        setattr(a, f, slot(va, vb))
+
+    try:
+        walk(ta, tb, "root")
+    except _Mismatch as e:
+        return dict(refused=str(e))
+    return dict(skeleton=ast.unparse(ta), dims=dims)
+
+
+def instantiate_crystal(skeleton, values):
+    """Fill a crystallized form's dimensions: values is a list,
+    one per __Dn__ slot."""
+    src = skeleton
+    for i, v in enumerate(values):
+        src = src.replace(f"'__D{i}__'", repr(v))
+        src = src.replace(f'"__D{i}__"', repr(v))
+        src = src.replace(f"__D{i}__", str(v))
+    try:
+        ast.parse(src)
+    except SyntaxError:
+        return None
+    return src
+
+
 def minted_shapes(mind):
     return [mind.net.get_meta(n, "code")
             for n in list(mind.net.meta)

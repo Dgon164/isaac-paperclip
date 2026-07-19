@@ -1999,3 +1999,33 @@ from text-reuse to FORM-reuse: take a held codeform, set the new
 lesson's dimensions, court it. Same court as tell_law: same
 skeleton + same dimensions = witness; same skeleton + new
 dimensions = a VARIANT instance in the form's family.
+
+## THE INTERNAL SIMULATOR + FORM-BY-COMPARISON (owner, 2026-07-19,
+## completing the variable-and-value design): "memorize the
+## initial, then recompute it against a different version...
+## variables also have shapes... they can change depending on the
+## sequence and structure... we should have him be able to
+## simulate and execute the code internally, where he can think
+## about the structures and the outputs and the midstate and
+## everything, basically create the variables as nodes and change
+## them as he thinks things through... when you have two print
+## functions and the print section is different, then the
+## comparator and crystallizer can have print() as a node and then
+## arguments for filling it in"
+TWO ORGANS: (1) THE TRACE — internal execution where every
+variable becomes a NODE and every step registers its SHAPE
+(type + size + small values) as it changes through the sequence;
+midstates and outputs observable in the net; the trace is a TIME
+SERIES his existing organs (analyst, patterns, lag) can eat.
+(2) FORM-BY-COMPARISON — the crystallizer at code: two instances
+walked in parallel; what they SHARE is the form (print() as a
+node); where they DIFFER are the dimensions (arguments for
+filling in); repeated identical differences collapse to ONE
+dimension (the same variable seen through its occurrences);
+different topologies REFUSE honestly. This supersedes the
+hand-picked dimension kinds of abstract_form: dimensions are
+DISCOVERED by registration, never enumerated by hand — the
+comparison-as-registration keystone arriving at code. PARKED,
+NAMED: comparing two instances' TRACES (dynamic form discovery);
+the new-instance reader ("he doesn't know what is what until he
+learns to fully read code") = trace + comparison composed.

@@ -156,6 +156,43 @@ def main():
           f"dims {form['dims']['name']}/{form['dims']['methods']}"
           f" -> get_first_line/readline")
 
+    # CB9 — THE INTERNAL SIMULATOR: variables as shape-trajectories,
+    # deltas only (registration), midstates observable
+    from isaac_store.composer import (trace_execution,
+                                      crystallize_form,
+                                      instantiate_crystal)
+    ev = trace_execution(
+        'def cw(t):\n    p = t.split()\n    n = len(p)\n'
+        '    return n\n\nr = cw("a b c")')
+    flat = {k: v for _ln, ch in ev for k, v in ch.items()}
+    ok = (flat.get("p") == ("list", 3)
+          and flat.get("n") == ("int", 3)
+          and flat.get("t") == ("str", "a b c"))
+    check("CB9 the internal simulator — midstate shapes traced",
+          ok, f"p={flat.get('p')}, n={flat.get('n')}")
+
+    # CB10 — FORM-BY-COMPARISON: print() as a node with an argument
+    # slot; repeated differences = ONE dimension; different
+    # topologies refuse
+    c1 = crystallize_form('print("Hello")', 'print("World")')
+    f1 = ('def a(x):\n    with open(x) as f:\n'
+          '        s = f.read()\n    return s')
+    f2 = ('def b(y):\n    with open(y) as f:\n'
+          '        s = f.readline()\n    return s')
+    c2 = crystallize_form(f1, f2)
+    third = instantiate_crystal(c2["skeleton"], ["c", "z", "read"])
+    bad = crystallize_form('print("x")', 'x = 1\nprint("x")')
+    ok = (c1["skeleton"] == "print('__D0__')"
+          and c1["dims"] == [dict(a="Hello", b="World")]
+          and len(c2["dims"]) == 3
+          and c2["skeleton"].count("__D1__") == 2
+          and third is not None and "def c(z):" in third
+          and "refused" in bad)
+    check("CB10 form-by-comparison — print() slotted, occurrences "
+          "collapse to one dim, topologies refuse", ok,
+          f"{c1['skeleton']} | dims {len(c2['dims'])} | "
+          f"refuse: {'refused' in bad}")
+
     dt = time.perf_counter() - t0
     npass = sum(checks)
     print(f"\n  BATTERY: {npass} passed, {len(checks) - npass} "
