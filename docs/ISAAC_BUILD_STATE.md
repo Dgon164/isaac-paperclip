@@ -1590,3 +1590,17 @@ every read claim, and the read's cap law reproduces every observed
 refill delta exactly. Read proposes, execution confirms — the
 black-box road (no source: ROMs, binaries) remains the instrument
 road's honest domain.
+
+## 2026-07-18 — THE ENGINEER LANE'S COURTS PROMOTED (#25)
+isaac_store/engineer.py: the probe-proven foundation courts as a
+module — tube_court (derive/corroborate/refuse-with-residual/
+DOF-OPEN), view_court (multi-view identity; wounds routed),
+slot_court (residue mandatory; signatures pluggable),
+tms_propagate/tms_verify (verify NEVER repairs), code_map/
+map_signature (programs as doors; map-alone regeneration),
+containment_court (three verdicts; vocabulary scan before
+enumeration), read_goal_sheet (goal sheets FROM PROGRAM TEXT: the
+owner's read-the-code correction). Battery test_engineer.py 10/10
+joins the permanent wall (incl. the literal mod null and the
+instrument court: behavior reproduces the read's cap law exactly).
+v1 vocabulary limits named in the module docstring.
