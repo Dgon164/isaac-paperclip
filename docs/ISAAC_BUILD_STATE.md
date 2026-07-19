@@ -1572,3 +1572,21 @@ NULL: policy bit-identical across lucky streams — no rituals.
 CONSTRUCTION: sheet-policy 15.3x survival, 172-vs-1 score over
 blind random. Four wrong-kept lessons in the docstring (trapped
 start; cap-hidden refill; threshold-vs-evidence; buffer tooth).
+
+## 2026-07-18 — THE READ ROAD (owner correction: "read the code
+## directly and learn information") — engineer_gread_probe 8/8
+The G-rung's behavioral recovery was THE INSTRUMENT, not the point.
+The read road recovers the goal sheet STATICALLY from the program
+text: reward +10 and its food-guard READ from the AST; growth
+structural (insert-always/pop-unless-food); the TRUE +40 refill and
+its cap 100 READ (which behavior could only see as +39-at-best —
+the read sees the mechanism, the instrument sees the
+manifestation); the lockout from shape (input overwritten from
+state = the transition does not exist); fatal guards split on OR
+and classified (wall/collision/exhaustion); lucky FREE by DEAD DATA
+FLOW. THE MOD NULL literal: -10 read from the modded text with zero
+execution. THE INSTRUMENT COURT: the behavioral road corroborates
+every read claim, and the read's cap law reproduces every observed
+refill delta exactly. Read proposes, execution confirms — the
+black-box road (no source: ROMs, binaries) remains the instrument
+road's honest domain.
