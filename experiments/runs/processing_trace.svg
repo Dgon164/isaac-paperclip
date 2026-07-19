@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="710" font-family="monospace" font-size="12">
+<text x="20" y="28" font-size="15">the processing trace — one assessment, every step receipted</text>
+<rect x="20" y="50" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="64">  1. [ask] block-with-bore.kind-is = ['housing']</text>
+<rect x="20" y="76" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="90">  2. [ask] hollow-cylinder.kind-is = ['tube']</text>
+<rect x="20" y="102" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="116">  3. [ask] solid-cylinder.kind-is = ['shaft-or-pin']</text>
+<rect x="20" y="128" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="142">  4. [ask] hollow-cylinder.kind-is = ['tube']</text>
+<rect x="20" y="154" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="168">  5. [ask] hollow-cylinder.kind-is = ['tube']</text>
+<rect x="20" y="180" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="194">  6. [court] gasket dims = REFUSED</text>
+<rect x="20" y="206" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="220">  7. [ask] gap-negative-press.means = ['connected']</text>
+<rect x="20" y="232" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="246">  8. [ask] gap-positive.means = ['not-touching']</text>
+<rect x="20" y="258" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="272">  9. [ask] joint-weld.means = ['connected']</text>
+<rect x="20" y="284" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="298"> 10. [ask] clearance-shaft-in-bushing.pattern-of = ['journal-bearing']</text>
+<rect x="20" y="310" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="324"> 11. [ask] connected.transmits = ['pull', 'push']</text>
+<rect x="20" y="336" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="350"> 12. [ask] connected.transmits = ['pull', 'push']</text>
+<rect x="20" y="362" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="376"> 13. [ask] not-touching.transmits = []</text>
+<rect x="20" y="388" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="402"> 14. [ask] not-touching.transmits = []</text>
+<rect x="20" y="414" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="428"> 15. [ask] connected.transmits = ['pull', 'push']</text>
+<rect x="20" y="440" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="454"> 16. [ask] designator-V.names = []</text>
+<rect x="20" y="466" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="480"> 17. [ask] designator-SW.names = ['switch']</text>
+<rect x="20" y="492" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="506"> 18. [ask] designator-R.names = ['resistor']</text>
+<rect x="20" y="518" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="532"> 19. [ask] designator-D.names = ['diode']</text>
+<rect x="20" y="544" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="558"> 20. [ask] led-red.forward-drop = ['2.0V']</text>
+<rect x="20" y="570" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="584"> 21. [law] led-resistor solve I = {'verdict': 'DERIVED', 'x2': 0.017948717948717947}</text>
+<rect x="20" y="596" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="610"> 22. [ask] designator-V.names = []</text>
+<rect x="20" y="622" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="636"> 23. [ask] designator-SW.names = ['switch']</text>
+<rect x="20" y="648" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="662"> 24. [ask] designator-D.names = ['diode']</text>
+<rect x="20" y="674" width="840" height="20" fill="none" stroke="#888"/>
+<text x="26" y="688"> 25. [negative] led-without-current-limit = ['neg']</text>
+</svg>

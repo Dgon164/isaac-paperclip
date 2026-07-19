@@ -313,6 +313,21 @@ def solve_backward(mind, name, known, want):
                             receipt="outside the solver's scope")
         terms.append((float(c), fac))
     b0 = float(m.get("intercept", 0.0))
+    if want is None:
+        y_calc = b0
+        for c, fac in terms:
+            v = c
+            for var, p in fac:
+                v *= known[var] ** p
+            y_calc += v
+        resid = known["y"] - y_calc
+        if abs(resid) <= 1e-9 * max(1.0, abs(known["y"])):
+            return dict(verdict="CORROBORATION",
+                        receipt="all quantities given, zero "
+                                "residual — the books balance")
+        return dict(verdict="REFUSED",
+                    residual=round(float(resid), 6),
+                    receipt="the law he holds is violated")
     if want == "y":
         y = b0
         for c, fac in terms:

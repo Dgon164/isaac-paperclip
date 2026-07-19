@@ -1671,3 +1671,22 @@ shapes-and-labels ontology measured. Account: 627->843 nodes,
 236->1,524 doors, 9->37 laws, 311 facts; SELECTION PRECISION HELD
 AT 1.0 with 4x the laws; probe 0.264s. Scoreboard results appended
 to CURRICULUM_CHECKLIST.md.
+
+## 2026-07-18 — STRUCTURE ASSESSMENT + THE OBSERVED MAPS 8/8
+Owner: "give him complete structures and he can assess how they are
+built and connected" + "observe the maps... what he understands
+about a thing." engineer_assess_probe (stands on the curriculum
+feed): a 5-part assembly assessed FROM HIS KNOWLEDGE ONLY — parts
+via his kind signatures (+ the gasket flagged WOUND by his own tube
+constraint, residual -0.5, never silently classified); connections
+via his taxonomy w/ quantities (press 0.05, clearance 0.04, weld);
+JOURNAL-BEARING function recognized from his pattern fact; load
+paths 3/3 on the assessed graph; regeneration==truth; the exploded
+null says nothing false. The circuit: kinds from his designator
+facts, loop traced, OPERATING POINT 17.95mA DERIVED from his
+led-resistor law + his forward-drop fact; the resistor-less variant
+flagged DANGER from his certified negative. THE OBSERVED MAPS
+emitted (runs/*.svg): the 25-step receipted PROCESSING TRACE, the
+UNDERSTANDING MAP (ego-graph of 'connected'), the ASSESSMENT MAP.
+Solver v2 regained its all-knowns consistency branch (wrong-kept:
+v2 had lost want=None).

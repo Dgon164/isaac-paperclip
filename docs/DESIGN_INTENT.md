@@ -1619,6 +1619,42 @@ are GENERIC organs — with the hand-domain code ABLATED in the
 battery as the proof. Scaffolding probes may come first; the
 transplant is the finish line, never optional.
 
+## STRUCTURE ASSESSMENT (owner, 2026-07-18, after the full feed):
+## "so, what we need to do is structures now. give him complete
+## structures and he can assess how they are built and connected."
+The decomposition cycle pointed at WHOLES: a complete structure
+(assembly / circuit / program) goes in; the ASSESSMENT comes out —
+PARTS identified against HIS kind signatures, CONNECTIONS classified
+through HIS contact taxonomy with quantities named, FUNCTIONS
+recognized from HIS pattern facts (bushing + clearance shaft =
+journal bearing), DERIVED quantities from HIS laws (a circuit's
+operating point computed from his own led-resistor law), FLAGS from
+HIS negatives (LED without current limit = danger), UNKNOWNS honest
+(a dims-inconsistent part is a WOUND, never silently classified).
+COURTS: completeness (every part, every pair — accounted or
+refused); REGENERATION (the assessment alone rebuilds the relation
+graph); the exploded null (parts moved apart -> all not-touching,
+no functions, no false claims). One assessment shape, three
+substrates (mechanical / electrical / code — the call graph is the
+program's connection graph).
+THE OBSERVED MAPS (owner, same hour: "we need to figure out how to
+observe the maps. either the flows, or the structures, or the
+mental processing states for something. what he understands about a
+thing, not just how its built."): three windows, emitted as files —
+(1) THE PROCESSING TRACE (every fact asked, law fired, court run
+during one task, in order, receipted — the mental state of a
+computation); (2) THE UNDERSTANDING MAP (the ego-graph of what HE
+holds about a subject: doors in/out, facts, evidence, containers —
+radial SVG); (3) THE ASSESSMENT MAP (the structure as he concluded
+it). PROBE-PROVEN same hour (engineer_assess_probe.py 8/8): parts
+via his signatures (+1 honest wound by his own constraint),
+connections w/ quantities, journal-bearing FUNCTION recognized from
+his pattern fact, load paths 3/3, regeneration==truth + exploded
+null silent, circuit operating point 17.95mA DERIVED from his law +
+danger flagged from his negative; 25-step receipted trace + both
+maps emitted (experiments/runs/*.svg). Next rungs: maps into the
+analyst face; live-account map observation; flow maps of drills.
+
 ## THE FACTS LAYER (owner, 2026-07-18, after the size question):
 ## "we can have a facts layer. we have the main structural
 ## information, and then datapoint breakdowns he can reference and

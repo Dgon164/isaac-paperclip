@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" font-family="monospace" font-size="11">
+<circle cx="450" cy="450" r="60" fill="none" stroke="#333" stroke-width="2"/>
+<text x="450" y="450" text-anchor="middle">assembly (as he conc</text>
+<line x1="450" y1="450" x2="780" y2="450" stroke="#bbb"/>
+<text x="780" y="450" text-anchor="start">block: housing</text>
+<text x="780" y="462" text-anchor="start" fill="#777">part</text>
+<line x1="450" y1="450" x2="716" y2="643" stroke="#bbb"/>
+<text x="716" y="643" text-anchor="start">bushing: tube</text>
+<text x="716" y="655" text-anchor="start" fill="#777">part</text>
+<line x1="450" y1="450" x2="551" y2="763" stroke="#bbb"/>
+<text x="551" y="763" text-anchor="start">shaft: shaft-or-pin</text>
+<text x="551" y="775" text-anchor="start" fill="#777">part</text>
+<line x1="450" y1="450" x2="349" y2="763" stroke="#bbb"/>
+<text x="349" y="763" text-anchor="end">collar: tube</text>
+<text x="349" y="775" text-anchor="end" fill="#777">part</text>
+<line x1="450" y1="450" x2="184" y2="643" stroke="#bbb"/>
+<text x="184" y="643" text-anchor="end">gasket: WOUND</text>
+<text x="184" y="655" text-anchor="end" fill="#777">part</text>
+<line x1="450" y1="450" x2="120" y2="450" stroke="#bbb"/>
+<text x="120" y="450" text-anchor="end">bushing~block: connected 0.05</text>
+<text x="120" y="462" text-anchor="end" fill="#777">connection</text>
+<line x1="450" y1="450" x2="184" y2="257" stroke="#bbb"/>
+<text x="184" y="257" text-anchor="end">shaft~bushing: not-touching 0.04</text>
+<text x="184" y="269" text-anchor="end" fill="#777">connection</text>
+<line x1="450" y1="450" x2="349" y2="137" stroke="#bbb"/>
+<text x="349" y="137" text-anchor="end">shaft~collar: connected </text>
+<text x="349" y="149" text-anchor="end" fill="#777">connection</text>
+<line x1="450" y1="450" x2="551" y2="137" stroke="#bbb"/>
+<text x="551" y="137" text-anchor="start">journal-bearing @ shaft</text>
+<text x="551" y="149" text-anchor="start" fill="#777">function</text>
+<line x1="450" y1="450" x2="716" y2="257" stroke="#bbb"/>
+<text x="716" y="257" text-anchor="start">WOUND: gasket (-0.5)</text>
+<text x="716" y="269" text-anchor="start" fill="#777">wound</text>
+</svg>

@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="900" font-family="monospace" font-size="11">
+<circle cx="450" cy="450" r="60" fill="none" stroke="#333" stroke-width="2"/>
+<text x="450" y="450" text-anchor="middle">connected</text>
+<line x1="450" y1="450" x2="780" y2="450" stroke="#bbb"/>
+<text x="780" y="450" text-anchor="start">→push</text>
+<text x="780" y="462" text-anchor="start" fill="#777">in:cad-mechanical</text>
+<line x1="450" y1="450" x2="683" y2="683" stroke="#bbb"/>
+<text x="683" y="683" text-anchor="start">→transmits</text>
+<text x="683" y="695" text-anchor="start" fill="#777">seq</text>
+<line x1="450" y1="450" x2="450" y2="780" stroke="#bbb"/>
+<text x="450" y="780" text-anchor="start">→pull</text>
+<text x="450" y="792" text-anchor="start" fill="#777">in:cad-mechanical</text>
+<line x1="450" y1="450" x2="217" y2="683" stroke="#bbb"/>
+<text x="217" y="683" text-anchor="end">←joint-weld</text>
+<text x="217" y="695" text-anchor="end" fill="#777">in:cad-mechanical</text>
+<line x1="450" y1="450" x2="120" y2="450" stroke="#bbb"/>
+<text x="120" y="450" text-anchor="end">←means</text>
+<text x="120" y="462" text-anchor="end" fill="#777">seq</text>
+<line x1="450" y1="450" x2="217" y2="217" stroke="#bbb"/>
+<text x="217" y="217" text-anchor="end">←gap-negative-press</text>
+<text x="217" y="229" text-anchor="end" fill="#777">in:cad-mechanical</text>
+<line x1="450" y1="450" x2="450" y2="120" stroke="#bbb"/>
+<text x="450" y="120" text-anchor="end">transmits: push</text>
+<text x="450" y="132" text-anchor="end" fill="#777">fact</text>
+<line x1="450" y1="450" x2="683" y2="217" stroke="#bbb"/>
+<text x="683" y="217" text-anchor="start">transmits: pull</text>
+<text x="683" y="229" text-anchor="start" fill="#777">fact</text>
+</svg>
