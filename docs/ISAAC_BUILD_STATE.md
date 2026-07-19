@@ -1623,3 +1623,20 @@ INSTRUMENT confirms (k 3.5000 from the measured period, e 0.7999
 from bounce ratios). GPT-2 fidelity PARKED (queued, not dropped).
 NEXT: mates as typed doors (M3), part-stack propagation (M4),
 kinematics (M5), the single-cylinder gate (M6).
+
+## 2026-07-18 — THE OWNERSHIP TRANSPLANT 8/8 (the owner's question
+## made law: "what did you build for him to be able to recreate
+## these")
+HONEST AUDIT: the mechanical rung's first build taught the CODEBASE
+(constraint/taxonomy/rules in Python, none his). THE TRANSPLANT
+(engineer_transplant_probe): same eight answers from NET CONTENT +
+one GENERIC organ, hand courts monkeypatched-to-raise and never
+called — the tube constraint TOLD in his grammar (mechanics
+container, told-unverified, supersedable); the taxonomy TAUGHT
+(teach/teach_not; transmits from ask()); laws_run_backward = the
+one new generic organ (any linear law he holds, any unknown:
+derive/corroborate/refuse-with-residual/DOF) — tube + groove
+dependency + Kirchhoff from the SAME organ, zero per-domain Python.
+THE EDIT: one teach() and welds carry torque. STANDING DISCIPLINE
+captured on the sheet: a rung is DONE when content is NET and
+courts are GENERIC, hand-domain code ABLATED in the battery.

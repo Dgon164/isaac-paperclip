@@ -1595,6 +1595,29 @@ segment serves: SEE WHAT AND HOW HE UNDERSTANDS — every claim
 carries its derivation, every understanding must construct.
 Ladder beyond: mates as typed doors (M3), part-stack propagation
 (M4), kinematics (M5), the single-cylinder engine gate (M6).
+THE OWNERSHIP AUDIT (owner, 2026-07-18, the question that made it
+law: "how did you teach him about this because it will matter.
+what did you build for him to be able to recreate these."): the
+mechanical rung's first build put the knowledge in PYTHON —
+tube_court's constraint, contact_court's taxonomy, force_path's
+rules — none of it his, none supersedable (the keystone's wound,
+fresh). THE TRANSPLANT (engineer_transplant_probe.py, 8/8, hand
+courts monkeypatched-to-raise and never called): the constraint
+TOLD in his own grammar (tell_law "+1.00*x0 +2.00*x1" -> law node,
+mechanics container, told-unverified); the taxonomy TAUGHT
+(teach/teach_not — transmit sets from ask(); negatives
+first-class); ONE new GENERIC organ, laws_run_backward (solve any
+linear law he holds for any unknown, reading the model FROM HIS
+NET) — derive-the-third, corroboration, refusal-with-residual, and
+DOF-naming for EVERY constraint he ever holds: the tube, the
+groove dependency, AND Kirchhoff's sum from the same organ, zero
+new Python per domain. THE EDIT receipt: one teach() and welds
+carry torque — his knowledge, his to change. STANDING DISCIPLINE
+FROM HERE: a rung is DONE only when its content is NET (told/
+taught/discovered, container-stamped, supersedable) and its courts
+are GENERIC organs — with the hand-domain code ABLATED in the
+battery as the proof. Scaffolding probes may come first; the
+transplant is the finish line, never optional.
 
 ## THE FACTS LAYER (owner, 2026-07-18, after the size question):
 ## "we can have a facts layer. we have the main structural
