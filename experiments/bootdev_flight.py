@@ -319,6 +319,27 @@ def main():
                                             f"{sd.rstrip('/')}")
                                     break
                                 WORKDIR = old
+            # road 1.4 — TOLD-FILE (the git course's prose shape:
+            # "Create a file ... called `X` and add the following"
+            # + the next fenced block as the contents — the lesson
+            # tells both the name and the text)
+            if road is None:
+                mfile = re.search(r"(?:called|named) `([\w./-]+)`",
+                                  readme)
+                if mfile and "." in mfile.group(1):
+                    pos = readme.find(mfile.group(0))
+                    fence = re.search(r"```[a-z]*\n(.*?)```",
+                                      readme[pos:], re.S)
+                    if fence:
+                        write_file(mfile.group(1),
+                                   fence.group(1).strip() + "\n")
+                        for b in told_commands(readme):
+                            wsl(f"cd {WORKDIR} && {b}",
+                                timeout=180)
+                        if spec_court(L)["green"]:
+                            road = (f"TOLD-FILE("
+                                    f"{mfile.group(1)}) + "
+                                    f"told-cmds")
             # road 2 — compose from the idiom pool + minted shapes
             if road is None and readme:
                 defs = minted_shapes(mind)
